@@ -1,0 +1,48 @@
+package com.diegoferreiracaetano.dlearn.data.user.source.remote
+
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+
+class UserNetworkDataSource {
+
+    private val accessMutex = Mutex()
+    private var users = listOf(
+        UserRemote(
+            id = 1,
+            name = "Diego",
+            email = "diego@gmail.com",
+            password = "teste"
+        ),
+        UserRemote(
+            id = 2,
+            name = "Lucas",
+            email = "lucas@gmail.com",
+            password = "teste"
+        ),
+    )
+
+    suspend fun loadUser(): List<UserRemote> = accessMutex.withLock {
+        delay(SERVICE_LATENCY_IN_MILLIS)
+        return users
+    }
+
+    suspend fun saveUser(newUser: UserRemote) = accessMutex.withLock {
+        delay(SERVICE_LATENCY_IN_MILLIS)
+        users + newUser
+
+        Unit
+    }
+
+    suspend fun findByUser(email: String, password: String): UserRemote? = accessMutex.withLock {
+        delay(SERVICE_LATENCY_IN_MILLIS)
+        return users.find { it.email == email && it.password == password }
+    }
+
+    suspend fun findByEmail(email: String): UserRemote? = accessMutex.withLock {
+        delay(SERVICE_LATENCY_IN_MILLIS)
+        return users.find { it.email == email}
+    }
+}
+
+private const val SERVICE_LATENCY_IN_MILLIS = 2000L

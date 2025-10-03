@@ -1,0 +1,19 @@
+
+<resources>
+
+    <string name="title_email">E-mail</string>
+    <string name="title_password">Senha</string>
+    <string name="title_name">Nome</string>
+    <string name="title_change_name">Trocar nome</string>
+    <string name="title_change_password">Trocar senha</string>
+
+
+    <string name="otp_error_default">Código inválido. Tente novamente.</string>
+    <string name="otp_resend_prompt">Não recebeu o código? </string>
+    <string name="otp_resend_now">Reenvie agora</string>
+    <string name="otp_resend_in">Reenvie em %1$s</string>
+
+
+    <string name="email_message_validation">Informe um e-mail válido.</string>
+    <string name="password_message_validation">Use uma senha válida.</string>
+</resources>

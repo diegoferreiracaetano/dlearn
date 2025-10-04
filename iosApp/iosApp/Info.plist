@@ -8,8 +8,6 @@
 	<dict>
 		<key>UIColorName</key>
 		<string>background</string>
-		<key>UIImageName</key>
-		<string>logo</string>
 		<key>UIImageRespectsSafeAreaInsets</key>
 		<false/>
 		<key>UILaunchScreen</key>

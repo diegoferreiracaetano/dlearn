@@ -15,14 +15,17 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
+        iosTarget.binaries {
+            framework {
+                baseName = "ComposeApp"
+                isStatic = true
+                freeCompilerArgs += listOf("-Xbinary=bundleId=com.diegoferreiracaetano.composeapp")
+            }
         }
     }
     
@@ -94,4 +97,3 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
-

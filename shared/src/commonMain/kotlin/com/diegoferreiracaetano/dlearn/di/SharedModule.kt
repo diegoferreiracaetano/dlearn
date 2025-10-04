@@ -13,18 +13,19 @@ import com.diegoferreiracaetano.dlearn.domain.user.VerifyCodeUseCase
 import com.russhwolf.settings.Settings
 import org.koin.dsl.module
 
-val sharedModule = module {
+val sharedModule =
+    module {
 
-    single { UserNetworkDataSource() }
-    single<UserRepository> { UserRepositoryRemote(get()) }
-    single { CreateAccountUseCase(get()) }
-    single { LoginUseCase(get(), get()) }
-    single { SendCodeUseCase(get()) }
-    single { VerifyCodeUseCase(get()) }
-    single { Settings() }
-    single<SessionStorage> { SettingsSessionStorage(get()) }
-    single { SessionManager(get()) }
+        single { UserNetworkDataSource() }
+        single<UserRepository> { UserRepositoryRemote(get()) }
+        single { CreateAccountUseCase(get()) }
+        single { LoginUseCase(get(), get()) }
+        single { SendCodeUseCase(get()) }
+        single { VerifyCodeUseCase(get()) }
+        single { Settings() }
+        single<SessionStorage> { SettingsSessionStorage(get()) }
+        single { SessionManager(get()) }
 
 //    single { PokemonLocalDataSource() }
 //    single<PokemonRepository> { PokemonRepositoryRemote(get()) }
-}
+    }

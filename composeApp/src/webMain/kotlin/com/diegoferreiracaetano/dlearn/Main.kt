@@ -6,7 +6,6 @@ import com.diegoferreiracaetano.dlearn.di.initKoin
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-
     initKoin()
 
     ComposeViewport {

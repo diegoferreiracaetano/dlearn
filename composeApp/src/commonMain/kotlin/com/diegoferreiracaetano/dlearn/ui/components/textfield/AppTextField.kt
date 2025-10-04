@@ -3,9 +3,7 @@ package com.diegoferreiracaetano.dlearn.ui.components.textfield
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -24,24 +22,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.ui.theme.DLearnTheme
-import com.diegoferreiracaetano.dlearn.ui.theme.Shapes
-import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import dlearn.composeapp.generated.resources.Res
 import dlearn.composeapp.generated.resources.email_message_validation
 import dlearn.composeapp.generated.resources.password_message_validation
 import dlearn.composeapp.generated.resources.title_email
 import dlearn.composeapp.generated.resources.title_password
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class TextFieldType {
     EMAIL,
     PASSWORD,
-    NONE
+    NONE,
 }
+
 @Composable
 fun AppTextField(
     value: String,
@@ -53,7 +50,7 @@ fun AppTextField(
     type: TextFieldType = TextFieldType.NONE,
     leadingIcon: @Composable (() -> Unit)? = null,
     shape: Shape = MaterialTheme.shapes.extraLarge,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
     val colorScheme = MaterialTheme.colorScheme
@@ -65,12 +62,13 @@ fun AppTextField(
 
     val containerColor = colorScheme.surface
 
-    val visualTransformation = when (type) {
-        TextFieldType.PASSWORD ->
-            if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
-        TextFieldType.EMAIL -> VisualTransformation.None
-        TextFieldType.NONE -> VisualTransformation.None
-    }
+    val visualTransformation =
+        when (type) {
+            TextFieldType.PASSWORD ->
+                if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
+            TextFieldType.EMAIL -> VisualTransformation.None
+            TextFieldType.NONE -> VisualTransformation.None
+        }
 
     Column(modifier = modifier) {
         OutlinedTextField(
@@ -80,14 +78,14 @@ fun AppTextField(
                 if (label != null) {
                     Text(
                         text = stringResource(label),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             },
             placeholder = {
                 Text(
                     text = stringResource(placeholder),
-                    color = placeholderColor
+                    color = placeholderColor,
                 )
             },
             leadingIcon = leadingIcon,
@@ -104,20 +102,22 @@ fun AppTextField(
                 }
             },
             singleLine = true,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = borderColor,
-                unfocusedBorderColor = borderColor,
-                errorBorderColor = colorScheme.error,
-                cursorColor = textColor,
-                focusedContainerColor = containerColor,
-                unfocusedContainerColor = containerColor,
-                errorContainerColor = containerColor,
-                focusedTextColor = textColor,
-                unfocusedTextColor = textColor,
-                errorTextColor = textColor
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
+            colors =
+                OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = borderColor,
+                    unfocusedBorderColor = borderColor,
+                    errorBorderColor = colorScheme.error,
+                    cursorColor = textColor,
+                    focusedContainerColor = containerColor,
+                    unfocusedContainerColor = containerColor,
+                    errorContainerColor = containerColor,
+                    focusedTextColor = textColor,
+                    unfocusedTextColor = textColor,
+                    errorTextColor = textColor,
+                ),
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
         )
 
         if (supportingText != null) {
@@ -125,14 +125,14 @@ fun AppTextField(
                 text = stringResource(supportingText),
                 color = supportingTextColor,
                 style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp, start = 16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp, start = 16.dp),
             )
         }
     }
 }
-
 
 @Preview()
 @Composable
@@ -143,8 +143,9 @@ fun AppTextFieldPreview() {
     DLearnTheme {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .padding(16.dp),
         ) {
             AppTextField(
                 value = email,
@@ -153,7 +154,7 @@ fun AppTextFieldPreview() {
                 placeholder = Res.string.title_email,
                 isError = email.contains("cm"),
                 type = TextFieldType.EMAIL,
-                supportingText = Res.string.email_message_validation
+                supportingText = Res.string.email_message_validation,
             )
 
             AppTextField(
@@ -162,7 +163,7 @@ fun AppTextFieldPreview() {
                 placeholder = Res.string.title_password,
                 isError = password.length < 6,
                 type = TextFieldType.PASSWORD,
-                supportingText = Res.string.password_message_validation
+                supportingText = Res.string.password_message_validation,
             )
         }
     }

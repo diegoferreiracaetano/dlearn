@@ -11,25 +11,25 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 class LoginUseCase(
     private val repository: UserRepository,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
 ) : UseCase<Pair<String, String>, Flow<String>> {
-
-    companion object{
+    companion object {
         private const val USER = "user"
         private const val ERROR_USER = "Usuário ou senha inválidos."
     }
 
-    override fun invoke(params: Pair<String, String>): Flow<String> = flow {
-        val user = repository.findByUser(params.first, params.second).single()
+    override fun invoke(params: Pair<String, String>): Flow<String> =
+        flow {
+            val user = repository.findByUser(params.first, params.second).single()
 
-        if (user != null) {
-            val token = createFakeJwt(mapOf(USER to user.toJson()))
-            sessionManager.login(user, token)
-            emit(token)
-        } else {
-            throw IllegalArgumentException(ERROR_USER)
+            if (user != null) {
+                val token = createFakeJwt(mapOf(USER to user.toJson()))
+                sessionManager.login(user, token)
+                emit(token)
+            } else {
+                throw IllegalArgumentException(ERROR_USER)
+            }
         }
-    }
 
     @OptIn(ExperimentalEncodingApi::class)
     private fun createFakeJwt(payload: Map<String, Any>): String {

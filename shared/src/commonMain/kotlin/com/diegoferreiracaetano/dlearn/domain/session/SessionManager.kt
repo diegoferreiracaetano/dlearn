@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class SessionManager(private val storage: SessionStorage) {
+class SessionManager(
+    private val storage: SessionStorage,
+) {
     private val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
 
@@ -16,7 +18,10 @@ class SessionManager(private val storage: SessionStorage) {
         _isLoggedIn.value = storage.hasSession()
     }
 
-    suspend fun login(user: User, token: String) {
+    suspend fun login(
+        user: User,
+        token: String,
+    ) {
         storage.saveUser(user.toJson())
         storage.saveToken(token)
         _isLoggedIn.value = true
@@ -27,7 +32,7 @@ class SessionManager(private val storage: SessionStorage) {
         _isLoggedIn.value = false
     }
 
-    fun user(): User?  = storage.getUser()?.fromJson()
+    fun user(): User? = storage.getUser()?.fromJson()
 
     fun token(): String? = storage.getToken()
 }

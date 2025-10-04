@@ -7,15 +7,14 @@ import kotlinx.coroutines.flow.single
 
 class SendCodeUseCase(
     private val repository: UserRepository,
-
 ) : UseCase<String, Flow<String>> {
+    override fun invoke(params: String): Flow<String> =
+        flow {
+            val user = repository.findByEmail(params).single()
+            if (user != null) {
+                repository.sendCode(email = user.email)
+            }
 
-    override fun invoke(params: String): Flow<String> = flow {
-        val user = repository.findByEmail(params).single()
-        if (user != null) {
-            repository.sendCode(email = user.email)
+            emit(params)
         }
-
-        emit(params)
-    }
 }

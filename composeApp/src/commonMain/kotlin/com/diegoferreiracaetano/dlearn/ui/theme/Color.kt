@@ -28,12 +28,12 @@ val onErrorDark = Color(0xFFFFFFFF)
 val errorContainerDark = Color(0xFF1F1D2B)
 val onErrorContainerDark = Color(0xFFFFFFFF)
 
-val outlineDark = Color(0xFF969674)         // Dark Grey
-val outlineVariantDark = Color(0xFF92929D)  // Grey
+val outlineDark = Color(0xFF969674) // Dark Grey
+val outlineVariantDark = Color(0xFF92929D) // Grey
 val scrimDark = Color(0xFF000000)
-val inverseSurfaceDark = Color(0xFFEAEAEA)  // Line Dark
+val inverseSurfaceDark = Color(0xFFEAEAEA) // Line Dark
 val inverseOnSurfaceDark = Color(0xFF1F1D2B)
-val inversePrimaryDark = Color(0xFF1850BD)  // Blue Accent
+val inversePrimaryDark = Color(0xFF1850BD) // Blue Accent
 
 val surfaceDimDark = Color(0xFF1F1D2B)
 val surfaceBrightDark = Color(0xFF252836)

@@ -7,14 +7,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class UserRepositoryRemote(
-    private val dataSource: UserNetworkDataSource
-): UserRepository {
-
+    private val dataSource: UserNetworkDataSource,
+) : UserRepository {
     private var code: String? = null
 
-    override fun users() = flow {
-        emit(dataSource.loadUser().toDomainList())
-    }
+    override fun users() =
+        flow {
+            emit(dataSource.loadUser().toDomainList())
+        }
 
     override suspend fun save(user: User) {
         dataSource.saveUser(user.toExternal())
@@ -22,20 +22,22 @@ class UserRepositoryRemote(
 
     override fun findByUser(
         email: String,
-        password: String
+        password: String,
     ) = flow {
-
-        val user = dataSource.findByUser(
-            email,
-            password
-        )?.toDomain()
+        val user =
+            dataSource
+                .findByUser(
+                    email,
+                    password,
+                )?.toDomain()
 
         emit(user)
     }
 
-    override fun findByEmail(email: String): Flow<User?> =  flow {
-        emit(dataSource.findByEmail(email)?.toDomain())
-    }
+    override fun findByEmail(email: String): Flow<User?> =
+        flow {
+            emit(dataSource.findByEmail(email)?.toDomain())
+        }
 
     override suspend fun sendCode(email: String) {
         delay(2000)

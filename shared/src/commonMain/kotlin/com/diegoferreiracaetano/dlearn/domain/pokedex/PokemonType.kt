@@ -18,5 +18,5 @@ enum class PokemonType {
     DRAGON,
     DARK,
     STEEL,
-    FAIRY
+    FAIRY,
 }

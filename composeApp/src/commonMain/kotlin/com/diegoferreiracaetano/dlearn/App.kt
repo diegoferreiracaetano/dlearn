@@ -16,7 +16,6 @@ import org.koin.compose.koinInject
 @Composable
 fun App() {
     DLearnTheme {
-
         val sessionManager: SessionManager = koinInject()
         LaunchedEffect(Unit) {
             sessionManager.initialize()

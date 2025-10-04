@@ -33,7 +33,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 enum class ButtonType {
     PRIMARY,
     SECONDARY,
-    TERTIARY
+    TERTIARY,
 }
 
 @Composable
@@ -43,9 +43,8 @@ fun AppButton(
     type: ButtonType = ButtonType.PRIMARY,
     image: DrawableResource? = null,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
-
     when (type) {
         ButtonType.PRIMARY -> AppButonPrimary(text, onClick, image, modifier, enabled)
         ButtonType.SECONDARY -> AppButonSecondary(text, onClick, image, modifier, enabled)
@@ -59,19 +58,21 @@ fun AppButonPrimary(
     onClick: () -> Unit,
     image: DrawableResource? = null,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
     Button(
         onClick = onClick,
         shape = Shapes.extraLarge,
         enabled = enabled,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
-        ),
-        modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp)
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(56.dp),
     ) {
         AppButtonContent(text, image)
     }
@@ -83,21 +84,22 @@ fun AppButonSecondary(
     onClick: () -> Unit,
     image: DrawableResource? = null,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
     OutlinedButton(
         onClick = onClick,
         shape = Shapes.extraLarge,
         enabled = enabled,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-        colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.primary
-        ),
-        modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp)
-
+        colors =
+            ButtonDefaults.outlinedButtonColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.primary,
+            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(56.dp),
     ) {
         AppButtonContent(text, image)
     }
@@ -109,21 +111,22 @@ fun AppButonTertiary(
     onClick: () -> Unit,
     image: DrawableResource? = null,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
     OutlinedButton(
         onClick = onClick,
         shape = Shapes.extraLarge,
         enabled = enabled,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.surface),
-        colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = MaterialTheme.colorScheme.onSurface,
-            contentColor = MaterialTheme.colorScheme.surface
-        ),
-        modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp)
-
+        colors =
+            ButtonDefaults.outlinedButtonColors(
+                containerColor = MaterialTheme.colorScheme.onSurface,
+                contentColor = MaterialTheme.colorScheme.surface,
+            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(56.dp),
     ) {
         AppButtonContent(text, image)
     }
@@ -135,14 +138,13 @@ fun AppButtonContent(
     image: DrawableResource? = null,
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-
         if (image != null) {
             Image(
                 painterResource(image),
                 contentDescription = text,
-                modifier = Modifier.size(28.dp)
+                modifier = Modifier.size(28.dp),
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -154,7 +156,6 @@ fun AppButtonContent(
         )
     }
 }
-
 
 @Composable
 fun ElementButton(
@@ -170,18 +171,21 @@ fun ElementButton(
     Button(
         onClick = onClick,
         shape = shape,
-        elevation = ButtonDefaults.buttonElevation(
-            defaultElevation = 4.dp,
-            pressedElevation = 8.dp,
-            disabledElevation = 0.dp
-        ),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = background,
-            contentColor = textColor,
-        ),
-        modifier = modifier
-            .fillMaxWidth()
-            .height(height)
+        elevation =
+            ButtonDefaults.buttonElevation(
+                defaultElevation = 4.dp,
+                pressedElevation = 8.dp,
+                disabledElevation = 0.dp,
+            ),
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = background,
+                contentColor = textColor,
+            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(height),
     ) {
         Text(
             text = text,
@@ -195,42 +199,41 @@ fun ElementButton(
 fun AppButtonPrimaryPreview() {
     DLearnTheme {
         Column(
-            modifier = Modifier
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier =
+                Modifier
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AppButton(
                 text = "Primary",
-                onClick = {}
+                onClick = {},
             )
 
             AppButton(
                 text = "Primary disable",
                 onClick = {},
-                enabled = false
+                enabled = false,
             )
 
             AppButton(
                 text = "Secondary",
                 onClick = {},
-                type = ButtonType.SECONDARY
+                type = ButtonType.SECONDARY,
             )
 
             AppButton(
                 text = "Secondary disable",
                 onClick = {},
                 enabled = false,
-                type = ButtonType.SECONDARY
+                type = ButtonType.SECONDARY,
             )
 
             AppButton(
                 text = "Tertiary",
                 onClick = {},
                 type = ButtonType.TERTIARY,
-                image = Res.drawable.google
+                image = Res.drawable.google,
             )
         }
     }
 }
-
-

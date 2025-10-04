@@ -11,7 +11,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Home
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Onboarding
 import com.diegoferreiracaetano.dlearn.ui.views.home.HomeScreen
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.koinInject
@@ -21,18 +20,17 @@ fun AppNavGraph(
     sessionManager: SessionManager = koinInject(),
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ) {
-
     val isLoggedIn by sessionManager.isLoggedIn.collectAsStateWithLifecycle()
-    //val startDestination = if (isLoggedIn) Home.route else Onboarding.route
+    // val startDestination = if (isLoggedIn) Home.route else Onboarding.route
 
     val startDestination = Home.route
 
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        modifier = modifier
+        modifier = modifier,
     ) {
         composable(Home.route) {
             HomeScreen(
@@ -42,7 +40,7 @@ fun AppNavGraph(
                 onItemClick = {
                     //   navController.navigate(PokemonDetail.routeWithId(it))
                 },
-                modifier = modifier
+                modifier = modifier,
             )
         }
     }

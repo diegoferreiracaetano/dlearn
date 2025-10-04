@@ -32,14 +32,14 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.ui.theme.DLearnTheme
-import kotlinx.coroutines.delay
-import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import dlearn.composeapp.generated.resources.Res
 import dlearn.composeapp.generated.resources.otp_error_default
 import dlearn.composeapp.generated.resources.otp_resend_in
 import dlearn.composeapp.generated.resources.otp_resend_now
 import dlearn.composeapp.generated.resources.otp_resend_prompt
+import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun AppOtpVerification(
@@ -49,7 +49,7 @@ fun AppOtpVerification(
     isError: Boolean = false,
     errorText: String? = null,
     onOtpTextChange: (text: String, isComplete: Boolean) -> Unit,
-    onResendClick: () -> Unit
+    onResendClick: () -> Unit,
 ) {
     var countdown by remember { mutableStateOf(59) }
     var isTimerRunning by remember { mutableStateOf(true) }
@@ -71,7 +71,7 @@ fun AppOtpVerification(
 
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         BasicTextField(
             value = TextFieldValue(otpText, selection = TextRange(otpText.length)),
@@ -80,9 +80,10 @@ fun AppOtpVerification(
                     onOtpTextChange(it.text, it.text.length == otpCount)
                 }
             },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.NumberPassword
-            ),
+            keyboardOptions =
+                KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.NumberPassword,
+                ),
             visualTransformation = VisualTransformation.None,
             decorationBox = {
                 Row(horizontalArrangement = Arrangement.Center) {
@@ -93,7 +94,7 @@ fun AppOtpVerification(
                         }
                     }
                 }
-            }
+            },
         )
 
         if (isError && errorText != null) {
@@ -102,43 +103,44 @@ fun AppOtpVerification(
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
             )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = stringResource(Res.string.otp_resend_prompt),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             if (isTimerRunning) {
-
                 val formattedCountDown = countdown.toString().padStart(2, '0')
 
                 Text(
                     text = stringResource(Res.string.otp_resend_in, formattedCountDown),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             } else {
                 Text(
                     text = stringResource(Res.string.otp_resend_now),
-                    modifier = Modifier.clickable {
-                        onResendClick()
-                        restartTimer()
-                    },
+                    modifier =
+                        Modifier.clickable {
+                            onResendClick()
+                            restartTimer()
+                        },
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
         }
@@ -149,32 +151,34 @@ fun AppOtpVerification(
 private fun CharView(
     index: Int,
     text: String,
-    isError: Boolean
+    isError: Boolean,
 ) {
     val isFocused = text.length == index
     val char = if (index < text.length) text[index].toString() else ""
     val shape = RoundedCornerShape(8.dp)
     val colorScheme = MaterialTheme.colorScheme
 
-    val borderColor = when {
-        isFocused -> colorScheme.primary
-        isError -> colorScheme.error
-        else -> colorScheme.outline
-    }
+    val borderColor =
+        when {
+            isFocused -> colorScheme.primary
+            isError -> colorScheme.error
+            else -> colorScheme.outline
+        }
 
     Box(
-        modifier = Modifier
-            .width(50.dp)
-            .height(56.dp)
-            .border(1.dp, borderColor, shape)
-            .padding(4.dp),
-        contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .width(50.dp)
+                .height(56.dp)
+                .border(1.dp, borderColor, shape)
+                .padding(4.dp),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = char,
             style = MaterialTheme.typography.headlineSmall,
             color = colorScheme.onSurface,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }
@@ -198,7 +202,7 @@ fun AppOtpVerificationPreview() {
                 onResendClick = {
                     otpValue = ""
                     isError = false
-                }
+                },
             )
         }
     }

@@ -4,16 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.koin.compose.koinInject
 
-
 @Composable
 fun HomeScreen(
     onTabSelected: (String) -> Unit,
     onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = koinInject()
+    viewModel: HomeViewModel = koinInject(),
 ) {
-
-
 //    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 //
 //    PokemonListScreen(
@@ -22,18 +19,18 @@ fun HomeScreen(
 //        onItemClick = onItemClick,
 //        onChangeType = { search, type, order -> viewModel.list(search, type, order) },
 //        modifier,
-////    )
-//}
+// //    )
+// }
 
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun PokemonListScreen(
+// @OptIn(ExperimentalMaterial3Api::class)
+// @Composable
+// fun PokemonListScreen(
 //    list: List<Pokemon>?,
 //    onTabSelected: (String) -> Unit,
 //    onItemClick: (String) -> Unit,
 //    onChangeType: (String, String, OrderType) -> Unit,
 //    modifier: Modifier = Modifier,
-//) {
+// ) {
 //    AppContainer(
 //        modifier = modifier,
 //        bottomBar = AppBottomNavigation(
@@ -58,13 +55,13 @@ fun HomeScreen(
 //            }
 //        }
 //    }
-//}
+// }
 //
-//@Composable
-//fun FilterRow(
+// @Composable
+// fun FilterRow(
 //    onChangeType: (String, String, OrderType) -> Unit,
 //    modifier: Modifier = Modifier
-//) {
+// ) {
 //    var search by remember { mutableStateOf("") }
 //    var selectedType by remember { mutableStateOf("") }
 //    var selectedOrder by remember { mutableStateOf(ASC) }
@@ -98,12 +95,12 @@ fun HomeScreen(
 //            )
 //        }
 //    }
-//}
+// }
 //
 //
-//@Preview
-//@Composable
-//fun HomeScreenPreview() {
+// @Preview
+// @Composable
+// fun HomeScreenPreview() {
 //    val list = listOf(
 //        Pokemon("001", "Pikachu", listOf(PokemonType.ELECTRIC), "", false)
 //    )

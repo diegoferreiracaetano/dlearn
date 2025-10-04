@@ -1,0 +1,24 @@
+name: Verificação de Estilo com Ktlint
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  ktlint-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17' # Use a versão Java compatível com seu KMP
+          distribution: 'temurin'
+
+      - name: Rodar ktlintCheck
+        run: ./gradlew ktlintCheck

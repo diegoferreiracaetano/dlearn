@@ -10,6 +10,7 @@ fun initKoin() {
     }
 }
 
-val appModule = module {
-    factory { HomeViewModel() }
-}
+val appModule =
+    module {
+        factory { HomeViewModel() }
+    }

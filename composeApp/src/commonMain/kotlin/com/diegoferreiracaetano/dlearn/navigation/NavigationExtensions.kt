@@ -10,26 +10,28 @@ import androidx.savedstate.read
 
 inline fun <reified T : Enum<T>> NavBackStackEntry.readEnumOrDefault(
     key: String,
-    default: T
-): T = runCatching {
-    val value = this.arguments?.read { getString(key) }.orEmpty()
-    enumValueOf<T>(value)
-}.getOrDefault(default)
+    default: T,
+): T =
+    runCatching {
+        val value = this.arguments?.read { getString(key) }.orEmpty()
+        enumValueOf<T>(value)
+    }.getOrDefault(default)
 
 inline fun <reified T> NavBackStackEntry.readOrDefault(
     key: String,
-    default: T
+    default: T,
 ): T {
-    val value = this.arguments?.read {
-        when (T::class) {
-            String::class -> getString(key) as? T
-            Int::class -> getInt(key) as? T
-            Boolean::class -> getBoolean(key) as? T
-            Long::class -> getLong(key) as? T
-            Float::class -> getFloat(key) as? T
-            else -> null
+    val value =
+        this.arguments?.read {
+            when (T::class) {
+                String::class -> getString(key) as? T
+                Int::class -> getInt(key) as? T
+                Boolean::class -> getBoolean(key) as? T
+                Long::class -> getLong(key) as? T
+                Float::class -> getFloat(key) as? T
+                else -> null
+            }
         }
-    }
     return value ?: default
 }
 

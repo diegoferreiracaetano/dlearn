@@ -6,24 +6,25 @@ class UserRemote(
     val id: Int,
     val name: String,
     val email: String,
-    val password: String
+    val password: String,
 )
-
 
 fun List<UserRemote>.toDomainList() = map(UserRemote::toDomain)
 
-fun UserRemote.toDomain() = User(
-    id = id,
-    name = name,
-    email = email,
-    password = password
-)
+fun UserRemote.toDomain() =
+    User(
+        id = id,
+        name = name,
+        email = email,
+        password = password,
+    )
 
 fun List<User>.toExternal() = map(User::toExternal)
 
-fun User.toExternal() = UserRemote(
-    id = id,
-    name = name,
-    email = email,
-    password = password
-)
+fun User.toExternal() =
+    UserRemote(
+        id = id,
+        name = name,
+        email = email,
+        password = password,
+    )

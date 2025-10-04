@@ -1,7 +1,10 @@
 package com.diegoferreiracaetano.dlearn.navigation
 
-sealed class ScreenRouter(val route: String) {
+sealed class ScreenRouter(
+    val route: String,
+) {
     object Home : ScreenRouter("home")
+
     object Onboarding : ScreenRouter("onboarding")
 //    object OnboardingFinish : ScreenRouter("onboarding_finish")
 //    object Profile : ScreenRouter("profile")

@@ -1,13 +1,11 @@
 package com.diegoferreiracaetano.dlearn.ui.views.home
 
 import androidx.lifecycle.ViewModel
-import com.diegoferreiracaetano.dlearn.domain.pokedex.PokemonRepository
 
 class HomeViewModel(
-    //private val repository: PokemonRepository
-): ViewModel() {
-
-//    object FilterConstants {
+    // private val repository: PokemonRepository
+) : ViewModel() {
+    //    object FilterConstants {
 //        const val ALL_TYPES = ""
 //        const val DEFAULT_SEARCH = ""
 //    }

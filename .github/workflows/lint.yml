@@ -17,8 +17,8 @@ jobs:
       - name: Configurar Java
         uses: actions/setup-java@v4
         with:
-          java-version: '17' # Use a versão Java compatível com seu KMP
+          java-version: '17'
           distribution: 'temurin'
 
-      - name: Rodar ktlintCheck
-        run: ./gradlew ktlintCheck
+      - name: Run Detekt
+        run: ./gradlew detekt

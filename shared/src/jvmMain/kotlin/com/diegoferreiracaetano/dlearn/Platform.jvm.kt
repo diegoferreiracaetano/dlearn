@@ -5,3 +5,5 @@ class JVMPlatform : Platform {
 }
 
 actual fun getPlatform(): Platform = JVMPlatform()
+
+actual val currentPlatform: PlatformType = PlatformType.Other

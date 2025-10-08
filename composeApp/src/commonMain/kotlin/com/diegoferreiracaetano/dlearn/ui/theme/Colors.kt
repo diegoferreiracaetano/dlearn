@@ -1,8 +1,9 @@
 package com.diegoferreiracaetano.dlearn.ui.theme
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
-val primaryDark = Color(0xFF1850BD)
+val primaryDark = Color(0xFF12CDD9)
 val onPrimaryDark = Color(0xFFFFFFFF)
 val primaryContainerDark = Color(0xFF252836)
 val onPrimaryContainerDark = Color(0xFFFFFFFF)
@@ -28,12 +29,12 @@ val onErrorDark = Color(0xFFFFFFFF)
 val errorContainerDark = Color(0xFF1F1D2B)
 val onErrorContainerDark = Color(0xFFFFFFFF)
 
-val outlineDark = Color(0xFF969674) // Dark Grey
-val outlineVariantDark = Color(0xFF92929D) // Grey
+val outlineDark = Color(0xFF92929D) // Dark Grey
+val outlineVariantDark = Color(0xFFF1F1F5) // Grey
 val scrimDark = Color(0xFF000000)
 val inverseSurfaceDark = Color(0xFFEAEAEA) // Line Dark
 val inverseOnSurfaceDark = Color(0xFF1F1D2B)
-val inversePrimaryDark = Color(0xFF1850BD) // Blue Accent
+val inversePrimaryDark = Color(0xFF12CDD9) // Blue Accent
 
 val surfaceDimDark = Color(0xFF1F1D2B)
 val surfaceBrightDark = Color(0xFF252836)
@@ -44,16 +45,16 @@ val surfaceContainerHighDark = Color(0xFF2D2D2D)
 val surfaceContainerHighestDark = Color(0xFF323232)
 
 val successDark = Color(0xFF22B07D)
-val onSuccessDark = Color(0xFF1F1D2B)
-val successContainerDark = Color(0xFF1F1D2B)
+val onSuccessDark = Color(0xFFFFFFFF)
+val successContainerDark = Color(0xFFFFFFFF)
 val onSuccessContainerDark = Color(0xFF22B07D)
 
 val warningDark = Color(0xFFFF8700)
-val onWarningDark = Color(0xFF1F1D2B)
-val warningContainerDark = Color(0xFF1F1D2B)
+val onWarningDark = Color(0xFFFFFFFF)
+val warningContainerDark = Color(0xFFFFFFFF)
 val onWarningContainerDark = Color(0xFFFF8700)
 
-val primaryLight = Color(0xFF01850BD)
+val primaryLight = Color(0xFF012CDD9)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFFFFFFF)
 val onPrimaryContainerLight = Color(0xFF001F23)
@@ -90,3 +91,17 @@ val surfaceContainerLowLight = Color(0xFFF1F4FA)
 val surfaceContainerLight = Color(0xFFEBEFF4)
 val surfaceContainerHighLight = Color(0xFFE6E9EF)
 val surfaceContainerHighestLight = Color(0xFFE0E4E9)
+
+//@Immutable
+data class ColorFamily(
+    val color: Color,
+    val onColor: Color,
+    val colorContainer: Color,
+    val onColorContainer: Color
+)
+
+@Immutable
+data class ExtendedColorScheme(
+    val success: ColorFamily,
+    val warning: ColorFamily,
+)

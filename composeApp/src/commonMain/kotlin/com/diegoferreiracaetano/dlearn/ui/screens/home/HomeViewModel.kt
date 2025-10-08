@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn.ui.views.home
+package com.diegoferreiracaetano.dlearn.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 

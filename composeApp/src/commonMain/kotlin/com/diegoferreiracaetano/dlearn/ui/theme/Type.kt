@@ -145,7 +145,7 @@ fun DLearnTypography() =
                 fontFamily = MontserratFontFamily(),
                 fontWeight = FontWeight.Normal,
                 fontSize = 11.sp,
-                lineHeight = 16.sp,
+                lineHeight = 14.sp,
                 letterSpacing = 0.5.sp,
             ),
     )

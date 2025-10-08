@@ -28,6 +28,13 @@ kotlin {
     }
     
     sourceSets {
+        val iosMain by creating {
+            dependsOn(commonMain.get())
+        }
+
+        iosArm64Main.get().dependsOn(iosMain)
+        iosSimulatorArm64Main.get().dependsOn(iosMain)
+
         commonMain.dependencies {
             api("io.insert-koin:koin-core:4.1.0")
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")

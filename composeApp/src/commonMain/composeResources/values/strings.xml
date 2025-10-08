@@ -1,6 +1,9 @@
 
 <resources>
 
+    <string name="app_name">DLearn</string>
+    <string name="app_subtitle">Learning Platform</string>"
+
     <string name="title_email">E-mail</string>
     <string name="title_password">Senha</string>
     <string name="title_name">Nome</string>
@@ -13,7 +16,11 @@
     <string name="otp_resend_now">Reenvie agora</string>
     <string name="otp_resend_in">Reenvie em %1$s</string>
 
-
     <string name="email_message_validation">Informe um e-mail válido.</string>
     <string name="password_message_validation">Use uma senha válida.</string>
+
+    <string name="login_screen_title">Bem vindo de volta!</string>
+
+    <string name="action_back">Voltar</string>
+    <string name="action_favorite">Favoritar</string>
 </resources>

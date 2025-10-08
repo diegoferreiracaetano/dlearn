@@ -15,6 +15,8 @@ subprojects {
         buildUponDefaultConfig = true
         allRules = false
 
+        source.setFrom("src")
+
         reports {
             html.required.set(true)
             xml.required.set(true)

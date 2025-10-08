@@ -7,6 +7,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 
 private val lightScheme =
@@ -87,6 +89,27 @@ private val darkScheme =
         surfaceContainerHighest = surfaceContainerHighestDark,
     )
 
+
+
+val LocalExtendedColorScheme = staticCompositionLocalOf<ExtendedColorScheme> {
+    error("No ExtendedColorScheme provided")
+}
+
+val extendedColors = ExtendedColorScheme(
+    success = ColorFamily(
+        successDark,
+        onSuccessDark,
+        successContainerDark,
+        onSuccessContainerDark,
+    ),
+    warning = ColorFamily(
+        warningDark,
+        onWarningDark,
+        warningContainerDark,
+        onWarningContainerDark,
+    ),
+)
+
 @Composable
 fun DLearnTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -94,15 +117,19 @@ fun DLearnTheme(
 ) {
     val colorScheme = if (darkTheme) darkScheme else lightScheme
 
-    MaterialTheme(
-        colorScheme = darkScheme,
-        typography = DLearnTypography(),
-        shapes = Shapes,
+    CompositionLocalProvider(
+        LocalExtendedColorScheme provides extendedColors
     ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
+        MaterialTheme(
+            colorScheme = darkScheme,
+            typography = DLearnTypography(),
+            shapes = Shapes,
         ) {
-            content()
+            Surface(
+                // modifier = Modifier.fillMaxSize(),
+            ) {
+                content()
+            }
         }
     }
 }

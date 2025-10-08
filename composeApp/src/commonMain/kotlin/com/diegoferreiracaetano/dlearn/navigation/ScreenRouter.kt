@@ -7,11 +7,11 @@ sealed class ScreenRouter(
 
     object Onboarding : ScreenRouter("onboarding")
 //    object OnboardingFinish : ScreenRouter("onboarding_finish")
-//    object Profile : ScreenRouter("profile")
+     object Profile : ScreenRouter("profile")
 //    object EditName : ScreenRouter("edit_name")
 //    object EditPassword : ScreenRouter("edit_password")
-//    object Regions : ScreenRouter("regions")
-//    object Favorites : ScreenRouter("favorites")
+     object Regions : ScreenRouter("regions")
+     object Favorites : ScreenRouter("favorites")
 //
 //    object PreLogin: ScreenRouter("pre_login/{type}") {
 //        const val TYPE_ARG = "type"

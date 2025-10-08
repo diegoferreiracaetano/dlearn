@@ -5,3 +5,5 @@ class WasmPlatform : Platform {
 }
 
 actual fun getPlatform(): Platform = WasmPlatform()
+
+actual val currentPlatform: PlatformType = PlatformType.Other

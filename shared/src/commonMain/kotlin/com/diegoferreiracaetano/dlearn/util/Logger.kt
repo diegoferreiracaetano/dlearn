@@ -6,5 +6,5 @@ interface Logger {
         message: String,
     )
 }
-//
-// expect fun getLogger(): Logger
+
+expect fun getLogger(): Logger

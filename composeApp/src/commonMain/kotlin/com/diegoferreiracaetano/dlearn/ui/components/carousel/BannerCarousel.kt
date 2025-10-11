@@ -42,8 +42,9 @@ fun BannerCarousel(
         pageCount = { banners.size }
     )
 
-    Column(
-        modifier = Modifier.fillMaxWidth()
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
     ) {
 
         Text(
@@ -66,7 +67,7 @@ fun BannerCarousel(
         PageIndicator(
             banners.size,
             pagerState.currentPage,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier.align(BottomCenter)
                 .padding(bottom = 8.dp)
         )
 

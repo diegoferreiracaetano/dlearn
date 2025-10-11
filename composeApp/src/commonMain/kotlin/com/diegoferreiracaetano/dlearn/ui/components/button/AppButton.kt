@@ -53,7 +53,7 @@ fun AppButton(
 }
 
 @Composable
-fun AppButonPrimary(
+private fun AppButonPrimary(
     text: String,
     onClick: () -> Unit,
     image: DrawableResource? = null,
@@ -68,6 +68,8 @@ fun AppButonPrimary(
             ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
+                disabledContentColor = Color.LightGray,
+                disabledContainerColor = Color.Gray,
             ),
         modifier =
             modifier
@@ -79,7 +81,7 @@ fun AppButonPrimary(
 }
 
 @Composable
-fun AppButonSecondary(
+private fun AppButonSecondary(
     text: String,
     onClick: () -> Unit,
     image: DrawableResource? = null,
@@ -90,11 +92,13 @@ fun AppButonSecondary(
         onClick = onClick,
         shape = Shapes.extraLarge,
         enabled = enabled,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
         colors =
             ButtonDefaults.outlinedButtonColors(
                 containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                disabledContentColor = Color.LightGray,
+                disabledContainerColor = Color.Gray,
             ),
         modifier =
             modifier
@@ -106,7 +110,7 @@ fun AppButonSecondary(
 }
 
 @Composable
-fun AppButonTertiary(
+private fun AppButonTertiary(
     text: String,
     onClick: () -> Unit,
     image: DrawableResource? = null,
@@ -122,6 +126,8 @@ fun AppButonTertiary(
             ButtonDefaults.outlinedButtonColors(
                 containerColor = MaterialTheme.colorScheme.onSurface,
                 contentColor = MaterialTheme.colorScheme.surface,
+                disabledContentColor = Color.LightGray,
+                disabledContainerColor = Color.Gray,
             ),
         modifier =
             modifier
@@ -150,43 +156,6 @@ fun AppButtonContent(
             Spacer(modifier = Modifier.width(16.dp))
         }
 
-        Text(
-            text = text,
-            style = typography.labelLarge,
-        )
-    }
-}
-
-@Composable
-fun ElementButton(
-    text: String,
-    background: Color,
-    textColor: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val shape = Shapes.large
-    val height = 56.dp
-
-    Button(
-        onClick = onClick,
-        shape = shape,
-        elevation =
-            ButtonDefaults.buttonElevation(
-                defaultElevation = 4.dp,
-                pressedElevation = 8.dp,
-                disabledElevation = 0.dp,
-            ),
-        colors =
-            ButtonDefaults.buttonColors(
-                containerColor = background,
-                contentColor = textColor,
-            ),
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .height(height),
-    ) {
         Text(
             text = text,
             style = typography.labelLarge,

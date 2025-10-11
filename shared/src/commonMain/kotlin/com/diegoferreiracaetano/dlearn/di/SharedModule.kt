@@ -5,27 +5,59 @@ import com.diegoferreiracaetano.dlearn.data.session.SettingsSessionStorage
 import com.diegoferreiracaetano.dlearn.data.user.UserRepository
 import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserNetworkDataSource
 import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserRepositoryRemote
+import com.diegoferreiracaetano.dlearn.data.video.source.remote.VideoNetworkDataSource
+import com.diegoferreiracaetano.dlearn.data.video.source.remote.VideoRepositoryRemote
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.domain.user.CreateAccountUseCase
 import com.diegoferreiracaetano.dlearn.domain.user.LoginUseCase
 import com.diegoferreiracaetano.dlearn.domain.user.SendCodeUseCase
 import com.diegoferreiracaetano.dlearn.domain.user.VerifyCodeUseCase
+import com.diegoferreiracaetano.dlearn.domain.video.VideoRepository
+import com.diegoferreiracaetano.dlearn.shared.BuildConfig
 import com.russhwolf.settings.Settings
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.http.URLProtocol
+import io.ktor.http.appendPathSegments
+import io.ktor.http.path
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
-val sharedModule =
-    module {
+val sharedModule = module {
 
-        single { UserNetworkDataSource() }
-        single<UserRepository> { UserRepositoryRemote(get()) }
-        single { CreateAccountUseCase(get()) }
-        single { LoginUseCase(get(), get()) }
-        single { SendCodeUseCase(get()) }
-        single { VerifyCodeUseCase(get()) }
-        single { Settings() }
-        single<SessionStorage> { SettingsSessionStorage(get()) }
-        single { SessionManager(get()) }
 
-//    single { PokemonLocalDataSource() }
-//    single<PokemonRepository> { PokemonRepositoryRemote(get()) }
+    single {
+        HttpClient {
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        ignoreUnknownKeys = true
+                        prettyPrint = true
+                        isLenient = true
+                    }
+                )
+            }
+            defaultRequest {
+                url {
+                    protocol = URLProtocol.HTTPS
+                    host = BuildConfig.THE_MOVIE_DB_BASE_URL
+                }
+            }
+        }
     }
+
+    single { UserNetworkDataSource() }
+    single<UserRepository> { UserRepositoryRemote(get()) }
+    single { CreateAccountUseCase(get()) }
+    single { LoginUseCase(get(), get()) }
+    single { SendCodeUseCase(get()) }
+    single { VerifyCodeUseCase(get()) }
+    single { Settings() }
+    single<SessionStorage> { SettingsSessionStorage(get()) }
+    single { SessionManager(get()) }
+
+    single { VideoNetworkDataSource(get(), BuildConfig.THE_MOVIE_DB_API_KEY) }
+    single<VideoRepository> { VideoRepositoryRemote(get()) }
+}

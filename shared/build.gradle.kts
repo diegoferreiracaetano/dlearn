@@ -4,6 +4,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.buildconfig)
 }
 
 kotlin {
@@ -37,12 +39,28 @@ kotlin {
 
         commonMain.dependencies {
             api("io.insert-koin:koin-core:4.1.0")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-            implementation("com.russhwolf:multiplatform-settings-no-arg:1.3.0")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.multiplatform.settings.no.arg)
+            implementation(libs.kotlinx.serialization.json)
+            
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+        }
+
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
+
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.client.wasm)
         }
     }
 }
@@ -57,4 +75,10 @@ android {
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
+}
+
+buildConfig {
+    packageName("com.diegoferreiracaetano.dlearn.shared")
+    buildConfigField("String", "THE_MOVIE_DB_BASE_URL", providers.gradleProperty("THE_MOVIE_DB_BASE_URL").get())
+    buildConfigField("String", "THE_MOVIE_DB_API_KEY", providers.gradleProperty("THE_MOVIE_DB_API_KEY").get())
 }

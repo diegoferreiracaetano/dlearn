@@ -1,8 +1,21 @@
 package com.diegoferreiracaetano.dlearn.ui.components.navigation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -12,6 +25,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.ui.components.alert.AppSnackbarHost
+import com.diegoferreiracaetano.dlearn.ui.components.chip.AppChip
+import com.diegoferreiracaetano.dlearn.ui.components.chip.AppChipGroup
 import com.diegoferreiracaetano.dlearn.ui.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.ui.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.util.UiState
@@ -25,6 +40,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 private fun AppScaffoldContent(
     modifier: Modifier = Modifier,
     topBar: AppTopBar? = null,
+    chipContent: @Composable (() -> Unit)? = null,
     bottomBar: AppBottomNavigation? = null,
     snackBarHostState: SnackbarHostState,
     scrollBehavior: TopAppBarScrollBehavior,
@@ -34,11 +50,14 @@ private fun AppScaffoldContent(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         snackbarHost = { AppSnackbarHost(hostState = snackBarHostState) },
         topBar = {
-            topBar?.let {
-                AppTopBarFactory(
-                    config = it,
-                    scrollBehavior = scrollBehavior
-                )
+            Column {
+                topBar?.let {
+                    AppTopBarFactory(
+                        config = it,
+                        scrollBehavior = scrollBehavior
+                    )
+                }
+                chipContent?.invoke()
             }
         },
         bottomBar = {
@@ -52,13 +71,11 @@ private fun AppScaffoldContent(
         }
     ) { innerPadding ->
         val baseModifier = modifier
-        //    .widthIn(min = 150.dp, max = 600.dp)
-            .fillMaxSize()
-         //   .background(MaterialTheme.colorScheme.surface)
+            .fillMaxWidth()
             .padding(innerPadding)
             .consumeWindowInsets(innerPadding)
             .systemBarsPadding()
-      //      .padding(16.dp)
+            .padding(start = 16.dp, end = 16.dp)
 
         Box(
             modifier = Modifier
@@ -76,6 +93,7 @@ private fun AppScaffoldContent(
 fun AppContainer(
     modifier: Modifier = Modifier,
     topBar: AppTopBar? = null,
+    chipContent: @Composable (() -> Unit)? = null,
     bottomBar: AppBottomNavigation? = null,
     snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState()),
@@ -84,6 +102,7 @@ fun AppContainer(
     AppScaffoldContent(
         modifier = modifier,
         topBar = topBar,
+        chipContent = chipContent,
         bottomBar = bottomBar,
         snackBarHostState = snackBarHostState,
         scrollBehavior = scrollBehavior,
@@ -97,6 +116,7 @@ fun <T> AppContainer(
     uiState: UiState<T>?,
     modifier: Modifier = Modifier,
     topBar: AppTopBar? = null,
+    chipContent: @Composable (() -> Unit)? = null,
     bottomBar: AppBottomNavigation? = null,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState()),
     snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
@@ -110,6 +130,7 @@ fun <T> AppContainer(
     AppScaffoldContent(
         modifier = modifier,
         topBar = topBar,
+        chipContent = chipContent,
         bottomBar = bottomBar,
         snackBarHostState = snackBarHostState,
         scrollBehavior = scrollBehavior
@@ -121,17 +142,27 @@ fun <T> AppContainer(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun AppTopBarPreview() {
-    DLearnTheme {
+    DLearnTheme(darkTheme = true) {
         AppContainer(
             topBar = AppTopBar(
                 title = "Create",
                 backgroundColor = MaterialTheme.colorScheme.background,
                 onBack = {}
-            )
+            ),
+            chipContent = {
+                AppChipGroup(
+                    items = listOf(
+                        AppChip(label = "Séries"),
+                        AppChip(label = "Filmes"),
+                        AppChip(label = "Categorias", hasDropDown = true, isFilter = false)
+                    ),
+                    onFilterChanged = {}
+                )
+            }
         ) { padding ->
             Column(
                 modifier = padding,

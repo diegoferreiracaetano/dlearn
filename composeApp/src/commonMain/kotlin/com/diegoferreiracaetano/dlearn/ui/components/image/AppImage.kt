@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.seiko.imageloader.rememberImagePainter
+import dlearn.composeapp.generated.resources.Res
+import dlearn.composeapp.generated.resources.banner
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
@@ -20,8 +22,10 @@ fun AppImage(
 
     val painter = if (imageResource != null && imageURL.isNullOrEmpty())
         painterResource(imageResource)
+    else if (!imageURL.isNullOrEmpty())
+        rememberImagePainter(imageURL)
     else
-        rememberImagePainter(imageURL!!)
+        painterResource(Res.drawable.banner)
 
     Image(
         painter = painter,

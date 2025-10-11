@@ -1,7 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.components.navigation
 
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -24,13 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.diegoferreiracaetano.dlearn.PlatformType
-import com.diegoferreiracaetano.dlearn.currentPlatform
 import com.diegoferreiracaetano.dlearn.isIOS
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter
 import com.diegoferreiracaetano.dlearn.ui.theme.DLearnTheme
-import com.diegoferreiracaetano.dlearn.util.getLogger
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 data class AppBottomNavigation(
@@ -56,7 +53,7 @@ fun AppBottomNavigationBar(
 ) {
 
         NavigationBar(
-            modifier = modifier.height(80.dp),
+            modifier = modifier.height(if (isIOS) 90.dp else 80.dp),
             windowInsets =
                 if (isIOS) WindowInsets(bottom =  28.dp) else NavigationBarDefaults.windowInsets
         ) {
@@ -78,20 +75,17 @@ fun AppBottomNavigationBar(
                         Icon(
                             imageVector = if (isSelected) tab.selectedIcon else tab.unselectedIcon,
                             contentDescription = tab.label,
-                            tint = if (isSelected)
-                                MaterialTheme.colorScheme.primary
-                            else
-                                MaterialTheme.colorScheme.onPrimary
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     },
                     label = {
                         Text(
                             text = tab.label,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = if (isSelected)
-                                MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            style = if (isSelected)
+                                MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.ExtraBold)
                             else
-                                MaterialTheme.colorScheme.onPrimary
+                                MaterialTheme.typography.labelSmall,
                         )
                     },
                     colors = customColors

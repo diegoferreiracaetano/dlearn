@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.ui.components.carousel
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -22,39 +23,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.diegoferreiracaetano.dlearn.domain.video.Video
+import com.diegoferreiracaetano.dlearn.domain.video.VideoCategory
 import com.diegoferreiracaetano.dlearn.ui.components.image.AppImage
 import com.diegoferreiracaetano.dlearn.ui.theme.DLearnTheme
 import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.banner
 import dlearn.composeapp.generated.resources.banner1
-import dlearn.composeapp.generated.resources.banner2
-import dlearn.composeapp.generated.resources.banner3
-import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-
-data class BannerItem(
-    val id: String,
-    val title: String,
-    val subtitle: String,
-    val imageUrl: String? = null,
-    val imageResource: DrawableResource? = null
-)
 
 @Composable
 fun BannerCarousel(
-    banners: List<BannerItem>,
-    onItemClick: (BannerItem) -> Unit
+    title: String,
+    banners: List<Video>,
+    onItemClick: (Video) -> Unit
 ) {
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { banners.size }
     )
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
+    Column(
+        modifier = Modifier.fillMaxWidth()
     ) {
+
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(
+                top = 16.dp,
+                bottom = 8.dp,
+            ),
+        )
+
         HorizontalPager(state = pagerState) { pageIndex ->
             val banner = banners[pageIndex]
             BannerCard(
@@ -66,9 +66,10 @@ fun BannerCarousel(
         PageIndicator(
             banners.size,
             pagerState.currentPage,
-            modifier = Modifier.align(BottomCenter)
+            modifier = Modifier.align(Alignment.CenterHorizontally)
                 .padding(bottom = 8.dp)
         )
+
     }
 }
 
@@ -76,7 +77,7 @@ private const val RATIO = 16f / 9f
 
 @Composable
 private fun BannerCard(
-    item: BannerItem,
+    item: Video,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -85,15 +86,14 @@ private fun BannerCard(
         modifier = modifier
             .aspectRatio(RATIO)
             .fillMaxSize()
-            .padding(horizontal = 8.dp)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
     ) {
+
         Box(modifier = Modifier.fillMaxSize()) {
 
             AppImage(
-                imageResource = item.imageResource,
                 imageURL = item.imageUrl,
                 contentDescription = item.imageUrl,
                 modifier = Modifier.fillMaxSize()
@@ -106,7 +106,7 @@ private fun BannerCard(
                         brush = Brush.verticalGradient(
                             colors = listOf(
                                 Color.Transparent,
-                                MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.8f)
+                                Color.Unspecified.copy(alpha = 0.8f)
                             ),
                             startY = 300f
                         )
@@ -120,10 +120,12 @@ private fun BannerCard(
             ) {
                 Text(
                     text = item.title,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.titleLarge
                 )
                 Text(
                     text = item.subtitle,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -136,11 +138,16 @@ private fun BannerCard(
 fun BannerCardPreview() {
     DLearnTheme {
         BannerCard(
-            item = BannerItem(
+            item = Video(
                 id = "1",
-                title = "Black Panther: Wakanda Forever",
-                subtitle = "On March 2, 2022",
-                imageResource = Res.drawable.banner1
+                title = "Introduction to Jetpack Compose",
+                subtitle = "Jetpack Compose",
+                description = "A comprehensive guide to Jetpack Compose for beginners.",
+                categories = listOf(VideoCategory.JETPACK_COMPOSE, VideoCategory.ANDROID),
+                imageUrl = "https://i3.ytimg.com/vi/n2t5_qA1Q-o/maxresdefault.jpg",
+                isFavorite = false,
+                rating = 4.5f,
+                url = "https://www.youtube.com/watch?v=n2t5_qA1Q-o"
             ),
             onClick = {}
         )
@@ -151,28 +158,44 @@ fun BannerCardPreview() {
 @Composable
 fun BannerCarouselPreview() {
     val dummyBanners = listOf(
-        BannerItem(
+        Video(
             id = "1",
-            title = "Black Panther: Wakanda Forever",
-            subtitle = "On March 2, 2022",
-            imageResource = Res.drawable.banner1
+            title = "Introduction to Jetpack Compose",
+            subtitle = "Jetpack Compose",
+            description = "A comprehensive guide to Jetpack Compose for beginners.",
+            categories = listOf(VideoCategory.JETPACK_COMPOSE, VideoCategory.ANDROID),
+            imageUrl = "https://i3.ytimg.com/vi/n2t5_qA1Q-o/maxresdefault.jpg",
+            isFavorite = false,
+            rating = 4.5f,
+            url = "https://www.youtube.com/watch?v=n2t5_qA1Q-o"
         ),
-        BannerItem(
-            "2",
-            "Dune: Part Two",
-            "Epic sci-fi adventure",
-            imageResource = Res.drawable.banner2
+        Video(
+            id = "2",
+            title = "State Management in Compose",
+            subtitle = "Jetpack Compose",
+            description = "Learn how to manage state effectively in your Compose applications.",
+            categories = listOf(VideoCategory.JETPACK_COMPOSE, VideoCategory.ANDROID),
+            imageUrl = "https://i3.ytimg.com/vi/N_9o_L4nN5E/maxresdefault.jpg",
+            isFavorite = true,
+            rating = 4.8f,
+            url = "https://www.youtube.com/watch?v=N_9o_L4nN5E"
         ),
-        BannerItem(
-            "3",
-            "Spider-Man: No Way Home",
-            "The multiverse shattered",
-            imageResource = Res.drawable.banner3
-        )
+        Video(
+            id = "3",
+            title = "Dagger Hilt for Dependency Injection",
+            subtitle = "Android",
+            description = "Master dependency injection in Android with Dagger Hilt.",
+            categories = listOf(VideoCategory.ANDROID, VideoCategory.ARCHITECTURE),
+            imageUrl = "https://i3.ytimg.com/vi/g-2fcfd4gVE/maxresdefault.jpg",
+            isFavorite = false,
+            rating = 4.2f,
+            url = "https://www.youtube.com/watch?v=g-2fcfd4gVE"
+        ),
     )
 
     DLearnTheme {
         BannerCarousel(
+            title = "Favoritos",
             banners = dummyBanners,
             onItemClick = { item -> println("Clicked ${item.title}") } // Ação de clique simulada
         )

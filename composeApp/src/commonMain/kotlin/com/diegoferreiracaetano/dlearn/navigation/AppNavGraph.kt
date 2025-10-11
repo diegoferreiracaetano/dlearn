@@ -33,16 +33,16 @@ fun AppNavGraph(
         modifier = modifier,
     ) {
         composable(Home.route) {
-            ComponentGallery()
-//            HomeScreen(
-//                onTabSelected = { route ->
-//                    navController.navigateToRoute(route)
-//                },
-//                onItemClick = {
-//                    //   navController.navigate(PokemonDetail.routeWithId(it))
-//                },
-//                modifier = modifier,
-//            )
+//            ComponentGallery()
+            HomeScreen(
+                onTabSelected = { route ->
+                    navController.navigateToRoute(route)
+                },
+                onItemClick = {
+                    //   navController.navigate(PokemonDetail.routeWithId(it))
+                },
+                modifier = modifier,
+            )
         }
     }
 //        composable( Onboarding.route) {

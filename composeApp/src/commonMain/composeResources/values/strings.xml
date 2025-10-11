@@ -23,4 +23,7 @@
 
     <string name="action_back">Voltar</string>
     <string name="action_favorite">Favoritar</string>
+
+    <string name="action_watch">Assistir</string>
+    <string name="action_add_to_list">Minha lista</string>
 </resources>

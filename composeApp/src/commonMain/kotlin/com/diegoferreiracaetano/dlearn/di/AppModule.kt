@@ -12,5 +12,5 @@ fun initKoin() {
 
 val appModule =
     module {
-        factory { HomeViewModel() }
+        factory { HomeViewModel(get()) }
     }

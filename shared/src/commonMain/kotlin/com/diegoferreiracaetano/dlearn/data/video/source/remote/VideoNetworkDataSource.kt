@@ -11,13 +11,13 @@ class VideoNetworkDataSource(
     private val httpClient: HttpClient,
     private val apiKey: String,
 ) {
-    suspend fun fetchMovies(): List<VideoRemote> {
-        val response = httpClient.get("3/movie/popular") {
-            parameter("api_key", apiKey)
-        }
-
-        getLogger().d("TESTE", "Response: ${response.bodyAsText()}")
-
-        return response.body<VideoResponse>().results
-    }
+//    suspend fun fetchMovies(): List<VideoRemote> {
+//        val response = httpClient.get("3/movie/popular") {
+//            parameter("api_key", apiKey)
+//        }
+//
+//        getLogger().d("TESTE", "Response: ${response.bodyAsText()}")
+//
+//        return response.body<VideoResponse>().results
+//    }
 }

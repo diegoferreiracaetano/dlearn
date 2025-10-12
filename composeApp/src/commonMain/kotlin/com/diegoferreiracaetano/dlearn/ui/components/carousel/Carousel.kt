@@ -44,8 +44,8 @@ fun Carousel(
             text = title,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(
-                top = 4.dp,
-                bottom = 4.dp,
+                top = 8.dp,
+                bottom = 8.dp,
             ),
         )
         LazyRow(

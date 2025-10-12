@@ -1,13 +1,19 @@
 package com.diegoferreiracaetano.dlearn.ui.components.navigation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -18,7 +24,11 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -27,37 +37,30 @@ import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.ui.components.alert.AppSnackbarHost
 import com.diegoferreiracaetano.dlearn.ui.components.chip.AppChip
 import com.diegoferreiracaetano.dlearn.ui.components.chip.AppChipGroup
-import com.diegoferreiracaetano.dlearn.ui.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.ui.theme.DLearnTheme
-import com.diegoferreiracaetano.dlearn.ui.util.UiState
-import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.login_screen_title
-import org.jetbrains.compose.resources.stringResource
+import kotlinx.coroutines.flow.distinctUntilChanged
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 private fun AppScaffoldContent(
     modifier: Modifier = Modifier,
     topBar: AppTopBar? = null,
-    chipContent: @Composable (() -> Unit)? = null,
+    collapsibleContent: @Composable (() -> Unit)? = null,
     bottomBar: AppBottomNavigation? = null,
     snackBarHostState: SnackbarHostState,
     scrollBehavior: TopAppBarScrollBehavior,
-    content: @Composable (Modifier) -> Unit
+    content: LazyListScope.() -> Unit
 ) {
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         snackbarHost = { AppSnackbarHost(hostState = snackBarHostState) },
         topBar = {
-            Column {
-                topBar?.let {
-                    AppTopBarFactory(
-                        config = it,
-                        scrollBehavior = scrollBehavior
-                    )
-                }
-                chipContent?.invoke()
+            topBar?.let {
+                AppTopBarFactory(
+                    config = it,
+                    scrollBehavior = scrollBehavior
+                )
             }
         },
         bottomBar = {
@@ -70,12 +73,30 @@ private fun AppScaffoldContent(
             }
         }
     ) { innerPadding ->
-        val baseModifier = modifier
-            .fillMaxWidth()
-            .padding(innerPadding)
-            .consumeWindowInsets(innerPadding)
-            .systemBarsPadding()
-            .padding(start = 16.dp, end = 16.dp)
+        val listState = rememberLazyListState()
+        var collapsibleContentVisible by remember { mutableStateOf(true) }
+
+        LaunchedEffect(listState) {
+            var previousState = listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset
+
+            snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }
+                .distinctUntilChanged()
+                .collect { currentState ->
+                    val (previousIndex, previousOffset) = previousState
+                    val (currentIndex, currentOffset) = currentState
+
+                    val isScrollingDown = if (previousIndex != currentIndex) {
+                        currentIndex > previousIndex
+                    } else {
+                        currentOffset > previousOffset
+                    }
+
+                    collapsibleContentVisible = !(isScrollingDown && (currentIndex > 0 || currentOffset > 0))
+
+                    @Suppress("UNUSED_ASSIGNMENT")
+                    previousState = currentState
+                }
+        }
 
         Box(
             modifier = Modifier
@@ -83,7 +104,30 @@ private fun AppScaffoldContent(
                 .fillMaxSize(),
             contentAlignment = Alignment.TopCenter
         ) {
-            content(baseModifier)
+            LazyColumn(
+                state = listState,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(innerPadding)
+                    .consumeWindowInsets(innerPadding)
+                    .systemBarsPadding()
+                    .padding(start = 16.dp, end = 16.dp)
+            ) {
+                collapsibleContent?.let {
+                    stickyHeader {
+                        AnimatedVisibility(
+                            visible = collapsibleContentVisible,
+                            enter = slideInVertically(initialOffsetY = { -it }),
+                            exit = slideOutVertically(targetOffsetY = { -it }),
+                        ) {
+                            Box(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
+                                it()
+                            }
+                        }
+                    }
+                }
+                content()
+            }
         }
     }
 }
@@ -93,16 +137,16 @@ private fun AppScaffoldContent(
 fun AppContainer(
     modifier: Modifier = Modifier,
     topBar: AppTopBar? = null,
-    chipContent: @Composable (() -> Unit)? = null,
+    collapsibleContent: @Composable (() -> Unit)? = null,
     bottomBar: AppBottomNavigation? = null,
     snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState()),
-    content: @Composable (Modifier) -> Unit
+    content: LazyListScope.() -> Unit
 ) {
     AppScaffoldContent(
         modifier = modifier,
         topBar = topBar,
-        chipContent = chipContent,
+        collapsibleContent = collapsibleContent,
         bottomBar = bottomBar,
         snackBarHostState = snackBarHostState,
         scrollBehavior = scrollBehavior,
@@ -110,37 +154,6 @@ fun AppContainer(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun <T> AppContainer(
-    uiState: UiState<T>?,
-    modifier: Modifier = Modifier,
-    topBar: AppTopBar? = null,
-    chipContent: @Composable (() -> Unit)? = null,
-    bottomBar: AppBottomNavigation? = null,
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState()),
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    onLoading: @Composable () -> Unit = { AppLoading() },
-    content: @Composable (modifier: Modifier, data: T) -> Unit
-) {
-    LaunchedEffect(uiState?.error) {
-        uiState?.error?.let { snackBarHostState.showSnackbar(it) }
-    }
-
-    AppScaffoldContent(
-        modifier = modifier,
-        topBar = topBar,
-        chipContent = chipContent,
-        bottomBar = bottomBar,
-        snackBarHostState = snackBarHostState,
-        scrollBehavior = scrollBehavior
-    ) { baseModifier ->
-        when {
-            uiState == null || uiState.isLoading -> onLoading()
-            uiState.success != null -> content(baseModifier, uiState.success)
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
@@ -153,7 +166,7 @@ fun AppTopBarPreview() {
                 backgroundColor = MaterialTheme.colorScheme.background,
                 onBack = {}
             ),
-            chipContent = {
+            collapsibleContent = {
                 AppChipGroup(
                     items = listOf(
                         AppChip(label = "Séries"),
@@ -163,15 +176,13 @@ fun AppTopBarPreview() {
                     onFilterChanged = {}
                 )
             }
-        ) { padding ->
-            Column(
-                modifier = padding,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+        ) {
+            items(100) { index ->
                 Text(
-                    text = stringResource(Res.string.login_screen_title),
+                    text = "Item $index",
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Normal
+                    fontWeight = FontWeight.Normal,
+                    modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
         }

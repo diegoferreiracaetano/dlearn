@@ -33,6 +33,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun BannerCarousel(
+    modifier: Modifier = Modifier,
     title: String,
     banners: List<Video>,
     onItemClick: (Video) -> Unit
@@ -42,34 +43,45 @@ fun BannerCarousel(
         pageCount = { banners.size }
     )
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-
+    Column(modifier = modifier) {
         Text(
             text = title,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(
-                top = 16.dp,
+                top = 8.dp,
                 bottom = 8.dp,
             ),
         )
 
-        HorizontalPager(state = pagerState) { pageIndex ->
-            val banner = banners[pageIndex]
-            BannerCard(
-                item = banner,
-                onClick = { onItemClick(banner) }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(
+                    top = 16.dp,
+                    bottom = 8.dp,
+                ),
+            )
+
+            HorizontalPager(state = pagerState) { pageIndex ->
+                val banner = banners[pageIndex]
+                BannerCard(
+                    item = banner,
+                    onClick = { onItemClick(banner) }
+                )
+            }
+
+            PageIndicator(
+                banners.size,
+                pagerState.currentPage,
+                modifier = Modifier.align(BottomCenter)
+                    .padding(bottom = 8.dp)
             )
         }
-
-        PageIndicator(
-            banners.size,
-            pagerState.currentPage,
-            modifier = Modifier.align(BottomCenter)
-                .padding(bottom = 8.dp)
-        )
 
     }
 }

@@ -22,7 +22,6 @@ fun Application.module() {
             encodeDefaults = true // To include nulls if needed, but models are designed to avoid them
         })
     }
-
     routing {
         homeRouting()
     }

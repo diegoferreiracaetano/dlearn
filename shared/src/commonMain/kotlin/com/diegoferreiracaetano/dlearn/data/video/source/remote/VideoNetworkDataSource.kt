@@ -9,7 +9,7 @@ import io.ktor.client.statement.bodyAsText
 
 class VideoNetworkDataSource(
     private val httpClient: HttpClient,
-    private val apiKey: String,
+//    private val apiKey: String,
 ) {
 //    suspend fun fetchMovies(): List<VideoRemote> {
 //        val response = httpClient.get("3/movie/popular") {

@@ -30,15 +30,9 @@ kotlin {
     }
     
     sourceSets {
-        val iosMain by creating {
-            dependsOn(commonMain.get())
-        }
-
-        iosArm64Main.get().dependsOn(iosMain)
-        iosSimulatorArm64Main.get().dependsOn(iosMain)
 
         commonMain.dependencies {
-            api("io.insert-koin:koin-core:4.1.0")
+            api(libs.koin.core)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.multiplatform.settings.no.arg)
             implementation(libs.kotlinx.serialization.json)
@@ -75,10 +69,4 @@ android {
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
-}
-
-buildConfig {
-    packageName("com.diegoferreiracaetano.dlearn.shared")
-    buildConfigField("String", "THE_MOVIE_DB_BASE_URL", providers.gradleProperty("THE_MOVIE_DB_BASE_URL").get())
-    buildConfigField("String", "THE_MOVIE_DB_API_KEY", providers.gradleProperty("THE_MOVIE_DB_API_KEY").get())
 }

@@ -56,10 +56,11 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.shared)
+            implementation(libs.designsystem)
 
             implementation(libs.navigation.compose)
             implementation(libs.koin.compose)
-            implementation("io.github.qdsfdhvh:image-loader:1.10.0")
+            implementation(libs.image.loader)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -85,6 +86,7 @@ android {
     }
     buildTypes {
         getByName("release") {
+            isCrunchPngs = false
             isMinifyEnabled = false
         }
     }

@@ -14,6 +14,9 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.10.0"
+}
 
 dependencyResolutionManagement {
     repositories {
@@ -25,6 +28,18 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+
+
+        maven {
+            url = uri("https://maven.pkg.github.com/diegoferreiracaetano/dlearn")
+            credentials {
+                username = providers.gradleProperty("gpr.user").orNull
+                    ?: System.getenv("GITHUB_ACTOR")
+
+                password = providers.gradleProperty("gpr.key").orNull
+                    ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
 

@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.ui.screens.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
@@ -15,9 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.diegoferreiracaetano.dlearn.domain.home.Home
+import com.diegoferreiracaetano.dlearn.domain.home.HomeCategory
+import com.diegoferreiracaetano.dlearn.domain.home.HomeCategoryItems
 import com.diegoferreiracaetano.dlearn.domain.home.HomeDataContent
 import com.diegoferreiracaetano.dlearn.domain.home.HomeLayoutSection
 import com.diegoferreiracaetano.dlearn.domain.home.HomeSectionType
+import com.diegoferreiracaetano.dlearn.domain.video.Video
 import com.diegoferreiracaetano.dlearn.ui.components.carousel.BannerCarousel
 import com.diegoferreiracaetano.dlearn.ui.components.carousel.Carousel
 import com.diegoferreiracaetano.dlearn.ui.components.carousel.FullScreenBanner
@@ -27,7 +30,9 @@ import com.diegoferreiracaetano.dlearn.ui.components.navigation.AppBottomNavigat
 import com.diegoferreiracaetano.dlearn.ui.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.ui.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
-import org.koin.compose.koinInject                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+import com.diegoferreiracaetano.dlearn.ui.theme.DLearnTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 
 @Composable
 fun HomeScreen(
@@ -128,6 +133,7 @@ private fun Section(
         HomeSectionType.TOP_10 -> {
             Carousel(
                 title = section.title.orEmpty(),
+                showRanking = true,
                 items = data.top10,
                 onItemClick = { onItemClick(it.id) },
                 modifier = Modifier.padding(top = 16.dp),
@@ -152,5 +158,127 @@ private fun Section(
                 )
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun HomeListScreenPreview() {
+    val video = Video(
+        id = "1",
+        title = "Title",
+        subtitle = "Subtitle",
+        description = "Description",
+        url = "",
+        imageUrl = ""
+    )
+    val homeData = HomeDataContent(
+        bannerMain = video,
+        top10 = (1..10).map {
+            Video(
+                id = "$it",
+                title = "Title $it",
+                subtitle = "Subtitle $it",
+                description = "Description $it",
+                url = "",
+                imageUrl = ""
+            )
+        },
+        popular = (1..10).map {
+            Video(
+                id = "p$it",
+                title = "Title $it",
+                subtitle = "Subtitle $it",
+                description = "Description $it",
+                url = "",
+                imageUrl = ""
+            )
+        },
+        categories = listOf(
+            HomeCategoryItems(
+                category = HomeCategory(id = 1, name = "Category 1"),
+                items = (1..10).map {
+                    Video(
+                        id = "c1-$it",
+                        title = "Title $it",
+                        subtitle = "Subtitle $it",
+                        description = "Description $it",
+                        url = "",
+                        imageUrl = ""
+                    )
+                }
+            )
+        )
+    )
+    val home = Home(
+        layout = listOf(
+            HomeLayoutSection(type = HomeSectionType.BANNER_MAIN),
+            HomeLayoutSection(type = HomeSectionType.TOP_10, title = "Top 10"),
+            HomeLayoutSection(type = HomeSectionType.POPULAR, title = "Popular"),
+            HomeLayoutSection(type = HomeSectionType.CATEGORY)
+        ),
+        data = homeData
+    )
+
+    DLearnTheme {
+        HomeListScreen(
+            uiState = HomeUiState.Success(home),
+            onTabSelected = {},
+            onItemClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun SectionBannerMainPreview() {
+    val video = Video(
+        id = "1",
+        title = "Title",
+        subtitle = "Subtitle",
+        description = "Description",
+        url = "",
+        imageUrl = ""
+    )
+    val data = HomeDataContent(
+        bannerMain = video,
+        top10 = emptyList(),
+        popular = emptyList(),
+        categories = emptyList()
+    )
+    DLearnTheme {
+        Section(
+            section = HomeLayoutSection(type = HomeSectionType.BANNER_MAIN),
+            data = data,
+            onItemClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun SectionTop10Preview() {
+    val data = HomeDataContent(
+        bannerMain = null,
+        top10 = (1..10).map {
+            Video(
+                id = "$it",
+                title = "Title $it",
+                subtitle = "Subtitle $it",
+                description = "Description $it",
+                url = "",
+                imageUrl = ""
+            )
+        },
+        popular = emptyList(),
+        categories = emptyList()
+    )
+    DLearnTheme {
+        Section(
+            section = HomeLayoutSection(type = HomeSectionType.TOP_10, title = "Top 10"),
+            data = data,
+            onItemClick = {}
+        )
     }
 }

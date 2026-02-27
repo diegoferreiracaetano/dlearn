@@ -111,7 +111,7 @@ private fun AppScaffoldContent(
                     .padding(innerPadding)
                     .consumeWindowInsets(innerPadding)
                     .systemBarsPadding()
-                    .padding(start = 16.dp, end = 16.dp)
+                    .padding(start = 8.dp, end = 8.dp)
             ) {
                 collapsibleContent?.let {
                     stickyHeader {

@@ -13,7 +13,6 @@ import com.diegoferreiracaetano.dlearn.domain.user.CreateAccountUseCase
 import com.diegoferreiracaetano.dlearn.domain.user.LoginUseCase
 import com.diegoferreiracaetano.dlearn.domain.user.SendCodeUseCase
 import com.diegoferreiracaetano.dlearn.domain.user.VerifyCodeUseCase
-import com.diegoferreiracaetano.dlearn.shared.BuildConfig
 import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -40,7 +39,7 @@ val sharedModule = module {
             defaultRequest {
                 url {
                     protocol = URLProtocol.HTTP
-                    host = "192.168.15.4"
+                    host = "192.168.15.7"
                     port = 8081
                 }
             }
@@ -57,7 +56,9 @@ val sharedModule = module {
     single<SessionStorage> { SettingsSessionStorage(get()) }
     single { SessionManager(get()) }
 
-    single { VideoNetworkDataSource(get(), BuildConfig.THE_MOVIE_DB_API_KEY) }
+    single { VideoNetworkDataSource(get(),
+       // BuildConfig.THE_MOVIE_DB_API_KEY
+    ) }
 //    single<VideoRepository> { VideoRepositoryRemote(get()) }
     single<HomeRepository> { HomeRepositoryRemote(get()) }
 }

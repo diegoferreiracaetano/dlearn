@@ -1,8 +1,17 @@
 package com.diegoferreiracaetano.dlearn.domain.home
 
 import com.diegoferreiracaetano.dlearn.domain.video.Video
+import kotlinx.serialization.Serializable
+
+@Serializable
+enum class HomeFilterType {
+    ALL,
+    MOVIE,
+    SERIES
+}
 
 // Public Enum for the UI Layer
+@Serializable
 enum class HomeSectionType {
     BANNER_MAIN,
     TOP_10,
@@ -10,30 +19,19 @@ enum class HomeSectionType {
     CATEGORY
 }
 
-// Public Models for the UI Layer
-data class HomeLayoutSection(
-    val type: HomeSectionType,
-    val title: String? = null
-)
-
+@Serializable
 data class HomeCategory(
     val id: Int,
     val name: String
 )
 
-data class HomeCategoryItems(
-    val category: HomeCategory,
+@Serializable
+data class HomeDataContent(
     val items: List<Video>
 )
 
-data class HomeDataContent(
-    val bannerMain: Video?,
-    val top10: List<Video>,
-    val popular: List<Video>,
-    val categories: List<HomeCategoryItems>
-)
-
+@Serializable
 data class Home(
-    val layout: List<HomeLayoutSection>,
+    val sections: List<HomeSectionType>,
     val data: HomeDataContent
 )

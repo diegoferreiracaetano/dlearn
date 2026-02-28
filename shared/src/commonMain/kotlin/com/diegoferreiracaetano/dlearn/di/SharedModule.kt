@@ -6,7 +6,6 @@ import com.diegoferreiracaetano.dlearn.data.session.SettingsSessionStorage
 import com.diegoferreiracaetano.dlearn.data.user.UserRepository
 import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserNetworkDataSource
 import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserRepositoryRemote
-import com.diegoferreiracaetano.dlearn.data.video.source.remote.VideoNetworkDataSource
 import com.diegoferreiracaetano.dlearn.domain.home.HomeRepository
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.domain.user.CreateAccountUseCase
@@ -39,7 +38,7 @@ val sharedModule = module {
             defaultRequest {
                 url {
                     protocol = URLProtocol.HTTP
-                    host = "192.168.15.7"
+                    host = "192.168.15.6"
                     port = 8081
                 }
             }
@@ -55,10 +54,5 @@ val sharedModule = module {
     single { Settings() }
     single<SessionStorage> { SettingsSessionStorage(get()) }
     single { SessionManager(get()) }
-
-    single { VideoNetworkDataSource(get(),
-       // BuildConfig.THE_MOVIE_DB_API_KEY
-    ) }
-//    single<VideoRepository> { VideoRepositoryRemote(get()) }
     single<HomeRepository> { HomeRepositoryRemote(get()) }
 }

@@ -1,36 +1,48 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.diegoferreiracaetano.dlearn.designsystem.components.carousel.BannerCard
+import com.diegoferreiracaetano.dlearn.designsystem.components.carousel.BannerCarousel
+import com.diegoferreiracaetano.dlearn.designsystem.components.carousel.Carousel
+import com.diegoferreiracaetano.dlearn.designsystem.components.carousel.CarouselItem
+import com.diegoferreiracaetano.dlearn.designsystem.components.carousel.FullScreenBanner
+import com.diegoferreiracaetano.dlearn.designsystem.components.carousel.FullScreenVideo
+import com.diegoferreiracaetano.dlearn.designsystem.components.chip.AppChip
+import com.diegoferreiracaetano.dlearn.designsystem.components.chip.AppChipGroup
+import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppBottomNavigation
+import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppBottomNavigationBar
+import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
+import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
+import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.domain.home.Home
-import com.diegoferreiracaetano.dlearn.domain.home.HomeCategory
-import com.diegoferreiracaetano.dlearn.domain.home.HomeCategoryItems
 import com.diegoferreiracaetano.dlearn.domain.home.HomeDataContent
-import com.diegoferreiracaetano.dlearn.domain.home.HomeLayoutSection
 import com.diegoferreiracaetano.dlearn.domain.home.HomeSectionType
 import com.diegoferreiracaetano.dlearn.domain.video.Video
-import com.diegoferreiracaetano.dlearn.ui.components.carousel.BannerCarousel
-import com.diegoferreiracaetano.dlearn.ui.components.carousel.Carousel
-import com.diegoferreiracaetano.dlearn.ui.components.carousel.FullScreenBanner
-import com.diegoferreiracaetano.dlearn.ui.components.chip.AppChip
-import com.diegoferreiracaetano.dlearn.ui.components.chip.AppChipGroup
-import com.diegoferreiracaetano.dlearn.ui.components.navigation.AppBottomNavigation
-import com.diegoferreiracaetano.dlearn.ui.components.navigation.AppContainer
-import com.diegoferreiracaetano.dlearn.ui.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
-import com.diegoferreiracaetano.dlearn.ui.theme.DLearnTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
@@ -47,6 +59,8 @@ fun HomeScreen(
         uiState = uiState,
         onTabSelected = onTabSelected,
         onItemClick = onItemClick,
+        onFilterTypeChanged = viewModel::onFilterTypeChanged,
+        onSearchChanged = viewModel::onSearchChanged,
         modifier = modifier,
     )
 }
@@ -57,54 +71,96 @@ fun HomeListScreen(
     uiState: HomeUiState,
     onTabSelected: (String) -> Unit,
     onItemClick: (String) -> Unit,
+    onFilterTypeChanged: (String?) -> Unit,
+    onSearchChanged: (String?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var searchText by remember { mutableStateOf("") }
+    val listState = rememberLazyListState()
+    var collapsibleContentVisible by remember { mutableStateOf(true) }
+
     AppContainer(
         modifier = modifier,
-        collapsibleContent = {
-            AppChipGroup(
-                items = listOf(
-                    AppChip(label = "Séries"),
-                    AppChip(label = "Filmes"),
-                    AppChip(label = "Categorias", hasDropDown = true, isFilter = false)
-                ),
-                onFilterChanged = {}
+        topBar = {
+            AppTopBar(
+                title = "HOME",
+                searchValue = searchText,
+                onSearchValueChange = {
+                    searchText = it
+                    onSearchChanged(it)
+                }
             )
         },
-        topBar = AppTopBar(title = "HOME"),
-        bottomBar = AppBottomNavigation(
-            onTabSelected = onTabSelected
-        )
+        bottomBar = {
+            val nav = AppBottomNavigation(onTabSelected = onTabSelected)
+            AppBottomNavigationBar(
+                items = nav.items,
+                selectedRoute = nav.selectedRoute,
+                onTabSelected = nav.onTabSelected
+            )
+        }
     ) {
-        when (uiState) {
-            is HomeUiState.Success -> {
-                val homeData = uiState.home.data
-                items(uiState.home.layout) { section ->
-                    Section(section = section, data = homeData, onItemClick = onItemClick)
-                }
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-            }
 
-            is HomeUiState.Loading -> {
-                item {
-                    Box(
-                        modifier = Modifier.fillParentMaxSize(),
-                        contentAlignment = Alignment.Center
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            LazyColumn(
+                state = listState
+            ) {
+
+                stickyHeader {
+                    AnimatedVisibility(
+                        visible = collapsibleContentVisible,
+                        enter = slideInVertically(initialOffsetY = { -it }),
+                        exit = slideOutVertically(targetOffsetY = { -it }),
                     ) {
-                        CircularProgressIndicator()
+                        Box(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
+                            AppChipGroup(
+                                items = listOf(
+                                    AppChip(label = "Séries"),
+                                    AppChip(label = "Filmes"),
+                                    AppChip(label = "Categorias", hasDropDown = true, isFilter = false)
+                                ),
+                                onFilterChanged = onFilterTypeChanged
+                            )
+                        }
                     }
                 }
-            }
 
-            is HomeUiState.Error -> {
-                item {
-                    Box(
-                        modifier = Modifier.fillParentMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = uiState.message ?: "An unknown error occurred")
+                when (uiState) {
+                    is HomeUiState.Success -> {
+                        val homeData = uiState.home.data
+                        items(uiState.home.sections) { sectionType ->
+                            Section(sectionType = sectionType, data = homeData, onItemClick = onItemClick)
+                        }
+                        item {
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
+                    }
+
+                    is HomeUiState.Loading -> {
+                        item {
+                            Box(
+                                modifier = Modifier.fillParentMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
+                    }
+
+                    is HomeUiState.Error -> {
+                        item {
+                            Box(
+                                modifier = Modifier.fillParentMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(text = uiState.message ?: "An unknown error occurred")
+                            }
+                        }
                     }
                 }
             }
@@ -114,46 +170,81 @@ fun HomeListScreen(
 
 @Composable
 private fun Section(
-    section: HomeLayoutSection,
+    sectionType: HomeSectionType,
     data: HomeDataContent,
     onItemClick: (String) -> Unit
 ) {
-    when (section.type) {
+    val sectionItems = data.items.filter { it.section == sectionType }
+
+    when (sectionType) {
         HomeSectionType.BANNER_MAIN -> {
-            data.bannerMain?.let {
+            sectionItems.firstOrNull()?.let { video ->
                 FullScreenBanner(
-                    banners = listOf(it),
-                    onItemClick = { item -> onItemClick(item.id) },
-                    onWatchClick = { item -> println("Watch ${item.title}") },
-                    onAddToListClick = { item -> println("Add to List ${item.title}") }
+                    pageCount = 1,
+                    pageContent = {
+                        FullScreenVideo(
+                            title = video.title,
+                            subtitle = video.subtitle,
+                            imageUrl = video.imageUrl,
+                            onItemClick = { onItemClick(video.id) },
+                            onWatchClick = { println("Watch ${video.title}") },
+                            onAddToListClick = { println("Add to List ${video.title}") }
+                        )
+                    }
                 )
             }
         }
 
         HomeSectionType.TOP_10 -> {
-            Carousel(
-                title = section.title.orEmpty(),
-                showRanking = true,
-                items = data.top10,
-                onItemClick = { onItemClick(it.id) },
-                modifier = Modifier.padding(top = 16.dp),
-            )
+            if (sectionItems.isNotEmpty()) {
+                Carousel(
+                    title = "Top 10",
+                    items = sectionItems.take(10).mapIndexed { index, video ->
+                        CarouselItem(
+                            title = video.title,
+                            subtitle = video.subtitle,
+                            imageUrl = video.imageUrl,
+                            rank = index + 1,
+                            onClick = { onItemClick(video.id) }
+                        )
+                    },
+                    modifier = Modifier.padding(top = 16.dp),
+                )
+            }
         }
 
         HomeSectionType.POPULAR -> {
-            BannerCarousel(
-                title = section.title.orEmpty(),
-                banners = data.popular,
-                onItemClick = { onItemClick(it.id) }
-            )
+            if (sectionItems.isNotEmpty()) {
+                BannerCarousel(
+                    title = "Populares",
+                    pageCount = sectionItems.size,
+                    pageContent = { index ->
+                        val video = sectionItems[index]
+                        BannerCard(
+                            title = video.title,
+                            subtitle = video.subtitle,
+                            imageUrl = video.imageUrl,
+                            onClick = { onItemClick(video.id) }
+                        )
+                    }
+                )
+            }
         }
 
         HomeSectionType.CATEGORY -> {
-            data.categories.forEach { category ->
+            val categories = sectionItems.mapNotNull { it.category }.distinctBy { it.id }
+            categories.forEach { category ->
+                val categoryVideos = sectionItems.filter { it.category?.id == category.id }
                 Carousel(
-                    title = category.category.name,
-                    items = category.items,
-                    onItemClick = { onItemClick(it.id) },
+                    title = category.name,
+                    items = categoryVideos.map { video ->
+                        CarouselItem(
+                            title = video.title,
+                            subtitle = video.subtitle,
+                            imageUrl = video.imageUrl,
+                            onClick = { onItemClick(video.id) }
+                        )
+                    },
                     modifier = Modifier.padding(top = 16.dp),
                 )
             }
@@ -165,58 +256,18 @@ private fun Section(
 @Preview
 @Composable
 fun HomeListScreenPreview() {
-    val video = Video(
-        id = "1",
-        title = "Title",
-        subtitle = "Subtitle",
-        description = "Description",
-        url = "",
-        imageUrl = ""
-    )
     val homeData = HomeDataContent(
-        bannerMain = video,
-        top10 = (1..10).map {
-            Video(
-                id = "$it",
-                title = "Title $it",
-                subtitle = "Subtitle $it",
-                description = "Description $it",
-                url = "",
-                imageUrl = ""
-            )
-        },
-        popular = (1..10).map {
-            Video(
-                id = "p$it",
-                title = "Title $it",
-                subtitle = "Subtitle $it",
-                description = "Description $it",
-                url = "",
-                imageUrl = ""
-            )
-        },
-        categories = listOf(
-            HomeCategoryItems(
-                category = HomeCategory(id = 1, name = "Category 1"),
-                items = (1..10).map {
-                    Video(
-                        id = "c1-$it",
-                        title = "Title $it",
-                        subtitle = "Subtitle $it",
-                        description = "Description $it",
-                        url = "",
-                        imageUrl = ""
-                    )
-                }
-            )
+        items = listOf(
+            Video(id = "1", title = "Banner", subtitle = "2024", description = "", url = "", imageUrl = "", section = HomeSectionType.BANNER_MAIN),
+            Video(id = "2", title = "Top 1", subtitle = "2024", description = "", url = "", imageUrl = "", section = HomeSectionType.TOP_10),
+            Video(id = "3", title = "Popular", subtitle = "2024", description = "", url = "", imageUrl = "", section = HomeSectionType.POPULAR)
         )
     )
     val home = Home(
-        layout = listOf(
-            HomeLayoutSection(type = HomeSectionType.BANNER_MAIN),
-            HomeLayoutSection(type = HomeSectionType.TOP_10, title = "Top 10"),
-            HomeLayoutSection(type = HomeSectionType.POPULAR, title = "Popular"),
-            HomeLayoutSection(type = HomeSectionType.CATEGORY)
+        sections = listOf(
+            HomeSectionType.BANNER_MAIN,
+            HomeSectionType.TOP_10,
+            HomeSectionType.POPULAR
         ),
         data = homeData
     )
@@ -225,60 +276,9 @@ fun HomeListScreenPreview() {
         HomeListScreen(
             uiState = HomeUiState.Success(home),
             onTabSelected = {},
-            onItemClick = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-fun SectionBannerMainPreview() {
-    val video = Video(
-        id = "1",
-        title = "Title",
-        subtitle = "Subtitle",
-        description = "Description",
-        url = "",
-        imageUrl = ""
-    )
-    val data = HomeDataContent(
-        bannerMain = video,
-        top10 = emptyList(),
-        popular = emptyList(),
-        categories = emptyList()
-    )
-    DLearnTheme {
-        Section(
-            section = HomeLayoutSection(type = HomeSectionType.BANNER_MAIN),
-            data = data,
-            onItemClick = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-fun SectionTop10Preview() {
-    val data = HomeDataContent(
-        bannerMain = null,
-        top10 = (1..10).map {
-            Video(
-                id = "$it",
-                title = "Title $it",
-                subtitle = "Subtitle $it",
-                description = "Description $it",
-                url = "",
-                imageUrl = ""
-            )
-        },
-        popular = emptyList(),
-        categories = emptyList()
-    )
-    DLearnTheme {
-        Section(
-            section = HomeLayoutSection(type = HomeSectionType.TOP_10, title = "Top 10"),
-            data = data,
-            onItemClick = {}
+            onItemClick = {},
+            onFilterTypeChanged = {},
+            onSearchChanged = {}
         )
     }
 }

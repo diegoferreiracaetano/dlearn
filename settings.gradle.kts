@@ -10,6 +10,7 @@ pluginManagement {
                 includeGroupAndSubgroups("com.google")
             }
         }
+        mavenLocal()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -28,7 +29,7 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
-
+        mavenLocal()
 
         maven {
             url = uri("https://maven.pkg.github.com/diegoferreiracaetano/dlearn")

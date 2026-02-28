@@ -1,12 +1,9 @@
 package com.diegoferreiracaetano.dlearn.domain.video
 
-enum class VideoCategory {
-    ANDROID,
-    KOTLIN,
-    JETPACK_COMPOSE,
-    TESTING,
-    ARCHITECTURE,
-    PERFORMANCE,
-    FLUTTER,
-    IOS,
-}
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class VideoCategory(
+    val id: String,
+    val title: String
+)

@@ -1,8 +1,8 @@
 package com.diegoferreiracaetano.dlearn.tmdb
 
-import com.diegoferreiracaetano.dlearn.model.Movie
 import com.diegoferreiracaetano.dlearn.model.TmdbGenresResponse
 import com.diegoferreiracaetano.dlearn.model.TmdbListResponse
+import com.diegoferreiracaetano.dlearn.model.TmdbItemRemote
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_API_KEY
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_BASE_URL
 import io.ktor.client.HttpClient
@@ -14,7 +14,7 @@ import io.ktor.client.request.parameter
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-class TmdbClient {
+internal class TmdbClient {
     private val apiKey = THE_MOVIE_DB_API_KEY
     private val baseUrl = THE_MOVIE_DB_BASE_URL
 
@@ -38,11 +38,15 @@ class TmdbClient {
         }.body()
     }
 
-    suspend fun getPopularMovies(): TmdbListResponse<Movie> {
+    suspend fun getPopularMovies(): TmdbListResponse<TmdbItemRemote> {
         return get("/movie/popular")
     }
 
-    suspend fun getTopRatedMovies(): TmdbListResponse<Movie> {
+    suspend fun getPopularSeries(): TmdbListResponse<TmdbItemRemote> {
+        return get("/tv/popular")
+    }
+
+    suspend fun getTopRatedMovies(): TmdbListResponse<TmdbItemRemote> {
         return get("/movie/top_rated")
     }
 
@@ -50,7 +54,7 @@ class TmdbClient {
         return get("/genre/movie/list")
     }
 
-    suspend fun getMoviesByGenre(genreId: Int): TmdbListResponse<Movie> {
+    suspend fun getMoviesByGenre(genreId: Int): TmdbListResponse<TmdbItemRemote> {
         return get("/discover/movie", mapOf("with_genres" to genreId))
     }
 }

@@ -1,10 +1,11 @@
 package com.diegoferreiracaetano.dlearn.service
 
-import com.diegoferreiracaetano.dlearn.model.CategoryItems
-import com.diegoferreiracaetano.dlearn.model.HomeData
-import com.diegoferreiracaetano.dlearn.model.HomeForClient
-import com.diegoferreiracaetano.dlearn.model.LayoutSection
-import com.diegoferreiracaetano.dlearn.model.SectionType
+import com.diegoferreiracaetano.dlearn.domain.home.Home
+import com.diegoferreiracaetano.dlearn.domain.home.HomeDataContent
+import com.diegoferreiracaetano.dlearn.domain.home.HomeSectionType
+import com.diegoferreiracaetano.dlearn.domain.video.MediaType
+import com.diegoferreiracaetano.dlearn.domain.video.Video
+import com.diegoferreiracaetano.dlearn.model.toVideo
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import com.diegoferreiracaetano.dlearn.util.Cache
 import kotlinx.coroutines.async
@@ -13,58 +14,67 @@ import kotlinx.coroutines.coroutineScope
 
 class HomeService {
     private val tmdbClient = TmdbClient()
-    private val cache = Cache<HomeForClient>(300_000L) // 300s TTL
+    private val cache = Cache<Home>(300_000L) // 300s TTL
 
-    suspend fun getHome(): HomeForClient {
+    suspend fun getHome(): Home {
         val cachedHome = cache.get("home")
         if (cachedHome != null) {
             return cachedHome
         }
 
         return coroutineScope {
-            val popularMoviesDeferred = async { tmdbClient.getPopularMovies().results }
-            val topRatedMoviesDeferred = async { tmdbClient.getTopRatedMovies().results }
+            val popularMoviesDeferred = async { tmdbClient.getPopularMovies().results.map { it.toVideo(MediaType.MOVIE) } }
+            val popularSeriesDeferred = async { tmdbClient.getPopularSeries().results.map { it.toVideo(MediaType.SERIES) } }
+            val topRatedMoviesDeferred = async { tmdbClient.getTopRatedMovies().results.map { it.toVideo(MediaType.MOVIE) } }
             val genresDeferred = async { tmdbClient.getMovieGenres().genres }
 
             val popularMovies = popularMoviesDeferred.await()
+            val popularSeries = popularSeriesDeferred.await()
             val topRatedMovies = topRatedMoviesDeferred.await()
             val genres = genresDeferred.await()
 
-            val bannerMain = popularMovies.firstOrNull()
+            val bannerMain = popularMovies.firstOrNull()?.copy(section = HomeSectionType.BANNER_MAIN)
+            val top10 = topRatedMovies.take(10).map { it.copy(section = HomeSectionType.TOP_10) }
+            val popular = (popularMovies + popularSeries).shuffled().map { it.copy(section = HomeSectionType.POPULAR) }
 
-            // Fetch the first 4 genres and their movies concurrently
             val categoryItems = genres.take(4).map { category ->
                 async {
-                    val movies = tmdbClient.getMoviesByGenre(category.id).results
-                    CategoryItems(category, movies)
+                    tmdbClient.getMoviesByGenre(category.id).results.map {
+                        it.toVideo(MediaType.MOVIE).copy(
+                            section = HomeSectionType.CATEGORY,
+                            category = category
+                        )
+                    }
                 }
             }.awaitAll()
 
-            val layout = mutableListOf<LayoutSection>()
+            val allItems = mutableListOf<Video>()
+            bannerMain?.let { allItems.add(it) }
+            allItems.addAll(top10)
+            allItems.addAll(popular)
+            categoryItems.forEach { allItems.addAll(it) }
+
+            val uniqueItems = allItems.distinctBy { "${it.id}_${it.section}_${it.category?.id}" }
+
+            val sections = mutableListOf<HomeSectionType>()
             if (bannerMain != null) {
-                layout.add(LayoutSection(SectionType.BANNER_MAIN, "BANNER_MAIN"))
+                sections.add(HomeSectionType.BANNER_MAIN)
             }
-            if (topRatedMovies.isNotEmpty()) {
-                layout.add(LayoutSection(SectionType.TOP_10, "TOP_10", "Top 10"))
+            if (top10.isNotEmpty()) {
+                sections.add(HomeSectionType.TOP_10)
             }
-            if (popularMovies.isNotEmpty()) {
-                layout.add(LayoutSection(SectionType.POPULAR, "POPULAR", "Populares"))
+            if (popular.isNotEmpty()) {
+                sections.add(HomeSectionType.POPULAR)
             }
-            categoryItems.forEach {
-                layout.add(LayoutSection(SectionType.CATEGORY, "CATEGORY_${it.category.id}", it.category.name))
+            if (categoryItems.isNotEmpty()) {
+                sections.add(HomeSectionType.CATEGORY)
             }
 
+            val homeData = HomeDataContent(items = uniqueItems)
 
-            val homeData = HomeData(
-                bannerMain = bannerMain,
-                top10 = topRatedMovies,
-                popular = popularMovies,
-                categories = categoryItems
-            )
-
-            val homeForClient = HomeForClient(layout, homeData)
-            cache.put("home", homeForClient)
-            homeForClient
+            val home = Home(sections, homeData)
+            cache.put("home", home)
+            home
         }
     }
 }

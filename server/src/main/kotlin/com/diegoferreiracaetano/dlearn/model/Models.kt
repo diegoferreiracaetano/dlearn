@@ -1,58 +1,39 @@
 package com.diegoferreiracaetano.dlearn.model
 
+import com.diegoferreiracaetano.dlearn.domain.home.HomeCategory
+import com.diegoferreiracaetano.dlearn.domain.home.HomeSectionType
+import com.diegoferreiracaetano.dlearn.domain.video.MediaType
+import com.diegoferreiracaetano.dlearn.domain.video.Video
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-enum class SectionType {
-    BANNER_MAIN,
-    TOP_10,
-    POPULAR,
-    CATEGORY
-}
-
+// TMDB API DTOs (Internal to Server)
 @Serializable
-data class Movie(
+internal data class TmdbItemRemote(
     val id: Int,
-    val title: String,
+    val title: String? = null,
+    val name: String? = null,
     @SerialName("poster_path") val posterPath: String?,
     @SerialName("backdrop_path") val backdropPath: String?,
-    val overview: String
+    val overview: String = ""
 )
 
-@Serializable
-data class Category(
-    val id: Int,
-    val name: String
+internal fun TmdbItemRemote.toVideo(
+    mediaType: MediaType,
+    section: HomeSectionType? = null,
+    category: HomeCategory? = null
+) = Video(
+    id = id.toString(),
+    title = title ?: name ?: "",
+    subtitle = "",
+    description = overview,
+    url = "",
+    imageUrl = "https://image.tmdb.org/t/p/w500${posterPath.orEmpty()}",
+    mediaType = mediaType,
+    section = section,
+    category = category
 )
 
-@Serializable
-data class CategoryItems(
-    val category: Category,
-    val items: List<Movie>
-)
-
-@Serializable
-data class LayoutSection(
-    val type: SectionType,
-    val dataKey: String,
-    val title: String? = null
-)
-
-@Serializable
-data class HomeData(
-    @SerialName("BANNER_MAIN") val bannerMain: Movie?,
-    @SerialName("TOP_10") val top10: List<Movie>,
-    @SerialName("POPULAR") val popular: List<Movie>,
-    @SerialName("CATEGORIES") val categories: List<CategoryItems>
-)
-
-@Serializable
-data class HomeForClient(
-    val layout: List<LayoutSection>,
-    val data: HomeData
-)
-
-// TMDB API DTOs
 @Serializable
 data class TmdbListResponse<T>(
     val results: List<T>
@@ -60,5 +41,5 @@ data class TmdbListResponse<T>(
 
 @Serializable
 data class TmdbGenresResponse(
-    val genres: List<Category>
+    val genres: List<HomeCategory>
 )

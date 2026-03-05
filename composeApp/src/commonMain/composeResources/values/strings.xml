@@ -1,15 +1,12 @@
-
 <resources>
-
     <string name="app_name">DLearn</string>
-    <string name="app_subtitle">Learning Platform</string>"
+    <string name="app_subtitle">Learning Platform</string>
 
     <string name="title_email">E-mail</string>
     <string name="title_password">Senha</string>
     <string name="title_name">Nome</string>
     <string name="title_change_name">Trocar nome</string>
     <string name="title_change_password">Trocar senha</string>
-
 
     <string name="otp_error_default">Código inválido. Tente novamente.</string>
     <string name="otp_resend_prompt">Não recebeu o código? </string>
@@ -20,10 +17,40 @@
     <string name="password_message_validation">Use uma senha válida.</string>
 
     <string name="login_screen_title">Bem vindo de volta!</string>
+    <string name="login_screen_subtitle">Por favor, insira seus dados.</string>
+    <string name="login_forgot_password">Esqueceu a senha?</string>
+    <string name="login_action">Login</string>
+
+    <string name="signup_screen_title">Vamos começar</string>
+    <string name="signup_screen_subtitle">Os últimos filmes e séries estão aqui</string>
+    <string name="signup_agree_terms">Eu concordo com os Termos e Serviços e Política de Privacidade</string>
+    <string name="signup_action">Cadastrar</string>
+
+    <string name="onboarding_title_1">O maior streaming de filmes locais e internacionais</string>
+    <string name="onboarding_description_1">Semper in cursus magna et eu varius nunc adipiscing. Elementum justo, laoreet id sem varius parturient.</string>
+    <string name="onboarding_title_2">Oferece visualização de alta qualidade sem anúncios</string>
+    <string name="onboarding_description_2">Semper in cursus magna et eu varius nunc adipiscing. Elementum justo, laoreet id sem varius parturient.</string>
+    <string name="onboarding_title_3">Nosso serviço reúne suas séries favoritas</string>
+    <string name="onboarding_description_3">Semper in cursus magna et eu varius nunc adipiscing. Elementum justo, laoreet id sem varius parturient.</string>
+
+    <string name="onboarding_already_have_account">Já tem uma conta? </string>
+    <string name="onboarding_or_signup_with">Ou cadastre-se com</string>
+
+    <string name="reset_password_title">Redefinir Senha</string>
+    <string name="reset_password_subtitle">Descubra a senha da sua conta</string>
+    <string name="reset_password_action">Próximo</string>
+
+    <string name="verify_account_title">Verificando sua conta</string>
+    <string name="verify_account_subtitle">Acabamos de enviar um código de 4 dígitos para o seu e-mail</string>
+    <string name="verify_account_action">Continuar</string>
+
+    <string name="create_password_title">Criar Nova Senha</string>
+    <string name="create_password_subtitle">Insira sua nova senha</string>
+    <string name="create_password_action">Redefinir</string>
+    <string name="create_password_confirm">Confirmar Senha</string>
 
     <string name="action_back">Voltar</string>
     <string name="action_favorite">Favoritar</string>
-
     <string name="action_watch">Assistir</string>
     <string name="action_add_to_list">Minha lista</string>
 </resources>

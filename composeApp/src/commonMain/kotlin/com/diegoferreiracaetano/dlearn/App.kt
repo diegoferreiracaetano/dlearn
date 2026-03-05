@@ -6,9 +6,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.AppNavGraph
-import com.diegoferreiracaetano.dlearn.ui.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.screens.splash.SplashScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject

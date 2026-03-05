@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.diegoferreiracaetano.dlearn.ui.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import dlearn.composeapp.generated.resources.Res
 import dlearn.composeapp.generated.resources.app_name
 import dlearn.composeapp.generated.resources.app_subtitle

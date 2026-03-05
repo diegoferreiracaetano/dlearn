@@ -7,6 +7,12 @@ sealed class ScreenRouter(
     object New : ScreenRouter("New")
     object Favorites : ScreenRouter("Favorites")
     object Account : ScreenRouter("Account")
-    object Onboarding : ScreenRouter("onboarding")
+    object Welcome : ScreenRouter("welcome")
+    object Login : ScreenRouter("login")
+    object SignUp : ScreenRouter("signup")
+    object ResetPassword : ScreenRouter("reset_password")
+    object VerifyAccount : ScreenRouter("verify_account")
+    object CreateNewPassword : ScreenRouter("create_new_password")
     object Regions : ScreenRouter("regions")
+    object Onboarding : ScreenRouter("onboarding1")
 }

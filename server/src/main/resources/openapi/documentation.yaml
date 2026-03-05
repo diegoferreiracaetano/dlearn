@@ -1,0 +1,161 @@
+openapi: 3.0.3
+info:
+  title: DLearn BFF API
+  description: API for Server-Driven UI in DLearn App
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+    description: Local Server
+paths:
+  /v1/home:
+    get:
+      summary: Get Home Screen
+      description: Returns the Home screen configuration with SDUI components
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+          example: diego
+        - name: X-App-Version
+          in: header
+          required: false
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
+components:
+  schemas:
+    Screen:
+      type: object
+      properties:
+        title:
+          type: string
+        version:
+          type: integer
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/Component'
+    Component:
+      type: object
+      discriminator:
+        propertyName: type
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+    HeaderComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+            imageUrl:
+              type: string
+    UserCardComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            userName:
+              type: string
+            balance:
+              type: string
+            accountType:
+              type: string
+    BannerMainComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+            subtitle:
+              type: string
+            imageUrl:
+              type: string
+            videoId:
+              type: string
+    CarouselComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+            showRank:
+              type: boolean
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/CarouselItem'
+    BannerCarouselComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/CarouselItem'
+    ChipGroupComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/ChipItem'
+    QuickActionsComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            actions:
+              type: array
+              items:
+                $ref: '#/components/schemas/ActionItem'
+    CarouselItem:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        subtitle:
+          type: string
+        imageUrl:
+          type: string
+        rank:
+          type: integer
+    ChipItem:
+      type: object
+      properties:
+        label:
+          type: string
+        hasDropDown:
+          type: boolean
+        isFilter:
+          type: boolean
+    ActionItem:
+      type: object
+      properties:
+        label:
+          type: string
+        icon:
+          type: string
+        actionUrl:
+          type: string

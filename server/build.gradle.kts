@@ -21,13 +21,22 @@ dependencies {
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverNetty)
 
-    // Added dependencies
     implementation(libs.ktor.server.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
 
+    // Koin
+    implementation(libs.koin.core)
+    implementation("io.insert-koin:koin-ktor:4.1.0")
+
+    // Swagger & OpenAPI
+    implementation(libs.ktor.server.openapi)
+    implementation(libs.ktor.server.swagger)
+
+    // Caching
+    implementation(libs.ktor.server.caching.headers)
 
     testImplementation(libs.ktor.serverTestHost)
     testImplementation(libs.kotlin.testJunit)

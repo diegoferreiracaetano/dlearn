@@ -1,82 +1,75 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Web, Server.
+# DLearn - Kotlin Multiplatform (KMP) & SDUI Ecosystem
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+Este projeto é um ecossistema completo desenvolvido em **Kotlin Multiplatform (KMP)** que implementa uma arquitetura de **Server-Driven UI (SDUI)** para renderização dinâmica de interfaces via **Backend for Frontend (BFF)**.
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+## 🔗 Links Úteis
 
-* [/server](./server/src/main/kotlin) is for the Ktor server application.
-
-* [/shared](./shared/src) is for the code that will be shared between all targets in the project.
-  The most important subfolder is [commonMain](./shared/src/commonMain/kotlin). If preferred, you
-  can add code to the platform-specific folders here too.
-
-### Build and Run Android Application
-
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
-
-### Build and Run Server
-
-To build and run the development version of the server, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :server:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :server:run
-  ```
-
-### Build and Run Web Application
-
-To build and run the development version of the web app, use the run configuration from the run widget
-in your IDE's toolbar or run it directly from the terminal:
-- for the Wasm target (faster, modern browsers):
-  - on macOS/Linux
-    ```shell
-    ./gradlew :composeApp:wasmJsBrowserDevelopmentRun
-    ```
-  - on Windows
-    ```shell
-    .\gradlew.bat :composeApp:wasmJsBrowserDevelopmentRun
-    ```
-- for the JS target (slower, supports older browsers):
-  - on macOS/Linux
-    ```shell
-    ./gradlew :composeApp:jsBrowserDevelopmentRun
-    ```
-  - on Windows
-    ```shell
-    .\gradlew.bat :composeApp:jsBrowserDevelopmentRun
-    ```
-
-### Build and Run iOS Application
-
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+- **Documentação Técnica (GitHub Pages):** [https://diegoferreiracaetano.github.io/dlearn](https://diegoferreiracaetano.github.io/dlearn)
+- **Swagger UI (Local):** [http://localhost:8081/swagger](http://localhost:8081/swagger)
+- **API Home (Local):** [http://localhost:8081/v1/home](http://localhost:8081/v1/home)
 
 ---
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
+## 🏗️ Estrutura do Projeto
 
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [YouTrack](https://youtrack.jetbrains.com/newIssue?project=CMP).
+O projeto é modularizado para maximizar o compartilhamento de código entre plataformas:
+
+### 1. `shared` (KMP Module)
+O coração do ecossistema, onde reside a lógica de negócio e os modelos de dados.
+- **`commonMain`**: Contratos SDUI (`sealed interface Component`), repositórios (`HomeRepository`, `SDUIRepository`), use cases e entidades de domínio.
+- **Koin 4.1.0**: Injeção de dependência compartilhada.
+- **Kotlinx Serialization**: Gerenciamento de JSON polimórfico para componentes SDUI.
+- **Ktor Client**: Consumo de APIs REST com suporte a cache.
+
+### 2. `server` (Ktor BFF)
+O Backend for Frontend (BFF) que dita a interface do usuário.
+- **Server-Driven UI**: Constrói objetos `Screen` contendo listas de componentes dinâmicos.
+- **Orquestração**: Integra múltiplas fontes de dados (TMDB API, Pokedex, etc).
+- **Cache Inteligente**: `InMemoryCache` para dados de API (5 min) e headers de cache HTTP.
+- **Swagger/OpenAPI**: Documentação interativa disponível via Swagger.
+
+### 3. `composeApp` (UI Compartilhada)
+A aplicação principal escrita em **Jetpack Compose Multiplatform**.
+- **SDUI Engine**: Motor genérico (`RenderComponent`) que converte JSON do servidor em Composables reais.
+- **Design System**: Componentes atômicos reutilizáveis (Carrosséis, Banners, Chips, TopBars).
+- **Navigation**: Gerenciamento de rotas e estado de navegação via Compose Navigation.
+- **Plataformas**: Suporta **Android**, **iOS (via Compose)** e **Desktop**.
+
+### 4. `iosApp` (Swift Wrapper)
+O entrypoint para a plataforma iOS.
+- **SwiftUI**: Utiliza `UIViewControllerRepresentable` para carregar a `ComposeView` central.
+- **Bridge**: Integração direta com o módulo `shared` para inicialização do Koin e ciclo de vida.
+
+---
+
+## 🧩 Componentes SDUI Suportados
+
+O App renderiza dinamicamente:
+- `BannerCarousel`: Carrosséis de destaque com suporte a vídeo/imagem.
+- `Carousel`: Listas horizontais de conteúdo (ex: Top 10, Sugestões).
+- `ChipGroup`: Filtros rápidos dinâmicos definidos pelo backend.
+- `AppTopBar` & `BottomNavigation`: Barras de navegação controladas via BFF.
+- `FullScreenBanner`: Banners de impacto total para lançamentos.
+
+---
+
+## 🚀 Como Executar
+
+### Backend (BFF)
+1. Configure a `THE_MOVIE_DB_API_KEY` em `local.properties`.
+2. Execute: `./gradlew :server:run`
+3. Verifique em: `http://localhost:8081/v1/home`
+
+### Aplicativo (Android/iOS)
+- **Android**: Execute o módulo `composeApp` no Android Studio.
+- **iOS**: Abra o diretório `iosApp` no Xcode ou execute via Android Studio (plugin KMP).
+- **Desktop**: Execute `./gradlew :composeApp:run`
+
+---
+
+## 📄 Documentação & GitHub Pages
+
+A documentação detalhada é gerada via **MkDocs Material** e publicada automaticamente via GitHub Actions.
+- **Workflow**: `.github/workflows/docs.yml`
+- **Configuração**: `mkdocs.yml`
+- **Conteúdo**: Diretório `/docs`

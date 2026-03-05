@@ -14,10 +14,9 @@ import io.ktor.client.request.parameter
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-internal class TmdbClient {
+class TmdbClient {
     private val apiKey = THE_MOVIE_DB_API_KEY
     private val baseUrl = THE_MOVIE_DB_BASE_URL
-
 
     private val client = HttpClient(CIO) {
         install(ContentNegotiation) {

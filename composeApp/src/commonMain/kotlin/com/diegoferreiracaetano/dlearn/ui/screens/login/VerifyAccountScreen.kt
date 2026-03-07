@@ -1,7 +1,8 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.auth
+package com.diegoferreiracaetano.dlearn.ui.screens.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,35 +24,32 @@ import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
-import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
-import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
+import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppOtpVerification
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.login_action
-import dlearn.composeapp.generated.resources.login_forgot_password
-import dlearn.composeapp.generated.resources.login_screen_subtitle
-import dlearn.composeapp.generated.resources.login_screen_title
-import dlearn.composeapp.generated.resources.title_email
-import dlearn.composeapp.generated.resources.title_password
+import dlearn.composeapp.generated.resources.otp_resend_now
+import dlearn.composeapp.generated.resources.otp_resend_prompt
+import dlearn.composeapp.generated.resources.verify_account_action
+import dlearn.composeapp.generated.resources.verify_account_subtitle
+import dlearn.composeapp.generated.resources.verify_account_title
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(
+fun VerifyAccountScreen(
     onBackClick: () -> Unit,
-    onLoginClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit,
+    onContinueClick: () -> Unit,
+    onResendClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var otpCode by remember { mutableStateOf("") }
 
     AppContainer(
         modifier = modifier,
         topBar = {
             AppTopBar(
-                title = stringResource(Res.string.login_action),
+                title = stringResource(Res.string.verify_account_title),
                 onBack = onBackClick
             )
         }
@@ -65,14 +63,14 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = stringResource(Res.string.login_screen_title),
+                text = stringResource(Res.string.verify_account_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth()
             )
 
             Text(
-                text = stringResource(Res.string.login_screen_subtitle),
+                text = stringResource(Res.string.verify_account_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth()
@@ -80,52 +78,47 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            AppTextField(
-                value = email,
-                onValueChange = { email = it },
-                placeholder = Res.string.title_email,
-                label = Res.string.title_email,
-                type = TextFieldType.EMAIL,
+            AppOtpVerification(
+                otpText = otpCode,
+                onOtpTextChange = { text, _ -> otpCode = text },
+                onResendClick = onResendClick,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            AppButton(
+                text = stringResource(Res.string.verify_account_action),
+                onClick = onContinueClick,
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            AppTextField(
-                value = password,
-                onValueChange = { password = it },
-                placeholder = Res.string.title_password,
-                label = Res.string.title_password,
-                type = TextFieldType.PASSWORD,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            TextButton(
-                onClick = onForgotPasswordClick,
-                modifier = Modifier.align(Alignment.End)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = stringResource(Res.string.login_forgot_password),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary
+                    text = stringResource(Res.string.otp_resend_prompt),
+                    style = MaterialTheme.typography.bodyMedium
                 )
+                TextButton(onClick = onResendClick) {
+                    Text(
+                        text = stringResource(Res.string.otp_resend_now),
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            AppButton(
-                text = stringResource(Res.string.login_action),
-                onClick = onLoginClick,
-                modifier = Modifier.fillMaxWidth()
-            )
         }
     }
 }
 
 @Preview
 @Composable
-fun LoginScreenPreview() {
+fun VerifyAccountScreenPreview() {
     DLearnTheme {
-        LoginScreen(onBackClick = {}, onLoginClick = {}, onForgotPasswordClick = {})
+        VerifyAccountScreen(onBackClick = {}, onContinueClick = {}, onResendClick = {})
     }
 }

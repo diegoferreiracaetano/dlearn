@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.auth
+package com.diegoferreiracaetano.dlearn.ui.screens.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

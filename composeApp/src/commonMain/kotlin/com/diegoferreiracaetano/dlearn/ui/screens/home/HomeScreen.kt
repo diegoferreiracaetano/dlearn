@@ -1,27 +1,40 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.home
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.factory.AppContainerRenderer
+import com.diegoferreiracaetano.dlearn.ui.factory.AppTopBarRenderer
+import com.diegoferreiracaetano.dlearn.ui.factory.BannerCarouselRenderer
+import com.diegoferreiracaetano.dlearn.ui.factory.BannerRenderer
+import com.diegoferreiracaetano.dlearn.ui.factory.BottomNavigationRenderer
+import com.diegoferreiracaetano.dlearn.ui.factory.ChipGroupRenderer
+import com.diegoferreiracaetano.dlearn.ui.factory.FullScreenBannerRenderer
+import com.diegoferreiracaetano.dlearn.ui.factory.MovieCarouselRenderer
 import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.BannerCarouselComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.BannerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavItem
 import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.CarouselComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipItem
+import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.FullScreenBannerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.MovieCarouselComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
-import com.diegoferreiracaetano.dlearn.ui.util.ErrorScreen
-import com.diegoferreiracaetano.dlearn.ui.util.LoadingScreen
-import com.diegoferreiracaetano.dlearn.ui.util.RenderComponent
+import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
@@ -61,10 +74,8 @@ fun HomeListScreen(
 ) {
     var searchText by remember { mutableStateOf("") }
 
-    screen.components.forEach { component ->
-        RenderComponent(
-            modifier = modifier,
-            component = component,
+    val actions = remember(onItemClick, onFilterTypeChanged, onSearchChanged, onTabSelected, searchText) {
+        ComponentActions(
             onItemClick = onItemClick,
             onFilterTypeChanged = onFilterTypeChanged,
             onSearchChanged = onSearchChanged,
@@ -74,6 +85,52 @@ fun HomeListScreen(
         )
     }
 
+    screen.components.forEach { component ->
+        RenderComponent(
+            modifier = modifier,
+            component = component,
+            actions = actions
+        )
+    }
+}
+
+@Composable
+fun RenderComponent(
+    component: Component,
+    modifier: Modifier = Modifier,
+    actions: ComponentActions = ComponentActions()
+) {
+    when (component) {
+        is AppContainerComponent -> AppContainerRenderer().Render(component, actions, modifier)
+        is AppTopBarComponent -> AppTopBarRenderer().Render(component, actions, modifier)
+        is BottomNavigationComponent -> BottomNavigationRenderer().Render(component, actions, modifier)
+        is MovieCarouselComponent -> MovieCarouselRenderer().Render(component, actions, modifier)
+        is BannerCarouselComponent -> BannerCarouselRenderer().Render(component, actions, modifier)
+        is BannerComponent -> BannerRenderer().Render(component, actions, modifier)
+        is FullScreenBannerComponent -> FullScreenBannerRenderer().Render(component, actions, modifier)
+        is ChipGroupComponent -> ChipGroupRenderer().Render(component, actions, modifier)
+        else -> {} // Unknown components
+    }
+}
+
+@Composable
+fun LoadingScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+fun ErrorScreen(message: String? = null) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = message ?: "Unexpected Error")
+    }
 }
 
 @Preview
@@ -88,7 +145,7 @@ fun HomeListScreenPreview() {
                 components = listOf(
                     ChipGroupComponent(id = "2", items = listOf(ChipItem(id = "1", label = "Séries"))),
                     FullScreenBannerComponent(id = "3", title = "Banner", subtitle = "2024", imageUrl = ""),
-                    CarouselComponent(title = "Top 10", items = listOf()),
+                    MovieCarouselComponent(title = "Top 10", items = listOf()),
                     BannerCarouselComponent(title = "Populares", items = listOf())
                 )
             )

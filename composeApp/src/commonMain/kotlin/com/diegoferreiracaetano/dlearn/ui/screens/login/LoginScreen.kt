@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.auth
+package com.diegoferreiracaetano.dlearn.ui.screens.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,27 +27,31 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppText
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.reset_password_action
-import dlearn.composeapp.generated.resources.reset_password_subtitle
-import dlearn.composeapp.generated.resources.reset_password_title
+import dlearn.composeapp.generated.resources.login_action
+import dlearn.composeapp.generated.resources.login_forgot_password
+import dlearn.composeapp.generated.resources.login_screen_subtitle
+import dlearn.composeapp.generated.resources.login_screen_title
 import dlearn.composeapp.generated.resources.title_email
+import dlearn.composeapp.generated.resources.title_password
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResetPasswordScreen(
+fun LoginScreen(
     onBackClick: () -> Unit,
-    onNextClick: () -> Unit,
+    onLoginClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     AppContainer(
         modifier = modifier,
         topBar = {
             AppTopBar(
-                title = stringResource(Res.string.reset_password_title),
+                title = stringResource(Res.string.login_action),
                 onBack = onBackClick
             )
         }
@@ -60,14 +65,14 @@ fun ResetPasswordScreen(
             verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = stringResource(Res.string.reset_password_title),
+                text = stringResource(Res.string.login_screen_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth()
             )
 
             Text(
-                text = stringResource(Res.string.reset_password_subtitle),
+                text = stringResource(Res.string.login_screen_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth()
@@ -84,11 +89,33 @@ fun ResetPasswordScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            AppTextField(
+                value = password,
+                onValueChange = { password = it },
+                placeholder = Res.string.title_password,
+                label = Res.string.title_password,
+                type = TextFieldType.PASSWORD,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            TextButton(
+                onClick = onForgotPasswordClick,
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text(
+                    text = stringResource(Res.string.login_forgot_password),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
             Spacer(modifier = Modifier.height(32.dp))
 
             AppButton(
-                text = stringResource(Res.string.reset_password_action),
-                onClick = onNextClick,
+                text = stringResource(Res.string.login_action),
+                onClick = onLoginClick,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -97,8 +124,8 @@ fun ResetPasswordScreen(
 
 @Preview
 @Composable
-fun ResetPasswordScreenPreview() {
+fun LoginScreenPreview() {
     DLearnTheme {
-        ResetPasswordScreen(onBackClick = {}, onNextClick = {})
+        LoginScreen(onBackClick = {}, onLoginClick = {}, onForgotPasswordClick = {})
     }
 }

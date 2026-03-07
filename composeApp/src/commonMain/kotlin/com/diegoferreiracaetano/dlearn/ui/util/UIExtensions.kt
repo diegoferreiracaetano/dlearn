@@ -5,6 +5,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
+import com.diegoferreiracaetano.dlearn.designsystem.components.movie.MovieItem
+import com.diegoferreiracaetano.dlearn.ui.sdui.CardComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -63,4 +66,21 @@ fun <T, R> ViewModel.produceUiState(
 
 fun Color.contrastTextColor(): Color {
     return if (this.luminance() > 0.5f) Color.Black else Color.White
+}
+
+
+fun CardComponent.toMovieItem(): MovieItem {
+    return MovieItem(
+        id = this.id,
+        title = this.title,
+        imageSource = AppImageSource.Url(this.imageUrl),
+        rating = this.rating?.toDoubleOrNull(),
+        year = this.year.orEmpty(),
+        duration = this.duration.orEmpty(),
+        contentRating = this.contentRating.orEmpty(),
+        genre = this.genre ?: this.subtitle.orEmpty(),
+        type = this.type.orEmpty(),
+        isPremium = this.isPremium,
+        rank = this.rank
+    )
 }

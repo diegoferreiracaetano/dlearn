@@ -1,8 +1,7 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.auth
+package com.diegoferreiracaetano.dlearn.ui.screens.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,32 +26,29 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppText
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.signup_action
-import dlearn.composeapp.generated.resources.signup_agree_terms
-import dlearn.composeapp.generated.resources.signup_screen_subtitle
-import dlearn.composeapp.generated.resources.signup_screen_title
-import dlearn.composeapp.generated.resources.title_email
-import dlearn.composeapp.generated.resources.title_name
+import dlearn.composeapp.generated.resources.create_password_action
+import dlearn.composeapp.generated.resources.create_password_confirm
+import dlearn.composeapp.generated.resources.create_password_subtitle
+import dlearn.composeapp.generated.resources.create_password_title
 import dlearn.composeapp.generated.resources.title_password
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(
+fun CreateNewPasswordScreen(
     onBackClick: () -> Unit,
-    onSignUpClick: () -> Unit,
+    onResetClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
 
     AppContainer(
         modifier = modifier,
         topBar = {
             AppTopBar(
-                title = stringResource(Res.string.signup_action),
+                title = stringResource(Res.string.create_password_title),
                 onBack = onBackClick
             )
         }
@@ -66,41 +62,20 @@ fun SignUpScreen(
             verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = stringResource(Res.string.signup_screen_title),
+                text = stringResource(Res.string.create_password_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth()
             )
 
             Text(
-                text = stringResource(Res.string.signup_screen_subtitle),
+                text = stringResource(Res.string.create_password_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(32.dp))
-
-            AppTextField(
-                value = name,
-                onValueChange = { name = it },
-                placeholder = Res.string.title_name,
-                label = Res.string.title_name,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            AppTextField(
-                value = email,
-                onValueChange = { email = it },
-                placeholder = Res.string.title_email,
-                label = Res.string.title_email,
-                type = TextFieldType.EMAIL,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             AppTextField(
                 value = password,
@@ -113,22 +88,20 @@ fun SignUpScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(Res.string.signup_agree_terms),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            AppTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                placeholder = Res.string.create_password_confirm,
+                label = Res.string.create_password_confirm,
+                type = TextFieldType.PASSWORD,
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             AppButton(
-                text = stringResource(Res.string.signup_action),
-                onClick = onSignUpClick,
+                text = stringResource(Res.string.create_password_action),
+                onClick = onResetClick,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -137,8 +110,8 @@ fun SignUpScreen(
 
 @Preview
 @Composable
-fun SignUpScreenPreview() {
+fun CreateNewPasswordScreenPreview() {
     DLearnTheme {
-        SignUpScreen(onBackClick = {}, onSignUpClick = {})
+        CreateNewPasswordScreen(onBackClick = {}, onResetClick = {})
     }
 }

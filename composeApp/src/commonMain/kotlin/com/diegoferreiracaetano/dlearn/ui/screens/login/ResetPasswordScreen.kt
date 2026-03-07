@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.auth
+package com.diegoferreiracaetano.dlearn.ui.screens.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,29 +26,27 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppText
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.create_password_action
-import dlearn.composeapp.generated.resources.create_password_confirm
-import dlearn.composeapp.generated.resources.create_password_subtitle
-import dlearn.composeapp.generated.resources.create_password_title
-import dlearn.composeapp.generated.resources.title_password
+import dlearn.composeapp.generated.resources.reset_password_action
+import dlearn.composeapp.generated.resources.reset_password_subtitle
+import dlearn.composeapp.generated.resources.reset_password_title
+import dlearn.composeapp.generated.resources.title_email
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateNewPasswordScreen(
+fun ResetPasswordScreen(
     onBackClick: () -> Unit,
-    onResetClick: () -> Unit,
+    onNextClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
 
     AppContainer(
         modifier = modifier,
         topBar = {
             AppTopBar(
-                title = stringResource(Res.string.create_password_title),
+                title = stringResource(Res.string.reset_password_title),
                 onBack = onBackClick
             )
         }
@@ -62,14 +60,14 @@ fun CreateNewPasswordScreen(
             verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = stringResource(Res.string.create_password_title),
+                text = stringResource(Res.string.reset_password_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth()
             )
 
             Text(
-                text = stringResource(Res.string.create_password_subtitle),
+                text = stringResource(Res.string.reset_password_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth()
@@ -78,30 +76,19 @@ fun CreateNewPasswordScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             AppTextField(
-                value = password,
-                onValueChange = { password = it },
-                placeholder = Res.string.title_password,
-                label = Res.string.title_password,
-                type = TextFieldType.PASSWORD,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            AppTextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
-                placeholder = Res.string.create_password_confirm,
-                label = Res.string.create_password_confirm,
-                type = TextFieldType.PASSWORD,
+                value = email,
+                onValueChange = { email = it },
+                placeholder = Res.string.title_email,
+                label = Res.string.title_email,
+                type = TextFieldType.EMAIL,
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             AppButton(
-                text = stringResource(Res.string.create_password_action),
-                onClick = onResetClick,
+                text = stringResource(Res.string.reset_password_action),
+                onClick = onNextClick,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -110,8 +97,8 @@ fun CreateNewPasswordScreen(
 
 @Preview
 @Composable
-fun CreateNewPasswordScreenPreview() {
+fun ResetPasswordScreenPreview() {
     DLearnTheme {
-        CreateNewPasswordScreen(onBackClick = {}, onResetClick = {})
+        ResetPasswordScreen(onBackClick = {}, onNextClick = {})
     }
 }

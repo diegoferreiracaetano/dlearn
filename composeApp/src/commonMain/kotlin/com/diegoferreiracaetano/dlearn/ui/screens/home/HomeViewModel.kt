@@ -38,10 +38,10 @@ class HomeViewModel(
         }
     }
 
-    fun onFilterTypeChanged(type: String?) {
-        val filterType = when (type) {
-            "Séries" -> HomeFilterType.SERIES
-            "Filmes" -> HomeFilterType.MOVIE
+    fun onFilterTypeChanged(typeId: String?) {
+        val filterType = when (typeId) {
+            "series" -> HomeFilterType.SERIES
+            "movies" -> HomeFilterType.MOVIE
             else -> HomeFilterType.ALL
         }
         if (currentType == filterType) return

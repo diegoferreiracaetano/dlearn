@@ -15,13 +15,13 @@ import com.diegoferreiracaetano.dlearn.ui.screens.account.AccountScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.favorites.FavoritesScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.home.HomeScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.new.NewScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.auth.CreateNewPasswordScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.auth.LoginScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.auth.OnboardingScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.auth.WelcomeScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.auth.ResetPasswordScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.auth.SignUpScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.auth.VerifyAccountScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.login.CreateNewPasswordScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.login.LoginScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.onboarding.OnboardingScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.login.WelcomeScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.login.ResetPasswordScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.login.SignUpScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.login.VerifyAccountScreen
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.koinInject
 

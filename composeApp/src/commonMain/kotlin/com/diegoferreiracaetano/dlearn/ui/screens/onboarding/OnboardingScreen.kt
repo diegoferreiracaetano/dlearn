@@ -1,11 +1,8 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.auth
+package com.diegoferreiracaetano.dlearn.ui.screens.onboarding
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,11 +12,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.designsystem.components.carousel.PageCarousel
+import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImage
+import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
+import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource.*
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import dlearn.composeapp.generated.resources.Res
 import dlearn.composeapp.generated.resources.onboarding1
@@ -33,7 +32,6 @@ import dlearn.composeapp.generated.resources.onboarding_title_2
 import dlearn.composeapp.generated.resources.onboarding_title_3
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -72,11 +70,9 @@ fun OnboardingScreen(
         modifier = modifier,
         imageContent = { pageIndex ->
             if (pageIndex == 0) {
-                Image(
-                    painter = painterResource(pages[pageIndex].image),
-                    contentDescription = null,
+                AppImage(
+                    source = Resource(pages[pageIndex].image),
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop,
                 )
             } else {
                 Column(
@@ -84,14 +80,15 @@ fun OnboardingScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Image(
-                        painter = painterResource(pages[1].image),
-                        contentDescription = null,
+                    Spacer(modifier = Modifier.weight(1f))
+                    AppImage(
+                        source = Resource(pages[pageIndex].image),
                         modifier = Modifier
-                            .fillMaxWidth(),
-                        contentScale = ContentScale.Crop,
+                            .padding(16.dp)
+                            .fillMaxWidth()
+                            .weight(2.5f)
                     )
-                    Spacer(modifier = Modifier.height(200.dp))
+                    Spacer(modifier = Modifier.weight(2f))
                 }
            }
         },

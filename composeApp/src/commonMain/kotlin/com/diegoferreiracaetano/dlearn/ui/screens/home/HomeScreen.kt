@@ -12,25 +12,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppError
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
-import com.diegoferreiracaetano.dlearn.ui.factory.AppContainerRenderer
-import com.diegoferreiracaetano.dlearn.ui.factory.AppTopBarRenderer
-import com.diegoferreiracaetano.dlearn.ui.factory.BannerCarouselRenderer
-import com.diegoferreiracaetano.dlearn.ui.factory.BannerRenderer
-import com.diegoferreiracaetano.dlearn.ui.factory.BottomNavigationRenderer
-import com.diegoferreiracaetano.dlearn.ui.factory.ChipGroupRenderer
-import com.diegoferreiracaetano.dlearn.ui.factory.FullScreenBannerRenderer
-import com.diegoferreiracaetano.dlearn.ui.factory.MovieCarouselRenderer
+import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.BannerCarouselComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.BannerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavItem
 import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipItem
-import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.FullScreenBannerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.MovieCarouselComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -42,6 +34,7 @@ import org.koin.compose.koinInject
 fun HomeScreen(
     onTabSelected: (String) -> Unit,
     onItemClick: (String) -> Unit,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = koinInject(),
 ) {
@@ -59,7 +52,14 @@ fun HomeScreen(
             )
         }
         is HomeUiState.Loading -> LoadingScreen()
-        is HomeUiState.Error -> ErrorScreen(state.message)
+        is HomeUiState.Error -> {
+            AppError(
+                throwable = state.throwable,
+                modifier = modifier,
+                onPrimary = viewModel::retry,
+                onClose = onClose
+            )
+        }
     }
 }
 
@@ -86,30 +86,11 @@ fun HomeListScreen(
     }
 
     screen.components.forEach { component ->
-        RenderComponent(
+        RenderComponentFactory.Render(
             modifier = modifier,
             component = component,
             actions = actions
         )
-    }
-}
-
-@Composable
-fun RenderComponent(
-    component: Component,
-    modifier: Modifier = Modifier,
-    actions: ComponentActions = ComponentActions()
-) {
-    when (component) {
-        is AppContainerComponent -> AppContainerRenderer().Render(component, actions, modifier)
-        is AppTopBarComponent -> AppTopBarRenderer().Render(component, actions, modifier)
-        is BottomNavigationComponent -> BottomNavigationRenderer().Render(component, actions, modifier)
-        is MovieCarouselComponent -> MovieCarouselRenderer().Render(component, actions, modifier)
-        is BannerCarouselComponent -> BannerCarouselRenderer().Render(component, actions, modifier)
-        is BannerComponent -> BannerRenderer().Render(component, actions, modifier)
-        is FullScreenBannerComponent -> FullScreenBannerRenderer().Render(component, actions, modifier)
-        is ChipGroupComponent -> ChipGroupRenderer().Render(component, actions, modifier)
-        else -> {} // Unknown components
     }
 }
 

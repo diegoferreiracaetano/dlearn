@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppList
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
-import com.diegoferreiracaetano.dlearn.ui.screens.home.RenderComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
@@ -24,12 +23,12 @@ class AppContainerRenderer : ComponentRenderer {
             modifier = modifier,
             topBar = {
                 container.topBar?.let { topBar ->
-                    RenderComponent(component = topBar, actions = actions)
+                    RenderComponentFactory.Render(component = topBar, actions = actions)
                 }
             },
             bottomBar = {
                 container.bottomBar?.let { bottomBar ->
-                    RenderComponent(component = bottomBar, actions = actions)
+                    RenderComponentFactory.Render(component = bottomBar, actions = actions)
                 }
             }
         ) { contentModifier ->
@@ -37,7 +36,7 @@ class AppContainerRenderer : ComponentRenderer {
                 modifier = contentModifier
             ) {
                 items(container.components) { child ->
-                    RenderComponent(component = child, actions = actions)
+                    RenderComponentFactory.Render(component = child, actions = actions)
                 }
             }
         }

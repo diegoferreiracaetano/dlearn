@@ -27,6 +27,10 @@ class HomeViewModel(
         fetchHome()
     }
 
+    fun retry() {
+        fetchHome()
+    }
+
     fun onSearchChanged(query: String?) {
         if (currentSearch == query) return
         currentSearch = query
@@ -49,12 +53,12 @@ class HomeViewModel(
         fetchHome()
     }
 
-    private fun fetchHome() {
+    fun fetchHome() {
         _uiState.value = HomeUiState.Loading
         viewModelScope.launch {
             repository.getHome(type = currentType, search = currentSearch)
                 .catch { e ->
-                    _uiState.value = HomeUiState.Error(e.message)
+                    _uiState.value = HomeUiState.Error(e)
                 }
                 .collect { home ->
                     _uiState.value = HomeUiState.Success(home)

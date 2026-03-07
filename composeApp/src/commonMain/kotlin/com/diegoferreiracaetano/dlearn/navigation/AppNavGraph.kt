@@ -105,6 +105,9 @@ fun AppNavGraph(
                 onItemClick = {
                     // Implementar detalhe futuramente
                 },
+                onClose = {
+                    navController.popBackStack()
+                },
                 modifier = modifier,
             )
         }
@@ -134,6 +137,16 @@ fun AppNavGraph(
                 },
                 modifier = modifier,
             )
+        }
+    }
+}
+
+fun NavHostController.navigateToRoute(route: String) {
+    navigate(route) {
+        launchSingleTop = true
+        restoreState = true
+        popUpTo(graph.startDestinationId) {
+            saveState = true
         }
     }
 }

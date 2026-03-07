@@ -3,7 +3,7 @@ package com.diegoferreiracaetano.dlearn.ui.sdui
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CarouselComponent(
+data class MovieCarouselComponent(
     val title: String,
     val items: List<CardComponent>
 ) : Component

@@ -13,27 +13,39 @@ class HomeMapper {
         )
     }
 
-    fun toCarousel(title: String, videos: List<Video>, showRank: Boolean = false): CarouselComponent {
-        return CarouselComponent(
+    fun toCarousel(title: String, videos: List<Video>, showRank: Boolean = false): MovieCarouselComponent {
+        return MovieCarouselComponent(
             title = title,
-            items = videos.map { video -> 
-                CardComponent(
-                    title = video.title,
-                    imageUrl = video.imageUrl
-                )
+            items = videos.mapIndexed { index, video ->
+                video.toCardComponent(rank = if (showRank) index + 1 else null)
             }
         )
     }
 
-    fun toBannerCarousel(title: String, videos: List<Video>): CarouselComponent {
-        return CarouselComponent(
+    fun toBannerCarousel(title: String, videos: List<Video>): BannerCarouselComponent {
+        return BannerCarouselComponent(
             title = title,
             items = videos.map { video ->
-                CardComponent(
-                    title = video.title,
-                    imageUrl = video.imageUrl
-                )
+                video.toCardComponent()
             }
+        )
+    }
+
+    private fun Video.toCardComponent(rank: Int? = null): CardComponent {
+        return CardComponent(
+            id = id,
+            title = title,
+            subtitle = subtitle,
+            imageUrl = imageUrl,
+            rating = rating.toString(),
+            year = "", // TODO: Add year to Video domain if available
+            duration = "", // TODO: Add duration to Video domain if available
+            contentRating = "", // TODO: Add contentRating to Video domain if available
+            genre = categories.firstOrNull()?.title ?: "",
+            type = type.name,
+            isPremium = false,
+            rank = rank,
+            actionUrl = "/video/$id"
         )
     }
 }

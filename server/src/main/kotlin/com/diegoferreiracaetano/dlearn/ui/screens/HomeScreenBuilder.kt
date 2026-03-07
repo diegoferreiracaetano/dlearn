@@ -27,7 +27,7 @@ class HomeScreenBuilder(private val mapper: HomeMapper) {
 
         // Seção Top 10
         if (data.top10.isNotEmpty()) {
-            components.add(mapper.toCarousel("Top 10", data.top10))
+            components.add(mapper.toCarousel("Top 10", data.top10, showRank = true))
         }
 
         // Seção Populares
@@ -45,6 +45,8 @@ class HomeScreenBuilder(private val mapper: HomeMapper) {
         val container = AppContainerComponent(
             topBar = AppTopBarComponent(
                 title = "DLearn",
+                subtitle = "Bem-vindo de volta!",
+                imageUrl = "https://avatars.githubusercontent.com/u/1023?v=4",
                 showSearch = true
             ),
             bottomBar = BottomNavigationComponent(

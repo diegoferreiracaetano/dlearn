@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn
 
 import com.diegoferreiracaetano.dlearn.api.controllers.homeController
+import com.diegoferreiracaetano.dlearn.api.controllers.profileController
 import com.diegoferreiracaetano.dlearn.di.serverModule
 import com.diegoferreiracaetano.dlearn.orchestrator.HomeOrchestrator
 import io.ktor.http.CacheControl
@@ -54,5 +55,6 @@ fun Application.module() {
         openAPI(path = "openapi", swaggerFile = "openapi/documentation.yaml")
 
         homeController(homeOrchestrator)
+        profileController()
     }
 }

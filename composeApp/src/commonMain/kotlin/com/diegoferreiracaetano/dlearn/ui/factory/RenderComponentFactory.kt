@@ -2,15 +2,7 @@ package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.BannerCarouselComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.BannerComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.Component
-import com.diegoferreiracaetano.dlearn.ui.sdui.FullScreenBannerComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.MovieCarouselComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 
 object RenderComponentFactory {
@@ -29,6 +21,10 @@ object RenderComponentFactory {
             is BannerComponent -> BannerRenderer().Render(component, actions, modifier)
             is FullScreenBannerComponent -> FullScreenBannerRenderer().Render(component, actions, modifier)
             is ChipGroupComponent -> ChipGroupRenderer().Render(component, actions, modifier)
+            is ProfileRowComponent -> ProfileRowRenderer().Render(component, actions, modifier)
+            is PremiumBannerComponent -> PremiumBannerRenderer().Render(component, actions, modifier)
+            is SectionComponent -> SectionRenderer().Render(component, actions, modifier)
+            is FooterComponent -> FooterRenderer().Render(component, actions, modifier)
             else -> {} // Unknown components
         }
     }

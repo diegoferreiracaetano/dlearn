@@ -11,7 +11,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.*
-import com.diegoferreiracaetano.dlearn.ui.screens.account.AccountScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.favorites.FavoritesScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.home.HomeScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.new.NewScreen
@@ -22,6 +21,7 @@ import com.diegoferreiracaetano.dlearn.ui.screens.login.WelcomeScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.ResetPasswordScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.SignUpScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.VerifyAccountScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.profile.ProfileScreen
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.koinInject
 
@@ -50,7 +50,7 @@ fun AppNavGraph(
         composable(Welcome.route) {
             WelcomeScreen(
                 onSignUpClick = { navController.navigate(SignUp.route) },
-                onLoginClick = { navController.navigate(Login.route) },
+                onLoginClick = { navController.navigate(Home.route) },
                 modifier = modifier
             )
         }
@@ -130,10 +130,16 @@ fun AppNavGraph(
             )
         }
 
-        composable(Account.route) {
-            AccountScreen(
+        composable(Profile.route) {
+            ProfileScreen(
                 onTabSelected = { route ->
                     navController.navigateToRoute(route)
+                },
+                onItemClick = {
+                    // Implementar detalhe futuramente
+                },
+                onClose = {
+                    navController.popBackStack()
                 },
                 modifier = modifier,
             )

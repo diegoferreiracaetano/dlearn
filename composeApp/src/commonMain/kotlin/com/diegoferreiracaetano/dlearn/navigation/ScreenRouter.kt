@@ -6,7 +6,7 @@ sealed class ScreenRouter(
     object Home : ScreenRouter("Home")
     object New : ScreenRouter("New")
     object Favorites : ScreenRouter("Favorites")
-    object Account : ScreenRouter("Account")
+    object Profile : ScreenRouter("Account")
     object Welcome : ScreenRouter("welcome")
     object Login : ScreenRouter("login")
     object SignUp : ScreenRouter("signup")

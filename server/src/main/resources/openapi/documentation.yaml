@@ -31,6 +31,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Screen'
+  /v1/profile:
+    get:
+      summary: Get Profile Screen
+      description: Returns the Profile screen configuration with SDUI components
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
 components:
   schemas:
     Screen:
@@ -128,6 +139,17 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/ActionItem'
+    SectionComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/SectionItem'
     CarouselItem:
       type: object
       properties:
@@ -157,5 +179,19 @@ components:
           type: string
         icon:
           type: string
+        actionUrl:
+          type: string
+    SectionItem:
+      type: object
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+        iconIdentifier:
+          type: string
+          enum: [person, lock, notifications, language, public, delete, policy, help, info]
         actionUrl:
           type: string

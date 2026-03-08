@@ -12,10 +12,10 @@ class HomeOrchestrator(
 ) {
     private val homeCache = InMemoryCache<String, Screen>(5.minutes)
 
-    suspend fun getHomeData(userId: String, appVersion: Int): Screen {
-        return homeCache.getOrPut("$userId-$appVersion") {
+    suspend fun getHomeData(userId: String, appVersion: Int, lang: String): Screen {
+        return homeCache.getOrPut("$userId-$appVersion-$lang") {
             val domainData = getHomeDataUseCase.execute(userId)
-            screenBuilder.build(domainData, appVersion)
+            screenBuilder.build(domainData, appVersion, lang)
         }
     }
 }

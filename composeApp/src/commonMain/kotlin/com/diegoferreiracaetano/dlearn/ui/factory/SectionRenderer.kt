@@ -9,7 +9,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppTextRow
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.SectionComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
-import com.diegoferreiracaetano.dlearn.ui.util.IconMapper
+import com.diegoferreiracaetano.dlearn.ui.util.toIcon
 
 class SectionRenderer : ComponentRenderer {
     @Composable
@@ -31,12 +31,10 @@ class SectionRenderer : ComponentRenderer {
             )
             
             section.items.forEach { item ->
-                val icon = IconMapper.map(item.iconIdentifier)
-
                 AppTextRow(
                     label = item.label,
                     value = item.value,
-                    leadingIcon = icon,
+                    leadingIcon = item.icon.toIcon(),
                     onClick = { item.actionUrl?.let { actions.onItemClick(it) } }
                 )
             }

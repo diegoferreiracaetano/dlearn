@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 data class PremiumBannerComponent(
     val title: String,
     val description: String,
-    val iconIdentifier: String? = null,
+    val icon: AppIconType? = null,
     val actionUrl: String? = null
 ) : Component

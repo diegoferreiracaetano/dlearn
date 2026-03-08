@@ -12,7 +12,7 @@ data class Video(
     val imageUrl: String,
     val categories: List<VideoCategory> = listOf(),
     val isFavorite: Boolean = false,
-    val rating: Float = 0f,
+    val rating: Float? = null,
     val progress: Float = 0f,
     val type: VideoType = VideoType.DEFAULT,
     val mediaType: MediaType = MediaType.MOVIE,

@@ -12,5 +12,5 @@ data class BottomNavigationComponent(
 data class BottomNavItem(
     val label: String,
     val route: String,
-    val iconIdentifier: String? = null
+    val icon: AppIconType? = null
 )

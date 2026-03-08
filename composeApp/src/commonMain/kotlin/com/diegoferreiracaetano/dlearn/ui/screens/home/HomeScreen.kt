@@ -17,6 +17,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.BannerCarouselComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavItem
@@ -122,7 +123,8 @@ fun HomeListScreenPreview() {
         components = listOf(
             AppContainerComponent(
                 topBar = AppTopBarComponent(title = "DLearn"),
-                bottomBar = BottomNavigationComponent(items = listOf(BottomNavItem("Home", "/home", "home"))),
+                bottomBar = BottomNavigationComponent(items = listOf(BottomNavItem("Home", "/home",
+                    AppIconType.PERSON))),
                 components = listOf(
                     ChipGroupComponent(id = "2", items = listOf(ChipItem(id = "1", label = "Séries"))),
                     FullScreenBannerComponent(id = "3", title = "Banner", subtitle = "2024", imageUrl = ""),

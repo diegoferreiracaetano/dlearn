@@ -13,6 +13,6 @@ data class SectionItem(
     val id: String,
     val label: String,
     val value: String? = null,
-    val iconIdentifier: String? = null,
+    val icon: AppIconType? = null,
     val actionUrl: String? = null
 )

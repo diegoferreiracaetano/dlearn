@@ -3,9 +3,12 @@ package com.diegoferreiracaetano.dlearn.ui.screens
 import com.diegoferreiracaetano.dlearn.domain.models.ProfileDomainData
 import com.diegoferreiracaetano.dlearn.ui.mappers.ProfileMapper
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
-import com.diegoferreiracaetano.dlearn.util.Localization
+import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
-class ProfileScreenBuilder(private val mapper: ProfileMapper) {
+class ProfileScreenBuilder(
+    private val mapper: ProfileMapper,
+    private val i18n: I18nProvider
+) {
     fun build(data: ProfileDomainData, appVersion: Int, lang: String): Screen {
         val components = mutableListOf<Component>()
 
@@ -21,13 +24,13 @@ class ProfileScreenBuilder(private val mapper: ProfileMapper) {
         components.add(mapper.toFooter(lang))
 
         val container = AppContainerComponent(
-            topBar = AppTopBarComponent(title = Localization.getString("profile_title", lang)),
+            topBar = AppTopBarComponent(title = i18n.getString(AppStringType.PROFILE_TITLE, lang)),
             bottomBar = BottomNavigationComponent(
                 items = listOf(
-                    BottomNavItem(label = "Home", route = "home", iconIdentifier = "home"),
-                    BottomNavItem(label = "Busca", route = "search", iconIdentifier = "search"),
-                    BottomNavItem(label = "Favoritos", route = "favorite", iconIdentifier = "favorite"),
-                    BottomNavItem(label = "Perfil", route = "profile", iconIdentifier = "person")
+                    BottomNavItem(label = i18n.getString(AppStringType.NAV_HOME, lang), route = "home", icon = AppIconType.INFO),
+                    BottomNavItem(label = i18n.getString(AppStringType.NAV_SEARCH, lang), route = "search", icon = AppIconType.HELP),
+                    BottomNavItem(label = i18n.getString(AppStringType.NAV_FAVORITES, lang), route = "favorite", icon = AppIconType.NOTIFICATIONS),
+                    BottomNavItem(label = i18n.getString(AppStringType.NAV_PROFILE, lang), route = "profile", icon = AppIconType.PERSON)
                 ),
                 selectedRoute = "profile"
             ),

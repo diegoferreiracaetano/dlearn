@@ -30,7 +30,7 @@ class HomeDataService(private val tmdbClient: TmdbClient) {
         HomeDomainData(
             banner = popularMovies.firstOrNull(),
             top10 = topRatedMovies.take(10),
-            popular = (popularMovies + popularSeries).shuffled(),
+            popular = (popularMovies + popularSeries).shuffled().take(10),
             categories = categoryVideosMap
         )
     }

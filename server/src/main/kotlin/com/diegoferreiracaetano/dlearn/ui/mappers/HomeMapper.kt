@@ -2,8 +2,9 @@ package com.diegoferreiracaetano.dlearn.ui.mappers
 
 import com.diegoferreiracaetano.dlearn.domain.video.Video
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
+import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
-class HomeMapper {
+class HomeMapper(private val i18n: I18nProvider) {
     fun toBannerMain(video: Video): FullScreenBannerComponent {
         return FullScreenBannerComponent(
             id = video.id,
@@ -37,10 +38,10 @@ class HomeMapper {
             title = title,
             subtitle = subtitle,
             imageUrl = imageUrl,
-            rating = rating.toString(),
-            year = "", // TODO: Add year to Video domain if available
-            duration = "", // TODO: Add duration to Video domain if available
-            contentRating = "", // TODO: Add contentRating to Video domain if available
+            rating = rating?.toString(),
+            year = "",
+            duration = "",
+            contentRating = "",
             genre = categories.firstOrNull()?.title ?: "",
             type = type.name,
             isPremium = false,

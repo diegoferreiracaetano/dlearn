@@ -2,9 +2,9 @@ package com.diegoferreiracaetano.dlearn.ui.mappers
 
 import com.diegoferreiracaetano.dlearn.domain.models.ProfileDomainData
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
-import com.diegoferreiracaetano.dlearn.util.Localization
+import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
-class ProfileMapper {
+class ProfileMapper(private val i18n: I18nProvider) {
     fun toHeader(data: ProfileDomainData): ProfileRowComponent {
         return ProfileRowComponent(
             name = data.name,
@@ -17,49 +17,96 @@ class ProfileMapper {
     fun toPremiumBanner(data: ProfileDomainData, lang: String): PremiumBannerComponent? {
         if (!data.isPremium) return null
         return PremiumBannerComponent(
-            title = Localization.getString("premium_member", lang),
-            description = Localization.getString("premium_description", lang),
-            iconIdentifier = "premium",
+            title = i18n.getString(AppStringType.PREMIUM_MEMBER, lang),
+            description = i18n.getString(AppStringType.PREMIUM_DESCRIPTION, lang),
+            icon = AppIconType.PERSON,
             actionUrl = "/premium"
         )
     }
 
     fun toAccountSection(lang: String): SectionComponent {
         return SectionComponent(
-            title = Localization.getString("section_account", lang),
+            title = i18n.getString(AppStringType.SECTION_ACCOUNT, lang),
             items = listOf(
-                SectionItem(id = "member", label = Localization.getString("item_member", lang), iconIdentifier = "person", actionUrl = "/member"),
-                SectionItem(id = "password", label = Localization.getString("item_password", lang), iconIdentifier = "lock", actionUrl = "/change-password")
+                SectionItem(
+                    id = "member",
+                    label = i18n.getString(AppStringType.ITEM_MEMBER, lang),
+                    icon = AppIconType.PERSON,
+                    actionUrl = "/member"
+                ),
+                SectionItem(
+                    id = "password",
+                    label = i18n.getString(AppStringType.ITEM_PASSWORD, lang),
+                    icon = AppIconType.LOCK,
+                    actionUrl = "/change-password"
+                )
             )
         )
     }
 
     fun toGeneralSection(data: ProfileDomainData, lang: String): SectionComponent {
         return SectionComponent(
-            title = Localization.getString("section_general", lang),
+            title = i18n.getString(AppStringType.SECTION_GENERAL, lang),
             items = listOf(
-                SectionItem(id = "notification", label = Localization.getString("item_notification", lang), iconIdentifier = "notifications", actionUrl = "/notifications"),
-                SectionItem(id = "language", label = Localization.getString("item_language", lang), value = data.language, iconIdentifier = "language", actionUrl = "/language"),
-                SectionItem(id = "country", label = Localization.getString("item_country", lang), value = data.country, iconIdentifier = "public", actionUrl = "/country"),
-                SectionItem(id = "clear_cache", label = Localization.getString("item_clear_cache", lang), iconIdentifier = "delete", actionUrl = "/clear-cache")
+                SectionItem(
+                    id = "notification",
+                    label = i18n.getString(AppStringType.ITEM_NOTIFICATION, lang),
+                    icon = AppIconType.NOTIFICATIONS,
+                    actionUrl = "/notifications"
+                ),
+                SectionItem(
+                    id = "language",
+                    label = i18n.getString(AppStringType.ITEM_LANGUAGE, lang),
+                    value = data.language,
+                    icon = AppIconType.LANGUAGE,
+                    actionUrl = "/language"
+                ),
+                SectionItem(
+                    id = "country",
+                    label = i18n.getString(AppStringType.ITEM_COUNTRY, lang),
+                    value = data.country,
+                    icon = AppIconType.PUBLIC,
+                    actionUrl = "/country"
+                ),
+                SectionItem(
+                    id = "clear_cache",
+                    label = i18n.getString(AppStringType.ITEM_CLEAR_CACHE, lang),
+                    icon = AppIconType.DELETE,
+                    actionUrl = "/clear-cache"
+                )
             )
         )
     }
 
     fun toMoreSection(lang: String): SectionComponent {
         return SectionComponent(
-            title = Localization.getString("section_more", lang),
+            title = i18n.getString(AppStringType.SECTION_MORE, lang),
             items = listOf(
-                SectionItem(id = "legal", label = Localization.getString("item_legal", lang), iconIdentifier = "policy", actionUrl = "/legal"),
-                SectionItem(id = "help", label = Localization.getString("item_help", lang), iconIdentifier = "help", actionUrl = "/help"),
-                SectionItem(id = "about", label = Localization.getString("item_about", lang), iconIdentifier = "info", actionUrl = "/about")
+                SectionItem(
+                    id = "legal",
+                    label = i18n.getString(AppStringType.ITEM_LEGAL, lang),
+                    icon = AppIconType.POLICY,
+                    actionUrl = "/legal"
+                ),
+                SectionItem(
+                    id = "help",
+                    label = i18n.getString(AppStringType.ITEM_HELP, lang),
+                    icon = AppIconType.HELP,
+                    actionUrl = "/help"
+                ),
+                SectionItem(
+                    id = "about",
+                    label = i18n.getString(AppStringType.ITEM_ABOUT, lang),
+                    icon = AppIconType.INFO,
+                    actionUrl = "/about"
+                )
             )
         )
     }
 
     fun toFooter(lang: String): FooterComponent {
         return FooterComponent(
-            label = Localization.getString("logout", lang),
+            label = i18n.getString(AppStringType.LOGOUT, lang),
             actionUrl = "/logout"
         )
     }

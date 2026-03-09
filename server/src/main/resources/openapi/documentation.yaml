@@ -11,7 +11,7 @@ paths:
     get:
       summary: Get Home Screen
       description: Returns the Home screen configuration with SDUI components
-      parameters:
+      parameters: &common_params
         - name: userId
           in: query
           required: false
@@ -31,15 +31,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Screen'
+  /v1/movie/{movieId}:
+    get:
+      summary: Get Movie Detail Screen
+      description: Returns the Movie Detail screen configuration for a specific movie
+      parameters:
+        - name: movieId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: spider-man
+        - *common_params
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
+
 components:
   schemas:
     Screen:
       type: object
       properties:
-        title:
+        id:
           type: string
-        version:
-          type: integer
         components:
           type: array
           items:
@@ -51,29 +69,20 @@ components:
       properties:
         type:
           type: string
-        id:
-          type: string
-    HeaderComponent:
+    AppContainerComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
           properties:
-            title:
-              type: string
-            imageUrl:
-              type: string
-    UserCardComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            userName:
-              type: string
-            balance:
-              type: string
-            accountType:
-              type: string
-    BannerMainComponent:
+            topBar:
+              $ref: '#/components/schemas/AppTopBarComponent'
+            bottomBar:
+              $ref: '#/components/schemas/BottomNavigationComponent'
+            components:
+              type: array
+              items:
+                $ref: '#/components/schemas/Component'
+    AppTopBarComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
@@ -84,78 +93,131 @@ components:
               type: string
             imageUrl:
               type: string
-            videoId:
-              type: string
-    CarouselComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            title:
-              type: string
-            showRank:
+            showSearch:
               type: boolean
-            items:
+    MovieHeaderComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            imageUrl:
+              type: string
+            year:
+              type: string
+            duration:
+              type: string
+            genre:
+              type: string
+            rating:
+              type: string
+    ActionButtonsComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            primaryButton:
+              $ref: '#/components/schemas/ActionButton'
+            secondaryButtons:
               type: array
               items:
-                $ref: '#/components/schemas/CarouselItem'
-    BannerCarouselComponent:
+                $ref: '#/components/schemas/ActionButton'
+    ActionButton:
+      type: object
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        icon:
+          type: string
+        actionUrl:
+          type: string
+    ExpandableTextComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
           properties:
             title:
               type: string
-            items:
-              type: array
-              items:
-                $ref: '#/components/schemas/CarouselItem'
-    ChipGroupComponent:
+            text:
+              type: string
+            moreLabel:
+              type: string
+    CastCarouselComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
           properties:
-            items:
+            title:
+              type: string
+            cast:
               type: array
               items:
-                $ref: '#/components/schemas/ChipItem'
-    QuickActionsComponent:
+                $ref: '#/components/schemas/CastMember'
+    CastMember:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+        imageUrl:
+          type: string
+    EpisodeListComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
           properties:
-            actions:
+            title:
+              type: string
+            seasons:
               type: array
               items:
-                $ref: '#/components/schemas/ActionItem'
-    CarouselItem:
+                type: string
+            selectedSeason:
+              type: string
+            episodes:
+              type: array
+              items:
+                $ref: '#/components/schemas/EpisodeItem'
+    EpisodeItem:
       type: object
       properties:
         id:
           type: string
         title:
           type: string
-        subtitle:
+        duration:
+          type: string
+        description:
           type: string
         imageUrl:
           type: string
-        rank:
-          type: integer
-    ChipItem:
-      type: object
-      properties:
-        label:
+        isPremium:
+          type: boolean
+        actionUrl:
           type: string
-        hasDropDown:
-          type: boolean
-        isFilter:
-          type: boolean
-    ActionItem:
+    BottomNavigationComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/BottomNavigationItem'
+    BottomNavigationItem:
       type: object
       properties:
+        id:
+          type: string
         label:
           type: string
         icon:
+          type: string
+        selectedIcon:
           type: string
         actionUrl:
           type: string

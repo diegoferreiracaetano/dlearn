@@ -13,13 +13,15 @@ class MovieCarouselRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
-        val carousel = component as? MovieCarouselComponent ?: return
+        val carousel = (component as? MovieCarouselComponent) ?: return
+
         AppMovieCarousel(
             title = carousel.title,
             items = carousel.items.map { it.toMovieItem() },
-            onMovieClick = { movie -> actions.onItemClick(movie.id) }
+            onMovieClick = { movie -> actions.onItemClick(movie.id) },
+            modifier = modifier,
         )
     }
 }

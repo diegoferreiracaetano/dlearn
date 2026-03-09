@@ -3,6 +3,7 @@ package com.diegoferreiracaetano.dlearn.tmdb
 import com.diegoferreiracaetano.dlearn.model.TmdbGenresResponse
 import com.diegoferreiracaetano.dlearn.model.TmdbListResponse
 import com.diegoferreiracaetano.dlearn.model.TmdbItemRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbMovieDetailRemote
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_API_KEY
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_BASE_URL
 import io.ktor.client.HttpClient
@@ -55,5 +56,13 @@ class TmdbClient {
 
     suspend fun getMoviesByGenre(genreId: Int): TmdbListResponse<TmdbItemRemote> {
         return get("/discover/movie", mapOf("with_genres" to genreId))
+    }
+
+    suspend fun getMovieDetail(movieId: String): TmdbMovieDetailRemote {
+        return get("/movie/$movieId", mapOf("append_to_response" to "credits"))
+    }
+
+    suspend fun getTvShowDetail(tvId: String): TmdbMovieDetailRemote {
+        return get("/tv/$tvId", mapOf("append_to_response" to "credits"))
     }
 }

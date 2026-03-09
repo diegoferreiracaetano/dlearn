@@ -18,6 +18,12 @@ fun AppIconType?.toIcon(): ImageVector? {
         AppIconType.HELP -> Icons.AutoMirrored.Filled.Help
         AppIconType.INFO -> Icons.Default.Info
         AppIconType.WORKSPACE_PREMIUM -> Icons.Default.WorkspacePremium
+        AppIconType.PLAY_ARROW -> Icons.Default.PlayArrow
+        AppIconType.DOWNLOAD -> Icons.Default.Download
+        AppIconType.SHARE -> Icons.Default.Share
+        AppIconType.CALENDAR_MONTH -> Icons.Default.CalendarMonth
+        AppIconType.SCHEDULE -> Icons.Default.Schedule
+        AppIconType.STAR -> Icons.Default.Star
         AppIconType.UNKNOWN, null -> null
     }
 }

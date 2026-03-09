@@ -1,9 +1,11 @@
 package com.diegoferreiracaetano.dlearn
 
 import com.diegoferreiracaetano.dlearn.api.controllers.homeController
+import com.diegoferreiracaetano.dlearn.api.controllers.movieDetailController
 import com.diegoferreiracaetano.dlearn.api.controllers.profileController
 import com.diegoferreiracaetano.dlearn.di.serverModule
 import com.diegoferreiracaetano.dlearn.orchestrator.HomeOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.MovieDetailOrchestrator
 import io.ktor.http.CacheControl
 import io.ktor.http.ContentType
 import io.ktor.http.content.CachingOptions
@@ -48,6 +50,7 @@ fun Application.module() {
     }
 
     val homeOrchestrator by inject<HomeOrchestrator>()
+    val movieDetailOrchestrator by inject<MovieDetailOrchestrator>()
 
     routing {
         // Swagger UI will look for the documentation.yaml in the resources/openapi folder
@@ -56,5 +59,6 @@ fun Application.module() {
 
         homeController(homeOrchestrator)
         profileController()
+        movieDetailController(movieDetailOrchestrator)
     }
 }

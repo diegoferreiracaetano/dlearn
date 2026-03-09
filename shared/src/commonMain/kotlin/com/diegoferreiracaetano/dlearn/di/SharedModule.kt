@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.di
 
 import com.diegoferreiracaetano.dlearn.data.home.remote.HomeRepositoryRemote
+import com.diegoferreiracaetano.dlearn.data.movie.remote.MovieDetailRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.profile.remote.ProfileRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.session.SessionStorage
 import com.diegoferreiracaetano.dlearn.data.session.SettingsSessionStorage
@@ -8,6 +9,7 @@ import com.diegoferreiracaetano.dlearn.data.user.UserRepository
 import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserNetworkDataSource
 import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserRepositoryRemote
 import com.diegoferreiracaetano.dlearn.domain.home.HomeRepository
+import com.diegoferreiracaetano.dlearn.domain.movie.MovieDetailRepository
 import com.diegoferreiracaetano.dlearn.domain.profile.ProfileRepository
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.domain.user.CreateAccountUseCase
@@ -66,4 +68,5 @@ val sharedModule = module {
     single { SessionManager(get()) }
     single<HomeRepository> { HomeRepositoryRemote(get()) }
     single<ProfileRepository> { ProfileRepositoryRemote(get()) }
+    single<MovieDetailRepository> { MovieDetailRepositoryRemote(get()) }
 }

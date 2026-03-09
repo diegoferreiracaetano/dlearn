@@ -5,6 +5,7 @@ data class ComponentActions(
     val onFilterTypeChanged: (String?) -> Unit = {},
     val onSearchChanged: (String) -> Unit = {},
     val onTabSelected: (String) -> Unit = {},
+    val onBackClick: () -> Unit = {},
     val searchText: String = "",
     val onSearchTextChange: (String) -> Unit = {}
 )

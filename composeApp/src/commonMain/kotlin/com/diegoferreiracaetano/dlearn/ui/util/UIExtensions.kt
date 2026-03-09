@@ -68,7 +68,6 @@ fun Color.contrastTextColor(): Color {
     return if (this.luminance() > 0.5f) Color.Black else Color.White
 }
 
-
 fun CardComponent.toMovieItem(): MovieItem {
     return MovieItem(
         id = this.id,

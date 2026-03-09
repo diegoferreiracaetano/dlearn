@@ -5,6 +5,7 @@ package com.diegoferreiracaetano.dlearn.ui.factory
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppList
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent

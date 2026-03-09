@@ -6,9 +6,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.*
 import com.diegoferreiracaetano.dlearn.ui.screens.favorites.FavoritesScreen
@@ -21,6 +23,7 @@ import com.diegoferreiracaetano.dlearn.ui.screens.login.WelcomeScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.ResetPasswordScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.SignUpScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.VerifyAccountScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.profile.ProfileScreen
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.koinInject
@@ -33,7 +36,9 @@ fun AppNavGraph(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ) {
     val isLoggedIn by sessionManager.isLoggedIn.collectAsStateWithLifecycle()
-    val startDestination = if (isLoggedIn) Home.route else Onboarding.route
+   // val startDestination = if (isLoggedIn) Home.route else Onboarding.route
+
+    val startDestination = Home.route
 
     NavHost(
         navController = navController,
@@ -102,13 +107,28 @@ fun AppNavGraph(
                 onTabSelected = { route ->
                     navController.navigateToRoute(route)
                 },
-                onItemClick = {
-                    // Implementar detalhe futuramente
+                onItemClick = { movieId ->
+                    navController.navigate(MovieDetail.createRoute(movieId))
                 },
                 onClose = {
                     navController.popBackStack()
                 },
                 modifier = modifier,
+            )
+        }
+
+        composable(
+            route = MovieDetail.route,
+            arguments = listOf(navArgument("movieId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val movieId = backStackEntry.arguments?.getString("movieId") ?: ""
+            MovieDetailScreen(
+                movieId = movieId,
+                onBackClick = { navController.popBackStack() },
+                onItemClick = { clickedId ->
+                    navController.navigate(MovieDetail.createRoute(clickedId))
+                },
+                modifier = modifier
             )
         }
 

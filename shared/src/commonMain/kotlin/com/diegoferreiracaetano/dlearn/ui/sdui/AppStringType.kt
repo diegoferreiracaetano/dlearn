@@ -36,5 +36,11 @@ enum class AppStringType {
     NAV_FAVORITES,
     NAV_PROFILE,
 
+    // Movie Detail
+    DETAIL_TRAILER,
+    DETAIL_STORY_LINE,
+    DETAIL_CAST_CREW,
+    DETAIL_EPISODE,
+
     UNKNOWN
 }

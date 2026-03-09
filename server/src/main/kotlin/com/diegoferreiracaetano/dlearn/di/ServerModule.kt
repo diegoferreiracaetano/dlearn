@@ -1,15 +1,18 @@
 package com.diegoferreiracaetano.dlearn.di
 
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetHomeDataUseCase
+import com.diegoferreiracaetano.dlearn.domain.usecases.GetMovieDetailUseCase
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetProfileDataUseCase
 import com.diegoferreiracaetano.dlearn.infrastructure.services.HomeDataService
 import com.diegoferreiracaetano.dlearn.infrastructure.services.ProfileDataService
 import com.diegoferreiracaetano.dlearn.orchestrator.HomeOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.MovieDetailOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.ProfileOrchestrator
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import com.diegoferreiracaetano.dlearn.ui.mappers.HomeMapper
 import com.diegoferreiracaetano.dlearn.ui.mappers.ProfileMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.HomeScreenBuilder
+import com.diegoferreiracaetano.dlearn.ui.screens.MovieDetailScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.screens.ProfileScreenBuilder
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import org.koin.dsl.module
@@ -31,4 +34,9 @@ val serverModule = module {
     single { ProfileMapper(get()) }
     single { ProfileScreenBuilder(get(), get()) }
     single { ProfileOrchestrator(get(), get()) }
+
+    // Movie Detail
+    single { GetMovieDetailUseCase(get()) }
+    single { MovieDetailScreenBuilder(get()) }
+    single { MovieDetailOrchestrator(get(), get()) }
 }

@@ -18,10 +18,15 @@ class AppTopBarRenderer : ComponentRenderer {
         modifier: Modifier
     ) {
         val topBar = component as? AppTopBarComponent ?: return
+
         AppTopBar(
+            modifier = modifier,
             title = topBar.title,
             subtitle = topBar.subtitle,
-            profileImageSource = topBar.imageUrl?.let { AppImageSource.Url(it) }
+            profileImageSource = topBar.imageUrl?.let { AppImageSource.Url(it) },
+            onBack = actions.onBackClick,
+            onSearchValueChange = if (topBar.showSearch) actions.onSearchTextChange else null,
+            searchValue = actions.searchText
         )
     }
 }

@@ -14,13 +14,11 @@ enum class AppIconType {
     HELP,
     INFO,
     WORKSPACE_PREMIUM,
+    PLAY_ARROW,
+    DOWNLOAD,
+    SHARE,
+    CALENDAR_MONTH,
+    SCHEDULE,
+    STAR,
     UNKNOWN;
-
-    companion object {
-        fun from(value: String?): AppIconType = try {
-            valueOf(value?.uppercase() ?: "UNKNOWN")
-        } catch (e: Exception) {
-            UNKNOWN
-        }
-    }
 }

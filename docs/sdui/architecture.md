@@ -39,7 +39,10 @@ Atualmente, o DLearn suporta os seguintes componentes:
 | `UserRowComponent` | Linha de usuário genérica com foto, nome e cargo/função (ex: Elenco). |
 | `ProfileRowComponent` | Componente específico para o perfil, com nome, e-mail e ação de edição. |
 | `PremiumBannerComponent` | Banner de destaque para usuários premium. |
-| `SectionComponent` | Seção com título e lista de itens clicáveis. |
+| `SectionComponent` | Seção com título e lista de itens clicáveis (`SectionItem`). |
+| `AppMovieDetailHeaderComponent` | Header especializado para detalhes de filmes (título, poster, nota, duração, trailer e ações). |
+| `AppExpandableSectionComponent` | Seção com título e texto expansível (ex: Storyline/Sinopse). |
+| `FooterComponent` | Rodapé simples para ações como Logout. |
 
 ## 🛠️ Próximos Passos (TODO)
 

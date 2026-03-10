@@ -1,5 +1,7 @@
 package com.diegoferreiracaetano.dlearn.navigation
 
+import com.diegoferreiracaetano.dlearn.util.encodeURL
+
 sealed class ScreenRouter(
     val route: String,
 ) {
@@ -16,6 +18,6 @@ sealed class ScreenRouter(
     object Regions : ScreenRouter("regions")
     object Onboarding : ScreenRouter("onboarding1")
     object MovieDetail : ScreenRouter("movie_detail/{movieId}") {
-        fun createRoute(movieId: String) = "movie_detail/$movieId"
+        fun createRoute(movieId: String) = "movie_detail/${movieId.encodeURL()}"
     }
 }

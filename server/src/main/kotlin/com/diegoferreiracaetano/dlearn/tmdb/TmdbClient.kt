@@ -59,10 +59,10 @@ class TmdbClient {
     }
 
     suspend fun getMovieDetail(movieId: String): TmdbMovieDetailRemote {
-        return get("/movie/$movieId", mapOf("append_to_response" to "credits"))
+        return get("/movie/$movieId", mapOf("append_to_response" to "credits,videos"))
     }
 
     suspend fun getTvShowDetail(tvId: String): TmdbMovieDetailRemote {
-        return get("/tv/$tvId", mapOf("append_to_response" to "credits"))
+        return get("/tv/$tvId", mapOf("append_to_response" to "credits,videos"))
     }
 }

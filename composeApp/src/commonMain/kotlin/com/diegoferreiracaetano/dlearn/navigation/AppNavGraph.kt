@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -11,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.savedstate.read
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.*
 import com.diegoferreiracaetano.dlearn.ui.screens.favorites.FavoritesScreen
@@ -35,6 +38,7 @@ fun AppNavGraph(
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ) {
+    val uriHandler = LocalUriHandler.current
     val isLoggedIn by sessionManager.isLoggedIn.collectAsStateWithLifecycle()
    // val startDestination = if (isLoggedIn) Home.route else Onboarding.route
 
@@ -107,8 +111,8 @@ fun AppNavGraph(
                 onTabSelected = { route ->
                     navController.navigateToRoute(route)
                 },
-                onItemClick = { movieId ->
-                    navController.navigate(MovieDetail.createRoute(movieId))
+                onItemClick = { id ->
+                    navController.handleNavigation(id, uriHandler)
                 },
                 onClose = {
                     navController.popBackStack()
@@ -121,12 +125,12 @@ fun AppNavGraph(
             route = MovieDetail.route,
             arguments = listOf(navArgument("movieId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val movieId = backStackEntry.arguments?.getString("movieId") ?: ""
+            val movieId = backStackEntry.arguments?.read { getString("movieId") } ?: ""
             MovieDetailScreen(
                 movieId = movieId,
                 onBackClick = { navController.popBackStack() },
-                onItemClick = { clickedId ->
-                    navController.navigate(MovieDetail.createRoute(clickedId))
+                onItemClick = { id ->
+                    navController.handleNavigation(id, uriHandler)
                 },
                 modifier = modifier
             )
@@ -155,8 +159,8 @@ fun AppNavGraph(
                 onTabSelected = { route ->
                     navController.navigateToRoute(route)
                 },
-                onItemClick = {
-                    // Implementar detalhe futuramente
+                onItemClick = { id ->
+                    navController.handleNavigation(id, uriHandler)
                 },
                 onClose = {
                     navController.popBackStack()
@@ -164,6 +168,24 @@ fun AppNavGraph(
                 modifier = modifier,
             )
         }
+    }
+}
+
+private fun NavHostController.handleNavigation(
+    id: String, 
+    uriHandler: UriHandler
+) {
+    if (id.startsWith("youtube://")) {
+        val videoId = id.removePrefix("youtube://")
+        uriHandler.openUri("https://www.youtube.com/watch?v=$videoId")
+    } else if (id.startsWith("http") || id.contains("://")) {
+        try {
+            uriHandler.openUri(id)
+        } catch (e: Exception) {
+            // Silently fail if URI cannot be opened
+        }
+    } else {
+        navigate(MovieDetail.createRoute(id))
     }
 }
 

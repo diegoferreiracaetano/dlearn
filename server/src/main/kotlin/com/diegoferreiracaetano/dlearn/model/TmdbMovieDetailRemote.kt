@@ -15,20 +15,14 @@ data class TmdbMovieDetailRemote(
     @SerialName("first_air_date") val firstAirDate: String? = null,
     val runtime: Int? = null,
     @SerialName("vote_average") val voteAverage: Double? = null,
-    val genres: List<TmdbGenreRemote> = emptyList(),
-    val credits: TmdbCreditsRemote? = null
-)
-
-@Serializable
-data class TmdbGenreRemote(
-    val id: Int,
-    val name: String
+    val genres: List<TmdbGenre> = emptyList(),
+    val credits: TmdbCreditsRemote? = null,
+    val videos: TmdbVideosResponseRemote? = null
 )
 
 @Serializable
 data class TmdbCreditsRemote(
-    val cast: List<TmdbCastRemote> = emptyList(),
-    val crew: List<TmdbCrewRemote> = emptyList()
+    val cast: List<TmdbCastRemote> = emptyList()
 )
 
 @Serializable
@@ -40,9 +34,15 @@ data class TmdbCastRemote(
 )
 
 @Serializable
-data class TmdbCrewRemote(
-    val id: Int,
+data class TmdbVideosResponseRemote(
+    val results: List<TmdbVideoRemote> = emptyList()
+)
+
+@Serializable
+data class TmdbVideoRemote(
+    val id: String,
+    val key: String,
     val name: String,
-    val job: String,
-    @SerialName("profile_path") val profilePath: String? = null
+    val site: String,
+    val type: String
 )

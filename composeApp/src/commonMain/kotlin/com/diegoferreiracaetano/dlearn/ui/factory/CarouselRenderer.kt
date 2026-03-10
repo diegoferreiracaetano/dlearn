@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,8 +23,7 @@ class CarouselRenderer : ComponentRenderer {
             title = carousel.title,
             isPager = false,
             spacing = 16.dp,
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            modifier = modifier,
+            modifier = Modifier.padding(horizontal = 16.dp),
         ) { index ->
             RenderComponentFactory.Render(
                 component = carousel.items[index],

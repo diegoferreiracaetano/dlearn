@@ -19,7 +19,6 @@ object RenderComponentFactory {
             is MovieCarouselComponent -> MovieCarouselRenderer().Render(component, actions, modifier)
             is BannerCarouselComponent -> BannerCarouselRenderer().Render(component, actions, modifier)
             is CarouselComponent -> CarouselRenderer().Render(component, actions, modifier)
-            is BannerComponent -> BannerRenderer().Render(component, actions, modifier)
             is FullScreenBannerComponent -> FullScreenBannerRenderer().Render(component, actions, modifier)
             is ChipGroupComponent -> ChipGroupRenderer().Render(component, actions, modifier)
             is ProfileRowComponent -> ProfileRowRenderer().Render(component, actions, modifier)
@@ -28,6 +27,7 @@ object RenderComponentFactory {
             is SectionComponent -> SectionRenderer().Render(component, actions, modifier)
             is FooterComponent -> FooterRenderer().Render(component, actions, modifier)
             is AppMovieDetailHeaderComponent -> AppMovieDetailHeaderRenderer().Render(component, actions, modifier)
+            is AppExpandableSectionComponent -> AppExpandableSectionRenderer().Render(component, actions, modifier)
             else -> {} // Unknown components
         }
     }

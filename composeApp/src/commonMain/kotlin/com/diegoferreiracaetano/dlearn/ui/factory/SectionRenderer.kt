@@ -23,11 +23,10 @@ class SectionRenderer : ComponentRenderer {
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp)
         ) {
             AppSectionTitle(
-                title = section.title,
-                modifier = Modifier.padding(top = 8.dp)
+                title = section.title
             )
             
             section.items.forEach { item ->

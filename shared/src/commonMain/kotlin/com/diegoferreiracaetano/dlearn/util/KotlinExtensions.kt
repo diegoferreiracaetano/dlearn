@@ -1,5 +1,9 @@
 package com.diegoferreiracaetano.dlearn.util
 
+import io.ktor.http.encodeURLParameter
+
+fun String.encodeURL(): String = this.encodeURLParameter()
+
 inline fun <T> Iterable<T?>.filterNotNull(predicate: (T) -> Boolean): List<T> {
     return this.filter { it != null && predicate(it) }.map { it!! }
 }

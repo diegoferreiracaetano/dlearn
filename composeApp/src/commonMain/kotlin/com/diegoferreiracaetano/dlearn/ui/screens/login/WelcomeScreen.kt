@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.ButtonType
+import com.diegoferreiracaetano.dlearn.designsystem.components.image.toAppImageSource
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.theme.facebookColor
@@ -122,7 +123,7 @@ fun WelcomeScreen(
                 AppButton(
                     onClick = onSignUpClick,
                     type = ButtonType.SECONDARY,
-                    image = Res.drawable.google,
+                    imageSource = Res.drawable.google.toAppImageSource(),
                     iconTint = Color.Unspecified,
                     modifier = Modifier.size(64.dp)
                 )
@@ -132,7 +133,7 @@ fun WelcomeScreen(
                 AppButton(
                     onClick = onSignUpClick,
                     type = ButtonType.TERTIARY,
-                    image = Res.drawable.apple,
+                    imageSource = Res.drawable.apple.toAppImageSource(),
                     modifier = Modifier.size(64.dp),
                 )
 
@@ -140,7 +141,7 @@ fun WelcomeScreen(
 
                 AppButton(
                     onClick = onSignUpClick,
-                    image = Res.drawable.facebook,
+                    imageSource = Res.drawable.facebook.toAppImageSource(),
                     iconTint = Color.Unspecified,
                     modifier = Modifier.size(64.dp),
                     backgroundColor = facebookColor

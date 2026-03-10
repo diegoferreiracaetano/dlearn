@@ -4,12 +4,14 @@ import com.diegoferreiracaetano.dlearn.domain.usecases.GetHomeDataUseCase
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetMovieDetailUseCase
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetProfileDataUseCase
 import com.diegoferreiracaetano.dlearn.infrastructure.services.HomeDataService
+import com.diegoferreiracaetano.dlearn.infrastructure.services.MovieDetailDataService
 import com.diegoferreiracaetano.dlearn.infrastructure.services.ProfileDataService
 import com.diegoferreiracaetano.dlearn.orchestrator.HomeOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.MovieDetailOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.ProfileOrchestrator
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import com.diegoferreiracaetano.dlearn.ui.mappers.HomeMapper
+import com.diegoferreiracaetano.dlearn.ui.mappers.MovieDetailMapper
 import com.diegoferreiracaetano.dlearn.ui.mappers.ProfileMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.HomeScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.screens.MovieDetailScreenBuilder
@@ -36,7 +38,9 @@ val serverModule = module {
     single { ProfileOrchestrator(get(), get()) }
 
     // Movie Detail
+    single { MovieDetailDataService(get()) }
     single { GetMovieDetailUseCase(get()) }
-    single { MovieDetailScreenBuilder(get()) }
+    single { MovieDetailMapper(get()) }
+    single { MovieDetailScreenBuilder(get(), get()) }
     single { MovieDetailOrchestrator(get(), get()) }
 }

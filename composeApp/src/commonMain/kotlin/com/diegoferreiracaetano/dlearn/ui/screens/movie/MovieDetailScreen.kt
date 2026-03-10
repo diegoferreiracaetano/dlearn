@@ -10,14 +10,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.home.LoadingScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.state.MovieDetailUiState
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppMovieDetailHeaderComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.CarouselComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.UserRowComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
-import com.diegoferreiracaetano.dlearn.ui.sdui.SectionComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.SectionItem
+import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -113,16 +106,15 @@ fun MovieDetailContentPreview() {
                         year = "2014",
                         duration = "169 min",
                         genre = "Sci-Fi",
-                        rating = 8.6
+                        rating = 8.6,
+                        trailerId = "zSWdZVtXT7E",
+                        playText = "Trailer",
+                        downloadActionUrl = "dlearn://download/157336",
+                        shareActionUrl = "dlearn://share/157336"
                     ),
-                    SectionComponent(
+                    AppExpandableSectionComponent(
                         title = "Storyline",
-                        items = listOf(
-                            SectionItem(
-                                id = "story",
-                                label = "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival."
-                            )
-                        )
+                        text = "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival. The crew of the Endurance must travel to three potential planets to find a new home for mankind."
                     ),
                     CarouselComponent(
                         title = "Cast & Crew",
@@ -144,7 +136,7 @@ fun MovieDetailContentPreview() {
         )
     )
 
-    DLearnTheme {
+    DLearnTheme(darkTheme = true) {
         MovieDetailContent(
             screen = screen,
             onBackClick = {},

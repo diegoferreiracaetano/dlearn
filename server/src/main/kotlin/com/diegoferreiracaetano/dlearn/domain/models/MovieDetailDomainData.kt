@@ -10,11 +10,12 @@ data class MovieDetailDomainData(
     val rating: String,
     val storyLine: String,
     val cast: List<CastMemberDomainData>,
-    val seasons: List<SeasonDomainData>
+    val seasons: List<SeasonDomainData>,
+    val trailerId: String? = null
 )
 
 data class CastMemberDomainData(
-    val id: String,
+    val id: String = "",
     val name: String,
     val role: String,
     val imageUrl: String?
@@ -29,7 +30,5 @@ data class EpisodeDomainData(
     val id: String,
     val title: String,
     val duration: String,
-    val description: String,
-    val imageUrl: String,
     val isPremium: Boolean
 )

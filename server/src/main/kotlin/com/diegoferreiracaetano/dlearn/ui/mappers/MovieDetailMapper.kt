@@ -13,7 +13,7 @@ class MovieDetailMapper(private val i18n: I18nProvider) {
         const val DOWNLOAD_SCHEME = "dlearn://download/"
     }
 
-    fun toHeader(data: MovieDetailDomainData, lang: String): AppMovieDetailHeaderComponent {
+    fun toHeader(data: MovieDetailDomainData): AppMovieDetailHeaderComponent {
         return AppMovieDetailHeaderComponent(
             title = data.title,
             imageUrl = data.imageUrl,
@@ -22,7 +22,6 @@ class MovieDetailMapper(private val i18n: I18nProvider) {
             genre = data.genre,
             rating = data.rating.toDoubleOrNull(),
             trailerId = data.trailerId,
-            playText = i18n.getString(AppStringType.DETAIL_TRAILER, lang),
             downloadActionUrl = "$DOWNLOAD_SCHEME${data.id}",
             shareActionUrl = "$SHARE_SCHEME${data.id}"
         )

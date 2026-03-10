@@ -108,7 +108,6 @@ fun MovieDetailContentPreview() {
                         genre = "Sci-Fi",
                         rating = 8.6,
                         trailerId = "zSWdZVtXT7E",
-                        playText = "Trailer",
                         downloadActionUrl = "dlearn://download/157336",
                         shareActionUrl = "dlearn://share/157336"
                     ),

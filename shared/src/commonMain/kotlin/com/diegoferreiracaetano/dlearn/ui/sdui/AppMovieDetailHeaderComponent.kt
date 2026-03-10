@@ -11,7 +11,6 @@ data class AppMovieDetailHeaderComponent(
     val genre: String? = null,
     val rating: Double? = null,
     val trailerId: String? = null,
-    val playText: String? = null,
     val downloadActionUrl: String? = null,
     val shareActionUrl: String? = null
 ) : Component

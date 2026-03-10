@@ -35,11 +35,6 @@ A aplicação principal escrita em **Jetpack Compose Multiplatform**.
 - **Navigation**: Gerenciamento de rotas e estado de navegação via Compose Navigation.
 - **Plataformas**: Suporta **Android**, **iOS (via Compose)** e **Desktop**.
 
-### 4. `iosApp` (Swift Wrapper)
-O entrypoint para a plataforma iOS.
-- **SwiftUI**: Utiliza `UIViewControllerRepresentable` para carregar a `ComposeView` central.
-- **Bridge**: Integração direta com o módulo `shared` para inicialização do Koin e ciclo de vida.
-
 ---
 
 ## 🧩 Componentes SDUI Suportados
@@ -50,6 +45,7 @@ O App renderiza dinamicamente:
 - `ChipGroup`: Filtros rápidos dinâmicos definidos pelo backend.
 - `AppTopBar` & `BottomNavigation`: Barras de navegação controladas via BFF.
 - `FullScreenBanner`: Banners de impacto total para lançamentos.
+- `AppMovieDetailHeader`: Header inteligente que alterna entre pôster e player de vídeo nativo.
 
 ---
 
@@ -64,12 +60,3 @@ O App renderiza dinamicamente:
 - **Android**: Execute o módulo `composeApp` no Android Studio.
 - **iOS**: Abra o diretório `iosApp` no Xcode ou execute via Android Studio (plugin KMP).
 - **Desktop**: Execute `./gradlew :composeApp:run`
-
----
-
-## 📄 Documentação & GitHub Pages
-
-A documentação detalhada é gerada via **MkDocs Material** e publicada automaticamente via GitHub Actions.
-- **Workflow**: `.github/workflows/docs.yml`
-- **Configuração**: `mkdocs.yml`
-- **Conteúdo**: Diretório `/docs`

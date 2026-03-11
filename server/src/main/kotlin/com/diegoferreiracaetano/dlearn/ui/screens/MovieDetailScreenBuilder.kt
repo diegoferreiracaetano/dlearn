@@ -13,7 +13,7 @@ class MovieDetailScreenBuilder(
     fun build(data: MovieDetailDomainData, appVersion: Int, lang: String): Screen {
         val components = mutableListOf<Component>()
 
-        components.add(mapper.toHeader(data, lang))
+        components.add(mapper.toHeader(data))
         components.add(mapper.toStoryLine(data, lang))
         components.add(mapper.toCastCarousel(data, lang))
         

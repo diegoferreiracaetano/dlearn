@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.model
 
+import com.diegoferreiracaetano.dlearn.TmdbConstants
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.domain.video.Video
 import kotlinx.serialization.SerialName
@@ -23,7 +24,7 @@ fun TmdbItemRemote.toVideo(mediaType: MediaType): Video {
         subtitle = (releaseDate ?: firstAirDate ?: "").take(4),
         description = overview ?: "",
         url = "",
-        imageUrl = "https://image.tmdb.org/t/p/w500$posterPath",
+        imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}$posterPath",
         mediaType = mediaType
     )
 }

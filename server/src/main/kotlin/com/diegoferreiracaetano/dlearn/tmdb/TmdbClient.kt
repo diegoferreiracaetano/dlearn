@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.tmdb
 
+import com.diegoferreiracaetano.dlearn.TmdbConstants
 import com.diegoferreiracaetano.dlearn.model.TmdbGenresResponse
 import com.diegoferreiracaetano.dlearn.model.TmdbListResponse
 import com.diegoferreiracaetano.dlearn.model.TmdbItemRemote
@@ -31,7 +32,7 @@ class TmdbClient {
     private suspend inline fun <reified T> get(path: String, params: Map<String, Any> = emptyMap()): T {
         return client.get("$baseUrl$path") {
             parameter("api_key", apiKey)
-            parameter("language", "pt-BR")
+            parameter("language", TmdbConstants.LANGUAGE_PT_BR)
             params.forEach { (key, value) ->
                 parameter(key, value)
             }

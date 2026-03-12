@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.data.home.mapper
 
+import com.diegoferreiracaetano.dlearn.TmdbConstants
 import com.diegoferreiracaetano.dlearn.data.home.model.MovieRemote
 import com.diegoferreiracaetano.dlearn.domain.video.Video
 import com.diegoferreiracaetano.dlearn.domain.video.VideoType
@@ -10,7 +11,7 @@ internal fun MovieRemote.toVideo() = Video(
     subtitle = "",
     description = this.overview,
     url = "",
-    imageUrl = "https://image.tmdb.org/t/p/w500${posterPath.orEmpty()}",
+    imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}${posterPath.orEmpty()}",
     categories = emptyList(),
     isFavorite = false,
     rating = 0f,

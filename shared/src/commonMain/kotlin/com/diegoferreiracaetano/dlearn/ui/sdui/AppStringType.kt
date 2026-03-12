@@ -41,6 +41,7 @@ enum class AppStringType {
     DETAIL_STORY_LINE,
     DETAIL_CAST_CREW,
     DETAIL_EPISODE,
+    DETAIL_WATCH_NOW,
 
     UNKNOWN
 }

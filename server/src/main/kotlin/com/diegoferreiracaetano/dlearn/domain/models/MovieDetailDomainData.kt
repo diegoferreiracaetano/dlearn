@@ -11,11 +11,20 @@ data class MovieDetailDomainData(
     val storyLine: String,
     val cast: List<CastMemberDomainData>,
     val seasons: List<SeasonDomainData>,
-    val trailerId: String? = null
+    val trailerId: String? = null,
+    val isFavorite: Boolean = false,
+    val isInList: Boolean = false,
+    val providers: List<WatchProviderDomainData> = emptyList()
+)
+
+data class WatchProviderDomainData(
+    val name: String,
+    val iconUrl: String,
+    val priceInfo: String,
+    val watchUrl: String? = null
 )
 
 data class CastMemberDomainData(
-    val id: String = "",
     val name: String,
     val role: String,
     val imageUrl: String?
@@ -23,12 +32,5 @@ data class CastMemberDomainData(
 
 data class SeasonDomainData(
     val number: Int,
-    val episodes: List<EpisodeDomainData>
-)
-
-data class EpisodeDomainData(
-    val id: String,
-    val title: String,
-    val duration: String,
-    val isPremium: Boolean
+    val episodeCount: Int
 )

@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.infrastructure.services
 
 import com.diegoferreiracaetano.dlearn.domain.models.CastMemberDomainData
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
+import com.diegoferreiracaetano.dlearn.domain.models.WatchProviderDomainData
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import java.util.Locale
 
@@ -34,7 +35,14 @@ class MovieDetailDataService(private val tmdbClient: TmdbClient) {
                 )
             } ?: emptyList(),
             seasons = emptyList(),
-            trailerId = trailerId
+            trailerId = trailerId,
+            providers = response.watchProviders?.results?.get("BR")?.flatrate?.map {
+                WatchProviderDomainData(
+                    name = it.providerName ?: "",
+                    iconUrl = "https://image.tmdb.org/t/p/w185${it.logoPath}",
+                    priceInfo = "Assinar"
+                )
+            } ?: emptyList()
         )
     }
 }

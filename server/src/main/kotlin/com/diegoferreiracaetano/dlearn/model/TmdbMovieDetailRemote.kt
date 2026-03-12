@@ -17,7 +17,14 @@ data class TmdbMovieDetailRemote(
     @SerialName("vote_average") val voteAverage: Double? = null,
     val genres: List<TmdbGenre> = emptyList(),
     val credits: TmdbCreditsRemote? = null,
-    val videos: TmdbVideosResponseRemote? = null
+    val videos: TmdbVideosResponseRemote? = null,
+    @SerialName("external_ids") val externalIds: TmdbExternalIdsRemote? = null,
+    @SerialName("watch/providers") val watchProviders: TmdbWatchProvidersResponse? = null
+)
+
+@Serializable
+data class TmdbExternalIdsRemote(
+    @SerialName("imdb_id") val imdbId: String? = null
 )
 
 @Serializable

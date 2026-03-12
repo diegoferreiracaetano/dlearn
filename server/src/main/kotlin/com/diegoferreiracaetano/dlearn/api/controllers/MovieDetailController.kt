@@ -14,7 +14,7 @@ fun Route.movieDetailController(orchestrator: MovieDetailOrchestrator) {
             val movieId = call.parameters["movieId"] ?: return@get
             val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
             val lang = call.request.acceptLanguage() ?: "en"
-            
+
             val screen = orchestrator.getMovieDetail(movieId, appVersion, lang)
             call.respond(screen)
         }

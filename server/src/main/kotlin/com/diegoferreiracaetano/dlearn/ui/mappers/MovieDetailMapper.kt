@@ -6,14 +6,7 @@ import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
 class MovieDetailMapper(private val i18n: I18nProvider) {
 
-    private companion object {
-        const val DEFAULT_AVATAR_URL = "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-        const val PLAY_SCHEME = "dlearn://play/"
-        const val SHARE_SCHEME = "dlearn://share/"
-        const val DOWNLOAD_SCHEME = "dlearn://download/"
-    }
-
-    fun toHeader(data: MovieDetailDomainData): AppMovieDetailHeaderComponent {
+    fun toHeader(data: MovieDetailDomainData, lang: String): AppMovieDetailHeaderComponent {
         return AppMovieDetailHeaderComponent(
             title = data.title,
             imageUrl = data.imageUrl,
@@ -22,8 +15,16 @@ class MovieDetailMapper(private val i18n: I18nProvider) {
             genre = data.genre,
             rating = data.rating.toDoubleOrNull(),
             trailerId = data.trailerId,
-            downloadActionUrl = "$DOWNLOAD_SCHEME${data.id}",
-            shareActionUrl = "$SHARE_SCHEME${data.id}"
+            isFavorite = data.isFavorite,
+            isInList = data.isInList,
+            providers = data.providers.map {
+                WatchProviderComponent(
+                    name = it.name,
+                    iconUrl = it.iconUrl,
+                    priceInfo = i18n.getString(AppStringType.DETAIL_WATCH_NOW, lang),
+                    actionUrl = it.watchUrl
+                )
+            }
         )
     }
 
@@ -41,26 +42,17 @@ class MovieDetailMapper(private val i18n: I18nProvider) {
                 UserRowComponent(
                     name = it.name,
                     role = it.role,
-                    imageUrl = it.imageUrl ?: DEFAULT_AVATAR_URL
+                    imageUrl = it.imageUrl ?: ""
                 )
             }
         )
     }
 
     fun toEpisodesSection(data: MovieDetailDomainData, lang: String): SectionComponent? {
-        val season1 = data.seasons.firstOrNull { it.number == 1 } ?: return null
-        
+        if (data.seasons.isEmpty()) return null
         return SectionComponent(
             title = i18n.getString(AppStringType.DETAIL_EPISODE, lang),
-            items = season1.episodes.map {
-                SectionItem(
-                    id = it.id,
-                    label = it.title,
-                    value = it.duration,
-                    icon = if (it.isPremium) AppIconType.WORKSPACE_PREMIUM else null,
-                    actionUrl = "$PLAY_SCHEME${it.id}"
-                )
-            }
+            items = emptyList()
         )
     }
 }

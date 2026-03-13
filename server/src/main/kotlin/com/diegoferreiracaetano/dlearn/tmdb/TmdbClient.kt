@@ -78,4 +78,8 @@ class TmdbClient {
     suspend fun getTvShowDetail(tvId: String): TmdbMovieDetailRemote {
         return get("/tv/$tvId", mapOf("append_to_response" to "credits,videos,watch/providers,external_ids"))
     }
+
+    suspend fun searchMulti(query: String): TmdbListResponse<TmdbItemRemote> {
+        return get("/search/multi", mapOf("query" to query))
+    }
 }

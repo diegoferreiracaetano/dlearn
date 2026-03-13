@@ -17,7 +17,6 @@ fun Route.homeController(orchestrator: HomeOrchestrator) {
             val lang = call.request.acceptLanguage() ?: "en"
             
             val typeParam = call.request.queryParameters["type"]
-            val categoryId = call.request.queryParameters["categoryId"]
             
             val type = try {
                 if (typeParam != null) HomeFilterType.valueOf(typeParam.uppercase()) 
@@ -30,8 +29,7 @@ fun Route.homeController(orchestrator: HomeOrchestrator) {
                 userId = userId,
                 appVersion = appVersion,
                 lang = lang,
-                type = type,
-                categoryId = categoryId
+                type = type
             )
             call.respond(screen)
         }

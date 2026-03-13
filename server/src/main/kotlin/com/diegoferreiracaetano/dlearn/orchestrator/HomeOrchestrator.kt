@@ -17,14 +17,13 @@ class HomeOrchestrator(
         userId: String,
         appVersion: Int,
         lang: String,
-        type: HomeFilterType = HomeFilterType.ALL,
-        categoryId: String? = null
+        type: HomeFilterType = HomeFilterType.ALL
     ): Screen {
         // Cache based on filters too
-        val cacheKey = "$userId-$appVersion-$lang-$type-$categoryId"
+        val cacheKey = "$userId-$appVersion-$lang-$type"
         return homeCache.getOrPut(cacheKey) {
-            val domainData = getHomeDataUseCase.execute(userId, type, categoryId)
-            screenBuilder.build(domainData, appVersion, lang, type, categoryId)
+            val domainData = getHomeDataUseCase.execute(userId, type)
+            screenBuilder.build(domainData, appVersion, lang, type)
         }
     }
 }

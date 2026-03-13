@@ -17,28 +17,9 @@ class HomeScreenBuilder(
         data: HomeDomainData,
         appVersion: Int,
         lang: String,
-        type: HomeFilterType = HomeFilterType.ALL,
-        categoryId: String? = null
+        type: HomeFilterType = HomeFilterType.ALL
     ): Screen {
         val components = mutableListOf<Component>()
-
-        val categoriesOptions = data.categories.keys.map { categoryName ->
-            val id = categoryName.lowercase().replace(" ", "_")
-            ChipItem(
-                id = id,
-                label = categoryName,
-                isFilter = true,
-                isSelected = categoryId == id
-            )
-        }
-
-        val isCategorySelected = categoryId != null
-        val categoryLabel = if (isCategorySelected) {
-            data.categories.keys.firstOrNull { it.lowercase().replace(" ", "_") == categoryId }
-                ?: i18n.getString(AppStringType.FILTER_CATEGORIES, lang)
-        } else {
-            i18n.getString(AppStringType.FILTER_CATEGORIES, lang)
-        }
 
         components.add(
             ChipGroupComponent(
@@ -47,20 +28,12 @@ class HomeScreenBuilder(
                     ChipItem(
                         id = HomeFilterIds.SERIES,
                         label = i18n.getString(AppStringType.FILTER_SERIES, lang),
-                        isSelected = type == HomeFilterType.SERIES && !isCategorySelected
+                        isSelected = type == HomeFilterType.SERIES
                     ),
                     ChipItem(
                         id = HomeFilterIds.MOVIES,
                         label = i18n.getString(AppStringType.FILTER_MOVIES, lang),
-                        isSelected = type == HomeFilterType.MOVIE && !isCategorySelected
-                    ),
-                    ChipItem(
-                        id = HomeFilterIds.CATEGORIES,
-                        label = categoryLabel,
-                        hasDropDown = true,
-                        isFilter = false,
-                        isSelected = isCategorySelected,
-                        options = categoriesOptions
+                        isSelected = type == HomeFilterType.MOVIE
                     )
                 )
             )

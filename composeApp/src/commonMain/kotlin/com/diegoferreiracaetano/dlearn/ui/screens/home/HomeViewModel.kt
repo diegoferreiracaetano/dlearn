@@ -24,7 +24,6 @@ class HomeViewModel(
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     private var currentType: HomeFilterType = HomeFilterType.ALL
-    private var currentCategoryId: String? = null
     private var currentSearch: String? = null
 
     init {
@@ -35,8 +34,7 @@ class HomeViewModel(
         viewModelScope.launch {
             homeRepository.getHome(
                 type = currentType,
-                search = currentSearch,
-                categoryId = currentCategoryId
+                search = currentSearch
             ).onStart {
                 _uiState.update { HomeUiState.Loading }
             }.catch { error ->
@@ -55,10 +53,9 @@ class HomeViewModel(
                 component.copy(
                     items = component.items.map { item ->
                         val isSelected = when (item.id) {
-                            HomeFilterIds.SERIES -> currentType == HomeFilterType.SERIES && currentCategoryId == null
-                            HomeFilterIds.MOVIES -> currentType == HomeFilterType.MOVIE && currentCategoryId == null
-                            HomeFilterIds.CATEGORIES -> currentCategoryId != null
-                            else -> item.id == currentCategoryId
+                            HomeFilterIds.SERIES -> currentType == HomeFilterType.SERIES
+                            HomeFilterIds.MOVIES -> currentType == HomeFilterType.MOVIE
+                            else -> false
                         }
                         item.copy(isSelected = isSelected)
                     }
@@ -77,16 +74,8 @@ class HomeViewModel(
             else -> HomeFilterType.ALL
         }
 
-        if (currentType != newType || currentCategoryId != null) {
+        if (currentType != newType) {
             currentType = newType
-            currentCategoryId = null
-            loadHome()
-        }
-    }
-
-    fun onCategoryChanged(categoryId: String?, categoryName: String?) {
-        if (currentCategoryId != categoryId) {
-            currentCategoryId = categoryId
             loadHome()
         }
     }

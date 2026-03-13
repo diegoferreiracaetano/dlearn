@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface HomeRepository {
     fun getHome(
         type: HomeFilterType = HomeFilterType.ALL,
-        search: String? = null,
-        categoryId: String? = null
+        search: String? = null
     ): Flow<Screen>
 }

@@ -51,7 +51,6 @@ fun HomeScreen(
                 onTabSelected = onTabSelected,
                 onItemClick = onItemClick,
                 onFilterTypeChanged = viewModel::onFilterTypeChanged,
-                onCategoryChanged = viewModel::onCategoryChanged,
                 onSearchChanged = viewModel::onSearchChanged,
                 modifier = modifier,
             )
@@ -74,17 +73,15 @@ fun HomeListScreen(
     onTabSelected: (String) -> Unit,
     onItemClick: (String) -> Unit,
     onFilterTypeChanged: (String?) -> Unit,
-    onCategoryChanged: (String?, String?) -> Unit,
     onSearchChanged: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var searchText by remember { mutableStateOf("") }
 
-    val actions = remember(onItemClick, onFilterTypeChanged, onCategoryChanged, onSearchChanged, onTabSelected, searchText) {
+    val actions = remember(onItemClick, onFilterTypeChanged, onSearchChanged, onTabSelected, searchText) {
         ComponentActions(
             onItemClick = onItemClick,
             onFilterTypeChanged = onFilterTypeChanged,
-            onCategoryChanged = onCategoryChanged,
             onSearchChanged = onSearchChanged,
             onTabSelected = onTabSelected,
             searchText = searchText,
@@ -129,7 +126,6 @@ fun HomeListScreenPreview() {
             onTabSelected = {},
             onItemClick = {},
             onFilterTypeChanged = {},
-            onCategoryChanged = { _, _ -> },
             onSearchChanged = {}
         )
     }

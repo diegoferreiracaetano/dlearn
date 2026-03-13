@@ -13,13 +13,11 @@ import kotlinx.coroutines.flow.flow
 class HomeRepositoryRemote(private val httpClient: HttpClient) : HomeRepository {
     override fun getHome(
         type: HomeFilterType,
-        search: String?,
-        categoryId: String?
+        search: String?
     ): Flow<Screen> = flow {
         val response = httpClient.get("v1/home") {
             parameter("type", type.name)
             search?.let { parameter("search", it) }
-            categoryId?.let { parameter("categoryId", it) }
         }.body<Screen>()
         emit(response)
     }

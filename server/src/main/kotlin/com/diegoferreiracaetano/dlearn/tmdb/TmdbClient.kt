@@ -51,12 +51,24 @@ class TmdbClient {
         return get("/movie/top_rated")
     }
 
+    suspend fun getTopRatedSeries(): TmdbListResponse<TmdbItemRemote> {
+        return get("/tv/top_rated")
+    }
+
     suspend fun getMovieGenres(): TmdbGenresResponse {
         return get("/genre/movie/list")
     }
 
+    suspend fun getTvGenres(): TmdbGenresResponse {
+        return get("/genre/tv/list")
+    }
+
     suspend fun getMoviesByGenre(genreId: Int): TmdbListResponse<TmdbItemRemote> {
         return get("/discover/movie", mapOf("with_genres" to genreId))
+    }
+
+    suspend fun getTvByGenre(genreId: Int): TmdbListResponse<TmdbItemRemote> {
+        return get("/discover/tv", mapOf("with_genres" to genreId))
     }
 
     suspend fun getMovieDetail(movieId: String): TmdbMovieDetailRemote {

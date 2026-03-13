@@ -16,5 +16,6 @@ data class ChipItem(
     val label: String,
     val isSelected: Boolean = false,
     val hasDropDown: Boolean = false,
-    val isFilter: Boolean = true
+    val isFilter: Boolean = true,
+    val options: List<ChipItem>? = null
 )

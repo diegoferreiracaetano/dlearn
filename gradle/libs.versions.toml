@@ -24,7 +24,7 @@ navigationCompose = "2.9.0"
 coreSplashscreen = "1.0.1"
 detekt = "1.23.8"
 buildconfig = "5.7.0"
-designsystem = "1.0.26"
+designsystem = "1.0.27"
 
 [libraries]
 designsystem = { module = "com.diegoferreiracaetano.dlearn:designsystem", version.ref = "designsystem" }

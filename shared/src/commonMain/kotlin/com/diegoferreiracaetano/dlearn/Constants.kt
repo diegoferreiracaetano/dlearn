@@ -2,6 +2,25 @@ package com.diegoferreiracaetano.dlearn
 
 const val SERVER_PORT = 8080
 
+object HomeFilterIds {
+    const val ALL = "all"
+    const val SERIES = "series"
+    const val MOVIES = "movies"
+    const val CATEGORIES = "categories"
+}
+
+object ComponentIds {
+    const val FILTERS = "filters"
+    const val HOME_SCREEN = "home"
+}
+
+object NavigationRoutes {
+    const val HOME = "home"
+    const val SEARCH = "search"
+    const val FAVORITE = "favorite"
+    const val PROFILE = "person"
+}
+
 object TmdbConstants {
     const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/"
     const val IMAGE_W500 = "w500"

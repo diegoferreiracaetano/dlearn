@@ -15,6 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.ComponentIds
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppError
+import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
@@ -55,7 +56,7 @@ fun HomeScreen(
                 modifier = modifier,
             )
         }
-        is HomeUiState.Loading -> LoadingScreen()
+        is HomeUiState.Loading -> AppLoading()
         is HomeUiState.Error -> {
             AppError(
                 throwable = state.throwable,
@@ -97,26 +98,6 @@ fun HomeListScreen(
             component = component,
             actions = actions
         )
-    }
-}
-
-@Composable
-fun LoadingScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
-    }
-}
-
-@Composable
-fun ErrorScreen(message: String? = null) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = message ?: "Unexpected Error")
     }
 }
 

@@ -6,11 +6,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppError
+import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
-import com.diegoferreiracaetano.dlearn.ui.screens.home.LoadingScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.profile.state.ProfileUiState
-import com.diegoferreiracaetano.dlearn.ui.sdui.*
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.FooterComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.ProfileRowComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -54,7 +58,7 @@ private fun ProfileScreenContent(
             )
         }
 
-        is ProfileUiState.Loading -> LoadingScreen()
+        is ProfileUiState.Loading -> AppLoading()
         is ProfileUiState.Error -> {
             AppError(
                 throwable = uiState.throwable,

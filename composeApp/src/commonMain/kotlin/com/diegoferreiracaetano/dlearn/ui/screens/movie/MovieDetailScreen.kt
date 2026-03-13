@@ -1,16 +1,23 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.movie
 
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppError
+import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
-import com.diegoferreiracaetano.dlearn.ui.screens.home.LoadingScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.state.MovieDetailUiState
-import com.diegoferreiracaetano.dlearn.ui.sdui.*
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppExpandableSectionComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppMovieDetailHeaderComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.CarouselComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.ui.sdui.UserRowComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -53,7 +60,7 @@ internal fun MovieDetailScreen(
             )
         }
 
-        is MovieDetailUiState.Loading -> LoadingScreen()
+        is MovieDetailUiState.Loading -> AppLoading()
         is MovieDetailUiState.Error -> {
             AppError(
                 throwable = uiState.throwable,

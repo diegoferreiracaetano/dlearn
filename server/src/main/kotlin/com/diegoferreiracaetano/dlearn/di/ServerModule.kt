@@ -3,6 +3,8 @@ package com.diegoferreiracaetano.dlearn.di
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetHomeDataUseCase
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetMovieDetailUseCase
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetProfileDataUseCase
+import com.diegoferreiracaetano.dlearn.infrastructure.mappers.WatchProviderUrlMapper
+import com.diegoferreiracaetano.dlearn.infrastructure.mappers.TmdbMapper
 import com.diegoferreiracaetano.dlearn.infrastructure.services.HomeDataService
 import com.diegoferreiracaetano.dlearn.infrastructure.services.MovieDetailDataService
 import com.diegoferreiracaetano.dlearn.infrastructure.services.ProfileDataService
@@ -22,6 +24,8 @@ import org.koin.dsl.module
 val serverModule = module {
     single { TmdbClient() }
     single { I18nProvider() }
+    single { WatchProviderUrlMapper() }
+    single { TmdbMapper(get()) }
     
     // Home
     single { HomeDataService(get()) }
@@ -38,7 +42,7 @@ val serverModule = module {
     single { ProfileOrchestrator(get(), get()) }
 
     // Movie Detail
-    single { MovieDetailDataService(get()) }
+    single { MovieDetailDataService(get(), get()) }
     single { GetMovieDetailUseCase(get()) }
     single { MovieDetailMapper(get()) }
     single { MovieDetailScreenBuilder(get(), get()) }

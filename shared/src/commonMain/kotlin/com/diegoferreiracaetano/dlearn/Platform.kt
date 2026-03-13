@@ -15,3 +15,5 @@ expect fun getPlatform(): Platform
 expect val currentPlatform: PlatformType
 
 val isIOS = currentPlatform == PlatformType.IOS
+
+val isAndroid = currentPlatform == PlatformType.Android

@@ -17,17 +17,20 @@ data class MovieDetailDomainData(
     val providers: List<WatchProviderDomainData> = emptyList()
 )
 
-data class WatchProviderDomainData(
-    val name: String,
-    val iconUrl: String,
-    val priceInfo: String,
-    val watchUrl: String? = null
-)
-
 data class CastMemberDomainData(
     val name: String,
     val role: String,
     val imageUrl: String?
+)
+
+data class WatchProviderDomainData(
+    val id: Int?,
+    val name: String,
+    val iconUrl: String,
+    val priceInfo: String,
+    val appUrl: String? = null,
+    val webUrl: String? = null,
+    val tmdbUrl: String? = null
 )
 
 data class SeasonDomainData(

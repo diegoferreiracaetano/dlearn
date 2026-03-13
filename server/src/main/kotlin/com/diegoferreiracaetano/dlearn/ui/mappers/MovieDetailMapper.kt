@@ -22,7 +22,9 @@ class MovieDetailMapper(private val i18n: I18nProvider) {
                     name = it.name,
                     iconUrl = it.iconUrl,
                     priceInfo = i18n.getString(AppStringType.DETAIL_WATCH_NOW, lang),
-                    actionUrl = it.watchUrl
+                    appUrl = it.appUrl,
+                    webUrl = it.webUrl,
+                    tmdbUrl = it.tmdbUrl
                 )
             }
         )

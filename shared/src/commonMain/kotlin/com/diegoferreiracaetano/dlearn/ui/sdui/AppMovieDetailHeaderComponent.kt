@@ -7,7 +7,9 @@ data class WatchProviderComponent(
     val name: String,
     val iconUrl: String,
     val priceInfo: String,
-    val actionUrl: String? = null
+    val appUrl: String? = null,
+    val webUrl: String? = null,
+    val tmdbUrl: String? = null
 )
 
 @Serializable

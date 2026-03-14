@@ -80,28 +80,24 @@ fun MainContent(
         NavigationRoutes.HOME -> HomeScreen(
             onTabSelected = onTabSelected,
             onItemClick = onItemClick,
-            onClose = onClose,
             modifier = modifier
         )
 
         NavigationRoutes.PROFILE -> ProfileScreen(
             onTabSelected = onTabSelected,
             onItemClick = onItemClick,
-            onClose = onClose,
             modifier = modifier
         )
 
         NavigationRoutes.NEW -> NewScreen(
             onTabSelected = onTabSelected,
             onItemClick = onItemClick,
-            onClose = onClose,
             modifier = modifier
         )
 
         NavigationRoutes.FAVORITE -> FavoriteScreen(
             onTabSelected = onTabSelected,
             onItemClick = onItemClick,
-            onClose = onClose,
             modifier = modifier
         )
     }

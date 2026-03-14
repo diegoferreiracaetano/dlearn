@@ -2,19 +2,24 @@
 
 package com.diegoferreiracaetano.dlearn.ui.factory
 
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppErrorContent
 import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppList
+import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
+import com.diegoferreiracaetano.dlearn.ui.util.AppContainerState
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.LocalAppContainerState
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 
 class AppContainerRenderer : ComponentRenderer {
@@ -26,14 +31,24 @@ class AppContainerRenderer : ComponentRenderer {
     ) {
         val container = component as? AppContainerComponent ?: return
         val snackbarHostState = remember { SnackbarHostState() }
+        val containerState = remember { AppContainerState() }
 
-        CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
+        // Sincroniza o estado do container com as ações globais (ex: carregamento da tela)
+        LaunchedEffect(actions.isLoading, actions.error, actions.onRetry) {
+            containerState.update(
+                isLoading = actions.isLoading,
+                error = actions.error,
+                onRetry = actions.onRetry
+            )
+        }
+
+        CompositionLocalProvider(
+            LocalSnackbarHostState provides snackbarHostState,
+            LocalAppContainerState provides containerState
+        ) {
             AppContainer(
                 modifier = modifier,
                 snackBarHostState = snackbarHostState,
-                isLoading = actions.isLoading,
-                error = actions.error,
-                onRetry = actions.onRetry,
                 topBar = {
                     container.topBar?.let { topBar ->
                         RenderComponentFactory.Render(component = topBar, actions = actions)
@@ -54,14 +69,22 @@ class AppContainerRenderer : ComponentRenderer {
                         RenderComponentFactory.Render(component = bottomBar, actions = actions)
                     }
                 }
-            ) { contentModifier ->
-                BoxWithConstraints(modifier = contentModifier) {
-                    AppList(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
+            ) { baseModifier ->
+                Box(modifier = baseModifier) {
+                    AppList(modifier = Modifier.fillMaxSize()) {
                         items(container.components) { child ->
                             RenderComponentFactory.Render(component = child, actions = actions)
                         }
+                    }
+
+                    if (containerState.isLoading) {
+                        AppLoading(modifier = baseModifier)
+                    } else if (containerState.error != null) {
+                        AppErrorContent(
+                            modifier = baseModifier,
+                            throwable = containerState.error,
+                            onPrimary = containerState.onRetry
+                        )
                     }
                 }
             }

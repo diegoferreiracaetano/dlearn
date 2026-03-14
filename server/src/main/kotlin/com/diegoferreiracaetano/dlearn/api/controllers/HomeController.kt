@@ -10,7 +10,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 
 fun Route.homeController(orchestrator: HomeOrchestrator) {
-    route("/v3/home") {
+    route("/v1/home") {
         get {
             val userId = call.request.queryParameters["userId"] ?: "guest"
             val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1

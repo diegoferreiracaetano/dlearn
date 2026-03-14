@@ -8,6 +8,7 @@ import com.diegoferreiracaetano.dlearn.domain.home.HomeRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,7 +41,7 @@ class HomeViewModel(
             }.catch { error ->
                 _uiState.update { HomeUiState.Error(error) }
             }.collect { screen ->
-                _uiState.update { 
+                _uiState.update {
                     HomeUiState.Success(applySelectionToScreen(screen))
                 }
             }

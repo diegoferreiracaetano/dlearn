@@ -61,20 +61,12 @@ class AppContainerRenderer : ComponentRenderer {
                 }
             ) { baseModifier ->
                 Box(modifier = baseModifier) {
-                    AppList(modifier = Modifier.fillMaxSize()) {
-                        items(container.components) { child ->
-                            RenderComponentFactory.Render(component = child, actions = actions)
-                        }
-                    }
 
-                    if (containerState.isLoading) {
-                        AppLoading(modifier = baseModifier)
-                    } else if (containerState.error != null) {
-                        AppErrorContent(
-                            modifier = baseModifier,
-                            throwable = containerState.error,
-                            onPrimary = containerState.onRetry
-                        )
+                    val modifier = Modifier.fillMaxSize()
+                    AppList(modifier = modifier) {
+                        items(container.components) { child ->
+                            RenderComponentFactory.Render(modifier = modifier, component = child, actions = actions)
+                        }
                     }
                 }
             }

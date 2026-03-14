@@ -7,12 +7,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppErrorContent
 import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppList
+import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.profile.state.ProfileUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
-import com.diegoferreiracaetano.dlearn.ui.util.LocalAppContainerState
 import org.koin.compose.koinInject
 
 @Composable
@@ -23,7 +24,6 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = koinInject(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val containerState = LocalAppContainerState.current
 
     val actions = remember(onItemClick, onTabSelected, viewModel) {
         ComponentActions(
@@ -34,15 +34,12 @@ fun ProfileScreen(
     }
 
     when (val state = uiState) {
-        is ProfileUiState.Loading -> containerState.update(isLoading = true)
-        is ProfileUiState.Error -> containerState.update(
-            isLoading = false,
-            error = state.throwable,
-            onRetry = viewModel::retry
+        is ProfileUiState.Loading -> AppLoading()
+        is ProfileUiState.Error -> AppErrorContent(
+            throwable = state.throwable,
+            onPrimary = viewModel::retry
         )
-
         is ProfileUiState.Success -> {
-            containerState.reset()
             ProfileListContent(
                 components = state.screen.components,
                 actions = actions,

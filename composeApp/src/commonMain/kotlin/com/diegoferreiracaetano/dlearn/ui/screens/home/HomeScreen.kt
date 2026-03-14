@@ -8,6 +8,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppErrorContent
+import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
@@ -23,7 +25,6 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.FullScreenBannerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.MovieCarouselComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
-import com.diegoferreiracaetano.dlearn.ui.util.LocalAppContainerState
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
@@ -36,7 +37,6 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var searchText by remember { mutableStateOf("") }
-    val containerState = LocalAppContainerState.current
 
     val actions = remember(onItemClick, viewModel, onTabSelected, searchText) {
         ComponentActions(
@@ -51,13 +51,13 @@ fun HomeScreen(
     }
 
     when (val state = uiState) {
-        is HomeUiState.Loading -> containerState.update(isLoading = true)
-        is HomeUiState.Error -> containerState.update(
-            error = state.throwable,
-            onRetry = viewModel::retry
+        is HomeUiState.Loading -> AppLoading(modifier)
+        is HomeUiState.Error -> AppErrorContent(
+            modifier = modifier,
+            throwable = state.throwable,
+            onPrimary = viewModel::retry
         )
         is HomeUiState.Success -> {
-            containerState.reset()
             HomeListContent(
                 components = state.screen.components,
                 actions = actions,

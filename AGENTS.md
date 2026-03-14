@@ -5,7 +5,9 @@ Deve-se seguir estas diretrizes rigorosamente. Se não for possível cumpri-las,
 ## 1. Estrutura e Arquitetura
 - Projeto **Kotlin Multiplatform (KMP)**.
 - Respeitar a estrutura de pastas atual (`commonMain`, `androidMain`, etc.).
+- Antes da alteração explique o plano de implementação.
 - Aplicar **Clean Code** e SOLID.
+- Não deixe string, texto, cores e temas hardcode.
 
 ## 2. Design System (REGRA CRÍTICA)
 - Usar **APENAS** componentes do Design System do projeto.

@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.ui.screens
 
 import com.diegoferreiracaetano.dlearn.ComponentIds
 import com.diegoferreiracaetano.dlearn.HomeFilterIds
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
 import com.diegoferreiracaetano.dlearn.domain.models.HomeDomainData
 import com.diegoferreiracaetano.dlearn.ui.mappers.HomeMapper
@@ -57,28 +56,10 @@ class HomeScreenBuilder(
             }
         }
 
-        val container = AppContainerComponent(
-            topBar = AppTopBarComponent(
-                title = i18n.getString(AppStringType.HOME_TITLE, lang),
-                subtitle = i18n.getString(AppStringType.HOME_SUBTITLE, lang),
-                imageUrl = "https://avatars.githubusercontent.com/u/1023?v=4",
-                showSearch = true
-            ),
-            bottomBar = BottomNavigationComponent(
-                items = listOf(
-                    BottomNavItem(label = i18n.getString(AppStringType.NAV_HOME, lang), route = NavigationRoutes.HOME, icon = AppIconType.INFO),
-                    BottomNavItem(label = i18n.getString(AppStringType.NAV_SEARCH, lang), route = NavigationRoutes.SEARCH, icon = AppIconType.HELP),
-                    BottomNavItem(label = i18n.getString(AppStringType.NAV_FAVORITES, lang), route = NavigationRoutes.FAVORITE, icon = AppIconType.NOTIFICATIONS),
-                    BottomNavItem(label = i18n.getString(AppStringType.NAV_PROFILE, lang), route = NavigationRoutes.PROFILE, icon = AppIconType.PERSON)
-                ),
-                selectedRoute = NavigationRoutes.HOME
-            ),
-            components = components
-        )
-
         return Screen(
             id = ComponentIds.HOME_SCREEN,
-            components = listOf(container)
+            components = components,
+            showSearch = true
         )
     }
 }

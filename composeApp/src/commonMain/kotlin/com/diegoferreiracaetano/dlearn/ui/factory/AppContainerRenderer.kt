@@ -2,6 +2,8 @@
 
 package com.diegoferreiracaetano.dlearn.ui.factory
 
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -29,9 +31,22 @@ class AppContainerRenderer : ComponentRenderer {
             AppContainer(
                 modifier = modifier,
                 snackBarHostState = snackbarHostState,
+                isLoading = actions.isLoading,
+                error = actions.error,
+                onRetry = actions.onRetry,
                 topBar = {
                     container.topBar?.let { topBar ->
                         RenderComponentFactory.Render(component = topBar, actions = actions)
+                    }
+                },
+                searchBar = {
+                    container.searchBar?.let { searchBar ->
+                        RenderComponentFactory.Render(component = searchBar, actions = actions)
+                    }
+                },
+                chipGroup = {
+                    container.chipGroup?.let { chipGroup ->
+                        RenderComponentFactory.Render(component = chipGroup, actions = actions)
                     }
                 },
                 bottomBar = {
@@ -40,11 +55,13 @@ class AppContainerRenderer : ComponentRenderer {
                     }
                 }
             ) { contentModifier ->
-                AppList(
-                    modifier = contentModifier
-                ) {
-                    items(container.components) { child ->
-                        RenderComponentFactory.Render(component = child, actions = actions)
+                BoxWithConstraints(modifier = contentModifier) {
+                    AppList(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        items(container.components) { child ->
+                            RenderComponentFactory.Render(component = child, actions = actions)
+                        }
                     }
                 }
             }

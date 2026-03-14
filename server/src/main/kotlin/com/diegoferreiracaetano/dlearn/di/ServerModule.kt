@@ -9,15 +9,14 @@ import com.diegoferreiracaetano.dlearn.infrastructure.services.HomeDataService
 import com.diegoferreiracaetano.dlearn.infrastructure.services.MovieDetailDataService
 import com.diegoferreiracaetano.dlearn.infrastructure.services.ProfileDataService
 import com.diegoferreiracaetano.dlearn.orchestrator.HomeOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.MainOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.MovieDetailOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.ProfileOrchestrator
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import com.diegoferreiracaetano.dlearn.ui.mappers.HomeMapper
 import com.diegoferreiracaetano.dlearn.ui.mappers.MovieDetailMapper
 import com.diegoferreiracaetano.dlearn.ui.mappers.ProfileMapper
-import com.diegoferreiracaetano.dlearn.ui.screens.HomeScreenBuilder
-import com.diegoferreiracaetano.dlearn.ui.screens.MovieDetailScreenBuilder
-import com.diegoferreiracaetano.dlearn.ui.screens.ProfileScreenBuilder
+import com.diegoferreiracaetano.dlearn.ui.screens.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import org.koin.dsl.module
 
@@ -33,6 +32,12 @@ val serverModule = module {
     single { HomeMapper(get()) }
     single { HomeScreenBuilder(get(), get()) }
     single { HomeOrchestrator(get(), get()) }
+
+    // Main
+    single { NewScreenBuilder(get(), get()) }
+    single { FavoriteScreenBuilder(get(), get()) }
+    single { MainScreenBuilder(get()) }
+    single { MainOrchestrator(get(), get(), get(), get(), get(), get(), get()) }
 
     // Profile
     single { ProfileDataService() }

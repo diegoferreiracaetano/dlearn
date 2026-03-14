@@ -7,6 +7,13 @@ data class ComponentActions(
     val onSearchChanged: (String) -> Unit = {},
     val onTabSelected: (String) -> Unit = {},
     val onBackClick: () -> Unit = {},
+    val onClose: () -> Unit = {},
+    val onShowSearchChanged: (Boolean) -> Unit = {},
+    val onRetry: () -> Unit = {},
+    val currentRoute: String = "",
+    val isSearchVisible: Boolean = false,
     val searchText: String = "",
-    val onSearchTextChange: (String) -> Unit = {}
+    val onSearchTextChange: (String) -> Unit = {},
+    val isLoading: Boolean = false,
+    val error: Throwable? = null
 )

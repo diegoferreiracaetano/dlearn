@@ -18,7 +18,6 @@ import com.diegoferreiracaetano.dlearn.ui.util.UriResolutionException
 import com.diegoferreiracaetano.dlearn.util.getLogger
 import dlearn.composeapp.generated.resources.Res
 import dlearn.composeapp.generated.resources.error_provider_link
-import io.ktor.util.logging.error
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 

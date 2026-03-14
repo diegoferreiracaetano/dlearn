@@ -4,7 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class AppIconType {
+    HOME,
+    SEARCH,
+    FAVORITE,
     PERSON,
+    NEW,
     LOCK,
     NOTIFICATIONS,
     LANGUAGE,

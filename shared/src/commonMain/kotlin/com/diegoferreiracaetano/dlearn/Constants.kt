@@ -12,13 +12,17 @@ object HomeFilterIds {
 object ComponentIds {
     const val FILTERS = "filters"
     const val HOME_SCREEN = "home"
+    const val NEW_SCREEN = "new"
+    const val FAVORITE_SCREEN = "favorite"
+    const val PROFILE_SCREEN = "profile"
 }
 
 object NavigationRoutes {
-    const val HOME = "home"
-    const val SEARCH = "search"
-    const val FAVORITE = "favorite"
-    const val PROFILE = "person"
+    const val HOME = "Home"
+    const val NEW = "New"
+    const val SEARCH = "Search"
+    const val FAVORITE = "Favorites"
+    const val PROFILE = "Account"
 }
 
 object TmdbConstants {

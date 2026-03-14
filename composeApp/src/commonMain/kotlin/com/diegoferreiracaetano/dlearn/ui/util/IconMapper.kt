@@ -24,6 +24,10 @@ fun AppIconType?.toIcon(): ImageVector? {
         AppIconType.CALENDAR_MONTH -> Icons.Default.CalendarMonth
         AppIconType.SCHEDULE -> Icons.Default.Schedule
         AppIconType.STAR -> Icons.Default.Star
+        AppIconType.HOME -> Icons.Default.Home
+        AppIconType.SEARCH -> Icons.Default.Search
+        AppIconType.FAVORITE -> Icons.Default.Favorite
+        AppIconType.NEW -> Icons.Default.NewReleases
         AppIconType.UNKNOWN, null -> null
     }
 }

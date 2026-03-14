@@ -13,19 +13,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.CreateNewPassword
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Favorites
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Home
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Main
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Login
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.MovieDetail
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.New
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Onboarding
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Profile
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.ResetPassword
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.SignUp
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.VerifyAccount
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Welcome
-import com.diegoferreiracaetano.dlearn.ui.screens.favorites.FavoritesScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.home.HomeScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.main.MainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.CreateNewPasswordScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.LoginScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.ResetPasswordScreen
@@ -33,9 +29,7 @@ import com.diegoferreiracaetano.dlearn.ui.screens.login.SignUpScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.VerifyAccountScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.WelcomeScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.new.NewScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.onboarding.OnboardingScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.profile.ProfileScreen
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.koinInject
 
@@ -47,9 +41,9 @@ fun AppNavGraph(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ) {
     val isLoggedIn by sessionManager.isLoggedIn.collectAsStateWithLifecycle()
-   // val startDestination = if (isLoggedIn) Home.route else Onboarding.route
+   // val startDestination = if (isLoggedIn) Main.route else Onboarding.route
 
-    val startDestination = Home.route
+    val startDestination = Main.route
 
     NavHost(
         navController = navController,
@@ -66,7 +60,7 @@ fun AppNavGraph(
         composable(Welcome.route) {
             WelcomeScreen(
                 onSignUpClick = { navController.navigate(SignUp.route) },
-                onLoginClick = { navController.navigate(Home.route) },
+                onLoginClick = { navController.navigate(Main.route) },
                 modifier = modifier
             )
         }
@@ -74,7 +68,7 @@ fun AppNavGraph(
         composable(Login.route) {
             LoginScreen(
                 onBackClick = { navController.popBackStack() },
-                onLoginClick = { navController.navigate(Home.route) },
+                onLoginClick = { navController.navigate(Main.route) },
                 onForgotPasswordClick = { navController.navigate(ResetPassword.route) },
                 modifier = modifier
             )
@@ -113,11 +107,8 @@ fun AppNavGraph(
             )
         }
 
-        composable(Home.route) {
-            HomeScreen(
-                onTabSelected = { route ->
-                    navController.navigateToRoute(route)
-                },
+        composable(Main.route) {
+            MainScreen(
                 onItemClick = { id ->
                     navController.navigate(MovieDetail.createRoute(id))
                 },
@@ -140,39 +131,6 @@ fun AppNavGraph(
                     navController.navigate(MovieDetail.createRoute(id))
                 },
                 modifier = modifier
-            )
-        }
-
-        composable(New.route) {
-            NewScreen(
-                onTabSelected = { route ->
-                    navController.navigateToRoute(route)
-                },
-                modifier = modifier,
-            )
-        }
-
-        composable(Favorites.route) {
-            FavoritesScreen(
-                onTabSelected = { route ->
-                    navController.navigateToRoute(route)
-                },
-                modifier = modifier,
-            )
-        }
-
-        composable(Profile.route) {
-            ProfileScreen(
-                onTabSelected = { route ->
-                    navController.navigateToRoute(route)
-                },
-                onItemClick = { id ->
-                    navController.navigate(MovieDetail.createRoute(id))
-                },
-                onClose = {
-                    navController.popBackStack()
-                },
-                modifier = modifier,
             )
         }
     }

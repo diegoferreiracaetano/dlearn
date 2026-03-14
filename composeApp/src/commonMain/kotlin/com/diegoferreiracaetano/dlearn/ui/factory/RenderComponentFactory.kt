@@ -15,6 +15,7 @@ object RenderComponentFactory {
         when (component) {
             is AppContainerComponent -> AppContainerRenderer().Render(component, actions, modifier)
             is AppTopBarComponent -> AppTopBarRenderer().Render(component, actions, modifier)
+            is SearchBarComponent -> SearchBarRenderer().Render(component, actions, modifier)
             is BottomNavigationComponent -> BottomNavigationRenderer().Render(component, actions, modifier)
             is MovieCarouselComponent -> MovieCarouselRenderer().Render(component, actions, modifier)
             is BannerCarouselComponent -> BannerCarouselRenderer().Render(component, actions, modifier)
@@ -28,6 +29,7 @@ object RenderComponentFactory {
             is FooterComponent -> FooterRenderer().Render(component, actions, modifier)
             is AppMovieDetailHeaderComponent -> AppMovieDetailHeaderRenderer().Render(component, actions, modifier)
             is AppExpandableSectionComponent -> AppExpandableSectionRenderer().Render(component, actions, modifier)
+            is AppMainContentComponent -> AppMainContentRenderer().Render(component, actions, modifier)
             else -> {} // Unknown components
         }
     }

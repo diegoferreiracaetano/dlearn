@@ -1,7 +1,10 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.designsystem.components.carousel.FullScreenVideo
 import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
@@ -17,6 +20,7 @@ class FullScreenBannerRenderer : ComponentRenderer {
     ) {
         val banner = component as? FullScreenBannerComponent ?: return
         FullScreenVideo(
+            modifier = modifier.padding(horizontal = 16.dp),
             title = banner.title,
             subtitle = banner.subtitle.orEmpty(),
             imageSource = AppImageSource.Url(banner.imageUrl),

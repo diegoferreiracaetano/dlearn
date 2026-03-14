@@ -1,22 +1,21 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.movie
 
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppError
-import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
+import com.diegoferreiracaetano.dlearn.ui.screens.main.LocalMainContainerState
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.state.MovieDetailUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppExpandableSectionComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppMovieDetailHeaderComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.CarouselComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.UserRowComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -32,65 +31,52 @@ fun MovieDetailScreen(
     viewModel: MovieDetailViewModel = koinInject { parametersOf(movieId) },
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val containerState = LocalMainContainerState.current
 
-    MovieDetailScreen(
-        uiState = uiState,
-        onBackClick = onBackClick,
-        onItemClick = onItemClick,
-        onRetry = viewModel::retry,
-        modifier = modifier
-    )
-}
-
-@Composable
-internal fun MovieDetailScreen(
-    uiState: MovieDetailUiState,
-    onBackClick: () -> Unit,
-    onItemClick: (String) -> Unit,
-    onRetry: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    when (uiState) {
-        is MovieDetailUiState.Success -> {
-            MovieDetailContent(
-                screen = uiState.screen,
-                onBackClick = onBackClick,
-                onItemClick = onItemClick,
-                modifier = modifier,
-            )
-        }
-
-        is MovieDetailUiState.Loading -> AppLoading()
-        is MovieDetailUiState.Error -> {
-            AppError(
-                throwable = uiState.throwable,
-                modifier = modifier,
-                onPrimary = onRetry,
-                onClose = onBackClick
-            )
-        }
-    }
-}
-
-@Composable
-private fun MovieDetailContent(
-    screen: Screen,
-    onBackClick: () -> Unit,
-    onItemClick: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val actions = remember(onBackClick, onItemClick) {
+    val actions = remember(onBackClick, onItemClick, viewModel) {
         ComponentActions(
             onItemClick = onItemClick,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onRetry = viewModel::retry
         )
     }
 
-    screen.components.forEach { component ->
-        RenderComponentFactory.Render(
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is MovieDetailUiState.Success -> {
+                containerState.onMainLoading(false)
+            }
+
+            is MovieDetailUiState.Loading -> {
+                containerState.onMainLoading(true)
+            }
+
+            is MovieDetailUiState.Error -> {
+                containerState.onMainError(state.throwable)
+            }
+        }
+    }
+
+    if (uiState is MovieDetailUiState.Success) {
+        MovieDetailListContent(
+            components = (uiState as MovieDetailUiState.Success).screen.components,
+            actions = actions,
             modifier = modifier,
+        )
+    }
+}
+
+@Composable
+fun MovieDetailListContent(
+    components: List<Component>,
+    actions: ComponentActions,
+    modifier: Modifier = Modifier
+) {
+    components.forEach { component ->
+        RenderComponentFactory.Render(
             component = component,
-            actions = actions
+            actions = actions,
+            modifier = modifier
         )
     }
 }
@@ -98,43 +84,40 @@ private fun MovieDetailContent(
 @Preview
 @Composable
 fun MovieDetailContentPreview() {
-    val screen = Screen(
-        id = "movie_detail",
-        components = listOf(
-            AppContainerComponent(
-                topBar = AppTopBarComponent(
+    val components = listOf(
+        AppContainerComponent(
+            topBar = AppTopBarComponent(
+                title = "Interstellar",
+                showSearch = false
+            ),
+            components = listOf(
+                AppMovieDetailHeaderComponent(
                     title = "Interstellar",
-                    showSearch = false
+                    imageUrl = "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+                    year = "2014",
+                    duration = "169 min",
+                    genre = "Sci-Fi",
+                    rating = 8.6,
+                    trailerId = "zSWdZVtXT7E",
+                    downloadActionUrl = "dlearn://download/157336",
+                    shareActionUrl = "dlearn://share/157336"
                 ),
-                components = listOf(
-                    AppMovieDetailHeaderComponent(
-                        title = "Interstellar",
-                        imageUrl = "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
-                        year = "2014",
-                        duration = "169 min",
-                        genre = "Sci-Fi",
-                        rating = 8.6,
-                        trailerId = "zSWdZVtXT7E",
-                        downloadActionUrl = "dlearn://download/157336",
-                        shareActionUrl = "dlearn://share/157336"
-                    ),
-                    AppExpandableSectionComponent(
-                        title = "Storyline",
-                        text = "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival. The crew of the Endurance must travel to three potential planets to find a new home for mankind."
-                    ),
-                    CarouselComponent(
-                        title = "Cast & Crew",
-                        items = listOf(
-                            UserRowComponent(
-                                name = "Matthew McConaughey",
-                                role = "Cooper",
-                                imageUrl = "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                            ),
-                            UserRowComponent(
-                                name = "Anne Hathaway",
-                                role = "Brand",
-                                imageUrl = "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                            )
+                AppExpandableSectionComponent(
+                    title = "Storyline",
+                    text = "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival. The crew of the Endurance must travel to three potential planets to find a new home for mankind."
+                ),
+                CarouselComponent(
+                    title = "Cast & Crew",
+                    items = listOf(
+                        UserRowComponent(
+                            name = "Matthew McConaughey",
+                            role = "Cooper",
+                            imageUrl = "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                        ),
+                        UserRowComponent(
+                            name = "Anne Hathaway",
+                            role = "Brand",
+                            imageUrl = "https://cdn-icons-png.flaticon.com/512/149/149071.png"
                         )
                     )
                 )
@@ -143,36 +126,9 @@ fun MovieDetailContentPreview() {
     )
 
     DLearnTheme(darkTheme = true) {
-        MovieDetailContent(
-            screen = screen,
-            onBackClick = {},
-            onItemClick = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun MovieDetailScreenLoadingPreview() {
-    DLearnTheme {
-        MovieDetailScreen(
-            uiState = MovieDetailUiState.Loading,
-            onBackClick = {},
-            onItemClick = {},
-            onRetry = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun MovieDetailScreenErrorPreview() {
-    DLearnTheme {
-        MovieDetailScreen(
-            uiState = MovieDetailUiState.Error(Throwable("Failed to load movie details")),
-            onBackClick = {},
-            onItemClick = {},
-            onRetry = {}
+        MovieDetailListContent(
+            components = components,
+            actions = ComponentActions()
         )
     }
 }

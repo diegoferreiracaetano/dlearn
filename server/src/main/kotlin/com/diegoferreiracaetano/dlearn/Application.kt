@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn
 
 import com.diegoferreiracaetano.dlearn.api.controllers.homeController
+import com.diegoferreiracaetano.dlearn.api.controllers.mainController
 import com.diegoferreiracaetano.dlearn.api.controllers.movieDetailController
 import com.diegoferreiracaetano.dlearn.api.controllers.profileController
 import com.diegoferreiracaetano.dlearn.di.serverModule
@@ -57,6 +58,7 @@ fun Application.module() {
         swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml")
         openAPI(path = "openapi", swaggerFile = "openapi/documentation.yaml")
 
+        mainController()
         homeController(homeOrchestrator)
         profileController()
         movieDetailController(movieDetailOrchestrator)

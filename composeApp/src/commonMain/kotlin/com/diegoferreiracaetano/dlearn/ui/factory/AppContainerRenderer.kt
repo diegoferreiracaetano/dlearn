@@ -10,15 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppErrorContent
 import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppList
-import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
-import com.diegoferreiracaetano.dlearn.ui.util.AppContainerState
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
-import com.diegoferreiracaetano.dlearn.ui.util.LocalAppContainerState
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 
 class AppContainerRenderer : ComponentRenderer {
@@ -30,11 +26,9 @@ class AppContainerRenderer : ComponentRenderer {
     ) {
         val container = component as? AppContainerComponent ?: return
         val snackbarHostState = remember { SnackbarHostState() }
-        val containerState = remember { AppContainerState() }
 
         CompositionLocalProvider(
-            LocalSnackbarHostState provides snackbarHostState,
-            LocalAppContainerState provides containerState
+            LocalSnackbarHostState provides snackbarHostState
         ) {
             AppContainer(
                 modifier = modifier,
@@ -61,7 +55,6 @@ class AppContainerRenderer : ComponentRenderer {
                 }
             ) { baseModifier ->
                 Box(modifier = baseModifier) {
-
                     val modifier = Modifier.fillMaxSize()
                     AppList(modifier = modifier) {
                         items(container.components) { child ->

@@ -3,14 +3,14 @@ package com.diegoferreiracaetano.dlearn.ui.screens.new
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppErrorContent
 import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppList
+import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
-import com.diegoferreiracaetano.dlearn.ui.screens.main.LocalMainContainerState
 import com.diegoferreiracaetano.dlearn.ui.screens.new.state.NewUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
@@ -21,12 +21,10 @@ fun NewScreen(
     onTabSelected: (String) -> Unit,
     onItemClick: (String) -> Unit,
     onClose: () -> Unit,
-    onShowSearchChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: NewViewModel = koinInject(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val containerState = LocalMainContainerState.current
 
     val actions = remember(onItemClick, onTabSelected, viewModel) {
         ComponentActions(
@@ -36,23 +34,21 @@ fun NewScreen(
         )
     }
 
-    LaunchedEffect(uiState) {
-        when (val state = uiState) {
-            is NewUiState.Success -> {
-                onShowSearchChanged(state.screen.showSearch)
-                containerState.onMainLoading(false)
-            }
-            is NewUiState.Loading -> containerState.onMainLoading(true)
-            is NewUiState.Error -> containerState.onMainError(state.throwable)
-        }
-    }
-
-    (uiState as? NewUiState.Success)?.let { state ->
-        NewListContent(
-            components = state.screen.components,
-            actions = actions,
-            modifier = modifier,
+    when (val state = uiState) {
+        is NewUiState.Loading -> AppLoading(modifier = modifier)
+        is NewUiState.Error -> AppErrorContent(
+            throwable = state.throwable,
+            onPrimary = viewModel::retry,
+            modifier = modifier
         )
+
+        is NewUiState.Success -> {
+            NewListContent(
+                components = state.screen.components,
+                actions = actions,
+                modifier = modifier,
+            )
+        }
     }
 }
 

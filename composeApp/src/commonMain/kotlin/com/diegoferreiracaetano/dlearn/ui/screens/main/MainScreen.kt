@@ -1,7 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.main
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -28,10 +28,16 @@ fun MainScreen(
     val currentRoute by viewModel.currentRoute.collectAsStateWithLifecycle()
     val searchText by viewModel.searchText.collectAsStateWithLifecycle()
     val isSearchVisible by viewModel.isSearchVisible.collectAsStateWithLifecycle()
-    val childLoading by viewModel.childLoading.collectAsStateWithLifecycle()
-    val childError by viewModel.childError.collectAsStateWithLifecycle()
 
-    val actions = remember(currentRoute, isSearchVisible, searchText, uiState, childLoading, childError) {
+    // Centraliza a visibilidade da busca baseada no estado da tela vindo do backend
+    LaunchedEffect(uiState) {
+        if (uiState is MainUiState.Success) {
+            val screen = (uiState as MainUiState.Success).screen
+            viewModel.onShowSearchChanged(screen.showSearch)
+        }
+    }
+
+    val actions = remember(currentRoute, isSearchVisible, searchText, uiState) {
         val state = uiState
         ComponentActions(
             currentRoute = currentRoute,
@@ -43,24 +49,22 @@ fun MainScreen(
             onSearchTextChange = viewModel::onSearchTextChanged,
             onShowSearchChanged = viewModel::onShowSearchChanged,
             onRetry = viewModel::retry,
-            isLoading = state is MainUiState.Loading || childLoading,
-            error = (state as? MainUiState.Error)?.throwable ?: childError
+            isLoading = state is MainUiState.Loading,
+            error = (state as? MainUiState.Error)?.throwable
         )
     }
 
-    CompositionLocalProvider(LocalMainContainerState provides viewModel) {
-        val components = when (val state = uiState) {
-            is MainUiState.Success -> state.screen.components
-            else -> listOf(AppContainerComponent())
-        }
+    val components = when (val state = uiState) {
+        is MainUiState.Success -> state.screen.components
+        else -> listOf(AppContainerComponent())
+    }
 
-        components.forEach { component ->
-            RenderComponentFactory.Render(
-                component = component,
-                actions = actions,
-                modifier = modifier
-            )
-        }
+    components.forEach { component ->
+        RenderComponentFactory.Render(
+            component = component,
+            actions = actions,
+            modifier = modifier
+        )
     }
 }
 
@@ -70,7 +74,6 @@ fun MainContent(
     onTabSelected: (String) -> Unit,
     onItemClick: (String) -> Unit,
     onClose: () -> Unit,
-    onShowSearchChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (route) {
@@ -78,7 +81,6 @@ fun MainContent(
             onTabSelected = onTabSelected,
             onItemClick = onItemClick,
             onClose = onClose,
-            onShowSearchChanged = onShowSearchChanged,
             modifier = modifier
         )
 
@@ -86,7 +88,6 @@ fun MainContent(
             onTabSelected = onTabSelected,
             onItemClick = onItemClick,
             onClose = onClose,
-            onShowSearchChanged = onShowSearchChanged,
             modifier = modifier
         )
 
@@ -94,7 +95,6 @@ fun MainContent(
             onTabSelected = onTabSelected,
             onItemClick = onItemClick,
             onClose = onClose,
-            onShowSearchChanged = onShowSearchChanged,
             modifier = modifier
         )
 
@@ -102,7 +102,6 @@ fun MainContent(
             onTabSelected = onTabSelected,
             onItemClick = onItemClick,
             onClose = onClose,
-            onShowSearchChanged = onShowSearchChanged,
             modifier = modifier
         )
     }

@@ -1,9 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.home
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -11,11 +8,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppList
+import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppErrorContent
+import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
-import com.diegoferreiracaetano.dlearn.ui.screens.main.LocalMainContainerState
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
@@ -36,12 +33,10 @@ fun HomeScreen(
     onTabSelected: (String) -> Unit,
     onItemClick: (String) -> Unit,
     onClose: () -> Unit,
-    onShowSearchChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = koinInject(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val containerState = LocalMainContainerState.current
     var searchText by remember { mutableStateOf("") }
 
     val actions = remember(onItemClick, viewModel, onTabSelected, searchText) {
@@ -56,23 +51,21 @@ fun HomeScreen(
         )
     }
 
-    LaunchedEffect(uiState) {
-        when (val state = uiState) {
-            is HomeUiState.Success -> {
-                onShowSearchChanged(state.screen.showSearch)
-                containerState.onMainLoading(false)
-            }
-            is HomeUiState.Loading -> containerState.onMainLoading(true)
-            is HomeUiState.Error -> containerState.onMainError(state.throwable)
-        }
-    }
-
-    (uiState as? HomeUiState.Success)?.let { state ->
-        HomeListContent(
-            components = state.screen.components,
-            actions = actions,
-            modifier = modifier,
+    when (val state = uiState) {
+        is HomeUiState.Loading -> AppLoading(modifier = modifier)
+        is HomeUiState.Error -> AppErrorContent(
+            throwable = state.throwable,
+            onPrimary = viewModel::retry,
+            modifier = modifier
         )
+
+        is HomeUiState.Success -> {
+            HomeListContent(
+                components = state.screen.components,
+                actions = actions,
+                modifier = modifier,
+            )
+        }
     }
 }
 
@@ -82,7 +75,7 @@ fun HomeListContent(
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
-    components.forEach { component->
+    components.forEach { component ->
         RenderComponentFactory.Render(
             component = component,
             actions = actions,

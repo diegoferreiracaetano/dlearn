@@ -16,7 +16,6 @@ class AppMainContentRenderer : ComponentRenderer {
             onTabSelected = actions.onTabSelected,
             onItemClick = actions.onItemClick,
             onClose = actions.onClose,
-            onShowSearchChanged = actions.onShowSearchChanged,
             modifier = modifier.padding(vertical = 8.dp)
         )
     }

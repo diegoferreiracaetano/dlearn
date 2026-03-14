@@ -1,14 +1,14 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.movie
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppErrorContent
+import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
-import com.diegoferreiracaetano.dlearn.ui.screens.main.LocalMainContainerState
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.state.MovieDetailUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppExpandableSectionComponent
@@ -31,7 +31,6 @@ fun MovieDetailScreen(
     viewModel: MovieDetailViewModel = koinInject { parametersOf(movieId) },
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val containerState = LocalMainContainerState.current
 
     val actions = remember(onBackClick, onItemClick, viewModel) {
         ComponentActions(
@@ -41,28 +40,21 @@ fun MovieDetailScreen(
         )
     }
 
-    LaunchedEffect(uiState) {
-        when (val state = uiState) {
-            is MovieDetailUiState.Success -> {
-                containerState.onMainLoading(false)
-            }
-
-            is MovieDetailUiState.Loading -> {
-                containerState.onMainLoading(true)
-            }
-
-            is MovieDetailUiState.Error -> {
-                containerState.onMainError(state.throwable)
-            }
-        }
-    }
-
-    if (uiState is MovieDetailUiState.Success) {
-        MovieDetailListContent(
-            components = (uiState as MovieDetailUiState.Success).screen.components,
-            actions = actions,
-            modifier = modifier,
+    when (val state = uiState) {
+        is MovieDetailUiState.Loading -> AppLoading(modifier = modifier)
+        is MovieDetailUiState.Error -> AppErrorContent(
+            throwable = state.throwable,
+            onPrimary = viewModel::retry,
+            modifier = modifier
         )
+
+        is MovieDetailUiState.Success -> {
+            MovieDetailListContent(
+                components = state.screen.components,
+                actions = actions,
+                modifier = modifier,
+            )
+        }
     }
 }
 

@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppErrorContent
@@ -32,15 +31,6 @@ class AppContainerRenderer : ComponentRenderer {
         val container = component as? AppContainerComponent ?: return
         val snackbarHostState = remember { SnackbarHostState() }
         val containerState = remember { AppContainerState() }
-
-        // Sincroniza o estado do container com as ações globais (ex: carregamento da tela)
-        LaunchedEffect(actions.isLoading, actions.error, actions.onRetry) {
-            containerState.update(
-                isLoading = actions.isLoading,
-                error = actions.error,
-                onRetry = actions.onRetry
-            )
-        }
 
         CompositionLocalProvider(
             LocalSnackbarHostState provides snackbarHostState,

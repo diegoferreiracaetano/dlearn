@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.search.SearchRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
-import com.diegoferreiracaetano.dlearn.util.getLogger
+import com.diegoferreiracaetano.dlearn.ui.screens.search.state.SearchUiState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -15,14 +15,37 @@ class SearchViewModel(
     private val searchRepository: SearchRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
-    val uiState: StateFlow<UIState<Screen>> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<SearchUiState>(SearchUiState.Loading)
+    val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
+
+    private val _contentState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
+    val contentState: StateFlow<UIState<Screen>> = _contentState.asStateFlow()
 
     private val _query = MutableStateFlow("")
+    val query: StateFlow<String> = _query.asStateFlow()
+
     private var searchJob: Job? = null
 
     init {
+        loadShell()
         setupSearchDebounce()
+    }
+
+    private fun loadShell() {
+        viewModelScope.launch {
+            searchRepository.getSearchShell(_query.value)
+                .catch { error ->
+                    _uiState.value = SearchUiState.Error(error)
+                }
+                .collect { screen ->
+                    // Optionally extract the query from the server's shell configuration
+                    val searchBar = screen.components.firstOrNull() as? AppSearchBarComponent
+                    if (searchBar != null && searchBar.query.isNotEmpty() && _query.value.isEmpty()) {
+                        _query.value = searchBar.query
+                    }
+                    _uiState.value = SearchUiState.Success(screen)
+                }
+        }
     }
 
     private fun setupSearchDebounce() {
@@ -40,33 +63,26 @@ class SearchViewModel(
         _query.value = query
     }
 
-    fun onSearch(query: String) {
-        // Implementação de busca imediata ao pressionar Enter (opcional)
-        // Comentado conforme solicitado
-        // _query.value = query
-        // executeSearch(query)
-    }
-
     private fun executeSearch(query: String) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             searchRepository.search(query)
                 .onStart {
-                    // Opcional: Mostrar loading se desejar feedback visual durante a digitação
-                    // _uiState.value = UIState.Loading
+                    // _contentState.value = UIState.Loading
                 }
                 .catch { throwable ->
-                    _uiState.value = UIState.Error(throwable)
+                    _contentState.value = UIState.Error(throwable)
                 }
                 .collect { screen ->
-
-                    getLogger().d("VIEWMODEL", (screen.components as? AppSearchBarComponent)?.components.toString())
-                    _uiState.value = UIState.Success(screen)
+                    _contentState.value = UIState.Success(screen)
                 }
         }
     }
 
     fun retry() {
+        if (_uiState.value is SearchUiState.Error) {
+            loadShell()
+        }
         executeSearch(_query.value)
     }
 }

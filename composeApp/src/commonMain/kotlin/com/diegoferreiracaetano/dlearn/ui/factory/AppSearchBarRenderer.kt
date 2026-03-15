@@ -18,14 +18,13 @@ class AppSearchBarRenderer : ComponentRenderer {
         val searchComponent = component as? AppSearchBarComponent ?: return
 
         AppSearchBar(
-            query = searchComponent.query,
+            query = actions.searchQuery,
             onQueryChange = actions.onQueryChange,
             onSearch = actions.onSearch,
             onBackClick = actions.onBackClick,
             placeholder = searchComponent.placeholder,
             modifier = modifier,
             content = {
-                getLogger().d("TESTE", searchComponent.components.toString())
                 RenderComponentFactory.Render(searchComponent.components, actions, modifier)
             }
         )

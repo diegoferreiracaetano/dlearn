@@ -12,6 +12,5 @@ data class ComponentActions(
     val currentRoute: String = "",
     val onSearch: (String) -> Unit = {},
     val onQueryChange: (String) -> Unit = {},
-    val onActiveChange: (Boolean) -> Unit = {},
-    val active: Boolean = false
+    val searchQuery: String = ""
 )

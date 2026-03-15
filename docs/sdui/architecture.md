@@ -29,6 +29,9 @@ Atualmente, o DLearn suporta os seguintes componentes:
 | Componente | Função |
 |---|---|
 | `AppTopBarComponent` | Barra de topo com título e campo de busca. |
+| `AppSearchBarComponent` | Container que representa a barra de pesquisa e um slot para injeção dinâmica de resultados. |
+| `AppSearchContentComponent` | Marcador utilizado para inserir dinamicamente a resposta da busca dentro do SearchBar. |
+| `AppEmptyStateComponent` | Componente de fallback visual (ex: estado de "não encontrado"). |
 | `BottomNavigationComponent` | Barra de navegação inferior dinâmica. |
 | `AppContainerComponent` | Container raiz que pode conter barras de sistema e sub-componentes. |
 | `CarouselComponent` | Carrossel genérico que renderiza uma lista de sub-componentes. |
@@ -48,4 +51,3 @@ Atualmente, o DLearn suporta os seguintes componentes:
 
 - [ ] Implementar `SDUIRepositoryImpl` para buscar telas dinamicamente.
 - [ ] Criar endpoint `/api/screen/{route}` no servidor para centralizar a busca de telas.
-- [ ] Refatorar telas de `Favoritos` e `Conta` para usar o motor SDUI.

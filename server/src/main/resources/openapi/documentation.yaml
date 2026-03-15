@@ -40,8 +40,21 @@ paths:
                 $ref: '#/components/schemas/Screen'
   /v1/search:
     get:
+      summary: Get Search Shell
+      description: Returns the search screen shell configuration (container and search bar layout).
+      parameters:
+        - *common_params
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
+  /v1/search/content:
+    get:
       summary: Search Content
-      description: Returns a search screen with results based on the query
+      description: Returns the search content results based on the query, to be displayed inside the Search Shell.
       parameters:
         - name: q
           in: query

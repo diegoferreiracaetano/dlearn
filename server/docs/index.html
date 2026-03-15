@@ -1081,6 +1081,9 @@
                     <li data-group="Default" data-name="v1MovieMovieIdGet" class="">
                       <a href="#api-Default-v1MovieMovieIdGet">v1MovieMovieIdGet</a>
                     </li>
+                    <li data-group="Default" data-name="v1SearchContentGet" class="">
+                      <a href="#api-Default-v1SearchContentGet">v1SearchContentGet</a>
+                    </li>
                     <li data-group="Default" data-name="v1SearchGet" class="">
                       <a href="#api-Default-v1SearchGet">v1SearchGet</a>
                     </li>
@@ -1746,16 +1749,307 @@ except ApiException as e:
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Default-v1SearchGet">
-                      <article id="api-Default-v1SearchGet-0" data-group="User" data-name="v1SearchGet" data-version="0">
+                    <div id="api-Default-v1SearchContentGet">
+                      <article id="api-Default-v1SearchContentGet-0" data-group="User" data-name="v1SearchContentGet" data-version="0">
                         <div class="pull-left">
-                          <h1>v1SearchGet</h1>
+                          <h1>v1SearchContentGet</h1>
                           <p>Search Content</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Returns a search screen with results based on the query</p>
+                        <p class="marked">Returns the search content results based on the query, to be displayed inside the Search Shell.</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/search/content</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-v1SearchContentGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-v1SearchContentGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-v1SearchContentGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-v1SearchContentGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"http://localhost:8081/v1/search/content?q="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        
+        DefaultApi apiInstance = new DefaultApi();
+        String q = q_example; // String | 
+        try {
+            Screen result = apiInstance.v1SearchContentGet(q);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#v1SearchContentGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String q = q_example; // String | 
+        try {
+            Screen result = apiInstance.v1SearchContentGet(q);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#v1SearchContentGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *q = q_example; //  (optional)
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Search Content
+[apiInstance v1SearchContentGetWith:q
+              completionHandler: ^(Screen output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
+
+var api = new DLearnBffApi.DefaultApi()
+var opts = { 
+  'q': q_example // {{String}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.v1SearchContentGet(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-v1SearchContentGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class v1SearchContentGetExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new DefaultApi();
+            var q = q_example;  // String |  (optional) 
+
+            try
+            {
+                // Search Content
+                Screen result = apiInstance.v1SearchContentGet(q);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.v1SearchContentGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$q = q_example; // String | 
+
+try {
+    $result = $api_instance->v1SearchContentGet($q);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->v1SearchContentGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $q = q_example; # String | 
+
+eval { 
+    my $result = $api_instance->v1SearchContentGet(q => $q);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->v1SearchContentGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+q = q_example # String |  (optional)
+
+try: 
+    # Search Content
+    api_response = api_instance.v1_search_content_get(q=q)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->v1SearchContentGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">q</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_v1SearchContentGet_q">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1SearchContentGet-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1SearchContentGet-200-schema">
+                                  <div id='responses-v1SearchContentGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Screen"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1SearchContentGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1SearchContentGet-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1SearchContentGet-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-v1SearchGet">
+                      <article id="api-Default-v1SearchGet-0" data-group="User" data-name="v1SearchGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>v1SearchGet</h1>
+                          <p>Get Search Shell</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Returns the search screen shell configuration (container and search bar layout).</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/search</span></code></pre>
@@ -1780,7 +2074,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-Default-v1SearchGet-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"http://localhost:8081/v1/search?q="</code></pre>
+"http://localhost:8081/v1/search"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-v1SearchGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -1796,9 +2090,8 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         
         DefaultApi apiInstance = new DefaultApi();
-        String q = q_example; // String | 
         try {
-            Screen result = apiInstance.v1SearchGet(q);
+            Screen result = apiInstance.v1SearchGet();
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#v1SearchGet");
@@ -1815,9 +2108,8 @@ public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String q = q_example; // String | 
         try {
-            Screen result = apiInstance.v1SearchGet(q);
+            Screen result = apiInstance.v1SearchGet();
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#v1SearchGet");
@@ -1831,13 +2123,12 @@ public class DefaultApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Default-v1SearchGet-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *q = q_example; //  (optional)
-
+                              <pre class="prettyprint"><code class="language-cpp">
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
-// Search Content
-[apiInstance v1SearchGetWith:q
-              completionHandler: ^(Screen output, NSError* error) {
+// Get Search Shell
+[apiInstance v1SearchGetWithCompletionHandler: 
+              ^(Screen output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -1852,9 +2143,6 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
 
 var api = new DLearnBffApi.DefaultApi()
-var opts = { 
-  'q': q_example // {{String}} 
-};
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -1862,7 +2150,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.v1SearchGet(opts, callback);
+api.v1SearchGet(callback);
 </code></pre>
                             </div>
 
@@ -1884,12 +2172,11 @@ namespace Example
         {
 
             var apiInstance = new DefaultApi();
-            var q = q_example;  // String |  (optional) 
 
             try
             {
-                // Search Content
-                Screen result = apiInstance.v1SearchGet(q);
+                // Get Search Shell
+                Screen result = apiInstance.v1SearchGet();
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -1907,10 +2194,9 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
-$q = q_example; // String | 
 
 try {
-    $result = $api_instance->v1SearchGet($q);
+    $result = $api_instance->v1SearchGet();
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->v1SearchGet: ', $e->getMessage(), PHP_EOL;
@@ -1924,10 +2210,9 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::DefaultApi;
 
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
-my $q = q_example; # String | 
 
 eval { 
-    my $result = $api_instance->v1SearchGet(q => $q);
+    my $result = $api_instance->v1SearchGet();
     print Dumper($result);
 };
 if ($@) {
@@ -1944,11 +2229,10 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
-q = q_example # String |  (optional)
 
 try: 
-    # Search Content
-    api_response = api_instance.v1_search_get(q=q)
+    # Get Search Shell
+    api_response = api_instance.v1_search_get()
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->v1SearchGet: %s\n" % e)</code></pre>
@@ -1961,29 +2245,6 @@ except ApiException as e:
 
 
 
-                            <div class="methodsubtabletitle">Query parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                <tr><td style="width:150px;">q</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_v1SearchGet_q">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    String
-                                                </span>
-                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                            </table>
 
                           <h2>Responses</h2>
                             <h3> Status: 200 - OK </h3>

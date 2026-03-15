@@ -10,9 +10,12 @@ class SearchOrchestrator(
     private val getSearchDataUseCase: GetSearchDataUseCase,
     private val searchScreenBuilder: SearchScreenBuilder
 ) {
-    suspend fun search(
+    fun searchShell(query: String, lang: String): Screen {
+        return searchScreenBuilder.buildShell(query, lang)
+    }
+
+    suspend fun searchContent(
         userId: String,
-        appVersion: Int,
         lang: String,
         query: String
     ): Screen {
@@ -29,6 +32,6 @@ class SearchOrchestrator(
                 actionUrl = "/video/${video.id}"
             ) as Component
         }
-        return searchScreenBuilder.build(query, results, appVersion, lang)
+        return searchScreenBuilder.buildContent(query, results, lang)
     }
 }

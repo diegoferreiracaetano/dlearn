@@ -7,9 +7,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
+import com.diegoferreiracaetano.dlearn.ui.screens.search.state.SearchUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
-import com.diegoferreiracaetano.dlearn.ui.util.Render
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
@@ -22,9 +23,8 @@ fun SearchScreen(
     viewModel: SearchViewModel = koinInject(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val query by viewModel.query.collectAsStateWithLifecycle()
 
-    // Ao entrar na tela, não fazemos chamada automática com query, 
-    // apenas garantimos que o estado inicial seja carregado (ex: campo vazio)
     LaunchedEffect(Unit) {
         // viewModel.onQueryChange("") // Comentado ou chamado apenas para resetar se necessário
     }
@@ -36,7 +36,8 @@ fun SearchScreen(
             onBackClick = onBackClick,
             onSearch = { /* onSearch comentado conforme solicitado */ },
             onQueryChange = viewModel::onQueryChange,
-            onRetry = viewModel::retry
+            onRetry = viewModel::retry,
+            searchQuery = query
         )
     }
 
@@ -49,14 +50,29 @@ fun SearchScreen(
 
 @Composable
 fun SearchContent(
-    uiState: UIState<Screen>,
+    uiState: SearchUiState,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
-    uiState.Render(
-        actions = actions,
-        modifier = modifier
-    )
+    when (val state = uiState) {
+        is SearchUiState.Loading -> RenderComponentFactory.Render(
+            component = AppLoadingComponent,
+            actions = actions,
+            modifier = modifier
+        )
+        is SearchUiState.Error -> RenderComponentFactory.Render(
+            component = AppErrorComponent(state.throwable),
+            actions = actions,
+            modifier = modifier
+        )
+        is SearchUiState.Success -> {
+            RenderComponentFactory.Render(
+                components = state.screen.components,
+                actions = actions,
+                modifier = modifier
+            )
+        }
+    }
 }
 
 @Preview
@@ -64,7 +80,7 @@ fun SearchContent(
 fun SearchScreenLoadingPreview() {
     DLearnTheme {
         SearchContent(
-            uiState = UIState.Loading,
+            uiState = SearchUiState.Loading,
             actions = ComponentActions()
         )
     }
@@ -75,7 +91,7 @@ fun SearchScreenLoadingPreview() {
 fun SearchScreenErrorPreview() {
     DLearnTheme {
         SearchContent(
-            uiState = UIState.Error(Throwable("Erro de conexão")),
+            uiState = SearchUiState.Error(Throwable("Erro de conexão")),
             actions = ComponentActions()
         )
     }
@@ -102,7 +118,7 @@ fun SearchScreenEmptyPreview() {
     )
     DLearnTheme {
         SearchContent(
-            uiState = UIState.Success(screen),
+            uiState = SearchUiState.Success(screen),
             actions = ComponentActions()
         )
     }
@@ -127,7 +143,7 @@ fun SearchScreenSuccessPreview() {
     )
     DLearnTheme {
         SearchContent(
-            uiState = UIState.Success(screen),
+            uiState = SearchUiState.Success(screen),
             actions = ComponentActions()
         )
     }

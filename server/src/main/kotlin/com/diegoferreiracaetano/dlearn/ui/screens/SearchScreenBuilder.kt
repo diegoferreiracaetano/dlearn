@@ -5,10 +5,23 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
 class SearchScreenBuilder(private val i18n: I18nProvider) {
-    fun build(
+    fun buildShell(query: String, lang: String): Screen {
+        val placeholder = i18n.getString(AppStringType.SEARCH_PLACEHOLDER, lang)
+        return Screen(
+            id = ComponentIds.SEARCH_SCREEN,
+            components = listOf(
+                AppSearchBarComponent(
+                    query = query,
+                    placeholder = placeholder,
+                    components = listOf(AppSearchContentComponent() as Component)
+                ) as Component
+            )
+        )
+    }
+
+    fun buildContent(
         query: String,
         results: List<Component>,
-        appVersion: Int,
         lang: String
     ): Screen {
         val content = if (query.isBlank()) {
@@ -29,21 +42,11 @@ class SearchScreenBuilder(private val i18n: I18nProvider) {
             }
         }
 
-        val placeholder = i18n.getString(AppStringType.SEARCH_PLACEHOLDER, lang)
-
         return Screen(
-            id = ComponentIds.SEARCH_SCREEN,
-            components = listOf(
-                AppSearchBarComponent(
-                    query = query,
-                    placeholder = placeholder,
-                    components = if (content.isNotEmpty()) {
-                        listOf(AppListComponent(components = content) as Component)
-                    } else {
-                        emptyList()
-                    }
-                ) as Component
-            )
+            id = "SEARCH_CONTENT",
+            components = content.ifEmpty {
+                emptyList()
+            }
         )
     }
 }

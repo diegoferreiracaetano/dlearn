@@ -10,8 +10,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class SearchRepositoryRemote(private val httpClient: HttpClient) : SearchRepository {
-    override fun search(query: String): Flow<Screen> = flow {
+    override fun getSearchShell(query: String): Flow<Screen> = flow {
         val response = httpClient.get("v1/search") {
+            parameter("q", query)
+        }.body<Screen>()
+        emit(response)
+    }
+
+    override fun search(query: String): Flow<Screen> = flow {
+        val response = httpClient.get("v1/search/content") {
             parameter("q", query)
         }.body<Screen>()
         emit(response)

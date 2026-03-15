@@ -6,7 +6,6 @@ import com.diegoferreiracaetano.dlearn.util.encodeURL
 sealed class ScreenRouter(
     val route: String,
 ) {
-    object Main : ScreenRouter("main")
     object Home : ScreenRouter(NavigationRoutes.HOME)
     object New : ScreenRouter(NavigationRoutes.NEW)
     object Favorites : ScreenRouter(NavigationRoutes.FAVORITE)

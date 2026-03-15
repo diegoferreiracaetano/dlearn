@@ -11,7 +11,7 @@ object RenderComponentFactory {
     fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier = Modifier.Companion
+        modifier: Modifier = Modifier
     ) {
 
         when (component) {
@@ -38,4 +38,5 @@ object RenderComponentFactory {
             else -> {} // Unknown components
         }
     }
+
 }

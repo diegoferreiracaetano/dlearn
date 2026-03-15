@@ -20,14 +20,12 @@ class MainOrchestrator(
         userId: String,
         appVersion: Int,
         lang: String,
-        route: String,
         type: HomeFilterType
     ): Screen {
         return mainScreenBuilder.build(
             userId = userId,
             appVersion = appVersion,
             lang = lang,
-            route = route,
             type = type
         )
     }

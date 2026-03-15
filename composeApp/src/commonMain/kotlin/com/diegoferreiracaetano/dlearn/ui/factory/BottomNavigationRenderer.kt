@@ -1,12 +1,16 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppBottomNavigation
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppBottomNavigationBar
+import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppNavigationTab
 import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.toIcon
 
 class BottomNavigationRenderer : ComponentRenderer {
     @Composable
@@ -16,10 +20,23 @@ class BottomNavigationRenderer : ComponentRenderer {
         modifier: Modifier
     ) {
         val bottomNav = component as? BottomNavigationComponent ?: return
+
+        val mappedItems = bottomNav.items.map { item ->
+            val icon = item.icon.toIcon() ?: Icons.Default.QuestionMark
+            AppNavigationTab(
+                route = item.route,
+                label = item.label,
+                selectedIcon = icon,
+                unselectedIcon = icon
+            )
+        }
+
         val nav = AppBottomNavigation(
-            selectedRoute = bottomNav.selectedRoute.orEmpty(),
+            selectedRoute = actions.currentRoute,
+            items = mappedItems,
             onTabSelected = actions.onTabSelected
         )
+
         AppBottomNavigationBar(
             items = nav.items,
             selectedRoute = nav.selectedRoute,

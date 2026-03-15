@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.ui.screens.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
 import com.diegoferreiracaetano.dlearn.ui.screens.main.state.MainUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,9 +19,6 @@ class MainViewModel(
     private val _uiState = MutableStateFlow<MainUiState>(MainUiState.Loading)
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
-    private val _currentRoute = MutableStateFlow(NavigationRoutes.HOME)
-    val currentRoute: StateFlow<String> = _currentRoute.asStateFlow()
-
     private val _searchText = MutableStateFlow("")
     val searchText: StateFlow<String> = _searchText.asStateFlow()
 
@@ -35,24 +31,13 @@ class MainViewModel(
 
     fun loadMain() {
         viewModelScope.launch {
-            mainRepository.getMain(
-                route = _currentRoute.value
-            ).onStart {
+            mainRepository.getMain().onStart {
                 _uiState.update { MainUiState.Loading }
             }.catch { error ->
                 _uiState.update { MainUiState.Error(error) }
             }.collect { screen ->
                 _uiState.update { MainUiState.Success(screen) }
             }
-        }
-    }
-
-    fun onTabSelected(route: String) {
-        if (_currentRoute.value != route) {
-            _currentRoute.value = route
-            _searchText.value = ""
-            _isSearchVisible.value = false
-            loadMain()
         }
     }
 

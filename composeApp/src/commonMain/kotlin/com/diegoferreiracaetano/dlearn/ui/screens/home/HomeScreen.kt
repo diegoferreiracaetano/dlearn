@@ -16,6 +16,7 @@ import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppErrorComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppListComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppLoadingComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.BannerCarouselComponent
@@ -77,13 +78,11 @@ fun HomeContent(
             modifier = modifier
         )
         is HomeUiState.Success -> {
-            state.screen.components.forEach { component->
-                RenderComponentFactory.Render(
-                    component = component,
-                    actions = actions,
-                    modifier = modifier
-                )
-            }
+            RenderComponentFactory.Render(
+                component = AppListComponent(components = state.screen.components),
+                actions = actions,
+                modifier = modifier
+            )
         }
     }
 }

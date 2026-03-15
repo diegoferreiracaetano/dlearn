@@ -13,21 +13,24 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.CreateNewPassword
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Main
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Favorites
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Home
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Login
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.MovieDetail
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.New
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Onboarding
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Profile
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.ResetPassword
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.SignUp
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.VerifyAccount
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Welcome
-import com.diegoferreiracaetano.dlearn.ui.screens.main.MainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.CreateNewPasswordScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.LoginScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.ResetPasswordScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.SignUpScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.VerifyAccountScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.WelcomeScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.main.MainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.onboarding.OnboardingScreen
 import kotlinx.coroutines.CoroutineScope
@@ -41,9 +44,9 @@ fun AppNavGraph(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ) {
     val isLoggedIn by sessionManager.isLoggedIn.collectAsStateWithLifecycle()
-   // val startDestination = if (isLoggedIn) Main.route else Onboarding.route
+    // val startDestination = if (isLoggedIn) Main.route else Onboarding.route
 
-    val startDestination = Main.route
+    val startDestination = Home.route
 
     NavHost(
         navController = navController,
@@ -60,7 +63,7 @@ fun AppNavGraph(
         composable(Welcome.route) {
             WelcomeScreen(
                 onSignUpClick = { navController.navigate(SignUp.route) },
-                onLoginClick = { navController.navigate(Main.route) },
+                onLoginClick = { navController.navigateToRoute(Home.route) },
                 modifier = modifier
             )
         }
@@ -68,7 +71,7 @@ fun AppNavGraph(
         composable(Login.route) {
             LoginScreen(
                 onBackClick = { navController.popBackStack() },
-                onLoginClick = { navController.navigate(Main.route) },
+                onLoginClick = { navController.navigateToRoute(Home.route) },
                 onForgotPasswordClick = { navController.navigate(ResetPassword.route) },
                 modifier = modifier
             )
@@ -107,7 +110,7 @@ fun AppNavGraph(
             )
         }
 
-        composable(Main.route) {
+        composable(Home.route) {
             MainScreen(
                 onItemClick = { id ->
                     navController.navigate(MovieDetail.createRoute(id))
@@ -115,7 +118,59 @@ fun AppNavGraph(
                 onClose = {
                     navController.popBackStack()
                 },
+                onTabSelected = { route ->
+                    navController.navigateToRoute(route)
+                },
                 modifier = modifier,
+                currentRoute = Home.route
+            )
+        }
+
+        composable(New.route) {
+            MainScreen(
+                onItemClick = { id ->
+                    navController.navigate(MovieDetail.createRoute(id))
+                },
+                onClose = {
+                    navController.popBackStack()
+                },
+                onTabSelected = { route ->
+                    navController.navigateToRoute(route)
+                },
+                modifier = modifier,
+                currentRoute = New.route
+            )
+        }
+
+        composable(Favorites.route) {
+            MainScreen(
+                onItemClick = { id ->
+                    navController.navigate(MovieDetail.createRoute(id))
+                },
+                onClose = {
+                    navController.popBackStack()
+                },
+                onTabSelected = { route ->
+                    navController.navigateToRoute(route)
+                },
+                modifier = modifier,
+                currentRoute = Favorites.route
+            )
+        }
+
+        composable(Profile.route) {
+            MainScreen(
+                onItemClick = { id ->
+                    navController.navigate(MovieDetail.createRoute(id))
+                },
+                onClose = {
+                    navController.popBackStack()
+                },
+                onTabSelected = { route ->
+                    navController.navigateToRoute(route)
+                },
+                modifier = modifier,
+                currentRoute = Profile.route
             )
         }
 

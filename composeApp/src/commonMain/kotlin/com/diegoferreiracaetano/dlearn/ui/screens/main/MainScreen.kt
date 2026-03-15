@@ -1,7 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.main
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -20,16 +19,17 @@ import org.koin.compose.koinInject
 @Composable
 fun MainScreen(
     onItemClick: (String) -> Unit,
+    onTabSelected: (String) -> Unit,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = koinInject()
+    viewModel: MainViewModel = koinInject(),
+    currentRoute: String = NavigationRoutes.HOME
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val currentRoute by viewModel.currentRoute.collectAsStateWithLifecycle()
     val searchText by viewModel.searchText.collectAsStateWithLifecycle()
     val isSearchVisible by viewModel.isSearchVisible.collectAsStateWithLifecycle()
 
-    val actions = remember(currentRoute, isSearchVisible, searchText, uiState) {
+    val actions = remember(currentRoute, isSearchVisible, searchText, uiState, onTabSelected) {
         val state = uiState
         ComponentActions(
             currentRoute = currentRoute,
@@ -37,7 +37,7 @@ fun MainScreen(
             isSearchVisible = isSearchVisible,
             onItemClick = onItemClick,
             onClose = onClose,
-            onTabSelected = viewModel::onTabSelected,
+            onTabSelected = onTabSelected,
             onSearchTextChange = viewModel::onSearchTextChanged,
             onShowSearchChanged = viewModel::onShowSearchChanged,
             onRetry = viewModel::retry,

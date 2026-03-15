@@ -18,7 +18,6 @@ fun Route.mainController() {
             val userId = call.request.queryParameters["userId"] ?: "guest"
             val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
             val lang = call.request.acceptLanguage() ?: "en"
-            val route = call.request.queryParameters["route"] ?: "home"
             
             val typeParam = call.request.queryParameters["type"]
             val type = try {
@@ -32,7 +31,6 @@ fun Route.mainController() {
                 userId = userId,
                 appVersion = appVersion,
                 lang = lang,
-                route = route,
                 type = type
             )
             call.respond(screen)

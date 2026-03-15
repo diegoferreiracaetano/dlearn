@@ -12,12 +12,10 @@ import kotlinx.coroutines.flow.flow
 
 class MainRepositoryRemote(private val httpClient: HttpClient) : MainRepository {
     override fun getMain(
-        route: String,
         type: HomeFilterType,
         search: String?
     ): Flow<Screen> = flow {
         val response = httpClient.get("v1/main") {
-            parameter("route", route)
             parameter("type", type.name)
             search?.let { parameter("search", it) }
         }.body<Screen>()
@@ -25,12 +23,10 @@ class MainRepositoryRemote(private val httpClient: HttpClient) : MainRepository 
     }
 
     override fun getContent(
-        route: String,
         type: HomeFilterType,
         search: String?
     ): Flow<Screen> = flow {
         val response = httpClient.get("v1/main/content") {
-            parameter("route", route)
             parameter("type", type.name)
             search?.let { parameter("search", it) }
         }.body<Screen>()

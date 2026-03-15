@@ -6,14 +6,19 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 
 object RenderComponentFactory {
+
     @Composable
     fun Render(
         component: Component,
         actions: ComponentActions,
         modifier: Modifier = Modifier.Companion
     ) {
+
         when (component) {
+            is AppLoadingComponent -> AppLoadingRenderer().Render(component, actions, modifier)
+            is AppErrorComponent -> AppErrorRenderer().Render(component, actions, modifier)
             is AppContainerComponent -> AppContainerRenderer().Render(component, actions, modifier)
+            is AppListComponent -> AppListRenderer().Render(component, actions, modifier)
             is AppTopBarComponent -> AppTopBarRenderer().Render(component, actions, modifier)
             is SearchBarComponent -> SearchBarRenderer().Render(component, actions, modifier)
             is BottomNavigationComponent -> BottomNavigationRenderer().Render(component, actions, modifier)

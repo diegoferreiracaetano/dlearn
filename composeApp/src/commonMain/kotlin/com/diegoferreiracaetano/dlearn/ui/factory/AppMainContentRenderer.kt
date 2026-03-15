@@ -15,7 +15,6 @@ class AppMainContentRenderer : ComponentRenderer {
             route = actions.currentRoute,
             onTabSelected = actions.onTabSelected,
             onItemClick = actions.onItemClick,
-            onClose = actions.onClose,
             modifier = modifier.padding(vertical = 8.dp)
         )
     }

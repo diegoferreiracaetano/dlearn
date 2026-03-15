@@ -8,22 +8,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppErrorContent
+import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppError
 import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppErrorComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppLoadingComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.BannerCarouselComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavItem
 import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipItem
-import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.FullScreenBannerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.MovieCarouselComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -50,65 +52,57 @@ fun HomeScreen(
         )
     }
 
-    when (val state = uiState) {
-        is HomeUiState.Loading -> AppLoading(modifier)
-        is HomeUiState.Error -> AppErrorContent(
-            modifier = modifier,
-            throwable = state.throwable,
-            onPrimary = viewModel::retry
-        )
-        is HomeUiState.Success -> {
-            HomeListContent(
-                components = state.screen.components,
-                actions = actions,
-                modifier = modifier,
-            )
-        }
-    }
+    HomeContent(
+        uiState = uiState,
+        actions = actions,
+        modifier = modifier
+    )
 }
 
 @Composable
-fun HomeListContent(
-    components: List<Component>,
+fun HomeContent(
+    uiState: HomeUiState,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
-    components.forEach { component ->
-        RenderComponentFactory.Render(
-            component = component,
+    when (val state = uiState) {
+        is HomeUiState.Loading -> RenderComponentFactory.Render(
+            component = AppLoadingComponent,
             actions = actions,
             modifier = modifier
         )
+        is HomeUiState.Error ->  RenderComponentFactory.Render(
+            component = AppErrorComponent(state.throwable),
+            actions = actions,
+            modifier = modifier
+        )
+        is HomeUiState.Success -> {
+            state.screen.components.forEach { component->
+                RenderComponentFactory.Render(
+                    component = component,
+                    actions = actions,
+                    modifier = modifier
+                )
+            }
+        }
     }
 }
 
 @Preview
 @Composable
-fun HomeListScreenPreview() {
+fun HomeScreenPreview() {
     val components = listOf(
         AppContainerComponent(
             topBar = AppTopBarComponent(title = "DLearn"),
             bottomBar = BottomNavigationComponent(
                 items = listOf(
-                    BottomNavItem(
-                        "Home",
-                        NavigationRoutes.HOME,
-                        AppIconType.PERSON
-                    )
+                    BottomNavItem("Home", NavigationRoutes.HOME, AppIconType.PERSON)
                 ),
                 selectedRoute = NavigationRoutes.HOME
             ),
             components = listOf(
-                ChipGroupComponent(
-                    id = "2",
-                    items = listOf(ChipItem(id = "1", label = "Séries"))
-                ),
-                FullScreenBannerComponent(
-                    id = "3",
-                    title = "Banner",
-                    subtitle = "2024",
-                    imageUrl = ""
-                ),
+                ChipGroupComponent(id = "2", items = listOf(ChipItem(id = "1", label = "Séries"))),
+                FullScreenBannerComponent(id = "3", title = "Banner", subtitle = "2024", imageUrl = ""),
                 MovieCarouselComponent(title = "Top 10", items = listOf()),
                 BannerCarouselComponent(title = "Populares", items = listOf())
             )
@@ -116,8 +110,8 @@ fun HomeListScreenPreview() {
     )
 
     DLearnTheme {
-        HomeListContent(
-            components = components,
+        HomeContent(
+            uiState = HomeUiState.Success(Screen(id = "home", components = components)),
             actions = ComponentActions()
         )
     }

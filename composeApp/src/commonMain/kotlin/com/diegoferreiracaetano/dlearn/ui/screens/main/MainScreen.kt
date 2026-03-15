@@ -29,14 +29,6 @@ fun MainScreen(
     val searchText by viewModel.searchText.collectAsStateWithLifecycle()
     val isSearchVisible by viewModel.isSearchVisible.collectAsStateWithLifecycle()
 
-    // Centraliza a visibilidade da busca baseada no estado da tela vindo do backend
-    LaunchedEffect(uiState) {
-        if (uiState is MainUiState.Success) {
-            val screen = (uiState as MainUiState.Success).screen
-            viewModel.onShowSearchChanged(screen.showSearch)
-        }
-    }
-
     val actions = remember(currentRoute, isSearchVisible, searchText, uiState) {
         val state = uiState
         ComponentActions(
@@ -73,7 +65,6 @@ fun MainContent(
     route: String,
     onTabSelected: (String) -> Unit,
     onItemClick: (String) -> Unit,
-    onClose: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (route) {

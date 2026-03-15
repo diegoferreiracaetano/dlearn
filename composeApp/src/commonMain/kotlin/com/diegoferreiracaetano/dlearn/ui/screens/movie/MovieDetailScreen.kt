@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppErrorContent
+import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppError
 import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
@@ -42,7 +42,7 @@ fun MovieDetailScreen(
 
     when (val state = uiState) {
         is MovieDetailUiState.Loading -> AppLoading(modifier = modifier)
-        is MovieDetailUiState.Error -> AppErrorContent(
+        is MovieDetailUiState.Error -> AppError(
             throwable = state.throwable,
             onPrimary = viewModel::retry,
             modifier = modifier

@@ -7,4 +7,6 @@ import kotlinx.serialization.json.JsonClassDiscriminator
 
 @Serializable
 @JsonClassDiscriminator("type")
-sealed interface Component
+sealed interface Component {
+    val isFullScreen: Boolean get() = false
+}

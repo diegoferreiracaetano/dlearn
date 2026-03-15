@@ -1,13 +1,16 @@
 package com.diegoferreiracaetano.dlearn.ui.util
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
 import com.diegoferreiracaetano.dlearn.designsystem.components.movie.MovieItem
-import com.diegoferreiracaetano.dlearn.ui.sdui.CardComponent
+import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
+import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +29,40 @@ data class UiState<out T>(
     val isLoading: Boolean = false,
     val error: String? = null
 )
+
+@Composable
+fun UIState<Screen>.Render(
+    actions: ComponentActions,
+    modifier: Modifier = Modifier
+) {
+    when (this) {
+        is UIState.Loading -> {
+            RenderComponentFactory.Render(
+                component = AppLoadingComponent,
+                actions = actions,
+                modifier = modifier
+            )
+        }
+
+        is UIState.Error -> {
+            RenderComponentFactory.Render(
+                component = AppErrorComponent(
+                    throwable = this.throwable
+                ),
+                actions = actions,
+                modifier = modifier
+            )
+        }
+
+        is UIState.Success -> {
+            RenderComponentFactory.Render(
+                component = AppListComponent(components = this.data.components),
+                actions = actions,
+                modifier = modifier
+            )
+        }
+    }
+}
 
 @OptIn(ExperimentalCoroutinesApi::class)
 fun <T, R> Flow<T?>.asUiState(

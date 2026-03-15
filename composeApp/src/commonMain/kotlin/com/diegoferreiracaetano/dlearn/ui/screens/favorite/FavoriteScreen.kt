@@ -1,19 +1,14 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.favorite
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppErrorContent
-import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppList
-import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
-import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
-import com.diegoferreiracaetano.dlearn.ui.screens.favorite.state.FavoriteUiState
-import com.diegoferreiracaetano.dlearn.ui.sdui.Component
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.Render
 import org.koin.compose.koinInject
 
 @Composable
@@ -33,36 +28,18 @@ fun FavoriteScreen(
         )
     }
 
-    when (val state = uiState) {
-        is FavoriteUiState.Loading -> AppLoading()
-        is FavoriteUiState.Error -> AppErrorContent(
-            throwable = state.throwable,
-            onPrimary = viewModel::retry
-        )
-        is FavoriteUiState.Success -> {
-            FavoriteListContent(
-                components = state.screen.components,
-                actions = actions,
-                modifier = modifier,
-            )
-        }
-    }
+    FavoriteContent(uiState, actions, modifier)
+
 }
 
 @Composable
-fun FavoriteListContent(
-    components: List<Component>,
+fun FavoriteContent(
+    uiState: UIState<Screen>,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
-    AppList(
-        modifier = modifier.fillMaxSize()
-    ) {
-        items(components) { component ->
-            RenderComponentFactory.Render(
-                component = component,
-                actions = actions
-            )
-        }
-    }
+    uiState.Render(
+        actions = actions,
+        modifier = modifier
+    )
 }

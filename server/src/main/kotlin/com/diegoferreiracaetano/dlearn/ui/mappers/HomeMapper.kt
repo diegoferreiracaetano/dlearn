@@ -43,7 +43,7 @@ class HomeMapper(private val i18n: I18nProvider) {
             duration = "",
             contentRating = "",
             genre = categories.firstOrNull()?.title ?: "",
-            type = type.name,
+            movieType = type.name,
             isPremium = false,
             rank = rank,
             actionUrl = "/video/$id"

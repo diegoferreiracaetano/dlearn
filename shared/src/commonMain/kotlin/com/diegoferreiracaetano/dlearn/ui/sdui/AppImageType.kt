@@ -3,4 +3,8 @@ package com.diegoferreiracaetano.dlearn.ui.sdui
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object AppLoadingComponent : Component
+enum class AppImageType {
+    SEARCH,
+    EMPTY_STATE,
+    UNKNOWN;
+}

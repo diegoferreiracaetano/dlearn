@@ -6,6 +6,7 @@ Este projeto é um ecossistema completo desenvolvido em **Kotlin Multiplatform (
 
 - **Documentação Técnica (GitHub Pages):** [https://diegoferreiracaetano.github.io/dlearn](https://diegoferreiracaetano.github.io/dlearn)
 - **Swagger UI (Local):** [http://localhost:8081/swagger](http://localhost:8081/swagger)
+- **API Search (Local):** [http://localhost:8081/v1/search?q=Spider](http://localhost:8081/v1/search?q=Spider)
 - **API Home (Local):** [http://localhost:8081/v1/home](http://localhost:8081/v1/home)
 
 ---
@@ -16,7 +17,7 @@ O projeto é modularizado para maximizar o compartilhamento de código entre pla
 
 ### 1. `shared` (KMP Module)
 O coração do ecossistema, onde reside a lógica de negócio e os modelos de dados.
-- **`commonMain`**: Contratos SDUI (`sealed interface Component`), repositórios (`HomeRepository`, `SDUIRepository`), use cases e entidades de domínio.
+- **`commonMain`**: Contratos SDUI (`sealed interface Component`), repositórios (`SearchRepository`, `HomeRepository`), use cases e entidades de domínio.
 - **Koin 4.1.0**: Injeção de dependência compartilhada.
 - **Kotlinx Serialization**: Gerenciamento de JSON polimórfico para componentes SDUI.
 - **Ktor Client**: Consumo de APIs REST com suporte a cache.
@@ -24,6 +25,7 @@ O coração do ecossistema, onde reside a lógica de negócio e os modelos de da
 ### 2. `server` (Ktor BFF)
 O Backend for Frontend (BFF) que dita a interface do usuário.
 - **Server-Driven UI**: Constrói objetos `Screen` contendo listas de componentes dinâmicos.
+- **Search (TMDB Integration)**: Busca real-time unificada de filmes e séries com suporte a debounce no frontend.
 - **Orquestração**: Integra múltiplas fontes de dados (TMDB API, Pokedex, etc).
 - **Cache Inteligente**: `InMemoryCache` para dados de API (5 min) e headers de cache HTTP.
 - **Swagger/OpenAPI**: Documentação interativa disponível via Swagger.
@@ -31,7 +33,8 @@ O Backend for Frontend (BFF) que dita a interface do usuário.
 ### 3. `composeApp` (UI Compartilhada)
 A aplicação principal escrita em **Jetpack Compose Multiplatform**.
 - **SDUI Engine**: Motor genérico (`RenderComponent`) que converte JSON do servidor em Composables reais.
-- **Design System**: Componentes atômicos reutilizáveis (Carrosséis, Banners, Chips, TopBars).
+- **Search Logic**: Implementação de busca com debounce (500ms) e cancelamento de jobs em tempo real.
+- **Design System**: Componentes atômicos reutilizáveis (AppSearchBar, AppEmptyState, Carrosséis, Banners).
 - **Navigation**: Gerenciamento de rotas e estado de navegação via Compose Navigation.
 - **Plataformas**: Suporta **Android**, **iOS (via Compose)** e **Desktop**.
 
@@ -40,11 +43,12 @@ A aplicação principal escrita em **Jetpack Compose Multiplatform**.
 ## 🧩 Componentes SDUI Suportados
 
 O App renderiza dinamicamente:
+- `AppSearchBar`: Barra de busca controlada pelo servidor com slot de conteúdo dinâmico.
+- `AppEmptyState`: Feedback visual customizado para resultados não encontrados.
 - `BannerCarousel`: Carrosséis de destaque com suporte a vídeo/imagem.
 - `Carousel`: Listas horizontais de conteúdo (ex: Top 10, Sugestões).
 - `ChipGroup`: Filtros rápidos dinâmicos definidos pelo backend.
 - `AppTopBar` & `BottomNavigation`: Barras de navegação controladas via BFF.
-- `FullScreenBanner`: Banners de impacto total para lançamentos.
 - `AppMovieDetailHeader`: Header inteligente que alterna entre pôster e player de vídeo nativo.
 
 ---
@@ -54,7 +58,7 @@ O App renderiza dinamicamente:
 ### Backend (BFF)
 1. Configure a `THE_MOVIE_DB_API_KEY` em `local.properties`.
 2. Execute: `./gradlew :server:run`
-3. Verifique em: `http://localhost:8081/v1/home`
+3. Verifique em: `http://localhost:8081/v1/search?q=Batman`
 
 ### Aplicativo (Android/iOS)
 - **Android**: Execute o módulo `composeApp` no Android Studio.

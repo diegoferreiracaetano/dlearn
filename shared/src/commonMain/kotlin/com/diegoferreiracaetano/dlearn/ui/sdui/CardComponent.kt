@@ -13,7 +13,7 @@ data class CardComponent(
     val duration: String? = null,
     val contentRating: String? = null,
     val genre: String? = null,
-    val type: String? = null,
+    val movieType: String? = null,
     val isPremium: Boolean = false,
     val rank: Int? = null,
     val actionUrl: String? = null

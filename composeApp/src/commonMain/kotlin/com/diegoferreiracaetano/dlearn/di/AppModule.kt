@@ -6,6 +6,7 @@ import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailViewModel
 import com.diegoferreiracaetano.dlearn.ui.screens.profile.ProfileViewModel
 import com.diegoferreiracaetano.dlearn.ui.screens.favorite.FavoriteViewModel
 import com.diegoferreiracaetano.dlearn.ui.screens.new.NewViewModel
+import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchViewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
@@ -21,5 +22,6 @@ val appModule = module {
     factory { ProfileViewModel(get()) }
     factory { FavoriteViewModel(get()) }
     factory { NewViewModel(get()) }
+    factory { SearchViewModel(get()) }
     factory { (movieId: String) -> MovieDetailViewModel(movieId, get()) }
 }

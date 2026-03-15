@@ -25,8 +25,7 @@ class AppTopBarRenderer : ComponentRenderer {
             subtitle = topBar.subtitle,
             profileImageSource = topBar.imageUrl?.let { AppImageSource.Url(it) },
             onBack = actions.onBackClick,
-            onSearchValueChange = if (topBar.showSearch) actions.onSearchTextChange else null,
-            searchValue = actions.searchText
+            onSearchClick = actions.onSearchClick
         )
     }
 }

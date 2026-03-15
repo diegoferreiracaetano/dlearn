@@ -6,14 +6,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.favorite.FavoriteScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.home.HomeScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.main.state.MainUiState
 import com.diegoferreiracaetano.dlearn.ui.screens.new.NewScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.profile.ProfileScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchScreen
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavItem
+import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.Render
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Composable
@@ -21,6 +31,7 @@ fun MainScreen(
     onItemClick: (String) -> Unit,
     onTabSelected: (String) -> Unit,
     onClose: () -> Unit,
+    onSearchClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = koinInject(),
     currentRoute: String = NavigationRoutes.HOME
@@ -29,67 +40,61 @@ fun MainScreen(
     val searchText by viewModel.searchText.collectAsStateWithLifecycle()
     val isSearchVisible by viewModel.isSearchVisible.collectAsStateWithLifecycle()
 
-    val actions = remember(currentRoute, isSearchVisible, searchText, uiState, onTabSelected) {
-        val state = uiState
+    val actions = remember(currentRoute, isSearchVisible, searchText, onTabSelected) {
         ComponentActions(
             currentRoute = currentRoute,
-            searchText = searchText,
-            isSearchVisible = isSearchVisible,
+            onSearchClick = onSearchClick,
             onItemClick = onItemClick,
             onClose = onClose,
             onTabSelected = onTabSelected,
-            onSearchTextChange = viewModel::onSearchTextChanged,
-            onShowSearchChanged = viewModel::onShowSearchChanged,
-            onRetry = viewModel::retry,
-            isLoading = state is MainUiState.Loading,
-            error = (state as? MainUiState.Error)?.throwable
+            onRetry = viewModel::retry
         )
     }
+    MainContent(
+        uiState = uiState,
+        actions = actions,
+        modifier = modifier
+    )
 
-    val components = when (val state = uiState) {
-        is MainUiState.Success -> state.screen.components
-        else -> listOf(AppContainerComponent())
-    }
-
-    components.forEach { component ->
-        RenderComponentFactory.Render(
-            component = component,
-            actions = actions,
-            modifier = modifier
-        )
-    }
 }
 
 @Composable
 fun MainContent(
-    route: String,
-    onTabSelected: (String) -> Unit,
-    onItemClick: (String) -> Unit,
+    uiState: UIState<Screen>,
+    actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
-    when (route) {
-        NavigationRoutes.HOME -> HomeScreen(
-            onTabSelected = onTabSelected,
-            onItemClick = onItemClick,
-            modifier = modifier
-        )
+    uiState.Render(
+        actions = actions,
+        modifier = modifier
+    )
+}
 
-        NavigationRoutes.PROFILE -> ProfileScreen(
-            onTabSelected = onTabSelected,
-            onItemClick = onItemClick,
-            modifier = modifier
-        )
+@Preview
+@Composable
+fun MainScreenPreview() {
+    val bottomNavItems = listOf(
+        BottomNavItem(NavigationRoutes.HOME, NavigationRoutes.HOME, AppIconType.HOME),
+        BottomNavItem(NavigationRoutes.NEW, NavigationRoutes.NEW, AppIconType.NEW),
+        BottomNavItem(NavigationRoutes.FAVORITE, NavigationRoutes.FAVORITE, AppIconType.STAR),
+        BottomNavItem(NavigationRoutes.PROFILE, NavigationRoutes.PROFILE, AppIconType.PERSON)
+    )
 
-        NavigationRoutes.NEW -> NewScreen(
-            onTabSelected = onTabSelected,
-            onItemClick = onItemClick,
-            modifier = modifier
+    val components = listOf(
+        AppContainerComponent(
+            topBar = AppTopBarComponent(title = "DLearn", showSearch = true),
+            bottomBar = BottomNavigationComponent(
+                items = bottomNavItems,
+                selectedRoute = NavigationRoutes.HOME
+            ),
+            components = listOf()
         )
+    )
 
-        NavigationRoutes.FAVORITE -> FavoriteScreen(
-            onTabSelected = onTabSelected,
-            onItemClick = onItemClick,
-            modifier = modifier
-        )
+    DLearnTheme {
+         MainContent(
+             uiState = UIState.Success(Screen(id = "main", components = components)),
+             actions = ComponentActions()
+         )
     }
 }

@@ -10,6 +10,8 @@ sealed class ScreenRouter(
     object New : ScreenRouter(NavigationRoutes.NEW)
     object Favorites : ScreenRouter(NavigationRoutes.FAVORITE)
     object Profile : ScreenRouter(NavigationRoutes.PROFILE)
+
+    object Search : ScreenRouter("search")
     object Welcome : ScreenRouter("welcome")
     object Login : ScreenRouter("login")
     object SignUp : ScreenRouter("signup")

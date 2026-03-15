@@ -1,5 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
+import com.diegoferreiracaetano.dlearn.AppConstants
+import com.diegoferreiracaetano.dlearn.ComponentIds
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
@@ -17,7 +19,7 @@ class MainScreenBuilder(
         val topBar = AppTopBarComponent(
             title = i18n.getString(AppStringType.HOME_TITLE, lang),
             subtitle = i18n.getString(AppStringType.HOME_SUBTITLE, lang),
-            imageUrl = "https://avatars.githubusercontent.com/u/1023?v=4",
+            imageUrl = AppConstants.AVATAR_PLACEHOLDER,
             showSearch = false
         )
 
@@ -52,7 +54,7 @@ class MainScreenBuilder(
         )
 
         return Screen(
-            id = "main_shell",
+            id = ComponentIds.MAIN_SHELL,
             components = listOf(container),
             showSearch = false
         )

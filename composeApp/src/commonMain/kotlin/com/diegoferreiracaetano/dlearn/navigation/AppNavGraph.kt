@@ -12,18 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.CreateNewPassword
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Favorites
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Home
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Login
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.MovieDetail
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.New
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Onboarding
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Profile
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.ResetPassword
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.SignUp
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.VerifyAccount
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Welcome
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.*
 import com.diegoferreiracaetano.dlearn.ui.screens.login.CreateNewPasswordScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.LoginScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.ResetPasswordScreen
@@ -33,6 +22,7 @@ import com.diegoferreiracaetano.dlearn.ui.screens.login.WelcomeScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.main.MainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.onboarding.OnboardingScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchScreen
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.koinInject
 
@@ -110,6 +100,19 @@ fun AppNavGraph(
             )
         }
 
+        composable(Search.route) {
+            SearchScreen(
+                onTabSelected = { route ->
+                    navController.navigateToRoute(route)
+                },
+                onItemClick = { id ->
+                    navController.navigate(MovieDetail.createRoute(id))
+                },
+                onBackClick = { navController.popBackStack() },
+                modifier = modifier
+            )
+        }
+
         composable(Home.route) {
             MainScreen(
                 onItemClick = { id ->
@@ -121,6 +124,7 @@ fun AppNavGraph(
                 onTabSelected = { route ->
                     navController.navigateToRoute(route)
                 },
+                onSearchClick = { navController.navigate(Search.route) },
                 modifier = modifier,
                 currentRoute = Home.route
             )

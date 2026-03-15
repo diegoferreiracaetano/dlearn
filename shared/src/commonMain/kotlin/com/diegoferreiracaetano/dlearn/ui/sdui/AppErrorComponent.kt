@@ -7,6 +7,4 @@ import kotlinx.serialization.Transient
 data class AppErrorComponent(
     @Transient
     val throwable: Throwable? = null
-) : Component {
-    override val isFullScreen: Boolean get() = true
-}
+) : Component

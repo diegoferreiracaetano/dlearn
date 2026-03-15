@@ -24,7 +24,6 @@ class HomeViewModel(
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     private var currentType: HomeFilterType = HomeFilterType.ALL
-    private var currentSearch: String? = null
 
     init {
         loadHome()
@@ -33,8 +32,7 @@ class HomeViewModel(
     fun loadHome() {
         viewModelScope.launch {
             homeRepository.getHome(
-                type = currentType,
-                search = currentSearch
+                type = currentType
             ).onStart {
                 _uiState.update { HomeUiState.Loading }
             }.catch { error ->
@@ -76,13 +74,6 @@ class HomeViewModel(
 
         if (currentType != newType) {
             currentType = newType
-            loadHome()
-        }
-    }
-
-    fun onSearchChanged(query: String) {
-        if (currentSearch != query) {
-            currentSearch = query.ifBlank { null }
             loadHome()
         }
     }

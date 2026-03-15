@@ -24,6 +24,32 @@ paths:
           schema:
             type: integer
           example: 1
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [ALL, MOVIE, SERIES]
+          example: ALL
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
+  /v1/search:
+    get:
+      summary: Search Content
+      description: Returns a search screen with results based on the query
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+          example: Spider-Man
+        - *common_params
       responses:
         '200':
           description: OK
@@ -95,6 +121,70 @@ components:
               type: string
             showSearch:
               type: boolean
+    AppSearchBarComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            query:
+              type: string
+            placeholder:
+              type: string
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/Component'
+    AppEmptyStateComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+            description:
+              type: string
+            imageSource:
+              type: string
+    AppListComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            components:
+              type: array
+              items:
+                $ref: '#/components/schemas/Component'
+    CardComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            subtitle:
+              type: string
+            imageUrl:
+              type: string
+            rating:
+              type: string
+            year:
+              type: string
+            duration:
+              type: string
+            contentRating:
+              type: string
+            genre:
+              type: string
+            type:
+              type: string
+            isPremium:
+              type: boolean
+            rank:
+              type: integer
+            actionUrl:
+              type: string
     MovieHeaderComponent:
       allOf:
         - $ref: '#/components/schemas/Component'

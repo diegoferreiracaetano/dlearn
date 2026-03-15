@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
 import com.diegoferreiracaetano.dlearn.ui.screens.main.state.MainUiState
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,8 +18,8 @@ class MainViewModel(
     private val mainRepository: MainRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<MainUiState>(MainUiState.Loading)
-    val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
+    val uiState: StateFlow<UIState<Screen>> = _uiState.asStateFlow()
 
     private val _searchText = MutableStateFlow("")
     val searchText: StateFlow<String> = _searchText.asStateFlow()
@@ -32,11 +34,11 @@ class MainViewModel(
     fun loadMain() {
         viewModelScope.launch {
             mainRepository.getMain().onStart {
-                _uiState.update { MainUiState.Loading }
+                _uiState.update { UIState.Loading }
             }.catch { error ->
-                _uiState.update { MainUiState.Error(error) }
+                _uiState.update { UIState.Error(error) }
             }.collect { screen ->
-                _uiState.update { MainUiState.Success(screen) }
+                _uiState.update { UIState.Success(screen) }
             }
         }
     }

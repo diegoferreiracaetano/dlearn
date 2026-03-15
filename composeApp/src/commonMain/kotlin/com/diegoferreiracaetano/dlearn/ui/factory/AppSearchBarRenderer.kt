@@ -1,0 +1,33 @@
+package com.diegoferreiracaetano.dlearn.ui.factory
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.diegoferreiracaetano.dlearn.designsystem.components.search.AppSearchBar
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppSearchBarComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.Component
+import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.util.getLogger
+
+class AppSearchBarRenderer : ComponentRenderer {
+    @Composable
+    override fun Render(
+        component: Component,
+        actions: ComponentActions,
+        modifier: Modifier
+    ) {
+        val searchComponent = component as? AppSearchBarComponent ?: return
+
+        AppSearchBar(
+            query = searchComponent.query,
+            onQueryChange = actions.onQueryChange,
+            onSearch = actions.onSearch,
+            onBackClick = actions.onBackClick,
+            placeholder = searchComponent.placeholder,
+            modifier = modifier,
+            content = {
+                getLogger().d("TESTE", searchComponent.components.toString())
+                RenderComponentFactory.Render(searchComponent.components, actions, modifier)
+            }
+        )
+    }
+}

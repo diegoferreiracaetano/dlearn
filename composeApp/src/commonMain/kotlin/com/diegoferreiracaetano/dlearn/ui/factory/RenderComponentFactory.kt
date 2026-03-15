@@ -29,10 +29,12 @@ object RenderComponentFactory {
         when (component) {
             is AppLoadingComponent -> AppLoadingRenderer().Render(component, actions, modifier)
             is AppErrorComponent -> AppErrorRenderer().Render(component, actions, modifier)
+            is AppEmptyStateComponent -> AppEmptyStateRenderer().Render(component, actions, modifier)
+            is AppFeedbackComponent -> AppFeedbackRenderer().Render(component, actions, modifier)
             is AppContainerComponent -> AppContainerRenderer().Render(component, actions, modifier)
             is AppListComponent -> AppListRenderer().Render(component, actions, modifier)
             is AppTopBarComponent -> AppTopBarRenderer().Render(component, actions, modifier)
-            is SearchBarComponent -> SearchBarRenderer().Render(component, actions, modifier)
+            is AppSearchBarComponent -> AppSearchBarRenderer().Render(component, actions, modifier)
             is BottomNavigationComponent -> BottomNavigationRenderer().Render(component, actions, modifier)
             is MovieCarouselComponent -> MovieCarouselRenderer().Render(component, actions, modifier)
             is BannerCarouselComponent -> BannerCarouselRenderer().Render(component, actions, modifier)

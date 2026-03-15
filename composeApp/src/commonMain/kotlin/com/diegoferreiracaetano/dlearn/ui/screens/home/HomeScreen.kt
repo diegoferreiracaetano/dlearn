@@ -1,24 +1,19 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.home
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppError
-import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppErrorComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppListComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppLoadingComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.BannerCarouselComponent
@@ -36,6 +31,7 @@ import org.koin.compose.koinInject
 @Composable
 fun HomeScreen(
     onTabSelected: (String) -> Unit,
+    onSearchClick: (() -> Unit)?,
     onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = koinInject(),
@@ -47,10 +43,8 @@ fun HomeScreen(
         ComponentActions(
             onItemClick = onItemClick,
             onFilterTypeChanged = viewModel::onFilterTypeChanged,
-            onSearchChanged = viewModel::onSearchChanged,
+            onSearchClick = onSearchClick,
             onTabSelected = onTabSelected,
-            searchText = searchText,
-            onSearchTextChange = { searchText = it },
             onRetry = viewModel::retry
         )
     }

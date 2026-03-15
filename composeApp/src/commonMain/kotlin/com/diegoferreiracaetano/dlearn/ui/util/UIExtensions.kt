@@ -13,7 +13,6 @@ import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -116,7 +115,7 @@ fun CardComponent.toMovieItem(): MovieItem {
         duration = this.duration.orEmpty(),
         contentRating = this.contentRating.orEmpty(),
         genre = this.genre ?: this.subtitle.orEmpty(),
-        type = this.type.orEmpty(),
+        type = this.movieType.orEmpty(),
         isPremium = this.isPremium,
         rank = this.rank
     )

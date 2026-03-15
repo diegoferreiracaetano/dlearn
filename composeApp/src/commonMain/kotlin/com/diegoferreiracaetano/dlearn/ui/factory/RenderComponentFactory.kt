@@ -7,6 +7,18 @@ import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 
 object RenderComponentFactory {
 
+
+    @Composable
+    fun Render(
+        components: List<Component>,
+        actions: ComponentActions,
+        modifier: Modifier = Modifier
+    ) {
+        components.forEach {
+            Render(it, actions, modifier)
+        }
+    }
+
     @Composable
     fun Render(
         component: Component,

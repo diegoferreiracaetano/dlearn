@@ -19,6 +19,7 @@ class BannerCarouselRenderer : ComponentRenderer {
         val carousel = component as? BannerCarouselComponent ?: return
         val items = carousel.items.map { it.toMovieItem() }
         AppBannerCarousel(
+            modifier = modifier,
             title = carousel.title,
             itemCount = items.size,
             itemContent = { index ->

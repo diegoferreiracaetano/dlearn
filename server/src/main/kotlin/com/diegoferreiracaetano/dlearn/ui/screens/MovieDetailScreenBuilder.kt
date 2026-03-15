@@ -27,7 +27,6 @@ class MovieDetailScreenBuilder(
                 AppContainerComponent(
                     topBar = AppTopBarComponent(
                         title = data.title,
-                        showSearch = false
                     ),
                     components = components
                 )

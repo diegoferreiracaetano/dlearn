@@ -20,7 +20,7 @@ class FullScreenBannerRenderer : ComponentRenderer {
     ) {
         val banner = component as? FullScreenBannerComponent ?: return
         FullScreenVideo(
-            modifier = modifier.padding(horizontal = 16.dp),
+            modifier = modifier,
             title = banner.title,
             subtitle = banner.subtitle.orEmpty(),
             imageSource = AppImageSource.Url(banner.imageUrl),

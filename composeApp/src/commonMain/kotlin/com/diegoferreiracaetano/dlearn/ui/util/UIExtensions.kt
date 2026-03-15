@@ -13,6 +13,7 @@ import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -56,7 +57,7 @@ fun UIState<Screen>.Render(
 
         is UIState.Success -> {
             RenderComponentFactory.Render(
-                component = AppListComponent(components = this.data.components),
+                components = data.components,
                 actions = actions,
                 modifier = modifier
             )

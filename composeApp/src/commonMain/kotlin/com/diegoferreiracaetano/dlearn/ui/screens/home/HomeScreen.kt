@@ -1,11 +1,13 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.home
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppError
@@ -79,7 +81,7 @@ fun HomeContent(
         )
         is HomeUiState.Success -> {
             RenderComponentFactory.Render(
-                component = AppListComponent(components = state.screen.components),
+                components = state.screen.components,
                 actions = actions,
                 modifier = modifier
             )

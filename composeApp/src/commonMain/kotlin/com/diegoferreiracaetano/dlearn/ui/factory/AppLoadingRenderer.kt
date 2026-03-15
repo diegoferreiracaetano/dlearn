@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,7 +18,7 @@ class AppLoadingRenderer : ComponentRenderer {
         val maxHeight = LocalContentMaxHeight.current
 
         AppLoading(
-            modifier =  modifier.height(maxHeight)
+            modifier =  modifier.fillMaxSize().height(maxHeight)
         )
     }
 }

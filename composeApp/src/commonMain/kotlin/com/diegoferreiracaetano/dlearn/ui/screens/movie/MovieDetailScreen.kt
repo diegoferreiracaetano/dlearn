@@ -5,19 +5,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.diegoferreiracaetano.dlearn.designsystem.components.error.AppError
-import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
-import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
-import com.diegoferreiracaetano.dlearn.ui.screens.movie.state.MovieDetailUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppExpandableSectionComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppMovieDetailHeaderComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.CarouselComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.Component
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.sdui.UserRowComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.Render
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
@@ -40,37 +38,20 @@ fun MovieDetailScreen(
         )
     }
 
-    when (val state = uiState) {
-        is MovieDetailUiState.Loading -> AppLoading(modifier = modifier)
-        is MovieDetailUiState.Error -> AppError(
-            throwable = state.throwable,
-            onPrimary = viewModel::retry,
-            modifier = modifier
-        )
-
-        is MovieDetailUiState.Success -> {
-            MovieDetailListContent(
-                components = state.screen.components,
-                actions = actions,
-                modifier = modifier,
-            )
-        }
-    }
+    MovieDetailContent(
+        uiState = uiState,
+        actions = actions,
+        modifier = modifier
+    )
 }
 
 @Composable
-fun MovieDetailListContent(
-    components: List<Component>,
+fun MovieDetailContent(
+    uiState: UIState<Screen>,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
-    components.forEach { component ->
-        RenderComponentFactory.Render(
-            component = component,
-            actions = actions,
-            modifier = modifier
-        )
-    }
+    uiState.Render(actions, modifier)
 }
 
 @Preview
@@ -118,8 +99,8 @@ fun MovieDetailContentPreview() {
     )
 
     DLearnTheme(darkTheme = true) {
-        MovieDetailListContent(
-            components = components,
+        MovieDetailContent(
+            uiState = UIState.Success(Screen(id = "home", components = components)),
             actions = ComponentActions()
         )
     }

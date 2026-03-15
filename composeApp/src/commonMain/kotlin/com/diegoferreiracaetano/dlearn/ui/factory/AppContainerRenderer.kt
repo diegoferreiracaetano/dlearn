@@ -2,10 +2,8 @@
 
 package com.diegoferreiracaetano.dlearn.ui.factory
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -14,7 +12,7 @@ import androidx.compose.ui.Modifier
 import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppList
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppLoadingComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppListComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.LocalContentMaxHeight
@@ -37,7 +35,7 @@ class AppContainerRenderer : ComponentRenderer {
                 modifier = modifier.fillMaxSize(),
                 snackBarHostState = snackbarHostState,
                 topBar = {
-                    container.topBar?.let { topBar ->
+                    container.getTopBarForRoute(actions.currentRoute)?.let { topBar ->
                         RenderComponentFactory.Render(component = topBar, actions = actions)
                     }
                 },
@@ -65,12 +63,11 @@ class AppContainerRenderer : ComponentRenderer {
                     CompositionLocalProvider(
                         LocalContentMaxHeight provides maxHeight
                     ) {
-                        container.components.forEach { component ->
-                            RenderComponentFactory.Render(
-                                component = component,
-                                actions = actions
-                            )
-                        }
+                        RenderComponentFactory.Render(
+                            component = AppListComponent(components = container.components),
+                            actions = actions,
+                            modifier = modifier
+                        )
                     }
                 }
             }

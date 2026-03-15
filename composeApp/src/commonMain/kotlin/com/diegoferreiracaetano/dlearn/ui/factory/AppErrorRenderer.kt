@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,15 +18,10 @@ class AppErrorRenderer : ComponentRenderer {
         val errorComponent = component as? AppErrorComponent
         val maxHeight = LocalContentMaxHeight.current
 
-        Box(
-            modifier = modifier.height(maxHeight),
-            contentAlignment = Alignment.Center
-        ) {
-            AppError(
-                modifier = Modifier,
-                throwable = errorComponent?.throwable,
-                onPrimary = actions.onRetry
-            )
-        }
+        AppError(
+            modifier = modifier.fillMaxSize().height(maxHeight),
+            throwable = errorComponent?.throwable,
+            onPrimary = actions.onRetry
+        )
     }
 }

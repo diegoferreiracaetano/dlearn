@@ -32,6 +32,7 @@ fun SearchMainScreen(
             onBackClick = onBackClick,
             onQueryChange = { query = it },
             onRetry = viewModel::retry,
+            onSearch = { query = it },
             searchQuery = query
         )
     }

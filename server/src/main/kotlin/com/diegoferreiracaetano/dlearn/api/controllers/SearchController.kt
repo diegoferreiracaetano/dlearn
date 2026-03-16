@@ -12,8 +12,9 @@ import io.ktor.server.routing.route
 fun Route.searchController(orchestrator: SearchOrchestrator) {
     route("/v1/search") {
         get {
+            val userId = call.request.queryParameters["userId"] ?: AppConstants.GUEST_USER_ID
             val lang = call.request.acceptLanguage() ?: AppConstants.DEFAULT_LANG
-            call.respond(orchestrator.searchMain(lang))
+            call.respond(orchestrator.searchMain(userId, lang))
         }
         get("content") {
             val userId = call.request.queryParameters["userId"] ?: AppConstants.GUEST_USER_ID

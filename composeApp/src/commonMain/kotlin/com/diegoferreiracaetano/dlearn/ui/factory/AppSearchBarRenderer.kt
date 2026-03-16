@@ -1,7 +1,11 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import com.diegoferreiracaetano.dlearn.designsystem.components.search.AppSearchBar
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppSearchBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
@@ -15,6 +19,11 @@ class AppSearchBarRenderer : ComponentRenderer {
         modifier: Modifier
     ) {
         val searchComponent = component as? AppSearchBarComponent ?: return
+        val focusRequester = remember { FocusRequester() }
+
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
 
         AppSearchBar(
             query = actions.searchQuery,
@@ -22,7 +31,7 @@ class AppSearchBarRenderer : ComponentRenderer {
             onSearch = actions.onSearch,
             onBackClick = actions.onBackClick,
             placeholder = searchComponent.placeholder,
-            modifier = modifier,
+            modifier = modifier.focusRequester(focusRequester),
             content = {
                 RenderComponentFactory.Render(
                     components = searchComponent.components,

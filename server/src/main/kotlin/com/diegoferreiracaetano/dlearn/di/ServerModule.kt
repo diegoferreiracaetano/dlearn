@@ -50,5 +50,5 @@ val serverModule = module {
     single { SearchDataService(get()) }
     single { GetSearchDataUseCase(get()) }
     single { SearchScreenBuilder(get()) }
-    single { SearchOrchestrator(get(), get()) }
+    single { SearchOrchestrator(get(), get(), get()) }
 }

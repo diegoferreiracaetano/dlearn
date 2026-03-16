@@ -31,6 +31,7 @@ object RenderComponentFactory {
     private val mainContentRenderer = AppMainContentRenderer()
     private val movieItemRenderer = MovieItemRenderer()
     private val searchContentRenderer = AppSearchContentRenderer()
+    private val appSectionTitleRenderer = AppSectionTitleRenderer()
 
     @Composable
     fun Render(
@@ -74,6 +75,7 @@ object RenderComponentFactory {
             is AppMainContentComponent -> mainContentRenderer.Render(component, actions, modifier)
             is MovieItemComponent -> movieItemRenderer.Render(component, actions, modifier)
             is AppSearchContentComponent -> searchContentRenderer.Render(component, actions, modifier)
+            is AppSectionTitleComponent -> appSectionTitleRenderer.Render(component, actions, modifier)
         }
     }
 }

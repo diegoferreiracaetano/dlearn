@@ -1,12 +1,29 @@
 openapi: 3.0.3
 info:
   title: DLearn BFF API
-  description: API for Server-Driven UI in DLearn App
+  description: API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows.
   version: 1.0.0
 servers:
   - url: http://localhost:8081
     description: Local Server
 paths:
+  /v1/app:
+    post:
+      summary: SDUI Gateway / BFF Generic Endpoint
+      description: Handles all dynamic screens and actions (Favorites, Watchlist, etc.) based on the request path.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
   /v1/home:
     get:
       summary: Get Home Screen
@@ -92,6 +109,22 @@ paths:
 
 components:
   schemas:
+    AppRequest:
+      type: object
+      required:
+        - path
+      properties:
+        path:
+          type: string
+          description: The target route or action (e.g., 'watchlist', 'favorite')
+        params:
+          type: object
+          additionalProperties:
+            type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
     Screen:
       type: object
       properties:

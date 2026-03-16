@@ -18,6 +18,7 @@ val serverModule = module {
     single { I18nProvider() }
     single { WatchProviderUrlMapper() }
     single { TmdbMapper(get()) }
+    single { UserDataService() }
     
     // Home
     single { HomeDataService(get()) }
@@ -30,8 +31,8 @@ val serverModule = module {
     single { WatchlistScreenBuilder(get()) }
     single { FavoriteScreenBuilder(get(), get()) }
     single { MainScreenBuilder(get()) }
-    single { WatchlistOrchestrator(get()) }
-    single { FavoriteOrchestrator(get(), get()) }
+    single { WatchlistOrchestrator(get(), get()) }
+    single { FavoriteOrchestrator(get(), get(), get()) }
     single { MainOrchestrator(get(), get(), get(), get(), get(), get(), get()) }
     single { AppOrchestrator(get(), get(), get()) }
 

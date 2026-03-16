@@ -29,26 +29,26 @@ class MainScreenBuilder(
                 items = listOf(
                     BottomNavItem(
                         label = i18n.getString(AppStringType.NAV_HOME, lang),
-                        route = NavigationRoutes.HOME,
+                        route = NavigationRoutes.buildRoute(NavigationRoutes.HOME),
                         icon = AppIconType.HOME
                     ),
                     BottomNavItem(
                         label = i18n.getString(AppStringType.NAV_WATCHLIST, lang),
-                        route = NavigationRoutes.WATCHLIST,
+                        route = NavigationRoutes.buildRoute(NavigationRoutes.WATCHLIST),
                         icon = AppIconType.WATCHLIST
                     ),
                     BottomNavItem(
                         label = i18n.getString(AppStringType.NAV_FAVORITES, lang),
-                        route = NavigationRoutes.FAVORITE,
+                        route = NavigationRoutes.buildRoute(NavigationRoutes.FAVORITE),
                         icon = AppIconType.FAVORITE
                     ),
                     BottomNavItem(
                         label = i18n.getString(AppStringType.NAV_PROFILE, lang),
-                        route = NavigationRoutes.PROFILE,
+                        route = NavigationRoutes.buildRoute(NavigationRoutes.PROFILE),
                         icon = AppIconType.PERSON
                     )
                 ),
-                selectedRoute = NavigationRoutes.HOME
+                selectedRoute = NavigationRoutes.buildRoute(NavigationRoutes.HOME)
             ),
             components = listOf(AppMainContentComponent())
         )

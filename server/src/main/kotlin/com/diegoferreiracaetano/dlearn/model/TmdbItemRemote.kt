@@ -3,6 +3,7 @@ package com.diegoferreiracaetano.dlearn.model
 import com.diegoferreiracaetano.dlearn.TmdbConstants
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.domain.video.Video
+import com.diegoferreiracaetano.dlearn.domain.video.VideoCategory
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,10 +15,28 @@ data class TmdbItemRemote(
     @SerialName("poster_path") val posterPath: String? = null,
     @SerialName("overview") val overview: String? = null,
     @SerialName("first_air_date") val firstAirDate: String? = null,
-    @SerialName("release_date") val releaseDate: String? = null
+    @SerialName("release_date") val releaseDate: String? = null,
+    @SerialName("vote_average") val voteAverage: Float? = null,
+    @SerialName("genre_ids") val genreIds: List<Int>? = null,
+    @SerialName("media_type") val mediaType: String? = null
 )
 
-fun TmdbItemRemote.toVideo(mediaType: MediaType): Video {
+fun TmdbItemRemote.toVideo(
+    fallbackMediaType: MediaType,
+    allGenres: List<TmdbGenre> = emptyList()
+): Video {
+    val categories = genreIds?.mapNotNull { id ->
+        allGenres.find { it.id == id }?.let { 
+            VideoCategory(id = it.id.toString(), title = it.name)
+        }
+    } ?: emptyList()
+
+    val type = when (mediaType) {
+        "movie" -> MediaType.MOVIE
+        "tv" -> MediaType.SERIES
+        else -> fallbackMediaType
+    }
+
     return Video(
         id = id.toString(),
         title = title ?: name ?: "",
@@ -25,6 +44,8 @@ fun TmdbItemRemote.toVideo(mediaType: MediaType): Video {
         description = overview ?: "",
         url = "",
         imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}$posterPath",
-        mediaType = mediaType
+        rating = voteAverage,
+        mediaType = type,
+        categories = categories
     )
 }

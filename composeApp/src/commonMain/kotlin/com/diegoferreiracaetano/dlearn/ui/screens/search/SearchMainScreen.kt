@@ -28,6 +28,7 @@ fun SearchMainScreen(
 
     val actions = remember(onItemClick, onBackClick, query) {
         ComponentActions(
+            onItemClick = onItemClick,
             onBackClick = onBackClick,
             onQueryChange = { query = it },
             onRetry = viewModel::retry,

@@ -12,6 +12,7 @@ import org.koin.compose.koinInject
 
 @Composable
 fun SearchContent(
+    onItemClick: (String) -> Unit,
     onSearch: (String) -> Unit,
     searchQuery: String,
     modifier: Modifier = Modifier,
@@ -23,8 +24,9 @@ fun SearchContent(
         viewModel.fetchSearch(searchQuery)
     }
 
-    val actions = remember(onSearch, searchQuery, viewModel) {
+    val actions = remember(onSearch, searchQuery, viewModel, onItemClick) {
         ComponentActions(
+            onItemClick = onItemClick,
             onSearch = onSearch,
             searchQuery = searchQuery
         )

@@ -1,8 +1,10 @@
 package com.diegoferreiracaetano.dlearn.ui.mappers
 
 import com.diegoferreiracaetano.dlearn.domain.video.Video
+import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
+import java.util.Locale
 
 class HomeMapper(private val i18n: I18nProvider) {
     fun toBannerMain(video: Video): FullScreenBannerComponent {
@@ -38,12 +40,12 @@ class HomeMapper(private val i18n: I18nProvider) {
             title = title,
             subtitle = subtitle,
             imageUrl = imageUrl,
-            rating = rating?.toString(),
-            year = "",
-            duration = "",
-            contentRating = "",
-            genre = categories.firstOrNull()?.title ?: "",
-            movieType = type.name,
+            rating = rating?.let { String.format(Locale.US, "%.1f", it) },
+            year = subtitle,
+            duration = null,
+            contentRating = "L",
+            genre = categories.firstOrNull()?.title,
+            movieType = if (mediaType == MediaType.MOVIE) "Filme" else "Série",
             isPremium = false,
             rank = rank,
             actionUrl = "/video/$id"

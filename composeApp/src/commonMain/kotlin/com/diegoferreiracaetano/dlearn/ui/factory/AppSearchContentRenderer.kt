@@ -17,6 +17,7 @@ class AppSearchContentRenderer : ComponentRenderer {
         if (component !is AppSearchContentComponent) return
 
         SearchContent(
+            onItemClick = actions.onItemClick,
             onSearch = actions.onSearch,
             searchQuery = actions.searchQuery,
             modifier = modifier

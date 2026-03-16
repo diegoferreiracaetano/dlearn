@@ -1,12 +1,10 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppErrorComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppLoadingComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
@@ -15,11 +13,16 @@ import org.koin.compose.koinInject
 
 @Composable
 fun AppScreen(
+    path: String,
     onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AppViewModel = koinInject(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(path) {
+        viewModel.loadContent(path)
+    }
 
     val actions = ComponentActions(
         onItemClick = onItemClick,
@@ -43,5 +46,4 @@ fun AppContent(
        actions = actions,
        modifier = modifier
    )
-
 }

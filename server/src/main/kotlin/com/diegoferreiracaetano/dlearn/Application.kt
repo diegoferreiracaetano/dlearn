@@ -61,5 +61,6 @@ fun Application.module() {
         profileController()
         movieDetailController(movieDetailOrchestrator)
         searchController(searchOrchestrator)
+        appController()
     }
 }

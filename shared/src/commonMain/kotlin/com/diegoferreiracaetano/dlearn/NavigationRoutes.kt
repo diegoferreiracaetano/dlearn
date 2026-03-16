@@ -2,7 +2,7 @@ package com.diegoferreiracaetano.dlearn
 
 object NavigationRoutes {
     const val HOME = "home"
-    const val NEW = "new"
+    const val WATCHLIST = "watchlist"
     const val FAVORITE = "favorite"
     const val PROFILE = "profile"
     const val SEARCH = "search"

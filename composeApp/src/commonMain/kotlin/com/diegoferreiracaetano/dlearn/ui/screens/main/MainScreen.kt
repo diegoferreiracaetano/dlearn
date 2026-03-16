@@ -66,8 +66,8 @@ fun MainContent(
 fun MainScreenPreview() {
     val bottomNavItems = listOf(
         BottomNavItem(NavigationRoutes.HOME, NavigationRoutes.HOME, AppIconType.HOME),
-        BottomNavItem(NavigationRoutes.NEW, NavigationRoutes.NEW, AppIconType.NEW),
-        BottomNavItem(NavigationRoutes.FAVORITE, NavigationRoutes.FAVORITE, AppIconType.STAR),
+        BottomNavItem(NavigationRoutes.WATCHLIST, NavigationRoutes.WATCHLIST, AppIconType.WATCHLIST),
+        BottomNavItem(NavigationRoutes.FAVORITE, NavigationRoutes.FAVORITE, AppIconType.FAVORITE),
         BottomNavItem(NavigationRoutes.PROFILE, NavigationRoutes.PROFILE, AppIconType.PERSON)
     )
 

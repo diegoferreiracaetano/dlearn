@@ -27,10 +27,13 @@ val serverModule = module {
     single { HomeOrchestrator(get(), get()) }
 
     // Main
-    single { NewScreenBuilder(get(), get()) }
+    single { WatchlistScreenBuilder(get()) }
     single { FavoriteScreenBuilder(get(), get()) }
     single { MainScreenBuilder(get()) }
+    single { WatchlistOrchestrator(get()) }
+    single { FavoriteOrchestrator(get(), get()) }
     single { MainOrchestrator(get(), get(), get(), get(), get(), get(), get()) }
+    single { AppOrchestrator(get(), get(), get()) }
 
     // Profile
     single { ProfileDataService() }

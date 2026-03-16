@@ -3,7 +3,7 @@ package com.diegoferreiracaetano.dlearn
 object ComponentIds {
     const val FILTERS = "filters"
     const val HOME_SCREEN = "home"
-    const val NEW_SCREEN = "new"
+    const val WATCHLIST_SCREEN = "watchlist"
     const val FAVORITE_SCREEN = "favorite"
     const val PROFILE_SCREEN = "profile"
     const val SEARCH_SCREEN = "search"

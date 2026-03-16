@@ -10,7 +10,7 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes
 class MainOrchestrator(
     private val mainScreenBuilder: MainScreenBuilder,
     private val homeScreenBuilder: HomeScreenBuilder,
-    private val newScreenBuilder: NewScreenBuilder,
+    private val watchlistScreenBuilder: WatchlistScreenBuilder,
     private val favoriteScreenBuilder: FavoriteScreenBuilder,
     private val profileScreenBuilder: ProfileScreenBuilder,
     private val getHomeDataUseCase: GetHomeDataUseCase,
@@ -42,9 +42,8 @@ class MainOrchestrator(
                 val domainData = getHomeDataUseCase.execute(userId, type)
                 homeScreenBuilder.build(domainData, appVersion, lang, type)
             }
-            NavigationRoutes.NEW -> {
-                val domainData = getHomeDataUseCase.execute(userId, type)
-                newScreenBuilder.build(domainData, lang)
+            NavigationRoutes.WATCHLIST -> {
+                watchlistScreenBuilder.build(lang)
             }
             NavigationRoutes.FAVORITE -> {
                 val domainData = getHomeDataUseCase.execute(userId, type)

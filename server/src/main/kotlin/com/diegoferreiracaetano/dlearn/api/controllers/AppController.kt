@@ -1,23 +1,33 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
+import com.diegoferreiracaetano.dlearn.orchestrator.AppOrchestrator
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import io.ktor.server.application.call
+import io.ktor.server.request.acceptLanguage
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
+import org.koin.ktor.ext.inject
 
 fun Route.appController() {
+    val orchestrator by inject<AppOrchestrator>()
+
     route("/v1/app") {
         post {
             val request = call.receive<AppRequest>()
-            
-            // O backend decide qual lógica executar baseado no request.path
-            // Pode chamar diferentes orchestrators, repositórios ou serviços.
-            // Exemplo:
-            // val screen = appOrchestrator.execute(request.path, request.params, request.metadata)
-            // call.respond(screen)
+            val userId = call.request.queryParameters["userId"] ?: "guest"
+            val lang = call.request.acceptLanguage() ?: "en"
+            val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
+
+            val screen = orchestrator.execute(
+                request = request,
+                userId = userId,
+                lang = lang,
+                appVersion = appVersion
+            )
+            call.respond(screen)
         }
     }
 }

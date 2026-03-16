@@ -33,9 +33,9 @@ class MainScreenBuilder(
                         icon = AppIconType.HOME
                     ),
                     BottomNavItem(
-                        label = i18n.getString(AppStringType.NAV_NEW, lang),
-                        route = NavigationRoutes.NEW,
-                        icon = AppIconType.NEW
+                        label = i18n.getString(AppStringType.NAV_WATCHLIST, lang),
+                        route = NavigationRoutes.WATCHLIST,
+                        icon = AppIconType.WATCHLIST
                     ),
                     BottomNavItem(
                         label = i18n.getString(AppStringType.NAV_FAVORITES, lang),

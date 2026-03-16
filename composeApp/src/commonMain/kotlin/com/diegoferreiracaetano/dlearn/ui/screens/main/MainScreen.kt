@@ -7,13 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
-import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
-import com.diegoferreiracaetano.dlearn.ui.screens.favorite.FavoriteScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.home.HomeScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.main.state.MainUiState
-import com.diegoferreiracaetano.dlearn.ui.screens.new.NewScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.profile.ProfileScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchScreen
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
@@ -37,10 +30,8 @@ fun MainScreen(
     currentRoute: String = NavigationRoutes.HOME
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val searchText by viewModel.searchText.collectAsStateWithLifecycle()
-    val isSearchVisible by viewModel.isSearchVisible.collectAsStateWithLifecycle()
 
-    val actions = remember(currentRoute, isSearchVisible, searchText, onTabSelected) {
+    val actions = remember(currentRoute, onTabSelected) {
         ComponentActions(
             currentRoute = currentRoute,
             onSearchClick = onSearchClick,

@@ -6,7 +6,6 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.search.AppSearchB
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppSearchBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
-import com.diegoferreiracaetano.dlearn.util.getLogger
 
 class AppSearchBarRenderer : ComponentRenderer {
     @Composable
@@ -25,7 +24,10 @@ class AppSearchBarRenderer : ComponentRenderer {
             placeholder = searchComponent.placeholder,
             modifier = modifier,
             content = {
-                RenderComponentFactory.Render(searchComponent.components, actions, modifier)
+                RenderComponentFactory.Render(
+                    components = searchComponent.components,
+                    actions = actions
+                )
             }
         )
     }

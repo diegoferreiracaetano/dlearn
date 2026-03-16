@@ -21,15 +21,16 @@ object RenderComponentFactory {
     private val carouselRenderer = CarouselRenderer()
     private val fullScreenBannerRenderer = FullScreenBannerRenderer()
     private val chipGroupRenderer = ChipGroupRenderer()
-    private val profileRowRenderer = ProfileRowRenderer()
-    private val userRowRenderer = UserRowRenderer()
+    private val profileRenderer = ProfileRowRenderer()
+    private val userRenderer = UserRowRenderer()
     private val premiumBannerRenderer = PremiumBannerRenderer()
     private val sectionRenderer = SectionRenderer()
     private val footerRenderer = FooterRenderer()
-    private val appMovieDetailHeaderRenderer = AppMovieDetailHeaderRenderer()
-    private val appExpandableSectionRenderer = AppExpandableSectionRenderer()
-    private val appMainContentRenderer = AppMainContentRenderer()
-    private val appSearchContentRenderer = AppSearchContentRenderer()
+    private val movieDetailHeaderRenderer = AppMovieDetailHeaderRenderer()
+    private val expandableSectionRenderer = AppExpandableSectionRenderer()
+    private val mainContentRenderer = AppMainContentRenderer()
+    private val movieItemRenderer = MovieItemRenderer()
+    private val searchContentRenderer = AppSearchContentRenderer()
 
     @Composable
     fun Render(
@@ -63,16 +64,16 @@ object RenderComponentFactory {
             is CarouselComponent -> carouselRenderer.Render(component, actions, modifier)
             is FullScreenBannerComponent -> fullScreenBannerRenderer.Render(component, actions, modifier)
             is ChipGroupComponent -> chipGroupRenderer.Render(component, actions, modifier)
-            is ProfileRowComponent -> profileRowRenderer.Render(component, actions, modifier)
-            is UserRowComponent -> userRowRenderer.Render(component, actions, modifier)
+            is ProfileRowComponent -> profileRenderer.Render(component, actions, modifier)
+            is UserRowComponent -> userRenderer.Render(component, actions, modifier)
             is PremiumBannerComponent -> premiumBannerRenderer.Render(component, actions, modifier)
             is SectionComponent -> sectionRenderer.Render(component, actions, modifier)
             is FooterComponent -> footerRenderer.Render(component, actions, modifier)
-            is AppMovieDetailHeaderComponent -> appMovieDetailHeaderRenderer.Render(component, actions, modifier)
-            is AppExpandableSectionComponent -> appExpandableSectionRenderer.Render(component, actions, modifier)
-            is AppMainContentComponent -> appMainContentRenderer.Render(component, actions, modifier)
-            is AppSearchContentComponent -> appSearchContentRenderer.Render(component, actions, modifier)
-            else -> {} // Unknown components
+            is AppMovieDetailHeaderComponent -> movieDetailHeaderRenderer.Render(component, actions, modifier)
+            is AppExpandableSectionComponent -> expandableSectionRenderer.Render(component, actions, modifier)
+            is AppMainContentComponent -> mainContentRenderer.Render(component, actions, modifier)
+            is MovieItemComponent -> movieItemRenderer.Render(component, actions, modifier)
+            is AppSearchContentComponent -> searchContentRenderer.Render(component, actions, modifier)
         }
     }
 }

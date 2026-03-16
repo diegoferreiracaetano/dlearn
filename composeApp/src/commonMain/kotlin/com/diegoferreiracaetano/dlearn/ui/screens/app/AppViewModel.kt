@@ -1,43 +1,38 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.main
+package com.diegoferreiracaetano.dlearn.ui.screens.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
-import com.diegoferreiracaetano.dlearn.ui.screens.main.state.MainUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class MainViewModel(
-    private val mainRepository: MainRepository
+class AppViewModel(
+    private val repository: MainRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
-    val uiState: StateFlow<UIState<Screen>> = _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()
 
     init {
-        loadMain()
+        loadContent()
     }
 
-    fun loadMain() {
+    fun loadContent() {
         viewModelScope.launch {
-            mainRepository.getMain().onStart {
-                _uiState.update { UIState.Loading }
-            }.catch { error ->
-                _uiState.update { UIState.Error(error) }
-            }.collect { screen ->
-                _uiState.update { UIState.Success(screen) }
-            }
+            repository.getContent()
+                .onStart { _uiState.update { UIState.Loading } }
+                .catch { error -> _uiState.update { UIState.Error(error) } }
+                .collect { screen -> _uiState.update { UIState.Success(screen) } }
         }
     }
 
     fun retry() {
-        loadMain()
+        loadContent()
     }
 }

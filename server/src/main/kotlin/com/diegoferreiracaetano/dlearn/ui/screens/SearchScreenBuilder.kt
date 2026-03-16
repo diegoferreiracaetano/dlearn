@@ -5,15 +5,15 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
 class SearchScreenBuilder(private val i18n: I18nProvider) {
-    fun buildShell(query: String, lang: String): Screen {
+    fun buildMain(lang: String): Screen {
         val placeholder = i18n.getString(AppStringType.SEARCH_PLACEHOLDER, lang)
         return Screen(
             id = ComponentIds.SEARCH_SCREEN,
             components = listOf(
                 AppSearchBarComponent(
-                    query = query,
+                    query = "",
                     placeholder = placeholder,
-                    components = listOf(AppSearchContentComponent() as Component)
+                    components = listOf(AppSearchContentComponent)
                 ) as Component
             )
         )
@@ -24,14 +24,15 @@ class SearchScreenBuilder(private val i18n: I18nProvider) {
         results: List<Component>,
         lang: String
     ): Screen {
-        val content = if (query.isBlank()) {
+        val components = if (query.isBlank()) {
             emptyList()
         } else {
-            results.ifEmpty {
+            if (results.isEmpty()) {
                 val emptyTitle = i18n.getString(AppStringType.SEARCH_EMPTY_TITLE, lang)
-                val emptyDescriptionBase = i18n.getString(AppStringType.SEARCH_EMPTY_DESCRIPTION, lang)
+                val emptyDescriptionBase =
+                    i18n.getString(AppStringType.SEARCH_EMPTY_DESCRIPTION, lang)
                 val fullDescription = "$emptyDescriptionBase \"$query\""
-                
+
                 listOf(
                     AppEmptyStateComponent(
                         title = emptyTitle,
@@ -39,14 +40,14 @@ class SearchScreenBuilder(private val i18n: I18nProvider) {
                         image = AppImageType.SEARCH
                     ) as Component
                 )
+            } else {
+                listOf(AppListComponent(components = results) as Component)
             }
         }
 
         return Screen(
             id = "SEARCH_CONTENT",
-            components = content.ifEmpty {
-                emptyList()
-            }
+            components = components
         )
     }
 }

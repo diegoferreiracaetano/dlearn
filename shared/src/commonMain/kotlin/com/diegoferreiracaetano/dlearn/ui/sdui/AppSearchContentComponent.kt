@@ -1,6 +1,8 @@
 package com.diegoferreiracaetano.dlearn.ui.sdui
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class AppSearchContentComponent : Component
+@SerialName("app_search_content")
+object AppSearchContentComponent : Component

@@ -22,7 +22,7 @@ import com.diegoferreiracaetano.dlearn.ui.screens.login.WelcomeScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.main.MainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.onboarding.OnboardingScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchMainScreen
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.koinInject
 
@@ -101,10 +101,7 @@ fun AppNavGraph(
         }
 
         composable(Search.route) {
-            SearchScreen(
-                onTabSelected = { route ->
-                    navController.navigateToRoute(route)
-                },
+            SearchMainScreen(
                 onItemClick = { id ->
                     navController.navigate(MovieDetail.createRoute(id))
                 },

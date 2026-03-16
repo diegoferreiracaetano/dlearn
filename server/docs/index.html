@@ -799,6 +799,13 @@
     }
   } ]
 };
+            defs["AppSearchContentComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object"
+  } ]
+};
             defs["AppTopBarComponent"] = {
   "allOf" : [ {
     "$ref" : "#/components/schemas/Component"
@@ -854,54 +861,6 @@
       "type" : "string"
     }
   }
-};
-            defs["CardComponent"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/Component"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "id" : {
-        "type" : "string"
-      },
-      "title" : {
-        "type" : "string"
-      },
-      "subtitle" : {
-        "type" : "string"
-      },
-      "imageUrl" : {
-        "type" : "string"
-      },
-      "rating" : {
-        "type" : "string"
-      },
-      "year" : {
-        "type" : "string"
-      },
-      "duration" : {
-        "type" : "string"
-      },
-      "contentRating" : {
-        "type" : "string"
-      },
-      "genre" : {
-        "type" : "string"
-      },
-      "type" : {
-        "type" : "string"
-      },
-      "isPremium" : {
-        "type" : "boolean"
-      },
-      "rank" : {
-        "type" : "integer"
-      },
-      "actionUrl" : {
-        "type" : "string"
-      }
-    }
-  } ]
 };
             defs["CastCarouselComponent"] = {
   "allOf" : [ {
@@ -1039,6 +998,54 @@
         "type" : "string"
       },
       "rating" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
+            defs["MovieItemComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "id" : {
+        "type" : "string"
+      },
+      "title" : {
+        "type" : "string"
+      },
+      "subtitle" : {
+        "type" : "string"
+      },
+      "imageUrl" : {
+        "type" : "string"
+      },
+      "rating" : {
+        "type" : "string"
+      },
+      "year" : {
+        "type" : "string"
+      },
+      "duration" : {
+        "type" : "string"
+      },
+      "contentRating" : {
+        "type" : "string"
+      },
+      "genre" : {
+        "type" : "string"
+      },
+      "movieType" : {
+        "type" : "string"
+      },
+      "isPremium" : {
+        "type" : "boolean"
+      },
+      "rank" : {
+        "type" : "integer"
+      },
+      "actionUrl" : {
         "type" : "string"
       }
     }

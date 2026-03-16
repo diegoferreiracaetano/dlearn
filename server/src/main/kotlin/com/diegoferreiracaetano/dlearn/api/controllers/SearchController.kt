@@ -13,8 +13,7 @@ fun Route.searchController(orchestrator: SearchOrchestrator) {
     route("/v1/search") {
         get {
             val lang = call.request.acceptLanguage() ?: AppConstants.DEFAULT_LANG
-            val query = call.request.queryParameters["q"] ?: ""
-            call.respond(orchestrator.searchShell(query, lang))
+            call.respond(orchestrator.searchMain(lang))
         }
         get("content") {
             val userId = call.request.queryParameters["userId"] ?: AppConstants.GUEST_USER_ID

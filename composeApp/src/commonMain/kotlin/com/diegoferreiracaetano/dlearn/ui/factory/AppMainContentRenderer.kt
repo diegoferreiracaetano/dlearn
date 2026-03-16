@@ -7,7 +7,6 @@ import com.diegoferreiracaetano.dlearn.ui.screens.favorite.FavoriteScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.home.HomeScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.new.NewScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.profile.ProfileScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchScreen
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 

@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MovieCarouselComponent(
     val title: String,
-    val items: List<CardComponent>
+    val items: List<MovieItemComponent>
 ) : Component

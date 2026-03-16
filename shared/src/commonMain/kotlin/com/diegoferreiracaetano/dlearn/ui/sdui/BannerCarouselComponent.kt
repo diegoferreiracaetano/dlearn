@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 @SerialName("BannerCarouselComponent")
 data class BannerCarouselComponent(
     val title: String,
-    val items: List<CardComponent>
+    val items: List<MovieItemComponent>
 ) : Component

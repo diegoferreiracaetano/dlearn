@@ -167,7 +167,7 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Component'
-    CardComponent:
+    MovieItemComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
@@ -190,7 +190,7 @@ components:
               type: string
             genre:
               type: string
-            type:
+            movieType:
               type: string
             isPremium:
               type: boolean
@@ -198,6 +198,10 @@ components:
               type: integer
             actionUrl:
               type: string
+    AppSearchContentComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
     MovieHeaderComponent:
       allOf:
         - $ref: '#/components/schemas/Component'

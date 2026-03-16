@@ -18,7 +18,6 @@ sealed class ScreenRouter(
     object ResetPassword : ScreenRouter("reset_password")
     object VerifyAccount : ScreenRouter("verify_account")
     object CreateNewPassword : ScreenRouter("create_new_password")
-    object Regions : ScreenRouter("regions")
     object Onboarding : ScreenRouter("onboarding1")
     object MovieDetail : ScreenRouter("movie_detail/{movieId}") {
         fun createRoute(movieId: String) = "movie_detail/${movieId.encodeURL()}"

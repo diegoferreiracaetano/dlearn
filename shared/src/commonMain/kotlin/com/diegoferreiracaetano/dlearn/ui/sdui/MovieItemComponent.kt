@@ -1,9 +1,11 @@
 package com.diegoferreiracaetano.dlearn.ui.sdui
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CardComponent(
+@SerialName("movie_item")
+data class MovieItemComponent(
     val id: String,
     val title: String,
     val subtitle: String? = null,

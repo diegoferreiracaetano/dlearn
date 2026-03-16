@@ -18,7 +18,7 @@ class HomeMapper(private val i18n: I18nProvider) {
         return MovieCarouselComponent(
             title = title,
             items = videos.mapIndexed { index, video ->
-                video.toCardComponent(rank = if (showRank) index + 1 else null)
+                video.toMovieItemComponent(rank = if (showRank) index + 1 else null)
             }
         )
     }
@@ -27,13 +27,13 @@ class HomeMapper(private val i18n: I18nProvider) {
         return BannerCarouselComponent(
             title = title,
             items = videos.map { video ->
-                video.toCardComponent()
+                video.toMovieItemComponent()
             }
         )
     }
 
-    private fun Video.toCardComponent(rank: Int? = null): CardComponent {
-        return CardComponent(
+    private fun Video.toMovieItemComponent(rank: Int? = null): MovieItemComponent {
+        return MovieItemComponent(
             id = id,
             title = title,
             subtitle = subtitle,

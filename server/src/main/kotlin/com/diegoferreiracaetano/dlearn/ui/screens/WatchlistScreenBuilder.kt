@@ -7,27 +7,28 @@ class WatchlistScreenBuilder(private val i18n: I18nProvider) {
     fun build(lang: String, items: List<Component>): Screen {
         val title = i18n.getString(AppStringType.NAV_WATCHLIST, lang)
         
-        val components = if (items.isEmpty()) {
-            listOf(
+        val components = mutableListOf<Component>()
+
+        components.add(
+            AppTopBarComponent(
+                title = title
+            )
+        )
+
+        if (items.isEmpty()) {
+            components.add(
                 AppEmptyStateComponent(
                     title = i18n.getString(AppStringType.WATCHLIST_EMPTY_TITLE, lang),
                     description = i18n.getString(AppStringType.WATCHLIST_EMPTY_DESCRIPTION, lang),
                     image = AppImageType.WATCHLIST
-                ) as Component
+                )
             )
         } else {
-            listOf(AppListComponent(components = items) as Component)
+            components.add(AppListComponent(components = items))
         }
 
-        val container = AppContainerComponent(
-            topBar = AppTopBarComponent(
-                title = title
-            ),
-            components = components
-        )
-
         return Screen(
-            components = listOf(container)
+            components = components
         )
     }
 }

@@ -21,6 +21,16 @@ class HomeScreenBuilder(
         val components = mutableListOf<Component>()
 
         components.add(
+            AppTopBarComponent(
+                title = i18n.getString(AppStringType.HOME_TITLE, lang),
+                subtitle = i18n.getString(AppStringType.HOME_SUBTITLE, lang),
+                imageUrl = AppConstants.AVATAR_PLACEHOLDER,
+                showSearch = true
+            )
+        )
+
+
+        components.add(
             ChipGroupComponent(
                 items = listOf(
                     ChipItem(
@@ -36,7 +46,6 @@ class HomeScreenBuilder(
                 )
             )
         )
-
         data.banner?.let {
             components.add(mapper.toBannerMain(it))
         }
@@ -55,18 +64,8 @@ class HomeScreenBuilder(
             }
         }
 
-        val container = AppContainerComponent(
-            topBar = AppTopBarComponent(
-                title = i18n.getString(AppStringType.HOME_TITLE, lang),
-                subtitle = i18n.getString(AppStringType.HOME_SUBTITLE, lang),
-                imageUrl = AppConstants.AVATAR_PLACEHOLDER,
-                showSearch = true
-            ),
-            components = components
-        )
-
         return Screen(
-            components = listOf(container)
+            components = components
         )
     }
 }

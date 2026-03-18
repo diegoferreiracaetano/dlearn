@@ -10,17 +10,18 @@ class ProfileScreenBuilder(
     private val i18n: I18nProvider
 ) {
     fun build(data: ProfileDomainData, appVersion: Int, lang: String): Screen {
-        val components = buildContent(data, lang)
+        val components = mutableListOf<Component>()
 
-        val container = AppContainerComponent(
-            topBar = AppTopBarComponent(
+        components.add(
+            AppTopBarComponent(
                 title = i18n.getString(AppStringType.NAV_PROFILE, lang)
-            ),
-            components = components
+            )
         )
 
+        components.addAll(buildContent(data, lang))
+
         return Screen(
-            components = listOf(container)
+            components = components
         )
     }
 

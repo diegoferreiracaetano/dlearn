@@ -100,7 +100,7 @@ fun MovieDetailContentPreview() {
 
     DLearnTheme(darkTheme = true) {
         MovieDetailContent(
-            uiState = UIState.Success(Screen(id = "home", components = components)),
+            uiState = UIState.Success(Screen(components = components)),
             actions = ComponentActions()
         )
     }

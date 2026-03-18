@@ -2,7 +2,10 @@ package com.diegoferreiracaetano.dlearn.ui.screens
 
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
 import com.diegoferreiracaetano.dlearn.ui.mappers.MovieDetailMapper
-import com.diegoferreiracaetano.dlearn.ui.sdui.*
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.Component
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
 class MovieDetailScreenBuilder(
@@ -22,7 +25,6 @@ class MovieDetailScreenBuilder(
         }
 
         return Screen(
-            id = "movie_detail_${data.id}",
             components = listOf(
                 AppContainerComponent(
                     topBar = AppTopBarComponent(

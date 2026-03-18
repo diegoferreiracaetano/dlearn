@@ -36,15 +36,6 @@ fun Screen.Render(
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
-    val topBarManager = LocalTopBarManager.current
-    
-    LaunchedEffect(this.topBar, actions) {
-        topBarManager.state = TopBarState(
-            component = this@Render.topBar,
-            actions = actions
-        )
-    }
-
     RenderComponentFactory.Render(
         components = this.components,
         actions = actions,

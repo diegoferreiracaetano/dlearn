@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("ChipGroupComponent")
 data class ChipGroupComponent(
-    val id: String,
     val items: List<ChipItem>
 ) : Component
 

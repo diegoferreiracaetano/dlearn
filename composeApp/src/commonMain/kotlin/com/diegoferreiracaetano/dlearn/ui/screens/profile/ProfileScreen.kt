@@ -54,7 +54,6 @@ fun ProfileContent(
 @Composable
 fun ProfileContentPreview() {
     val screen = Screen(
-        id = "profile",
         components = listOf(
             AppContainerComponent(
                 topBar = AppTopBarComponent(title = "Profile"),

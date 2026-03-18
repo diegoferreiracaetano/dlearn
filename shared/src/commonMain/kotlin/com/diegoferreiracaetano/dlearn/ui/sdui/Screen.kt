@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Screen(
-    val id: String,
+    val id: String? = null,
     val showSearch: Boolean = false,
     val topBar: AppTopBarComponent? = null,
     val components: List<Component>,

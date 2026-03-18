@@ -83,7 +83,6 @@ fun SearchScreenErrorPreview() {
 @Composable
 fun SearchScreenSuccessPreview() {
     val screen = Screen(
-        id = "search_shell",
         components = listOf(
             AppSearchBarComponent(
                 query = "Spider-Man",

@@ -98,8 +98,6 @@ fun AppContent(
 @Composable
 fun AppScreenWatchlistPreview() {
     val watchlistEmptyMock = Screen(
-        id = "watchlist",
-        showSearch = false,
         components = listOf(
             AppEmptyStateComponent(
                 title = "WATCHLIST_EMPTY_TITLE",

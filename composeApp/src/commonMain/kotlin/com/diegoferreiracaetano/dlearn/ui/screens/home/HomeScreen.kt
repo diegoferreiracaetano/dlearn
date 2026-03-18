@@ -84,7 +84,7 @@ fun HomeScreenPreview() {
                 selectedRoute = NavigationRoutes.HOME
             ),
             components = listOf(
-                ChipGroupComponent(id = "2", items = listOf(ChipItem(id = "1", label = "Séries"))),
+                ChipGroupComponent(items = listOf(ChipItem(id = "1", label = "Séries"))),
                 FullScreenBannerComponent(id = "3", title = "Banner", subtitle = "2024", imageUrl = ""),
                 MovieCarouselComponent(title = "Top 10", items = listOf()),
                 BannerCarouselComponent(title = "Populares", items = listOf())
@@ -94,7 +94,7 @@ fun HomeScreenPreview() {
 
     DLearnTheme {
         HomeContent(
-            uiState = HomeUiState.Success(Screen(id = "home", components = components)),
+            uiState = HomeUiState.Success(Screen(components = components)),
             actions = ComponentActions()
         )
     }

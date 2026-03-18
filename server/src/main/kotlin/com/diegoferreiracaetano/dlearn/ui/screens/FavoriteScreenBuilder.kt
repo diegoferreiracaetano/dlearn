@@ -1,6 +1,5 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
-import com.diegoferreiracaetano.dlearn.ComponentIds
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
@@ -21,13 +20,12 @@ class FavoriteScreenBuilder(private val i18n: I18nProvider) {
         }
 
         return Screen(
-            id = ComponentIds.FAVORITE_SCREEN,
-            components = components,
-            showSearch = true,
+            id = "favorites",
             topBar = AppTopBarComponent(
                 title = title,
-                showSearch = true
-            )
+                showSearch = false
+            ),
+            components = components
         )
     }
 }

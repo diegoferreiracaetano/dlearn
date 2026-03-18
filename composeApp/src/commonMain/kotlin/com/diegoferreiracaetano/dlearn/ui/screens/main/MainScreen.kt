@@ -85,7 +85,7 @@ fun MainScreenPreview() {
 
     DLearnTheme {
          MainContent(
-             uiState = UIState.Success(Screen(id = "main", components = components)),
+             uiState = UIState.Success(Screen(components = components)),
              actions = ComponentActions()
          )
     }

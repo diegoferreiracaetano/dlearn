@@ -14,12 +14,11 @@ class ProfileScreenBuilder(
 
         return Screen(
             id = "profile",
-            components = components,
-            showSearch = false,
             topBar = AppTopBarComponent(
                 title = i18n.getString(AppStringType.NAV_PROFILE, lang),
                 showSearch = false
-            )
+            ),
+            components = components
         )
     }
 

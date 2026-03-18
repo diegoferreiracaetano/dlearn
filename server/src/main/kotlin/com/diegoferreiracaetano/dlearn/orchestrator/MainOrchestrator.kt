@@ -1,62 +1,26 @@
 package com.diegoferreiracaetano.dlearn.orchestrator
 
-import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
-import com.diegoferreiracaetano.dlearn.domain.usecases.GetHomeDataUseCase
-import com.diegoferreiracaetano.dlearn.domain.usecases.GetProfileDataUseCase
-import com.diegoferreiracaetano.dlearn.ui.screens.*
-import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
+import com.diegoferreiracaetano.dlearn.ui.screens.MainScreenBuilder
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 
 class MainOrchestrator(
     private val mainScreenBuilder: MainScreenBuilder,
-    private val homeScreenBuilder: HomeScreenBuilder,
-    private val watchlistScreenBuilder: WatchlistScreenBuilder,
-    private val favoriteScreenBuilder: FavoriteScreenBuilder,
-    private val profileScreenBuilder: ProfileScreenBuilder,
-    private val getHomeDataUseCase: GetHomeDataUseCase,
-    private val getProfileDataUseCase: GetProfileDataUseCase
+    private val homeOrchestrator: HomeOrchestrator,
+    private val watchlistOrchestrator: WatchlistOrchestrator,
+    private val favoriteOrchestrator: FavoriteOrchestrator,
+    private val profileOrchestrator: ProfileOrchestrator
 ) {
     suspend fun getMainData(
         userId: String,
         appVersion: Int,
         lang: String,
-        type: HomeFilterType
     ): Screen {
         return mainScreenBuilder.build(
             userId = userId,
             appVersion = appVersion,
-            lang = lang,
-            type = type
+            lang = lang
         )
-    }
-
-    suspend fun getRouteData(
-        userId: String,
-        appVersion: Int,
-        lang: String,
-        route: String,
-        type: HomeFilterType
-    ): Screen {
-        return when (route) {
-            NavigationRoutes.HOME -> {
-                val domainData = getHomeDataUseCase.execute(userId, type)
-                homeScreenBuilder.build(domainData, appVersion, lang, type)
-            }
-            NavigationRoutes.WATCHLIST -> {
-                watchlistScreenBuilder.build(lang)
-            }
-            NavigationRoutes.FAVORITE -> {
-                val domainData = getHomeDataUseCase.execute(userId, type)
-                favoriteScreenBuilder.build(domainData, lang)
-            }
-            NavigationRoutes.PROFILE -> {
-                val profileData = getProfileDataUseCase.execute(lang)
-                profileScreenBuilder.build(profileData, appVersion, lang)
-            }
-            else -> {
-                val domainData = getHomeDataUseCase.execute(userId, type)
-                homeScreenBuilder.build(domainData, appVersion, lang, type)
-            }
-        }
     }
 }

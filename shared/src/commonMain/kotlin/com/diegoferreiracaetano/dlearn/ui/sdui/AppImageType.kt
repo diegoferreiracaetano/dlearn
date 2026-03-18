@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class AppImageType {
     SEARCH,
+    WATCHLIST,
+    FAVORITE,
     EMPTY_STATE,
     UNKNOWN;
 }

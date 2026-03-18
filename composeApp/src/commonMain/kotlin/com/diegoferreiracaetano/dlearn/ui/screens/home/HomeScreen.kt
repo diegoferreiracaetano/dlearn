@@ -11,20 +11,9 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppErrorComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppLoadingComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.BannerCarouselComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavItem
-import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.ChipItem
-import com.diegoferreiracaetano.dlearn.ui.sdui.FullScreenBannerComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.MovieCarouselComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.Render
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
@@ -68,14 +57,13 @@ fun HomeContent(
             actions = actions,
             modifier = modifier
         )
-        is HomeUiState.Error ->  RenderComponentFactory.Render(
+        is HomeUiState.Error -> RenderComponentFactory.Render(
             component = AppErrorComponent(state.throwable),
             actions = actions,
             modifier = modifier
         )
         is HomeUiState.Success -> {
-            RenderComponentFactory.Render(
-                components = state.screen.components,
+            state.screen.Render(
                 actions = actions,
                 modifier = modifier
             )

@@ -21,11 +21,9 @@ data class AppMovieDetailHeaderComponent(
     val genre: String? = null,
     val rating: Double? = null,
     val trailerId: String? = null,
+    val downloadActionUrl: String? = null,
+    val shareActionUrl: String? = null,
     val isFavorite: Boolean = false,
     val isInList: Boolean = false,
-    val favoriteAction: AppAction? = null,
-    val listAction: AppAction? = null,
-    val downloadAction: AppAction? = null,
-    val shareAction: AppAction? = null,
     val providers: List<WatchProviderComponent> = emptyList()
 ) : Component

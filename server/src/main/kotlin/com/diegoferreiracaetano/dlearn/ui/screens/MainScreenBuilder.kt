@@ -3,7 +3,6 @@ package com.diegoferreiracaetano.dlearn.ui.screens
 import com.diegoferreiracaetano.dlearn.AppConstants
 import com.diegoferreiracaetano.dlearn.ComponentIds
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
@@ -13,8 +12,7 @@ class MainScreenBuilder(
     fun build(
         userId: String,
         appVersion: Int,
-        lang: String,
-        type: HomeFilterType
+        lang: String
     ): Screen {
         val topBar = AppTopBarComponent(
             title = i18n.getString(AppStringType.HOME_TITLE, lang),
@@ -29,7 +27,7 @@ class MainScreenBuilder(
                 items = listOf(
                     BottomNavItem(
                         label = i18n.getString(AppStringType.NAV_HOME, lang),
-                        route = NavigationRoutes.buildRoute(NavigationRoutes.HOME),
+                        route = NavigationRoutes.HOME,
                         icon = AppIconType.HOME
                     ),
                     BottomNavItem(
@@ -44,11 +42,11 @@ class MainScreenBuilder(
                     ),
                     BottomNavItem(
                         label = i18n.getString(AppStringType.NAV_PROFILE, lang),
-                        route = NavigationRoutes.buildRoute(NavigationRoutes.PROFILE),
+                        route = NavigationRoutes.PROFILE,
                         icon = AppIconType.PERSON
                     )
                 ),
-                selectedRoute = NavigationRoutes.buildRoute(NavigationRoutes.HOME)
+                selectedRoute = NavigationRoutes.HOME
             ),
             components = listOf(AppMainContentComponent())
         )

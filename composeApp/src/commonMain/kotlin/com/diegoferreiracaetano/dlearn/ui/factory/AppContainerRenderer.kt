@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppList
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppListComponent
@@ -17,6 +16,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.LocalContentMaxHeight
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
+import com.diegoferreiracaetano.dlearn.ui.util.LocalTopBarManager
 
 class AppContainerRenderer : ComponentRenderer {
     @Composable
@@ -27,6 +27,7 @@ class AppContainerRenderer : ComponentRenderer {
     ) {
         val container = component as? AppContainerComponent ?: return
         val snackbarHostState = remember { SnackbarHostState() }
+        val topBarManager = LocalTopBarManager.current
 
         CompositionLocalProvider(
             LocalSnackbarHostState provides snackbarHostState
@@ -35,8 +36,12 @@ class AppContainerRenderer : ComponentRenderer {
                 modifier = modifier.fillMaxSize(),
                 snackBarHostState = snackbarHostState,
                 topBar = {
-                    container.getTopBarForRoute(actions.currentRoute)?.let { topBar ->
-                        RenderComponentFactory.Render(component = topBar, actions = actions)
+                    val topBarState = topBarManager.state
+                    val topBarComponent = topBarState.component ?: container.topBar
+                    val topBarActions = if (topBarState.component != null) topBarState.actions else actions
+
+                    topBarComponent?.let {
+                        RenderComponentFactory.Render(component = it, actions = topBarActions)
                     }
                 },
                 searchBar = {

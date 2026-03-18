@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.ui.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
@@ -31,32 +32,46 @@ data class UiState<out T>(
 )
 
 @Composable
+fun Screen.Render(
+    actions: ComponentActions,
+    modifier: Modifier = Modifier
+) {
+    val topBarManager = LocalTopBarManager.current
+    
+    LaunchedEffect(this.topBar, actions) {
+        topBarManager.state = TopBarState(
+            component = this@Render.topBar,
+            actions = actions
+        )
+    }
+
+    RenderComponentFactory.Render(
+        components = this.components,
+        actions = actions,
+        modifier = modifier
+    )
+}
+
+@Composable
 fun UIState<Screen>.Render(
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
     when (this) {
-        is UIState.Loading -> {
-            RenderComponentFactory.Render(
-                component = AppLoadingComponent,
-                actions = actions,
-                modifier = modifier
-            )
-        }
+        is UIState.Loading -> RenderComponentFactory.Render(
+            component = AppLoadingComponent,
+            actions = actions,
+            modifier = modifier
+        )
 
-        is UIState.Error -> {
-            RenderComponentFactory.Render(
-                component = AppErrorComponent(
-                    throwable = this.throwable
-                ),
-                actions = actions,
-                modifier = modifier
-            )
-        }
+        is UIState.Error -> RenderComponentFactory.Render(
+            component = AppErrorComponent(this.throwable),
+            actions = actions,
+            modifier = modifier
+        )
 
         is UIState.Success -> {
-            RenderComponentFactory.Render(
-                components = data.components,
+            this.data.Render(
                 actions = actions,
                 modifier = modifier
             )

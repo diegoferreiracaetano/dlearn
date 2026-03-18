@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.ui.util
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Help
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
@@ -27,7 +28,7 @@ fun AppIconType?.toIcon(): ImageVector? {
         AppIconType.HOME -> Icons.Default.Home
         AppIconType.SEARCH -> Icons.Default.Search
         AppIconType.FAVORITE -> Icons.Default.Favorite
-        AppIconType.NEW -> Icons.Default.NewReleases
+        AppIconType.WATCHLIST -> Icons.AutoMirrored.Filled.List
         AppIconType.UNKNOWN, null -> null
     }
 }

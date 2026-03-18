@@ -5,8 +5,8 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.AppAction
 object NavigationRoutes {
     const val APP_PREFIX = "app/"
     const val HOME = "home"
-    const val WATCHLIST = "watchlist"
-    const val FAVORITE = "favorite"
+    const val WATCHLIST = "app/watchlist"
+    const val FAVORITE = "app/favorite"
     const val PROFILE = "profile"
     const val SEARCH = "search"
     const val MOVIE_DETAIL = "movie_detail"
@@ -22,7 +22,7 @@ object NavigationRoutes {
     const val PARAMS_ARG = "params"
     const val MOVIE_ID_ARG = "movieId"
 
-    const val APP_GENERIC_ROUTE = "${APP_PREFIX}{$PATH_ARG}?$PARAMS_ARG={$PARAMS_ARG}"
+    const val APP_ROUTE = "${APP_PREFIX}{$PATH_ARG}?$PARAMS_ARG={$PARAMS_ARG}"
     const val MOVIE_DETAIL_ROUTE = "$MOVIE_DETAIL/{$MOVIE_ID_ARG}"
 
     fun buildRoute(path: String, params: Map<String, String>? = null): String {

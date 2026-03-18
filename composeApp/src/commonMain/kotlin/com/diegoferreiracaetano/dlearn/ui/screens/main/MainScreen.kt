@@ -15,6 +15,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.ProvideTopBarManager
 import com.diegoferreiracaetano.dlearn.ui.util.Render
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -23,7 +24,6 @@ import org.koin.compose.koinInject
 fun MainScreen(
     onItemClick: (String) -> Unit,
     onTabSelected: (String) -> Unit,
-    onClose: () -> Unit,
     onSearchClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = koinInject(),
@@ -36,17 +36,18 @@ fun MainScreen(
             currentRoute = currentRoute,
             onSearchClick = onSearchClick,
             onItemClick = onItemClick,
-            onClose = onClose,
             onTabSelected = onTabSelected,
             onRetry = viewModel::retry
         )
     }
-    MainContent(
-        uiState = uiState,
-        actions = actions,
-        modifier = modifier
-    )
-
+    
+    ProvideTopBarManager {
+        MainContent(
+            uiState = uiState,
+            actions = actions,
+            modifier = modifier
+        )
+    }
 }
 
 @Composable

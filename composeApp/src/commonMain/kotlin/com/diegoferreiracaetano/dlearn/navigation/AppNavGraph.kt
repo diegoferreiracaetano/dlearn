@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -11,8 +12,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.*
+import com.diegoferreiracaetano.dlearn.ui.screens.app.AppScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.CreateNewPasswordScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.LoginScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.ResetPasswordScreen
@@ -37,6 +40,7 @@ fun AppNavGraph(
     // val startDestination = if (isLoggedIn) Main.route else Onboarding.route
 
     val startDestination = Home.route
+    val uriHandler = LocalUriHandler.current
 
     NavHost(
         navController = navController,
@@ -102,9 +106,7 @@ fun AppNavGraph(
 
         composable(Search.route) {
             SearchMainScreen(
-                onItemClick = { id ->
-                    navController.navigate(MovieDetail.createRoute(id))
-                },
+                onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
                 onBackClick = { navController.popBackStack() },
                 modifier = modifier
             )
@@ -112,80 +114,75 @@ fun AppNavGraph(
 
         composable(Home.route) {
             MainScreen(
-                onItemClick = { id ->
-                    navController.navigate(MovieDetail.createRoute(id))
-                },
-                onClose = {
-                    navController.popBackStack()
-                },
-                onTabSelected = { route ->
-                    navController.navigateToRoute(route)
-                },
+                onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
+                onTabSelected = {
+                    route -> navController.navigateToRoute(route)
+                                },
                 onSearchClick = { navController.navigate(Search.route) },
                 modifier = modifier,
                 currentRoute = Home.route
             )
         }
 
-        composable(New.route) {
+        composable(Watchlist.route) {
             MainScreen(
-                onItemClick = { id ->
-                    navController.navigate(MovieDetail.createRoute(id))
-                },
-                onClose = {
-                    navController.popBackStack()
-                },
-                onTabSelected = { route ->
-                    navController.navigateToRoute(route)
-                },
+                onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
+                onTabSelected = { route -> navController.navigateToRoute(route) },
                 modifier = modifier,
-                currentRoute = New.route
+                currentRoute = Watchlist.route
             )
         }
 
-        composable(Favorites.route) {
+        composable(Favorite.route) {
             MainScreen(
-                onItemClick = { id ->
-                    navController.navigate(MovieDetail.createRoute(id))
-                },
-                onClose = {
-                    navController.popBackStack()
-                },
-                onTabSelected = { route ->
-                    navController.navigateToRoute(route)
-                },
+                onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
+                onTabSelected = { route -> navController.navigateToRoute(route) },
                 modifier = modifier,
-                currentRoute = Favorites.route
+                currentRoute = Favorite.route
             )
         }
 
         composable(Profile.route) {
             MainScreen(
-                onItemClick = { id ->
-                    navController.navigate(MovieDetail.createRoute(id))
-                },
-                onClose = {
-                    navController.popBackStack()
-                },
-                onTabSelected = { route ->
-                    navController.navigateToRoute(route)
-                },
+                onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
+                onTabSelected = { route -> navController.navigateToRoute(route) },
                 modifier = modifier,
                 currentRoute = Profile.route
             )
         }
 
+//        composable(
+//            route = NavigationRoutes.APP_ROUTE,
+//            arguments = listOf(
+//                navArgument(NavigationRoutes.PATH_ARG) { type = NavType.StringType },
+//                navArgument(NavigationRoutes.PARAMS_ARG) {
+//                    type = NavType.StringType
+//                    nullable = true
+//                    defaultValue = null
+//                }
+//            )
+//        ) { backStackEntry ->
+//            AppScreen(
+//                path = backStackEntry.sduiPath,
+//                params = backStackEntry.sduiParams,
+//                onBackClick = { navController.popBackStack() },
+//                onTabSelected = { route -> navController.navigateToRoute(route) },
+//                onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
+//                onNavigate = { action -> navController.navigateToRoute(NavigationRoutes.fromAction(action)) },
+//                onDeeplink = { action -> uriHandler.openUri(action.url) },
+//                modifier = modifier
+//            )
+//        }
+
         composable(
             route = MovieDetail.route,
-            arguments = listOf(navArgument("movieId") { type = NavType.StringType })
+            arguments = listOf(navArgument(NavigationRoutes.MOVIE_ID_ARG) { type = NavType.StringType })
         ) { backStackEntry ->
-            val movieId = backStackEntry.readOrDefault("movieId", "")
+            val movieId = backStackEntry.readOrDefault(NavigationRoutes.MOVIE_ID_ARG, "")
             MovieDetailScreen(
                 movieId = movieId,
                 onBackClick = { navController.popBackStack() },
-                onItemClick = { id ->
-                    navController.navigate(MovieDetail.createRoute(id))
-                },
+                onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
                 modifier = modifier
             )
         }

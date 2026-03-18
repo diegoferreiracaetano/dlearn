@@ -7,6 +7,30 @@ servers:
   - url: http://localhost:8081
     description: Local Server
 paths:
+  /v1/main:
+    get:
+      summary: Get Main Shell
+      description: Returns the main screen shell configuration (container with bottom navigation and initial components).
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+          example: diego
+        - name: X-App-Version
+          in: header
+          required: false
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
   /v1/app:
     post:
       summary: SDUI Gateway / BFF Generic Endpoint
@@ -99,6 +123,30 @@ paths:
             type: string
           example: spider-man
         - *common_params
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
+  /v1/profile:
+    get:
+      summary: Get Profile Screen
+      description: Returns the Profile screen configuration
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+          example: diego
+        - name: X-App-Version
+          in: header
+          required: false
+          schema:
+            type: integer
+          example: 1
       responses:
         '200':
           description: OK

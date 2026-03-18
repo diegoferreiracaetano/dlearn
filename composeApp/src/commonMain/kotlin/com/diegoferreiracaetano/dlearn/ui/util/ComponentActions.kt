@@ -1,5 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.util
 
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppAction
+
 data class ComponentActions(
     val onItemClick: (String) -> Unit = {},
     val onFilterTypeChanged: (String?) -> Unit = {},
@@ -9,6 +11,7 @@ data class ComponentActions(
     val onBackClick: () -> Unit = {},
     val onClose: () -> Unit = {},
     val onRetry: () -> Unit = {},
+    val onAction: (AppAction) -> Unit = {},
     val currentRoute: String = "",
     val onSearch: (String) -> Unit = {},
     val onQueryChange: (String) -> Unit = {},

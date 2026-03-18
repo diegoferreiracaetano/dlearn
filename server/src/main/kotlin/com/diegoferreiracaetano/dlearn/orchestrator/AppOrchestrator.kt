@@ -6,7 +6,6 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 
 class AppOrchestrator(
-    private val mainOrchestrator: MainOrchestrator,
     private val favoriteOrchestrator: FavoriteOrchestrator,
     private val watchlistOrchestrator: WatchlistOrchestrator,
 ) {
@@ -17,31 +16,27 @@ class AppOrchestrator(
         appVersion: Int
     ): Screen {
         return when (request.path) {
-            NavigationRoutes.FAVORITE -> {
-                val movieId = request.params?.get("movieId")
-                if (movieId != null) {
-                    favoriteOrchestrator.toggleFavorite(userId, movieId, lang)
-                } else {
-                    favoriteOrchestrator.getFavorite(userId, lang)
-                }
-            }
-            NavigationRoutes.WATCHLIST -> {
-                val movieId = request.params?.get("movieId")
-                if (movieId != null) {
-                    watchlistOrchestrator.toggleWatchlist(userId, movieId, lang)
-                } else {
-                    watchlistOrchestrator.getWatchlist(userId, lang)
-                }
-            }
-            else -> {
-                mainOrchestrator.getRouteData(
-                    userId = userId,
-                    appVersion = appVersion,
-                    lang = lang,
-                    route = request.path,
-                    type = HomeFilterType.ALL
-                )
-            }
+            NavigationRoutes.FAVORITE -> handleFavoriteRequest(request, userId, lang)
+            NavigationRoutes.WATCHLIST -> handleWatchlistRequest(request, userId, lang)
+            else ->  throw IllegalArgumentException("Invalid path: ${request.path}")
+        }
+    }
+
+    private suspend fun handleFavoriteRequest(request: AppRequest, userId: String, lang: String): Screen {
+        val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
+        return if (movieId != null) {
+            favoriteOrchestrator.toggleFavorite(userId, movieId, lang)
+        } else {
+            favoriteOrchestrator.getFavorite(userId, lang)
+        }
+    }
+
+    private suspend fun handleWatchlistRequest(request: AppRequest, userId: String, lang: String): Screen {
+        val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
+        return if (movieId != null) {
+            watchlistOrchestrator.toggleWatchlist(userId, movieId, lang)
+        } else {
+            watchlistOrchestrator.getWatchlist(userId, lang)
         }
     }
 }

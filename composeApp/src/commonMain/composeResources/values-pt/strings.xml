@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DLearn</string>
-    <string name="app_subtitle">Learning Platform</string>
+    <string name="app_subtitle">Plataforma de Aprendizado</string>
 
     <string name="title_email">E-mail</string>
     <string name="title_password">Senha</string>

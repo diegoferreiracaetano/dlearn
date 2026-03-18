@@ -3,6 +3,7 @@ package com.diegoferreiracaetano.dlearn.ui.screens.app
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppAction
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
@@ -22,6 +23,15 @@ class AppViewModel(
         val request = AppRequest(path, params, metadata)
         lastRequest = request
         executeRequest(request)
+    }
+
+    fun handleAction(action: AppAction) {
+        when (action) {
+            is AppAction.AppCall -> {
+                executeRequest(AppRequest(action.path, action.params, action.metadata))
+            }
+            else -> { /* Navigation and Deeplink are handled by the UI/Navigation layer */ }
+        }
     }
 
     private fun executeRequest(request: AppRequest) {

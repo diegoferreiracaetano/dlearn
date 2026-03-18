@@ -6,11 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface MainRepository {
     fun getMain(
-        type: HomeFilterType = HomeFilterType.ALL,
-        search: String? = null
-    ): Flow<Screen>
-
-    fun getContent(
+        route: String? = null,
         type: HomeFilterType = HomeFilterType.ALL,
         search: String? = null
     ): Flow<Screen>

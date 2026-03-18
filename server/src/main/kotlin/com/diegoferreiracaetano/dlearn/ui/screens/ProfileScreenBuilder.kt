@@ -9,13 +9,17 @@ class ProfileScreenBuilder(
     private val mapper: ProfileMapper,
     private val i18n: I18nProvider
 ) {
-    fun build(data: ProfileDomainData,appVersion: Int, lang: String): Screen {
+    fun build(data: ProfileDomainData, appVersion: Int, lang: String): Screen {
         val components = buildContent(data, lang)
 
         return Screen(
             id = "profile",
             components = components,
-            showSearch = false
+            showSearch = false,
+            topBar = AppTopBarComponent(
+                title = i18n.getString(AppStringType.NAV_PROFILE, lang),
+                showSearch = false
+            )
         )
     }
 

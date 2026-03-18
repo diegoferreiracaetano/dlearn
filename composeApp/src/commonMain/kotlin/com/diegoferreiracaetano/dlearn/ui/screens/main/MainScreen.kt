@@ -15,7 +15,6 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
-import com.diegoferreiracaetano.dlearn.ui.util.ProvideTopBarManager
 import com.diegoferreiracaetano.dlearn.ui.util.Render
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -40,14 +39,12 @@ fun MainScreen(
             onRetry = viewModel::retry
         )
     }
-    
-    ProvideTopBarManager {
-        MainContent(
-            uiState = uiState,
-            actions = actions,
-            modifier = modifier
-        )
-    }
+    MainContent(
+        uiState = uiState,
+        actions = actions,
+        modifier = modifier
+    )
+
 }
 
 @Composable

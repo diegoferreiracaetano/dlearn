@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
+import com.diegoferreiracaetano.dlearn.AppConstants
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
@@ -38,7 +39,15 @@ class MainScreenBuilder(
             selectedRoute = NavigationRoutes.HOME
         )
 
+        val defaultTopBar = AppTopBarComponent(
+            title = i18n.getString(AppStringType.HOME_TITLE, lang),
+            subtitle = i18n.getString(AppStringType.HOME_SUBTITLE, lang),
+            imageUrl = AppConstants.AVATAR_PLACEHOLDER,
+            showSearch = true
+        )
+
         val container = AppContainerComponent(
+            topBar = defaultTopBar,
             bottomBar = bottomBar,
             components = listOf(AppMainContentComponent())
         )

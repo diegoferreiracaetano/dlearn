@@ -12,13 +12,15 @@ class ProfileScreenBuilder(
     fun build(data: ProfileDomainData, appVersion: Int, lang: String): Screen {
         val components = buildContent(data, lang)
 
-        return Screen(
-            id = "profile",
+        val container = AppContainerComponent(
             topBar = AppTopBarComponent(
-                title = i18n.getString(AppStringType.NAV_PROFILE, lang),
-                showSearch = false
+                title = i18n.getString(AppStringType.NAV_PROFILE, lang)
             ),
             components = components
+        )
+
+        return Screen(
+            components = listOf(container)
         )
     }
 

@@ -19,13 +19,15 @@ class WatchlistScreenBuilder(private val i18n: I18nProvider) {
             listOf(AppListComponent(components = items) as Component)
         }
 
-        return Screen(
-            id = "watchlist",
+        val container = AppContainerComponent(
             topBar = AppTopBarComponent(
-                title = title,
-                showSearch = true
+                title = title
             ),
             components = components
+        )
+
+        return Screen(
+            components = listOf(container)
         )
     }
 }

@@ -1,14 +1,11 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
+import com.diegoferreiracaetano.dlearn.AppConstants
 import com.diegoferreiracaetano.dlearn.HomeFilterIds
 import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
 import com.diegoferreiracaetano.dlearn.domain.models.HomeDomainData
 import com.diegoferreiracaetano.dlearn.ui.mappers.HomeMapper
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
-import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.ChipItem
-import com.diegoferreiracaetano.dlearn.ui.sdui.Component
-import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
 class HomeScreenBuilder(
@@ -58,8 +55,18 @@ class HomeScreenBuilder(
             }
         }
 
-        return Screen(
+        val container = AppContainerComponent(
+            topBar = AppTopBarComponent(
+                title = i18n.getString(AppStringType.HOME_TITLE, lang),
+                subtitle = i18n.getString(AppStringType.HOME_SUBTITLE, lang),
+                imageUrl = AppConstants.AVATAR_PLACEHOLDER,
+                showSearch = true
+            ),
             components = components
+        )
+
+        return Screen(
+            components = listOf(container)
         )
     }
 }

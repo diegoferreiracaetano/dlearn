@@ -17,6 +17,8 @@ import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.LocalContentMaxHeight
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 import com.diegoferreiracaetano.dlearn.ui.util.LocalTopBarManager
+import com.diegoferreiracaetano.dlearn.ui.util.TopBarManager
+import com.diegoferreiracaetano.dlearn.ui.util.TopBarState
 
 class AppContainerRenderer : ComponentRenderer {
     @Composable
@@ -27,10 +29,11 @@ class AppContainerRenderer : ComponentRenderer {
     ) {
         val container = component as? AppContainerComponent ?: return
         val snackbarHostState = remember { SnackbarHostState() }
-        val topBarManager = LocalTopBarManager.current
+        val topBarManager = remember { TopBarManager() }
 
         CompositionLocalProvider(
-            LocalSnackbarHostState provides snackbarHostState
+            LocalSnackbarHostState provides snackbarHostState,
+            LocalTopBarManager provides topBarManager
         ) {
             AppContainer(
                 modifier = modifier.fillMaxSize(),

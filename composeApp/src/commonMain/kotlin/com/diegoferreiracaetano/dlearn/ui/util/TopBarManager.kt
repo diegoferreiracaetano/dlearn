@@ -18,12 +18,3 @@ class TopBarManager {
     var state by mutableStateOf(TopBarState())
 }
 
-val LocalTopBarManager = compositionLocalOf { TopBarManager() }
-
-@Composable
-fun ProvideTopBarManager(content: @Composable () -> Unit) {
-    val manager = remember { TopBarManager() }
-    CompositionLocalProvider(LocalTopBarManager provides manager) {
-        content()
-    }
-}

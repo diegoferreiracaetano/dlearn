@@ -19,13 +19,15 @@ class FavoriteScreenBuilder(private val i18n: I18nProvider) {
             listOf(AppListComponent(components = items) as Component)
         }
 
-        return Screen(
-            id = "favorites",
+        val container = AppContainerComponent(
             topBar = AppTopBarComponent(
-                title = title,
-                showSearch = false
+                title = title
             ),
             components = components
+        )
+
+        return Screen(
+            components = listOf(container)
         )
     }
 }

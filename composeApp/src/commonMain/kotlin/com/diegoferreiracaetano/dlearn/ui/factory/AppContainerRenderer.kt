@@ -16,9 +16,6 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.LocalContentMaxHeight
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
-import com.diegoferreiracaetano.dlearn.ui.util.LocalTopBarManager
-import com.diegoferreiracaetano.dlearn.ui.util.TopBarManager
-import com.diegoferreiracaetano.dlearn.ui.util.TopBarState
 
 class AppContainerRenderer : ComponentRenderer {
     @Composable
@@ -29,37 +26,31 @@ class AppContainerRenderer : ComponentRenderer {
     ) {
         val container = component as? AppContainerComponent ?: return
         val snackbarHostState = remember { SnackbarHostState() }
-        val topBarManager = remember { TopBarManager() }
 
         CompositionLocalProvider(
-            LocalSnackbarHostState provides snackbarHostState,
-            LocalTopBarManager provides topBarManager
+            LocalSnackbarHostState provides snackbarHostState
         ) {
             AppContainer(
                 modifier = modifier.fillMaxSize(),
                 snackBarHostState = snackbarHostState,
                 topBar = {
-                    val topBarState = topBarManager.state
-                    val topBarComponent = topBarState.component ?: container.topBar
-                    val topBarActions = if (topBarState.component != null) topBarState.actions else actions
-
-                    topBarComponent?.let {
-                        RenderComponentFactory.Render(component = it, actions = topBarActions)
+                    container.topBar?.let {
+                        RenderComponentFactory.Render(component = it, actions = actions, modifier = modifier)
                     }
                 },
                 searchBar = {
                     container.searchBar?.let { searchBar ->
-                        RenderComponentFactory.Render(component = searchBar, actions = actions)
+                        RenderComponentFactory.Render(component = searchBar, actions = actions, modifier = modifier)
                     }
                 },
                 chipGroup = {
                     container.chipGroup?.let { chipGroup ->
-                        RenderComponentFactory.Render(component = chipGroup, actions = actions)
+                        RenderComponentFactory.Render(component = chipGroup, actions = actions, modifier)
                     }
                 },
                 bottomBar = {
                     container.bottomBar?.let { bottomBar ->
-                        RenderComponentFactory.Render(component = bottomBar, actions = actions)
+                        RenderComponentFactory.Render(component = bottomBar, actions = actions, modifier = modifier)
                     }
                 }
             ) { baseModifier ->

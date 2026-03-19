@@ -21,16 +21,6 @@ class HomeScreenBuilder(
         val components = mutableListOf<Component>()
 
         components.add(
-            AppTopBarComponent(
-                title = i18n.getString(AppStringType.HOME_TITLE, lang),
-                subtitle = i18n.getString(AppStringType.HOME_SUBTITLE, lang),
-                imageUrl = AppConstants.AVATAR_PLACEHOLDER,
-                showSearch = true
-            )
-        )
-
-
-        components.add(
             ChipGroupComponent(
                 items = listOf(
                     ChipItem(

@@ -10,6 +10,8 @@ import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarItem
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarListComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavItem
 import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -69,21 +71,30 @@ fun MainScreenPreview() {
         BottomNavItem(NavigationRoutes.PROFILE, NavigationRoutes.PROFILE, AppIconType.PERSON)
     )
 
+    val selectedRoute = NavigationRoutes.HOME
+
     val components = listOf(
         AppContainerComponent(
-            topBar = AppTopBarComponent(title = "DLearn", showSearch = true),
+            topBar = AppTopBarListComponent(
+                listOf(
+                    AppTopBarItem(
+                        AppTopBarComponent(title = "DLearn", showSearch = true),
+                        selectedRoute)
+                ),
+                selectedRoute =selectedRoute
+            ),
             bottomBar = BottomNavigationComponent(
                 items = bottomNavItems,
-                selectedRoute = NavigationRoutes.HOME
+                selectedRoute = selectedRoute
             ),
             components = listOf()
         )
     )
 
     DLearnTheme {
-         MainContent(
-             uiState = UIState.Success(Screen(components = components)),
-             actions = ComponentActions()
-         )
+        MainContent(
+            uiState = UIState.Success(Screen(components = components)),
+            actions = ComponentActions()
+        )
     }
 }

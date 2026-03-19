@@ -2,7 +2,33 @@ package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.diegoferreiracaetano.dlearn.ui.sdui.*
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppErrorComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppExpandableSectionComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppFeedbackComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppListComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppLoadingComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppMainContentComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppMovieDetailHeaderComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppSearchBarComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppSearchContentComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppSectionTitleComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarListComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.BannerCarouselComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.CarouselComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.Component
+import com.diegoferreiracaetano.dlearn.ui.sdui.FooterComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.FullScreenBannerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.MovieCarouselComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.MovieItemComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.PremiumBannerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.ProfileRowComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.SectionComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.UserRowComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 
 object RenderComponentFactory {
@@ -14,6 +40,7 @@ object RenderComponentFactory {
     private val appContainerRenderer = AppContainerRenderer()
     private val appListRenderer = AppListRenderer()
     private val appTopBarRenderer = AppTopBarRenderer()
+    private val appTopBarListRenderer = AppTopBarListRenderer()
     private val appSearchBarRenderer = AppSearchBarRenderer()
     private val bottomNavigationRenderer = BottomNavigationRenderer()
     private val movieCarouselRenderer = MovieCarouselRenderer()
@@ -58,6 +85,7 @@ object RenderComponentFactory {
             is AppContainerComponent -> appContainerRenderer.Render(component, actions, modifier)
             is AppListComponent -> appListRenderer.Render(component, actions, modifier)
             is AppTopBarComponent -> appTopBarRenderer.Render(component, actions, modifier)
+            is AppTopBarListComponent -> appTopBarListRenderer.Render(component, actions, modifier)
             is AppSearchBarComponent -> appSearchBarRenderer.Render(component, actions, modifier)
             is BottomNavigationComponent -> bottomNavigationRenderer.Render(component, actions, modifier)
             is MovieCarouselComponent -> movieCarouselRenderer.Render(component, actions, modifier)

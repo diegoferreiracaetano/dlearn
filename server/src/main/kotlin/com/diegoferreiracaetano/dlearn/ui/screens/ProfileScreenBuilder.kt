@@ -2,7 +2,8 @@ package com.diegoferreiracaetano.dlearn.ui.screens
 
 import com.diegoferreiracaetano.dlearn.domain.models.ProfileDomainData
 import com.diegoferreiracaetano.dlearn.ui.mappers.ProfileMapper
-import com.diegoferreiracaetano.dlearn.ui.sdui.*
+import com.diegoferreiracaetano.dlearn.ui.sdui.Component
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
 class ProfileScreenBuilder(
@@ -11,12 +12,6 @@ class ProfileScreenBuilder(
 ) {
     fun build(data: ProfileDomainData, appVersion: Int, lang: String): Screen {
         val components = mutableListOf<Component>()
-
-        components.add(
-            AppTopBarComponent(
-                title = i18n.getString(AppStringType.NAV_PROFILE, lang)
-            )
-        )
 
         components.addAll(buildContent(data, lang))
 

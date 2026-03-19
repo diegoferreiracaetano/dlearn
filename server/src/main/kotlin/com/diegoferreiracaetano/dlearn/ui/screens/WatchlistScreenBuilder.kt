@@ -1,19 +1,17 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
-import com.diegoferreiracaetano.dlearn.ui.sdui.*
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppImageType
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppListComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
+import com.diegoferreiracaetano.dlearn.ui.sdui.Component
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
 class WatchlistScreenBuilder(private val i18n: I18nProvider) {
     fun build(lang: String, items: List<Component>): Screen {
-        val title = i18n.getString(AppStringType.NAV_WATCHLIST, lang)
-        
-        val components = mutableListOf<Component>()
 
-        components.add(
-            AppTopBarComponent(
-                title = title
-            )
-        )
+        val components = mutableListOf<Component>()
 
         if (items.isEmpty()) {
             components.add(

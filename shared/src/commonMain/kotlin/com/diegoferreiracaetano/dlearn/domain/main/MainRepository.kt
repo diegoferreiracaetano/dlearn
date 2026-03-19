@@ -5,9 +5,5 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.flow.Flow
 
 interface MainRepository {
-    fun getMain(
-        route: String? = null,
-        type: HomeFilterType = HomeFilterType.ALL,
-        search: String? = null
-    ): Flow<Screen>
+    fun getMain(): Flow<Screen>
 }

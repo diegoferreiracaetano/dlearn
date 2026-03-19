@@ -9,8 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
-import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
-import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.Render
@@ -47,28 +45,11 @@ fun HomeScreen(
 
 @Composable
 fun HomeContent(
-    uiState: HomeUiState,
+    uiState: UIState,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
-    when (val state = uiState) {
-        is HomeUiState.Loading -> RenderComponentFactory.Render(
-            component = AppLoadingComponent,
-            actions = actions,
-            modifier = modifier
-        )
-        is HomeUiState.Error -> RenderComponentFactory.Render(
-            component = AppErrorComponent(state.throwable),
-            actions = actions,
-            modifier = modifier
-        )
-        is HomeUiState.Success -> {
-            state.screen.Render(
-                actions = actions,
-                modifier = modifier
-            )
-        }
-    }
+    uiState.Render(actions, modifier)
 }
 
 @Preview
@@ -94,7 +75,7 @@ fun HomeScreenPreview() {
 
     DLearnTheme {
         HomeContent(
-            uiState = HomeUiState.Success(Screen(components = components)),
+            uiState = UIState.Success(Screen(components = components)),
             actions = ComponentActions()
         )
     }

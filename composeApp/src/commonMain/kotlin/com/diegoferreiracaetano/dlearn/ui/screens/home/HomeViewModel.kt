@@ -7,7 +7,7 @@ import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
 import com.diegoferreiracaetano.dlearn.domain.home.HomeRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
-import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
+import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,8 +20,8 @@ class HomeViewModel(
     private val homeRepository: HomeRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
-    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
+    val uiState: StateFlow<UIState> = _uiState.asStateFlow()
 
     private var currentType: HomeFilterType = HomeFilterType.ALL
 
@@ -34,12 +34,12 @@ class HomeViewModel(
             homeRepository.getHome(
                 type = currentType
             ).onStart {
-                _uiState.update { HomeUiState.Loading }
+                _uiState.update { UIState.Loading }
             }.catch { error ->
-                _uiState.update { HomeUiState.Error(error) }
+                _uiState.update { UIState.Error(error) }
             }.collect { screen ->
                 _uiState.update {
-                    HomeUiState.Success(applySelectionToScreen(screen))
+                    UIState.Success(applySelectionToScreen(screen))
                 }
             }
         }

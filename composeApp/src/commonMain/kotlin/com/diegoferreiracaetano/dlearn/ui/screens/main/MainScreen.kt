@@ -51,7 +51,7 @@ fun MainScreen(
 
 @Composable
 fun MainContent(
-    uiState: UIState<Screen>,
+    uiState: UIState,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {

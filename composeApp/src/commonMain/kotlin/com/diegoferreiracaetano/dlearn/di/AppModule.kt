@@ -12,7 +12,7 @@ import org.koin.dsl.module
 
 fun initKoin() {
     startKoin {
-        modules(appModule + sharedModule)
+        modules(appModule, renderModule, sharedModule)
     }
 }
 

@@ -46,7 +46,7 @@ fun SearchMainScreen(
 
 @Composable
 private fun SearchScreenContent(
-    uiState: UIState<Screen>,
+    uiState: UIState,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {

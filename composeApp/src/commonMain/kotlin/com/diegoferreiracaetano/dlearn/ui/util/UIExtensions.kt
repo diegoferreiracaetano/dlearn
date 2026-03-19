@@ -9,7 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
 import com.diegoferreiracaetano.dlearn.designsystem.components.movie.MovieItem
-import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
+import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponent
+import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponents
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,7 +36,7 @@ fun Screen.Render(
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
-    RenderComponentFactory.Render(
+    RenderComponents(
         components = this.components,
         actions = actions,
         modifier = modifier
@@ -43,25 +44,25 @@ fun Screen.Render(
 }
 
 @Composable
-fun UIState<Screen>.Render(
+fun UIState.Render(
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
     when (this) {
-        is UIState.Loading -> RenderComponentFactory.Render(
+        is UIState.Loading -> RenderComponent(
             component = AppLoadingComponent,
             actions = actions,
             modifier = modifier
         )
 
-        is UIState.Error -> RenderComponentFactory.Render(
+        is UIState.Error -> RenderComponent(
             component = AppErrorComponent(this.throwable),
             actions = actions,
             modifier = modifier
         )
 
         is UIState.Success -> {
-            this.data.Render(
+            this.Render(
                 actions = actions,
                 modifier = modifier
             )

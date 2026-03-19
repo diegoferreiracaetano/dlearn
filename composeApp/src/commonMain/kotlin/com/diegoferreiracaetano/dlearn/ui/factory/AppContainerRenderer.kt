@@ -35,22 +35,22 @@ class AppContainerRenderer : ComponentRenderer {
                 snackBarHostState = snackbarHostState,
                 topBar = {
                     container.topBar?.let {
-                        RenderComponentFactory.Render(component = it, actions = actions, modifier = modifier)
+                        RenderComponent(component = it, actions = actions, modifier = modifier)
                     }
                 },
                 searchBar = {
                     container.searchBar?.let { searchBar ->
-                        RenderComponentFactory.Render(component = searchBar, actions = actions, modifier = modifier)
+                        RenderComponent(component = searchBar, actions = actions, modifier = modifier)
                     }
                 },
                 chipGroup = {
                     container.chipGroup?.let { chipGroup ->
-                        RenderComponentFactory.Render(component = chipGroup, actions = actions, modifier)
+                        RenderComponent(component = chipGroup, actions = actions, modifier)
                     }
                 },
                 bottomBar = {
                     container.bottomBar?.let { bottomBar ->
-                        RenderComponentFactory.Render(component = bottomBar, actions = actions, modifier = modifier)
+                        RenderComponent(component = bottomBar, actions = actions, modifier = modifier)
                     }
                 }
             ) { baseModifier ->
@@ -62,7 +62,7 @@ class AppContainerRenderer : ComponentRenderer {
                     CompositionLocalProvider(
                         LocalContentMaxHeight provides maxHeight
                     ) {
-                        RenderComponentFactory.Render(
+                        RenderComponent(
                             component = AppListComponent(components = container.components),
                             actions = actions,
                             modifier = modifier

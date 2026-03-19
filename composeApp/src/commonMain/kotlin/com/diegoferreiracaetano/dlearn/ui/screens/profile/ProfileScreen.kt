@@ -39,7 +39,7 @@ fun ProfileScreen(
 
 @Composable
 fun ProfileContent(
-    uiState: UIState<Screen>,
+    uiState: UIState,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {

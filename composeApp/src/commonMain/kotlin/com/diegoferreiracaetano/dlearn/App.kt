@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,26 +10,34 @@ import androidx.compose.runtime.setValue
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.AppNavGraph
+import com.diegoferreiracaetano.dlearn.ui.factory.LocalRenderComponentFactory
+import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.splash.SplashScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Composable
 fun App() {
+    val renderFactory: RenderComponentFactory = koinInject()
+
     DLearnTheme {
-        val sessionManager: SessionManager = koinInject()
-        LaunchedEffect(Unit) {
-            sessionManager.initialize()
-        }
+        CompositionLocalProvider(
+            LocalRenderComponentFactory provides renderFactory
+        ) {
+            val sessionManager: SessionManager = koinInject()
+            LaunchedEffect(Unit) {
+                sessionManager.initialize()
+            }
 
-        var showLandingScreen by remember { mutableStateOf(true) }
+            var showLandingScreen by remember { mutableStateOf(true) }
 
-        if (showLandingScreen) {
-            SplashScreen(
-                onTimeout = { showLandingScreen = false },
-            )
-        } else {
-            AppNavGraph(sessionManager = sessionManager)
+            if (showLandingScreen) {
+                SplashScreen(
+                    onTimeout = { showLandingScreen = false },
+                )
+            } else {
+                AppNavGraph(sessionManager = sessionManager)
+            }
         }
     }
 }

@@ -1,16 +1,5 @@
 package com.diegoferreiracaetano.dlearn
 
-object ComponentIds {
-    const val FILTERS = "filters"
-    const val HOME_SCREEN = "home"
-    const val NEW_SCREEN = "new"
-    const val FAVORITE_SCREEN = "favorite"
-    const val PROFILE_SCREEN = "profile"
-    const val SEARCH_SCREEN = "search"
-    const val MAIN_SHELL = "main_shell"
-    const val SEARCH_BAR = "search_bar"
-}
-
 object HomeFilterIds {
     const val SERIES = "series"
     const val MOVIES = "movies"

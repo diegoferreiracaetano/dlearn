@@ -689,41 +689,6 @@
   <script>
     // Script section to load models into a JS Var
     var defs = {}
-            defs["ActionButton"] = {
-  "type" : "object",
-  "properties" : {
-    "id" : {
-      "type" : "string"
-    },
-    "label" : {
-      "type" : "string"
-    },
-    "icon" : {
-      "type" : "string"
-    },
-    "actionUrl" : {
-      "type" : "string"
-    }
-  }
-};
-            defs["ActionButtonsComponent"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/Component"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "primaryButton" : {
-        "$ref" : "#/components/schemas/ActionButton"
-      },
-      "secondaryButtons" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/ActionButton"
-        }
-      }
-    }
-  } ]
-};
             defs["AppContainerComponent"] = {
   "allOf" : [ {
     "$ref" : "#/components/schemas/Component"
@@ -763,6 +728,31 @@
     }
   } ]
 };
+            defs["AppErrorComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object"
+  } ]
+};
+            defs["AppExpandableSectionComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "text" : {
+        "type" : "string"
+      },
+      "maxLines" : {
+        "type" : "integer"
+      }
+    }
+  } ]
+};
             defs["AppListComponent"] = {
   "allOf" : [ {
     "$ref" : "#/components/schemas/Component"
@@ -777,6 +767,83 @@
       }
     }
   } ]
+};
+            defs["AppLoadingComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object"
+  } ]
+};
+            defs["AppMovieDetailHeaderComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "imageUrl" : {
+        "type" : "string"
+      },
+      "year" : {
+        "type" : "string"
+      },
+      "duration" : {
+        "type" : "string"
+      },
+      "genre" : {
+        "type" : "string"
+      },
+      "rating" : {
+        "type" : "number"
+      },
+      "trailerId" : {
+        "type" : "string"
+      },
+      "downloadActionUrl" : {
+        "type" : "string"
+      },
+      "shareActionUrl" : {
+        "type" : "string"
+      },
+      "isFavorite" : {
+        "type" : "boolean"
+      },
+      "isInList" : {
+        "type" : "boolean"
+      },
+      "providers" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/WatchProviderComponent"
+        }
+      }
+    }
+  } ]
+};
+            defs["AppRequest"] = {
+  "required" : [ "path" ],
+  "type" : "object",
+  "properties" : {
+    "path" : {
+      "type" : "string",
+      "description" : "The target route or action (e.g., 'watchlist', 'favorite')"
+    },
+    "params" : {
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "string"
+      }
+    },
+    "metadata" : {
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "string"
+      }
+    }
+  }
 };
             defs["AppSearchBarComponent"] = {
   "allOf" : [ {
@@ -806,6 +873,18 @@
     "type" : "object"
   } ]
 };
+            defs["AppSectionTitleComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
             defs["AppTopBarComponent"] = {
   "allOf" : [ {
     "$ref" : "#/components/schemas/Component"
@@ -823,6 +902,24 @@
       },
       "showSearch" : {
         "type" : "boolean"
+      }
+    }
+  } ]
+};
+            defs["BannerCarouselComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "items" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/MovieItemComponent"
+        }
       }
     }
   } ]
@@ -862,7 +959,7 @@
     }
   }
 };
-            defs["CastCarouselComponent"] = {
+            defs["CarouselComponent"] = {
   "allOf" : [ {
     "$ref" : "#/components/schemas/Component"
   }, {
@@ -871,29 +968,53 @@
       "title" : {
         "type" : "string"
       },
-      "cast" : {
+      "items" : {
         "type" : "array",
         "items" : {
-          "$ref" : "#/components/schemas/CastMember"
+          "$ref" : "#/components/schemas/Component"
         }
       }
     }
   } ]
 };
-            defs["CastMember"] = {
+            defs["ChipGroupComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "items" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/ChipItem"
+        }
+      }
+    }
+  } ]
+};
+            defs["ChipItem"] = {
   "type" : "object",
   "properties" : {
     "id" : {
       "type" : "string"
     },
-    "name" : {
+    "label" : {
       "type" : "string"
     },
-    "role" : {
-      "type" : "string"
+    "isSelected" : {
+      "type" : "boolean"
     },
-    "imageUrl" : {
-      "type" : "string"
+    "hasDropDown" : {
+      "type" : "boolean"
+    },
+    "isFilter" : {
+      "type" : "boolean"
+    },
+    "options" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/ChipItem"
+      }
     }
   }
 };
@@ -908,33 +1029,22 @@
     "propertyName" : "type"
   }
 };
-            defs["EpisodeItem"] = {
-  "type" : "object",
-  "properties" : {
-    "id" : {
-      "type" : "string"
-    },
-    "title" : {
-      "type" : "string"
-    },
-    "duration" : {
-      "type" : "string"
-    },
-    "description" : {
-      "type" : "string"
-    },
-    "imageUrl" : {
-      "type" : "string"
-    },
-    "isPremium" : {
-      "type" : "boolean"
-    },
-    "actionUrl" : {
-      "type" : "string"
+            defs["FooterComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "label" : {
+        "type" : "string"
+      },
+      "actionUrl" : {
+        "type" : "string"
+      }
     }
-  }
+  } ]
 };
-            defs["EpisodeListComponent"] = {
+            defs["FullScreenBannerComponent"] = {
   "allOf" : [ {
     "$ref" : "#/components/schemas/Component"
   }, {
@@ -943,62 +1053,32 @@
       "title" : {
         "type" : "string"
       },
-      "seasons" : {
-        "type" : "array",
-        "items" : {
-          "type" : "string"
-        }
-      },
-      "selectedSeason" : {
+      "subtitle" : {
         "type" : "string"
       },
-      "episodes" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/EpisodeItem"
-        }
-      }
-    }
-  } ]
-};
-            defs["ExpandableTextComponent"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/Component"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "title" : {
-        "type" : "string"
-      },
-      "text" : {
-        "type" : "string"
-      },
-      "moreLabel" : {
-        "type" : "string"
-      }
-    }
-  } ]
-};
-            defs["MovieHeaderComponent"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/Component"
-  }, {
-    "type" : "object",
-    "properties" : {
       "imageUrl" : {
         "type" : "string"
       },
-      "year" : {
+      "actionUrl" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
+            defs["MovieCarouselComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
         "type" : "string"
       },
-      "duration" : {
-        "type" : "string"
-      },
-      "genre" : {
-        "type" : "string"
-      },
-      "rating" : {
-        "type" : "string"
+      "items" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/MovieItemComponent"
+        }
       }
     }
   } ]
@@ -1051,6 +1131,48 @@
     }
   } ]
 };
+            defs["PremiumBannerComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "description" : {
+        "type" : "string"
+      },
+      "icon" : {
+        "type" : "string"
+      },
+      "actionUrl" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
+            defs["ProfileRowComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "name" : {
+        "type" : "string"
+      },
+      "email" : {
+        "type" : "string"
+      },
+      "imageUrl" : {
+        "type" : "string"
+      },
+      "actionUrl" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
             defs["Screen"] = {
   "type" : "object",
   "properties" : {
@@ -1062,6 +1184,88 @@
       "items" : {
         "$ref" : "#/components/schemas/Component"
       }
+    }
+  }
+};
+            defs["SectionComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "items" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/SectionItem"
+        }
+      }
+    }
+  } ]
+};
+            defs["SectionItem"] = {
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string"
+    },
+    "label" : {
+      "type" : "string"
+    },
+    "value" : {
+      "type" : "string"
+    },
+    "icon" : {
+      "type" : "string"
+    },
+    "actionUrl" : {
+      "type" : "string"
+    }
+  }
+};
+            defs["UserRowComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "id" : {
+        "type" : "string"
+      },
+      "name" : {
+        "type" : "string"
+      },
+      "role" : {
+        "type" : "string"
+      },
+      "imageUrl" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
+            defs["WatchProviderComponent"] = {
+  "type" : "object",
+  "properties" : {
+    "name" : {
+      "type" : "string"
+    },
+    "iconUrl" : {
+      "type" : "string"
+    },
+    "priceInfo" : {
+      "type" : "string"
+    },
+    "appUrl" : {
+      "type" : "string"
+    },
+    "webUrl" : {
+      "type" : "string"
+    },
+    "tmdbUrl" : {
+      "type" : "string"
     }
   }
 };
@@ -1082,17 +1286,26 @@
             <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">API Summary</a></li>
 
                   <li class="nav-header" data-group="Default"><a href="#api-Default">API Methods - Default</a></li>
+                    <li data-group="Default" data-name="v1AppPost" class="">
+                      <a href="#api-Default-v1AppPost">v1AppPost</a>
+                    </li>
                     <li data-group="Default" data-name="v1HomeGet" class="">
                       <a href="#api-Default-v1HomeGet">v1HomeGet</a>
+                    </li>
+                    <li data-group="Default" data-name="v1MainGet" class="">
+                      <a href="#api-Default-v1MainGet">v1MainGet</a>
                     </li>
                     <li data-group="Default" data-name="v1MovieMovieIdGet" class="">
                       <a href="#api-Default-v1MovieMovieIdGet">v1MovieMovieIdGet</a>
                     </li>
-                    <li data-group="Default" data-name="v1SearchContentGet" class="">
-                      <a href="#api-Default-v1SearchContentGet">v1SearchContentGet</a>
+                    <li data-group="Default" data-name="v1ProfileGet" class="">
+                      <a href="#api-Default-v1ProfileGet">v1ProfileGet</a>
                     </li>
-                    <li data-group="Default" data-name="v1SearchGet" class="">
-                      <a href="#api-Default-v1SearchGet">v1SearchGet</a>
+                    <li data-group="Default" data-name="v1SearchMainGet" class="">
+                      <a href="#api-Default-v1SearchMainGet">v1SearchMainGet</a>
+                    </li>
+                    <li data-group="Default" data-name="v1SearchResultGet" class="">
+                      <a href="#api-Default-v1SearchResultGet">v1SearchResultGet</a>
                     </li>
           </ul>
         </nav>
@@ -1109,12 +1322,323 @@
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
               <div class="app-desc">Version: 1.0.0</div>
             <hr>
-            <div>API for Server-Driven UI in DLearn App</div>
+            <div>API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows.</div>
           </div>
         </div>
         <div id="sections">
                 <section id="api-Default">
                   <h1>Default</h1>
+                    <div id="api-Default-v1AppPost">
+                      <article id="api-Default-v1AppPost-0" data-group="User" data-name="v1AppPost" data-version="0">
+                        <div class="pull-left">
+                          <h1>v1AppPost</h1>
+                          <p>SDUI Gateway / BFF Generic Endpoint</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Handles all dynamic screens and actions (Favorites, Watchlist, etc.) based on the request path.</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/app</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-v1AppPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-v1AppPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-v1AppPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-v1AppPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-v1AppPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-v1AppPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-v1AppPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-v1AppPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-v1AppPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-v1AppPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-v1AppPost-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-v1AppPost-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+-H "Accept: application/json"\
+-H "Content-Type: application/json"\
+"http://localhost:8081/v1/app"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-v1AppPost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        
+        DefaultApi apiInstance = new DefaultApi();
+        AppRequest body = ; // AppRequest | 
+        try {
+            Screen result = apiInstance.v1AppPost(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#v1AppPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-v1AppPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        AppRequest body = ; // AppRequest | 
+        try {
+            Screen result = apiInstance.v1AppPost(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#v1AppPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-v1AppPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-v1AppPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">AppRequest *body = ; // 
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// SDUI Gateway / BFF Generic Endpoint
+[apiInstance v1AppPostWith:body
+              completionHandler: ^(Screen output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1AppPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
+
+var api = new DLearnBffApi.DefaultApi()
+var body = ; // {{AppRequest}} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.v1AppPost(body, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-v1AppPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-v1AppPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class v1AppPostExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new DefaultApi();
+            var body = new AppRequest(); // AppRequest | 
+
+            try
+            {
+                // SDUI Gateway / BFF Generic Endpoint
+                Screen result = apiInstance.v1AppPost(body);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.v1AppPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1AppPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$body = ; // AppRequest | 
+
+try {
+    $result = $api_instance->v1AppPost($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->v1AppPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1AppPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $body = WWW::SwaggerClient::Object::AppRequest->new(); # AppRequest | 
+
+eval { 
+    my $result = $api_instance->v1AppPost(body => $body);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->v1AppPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1AppPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+body =  # AppRequest | 
+
+try: 
+    # SDUI Gateway / BFF Generic Endpoint
+    api_response = api_instance.v1_app_post(body)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->v1AppPost: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/AppRequest"
+      }
+    }
+  },
+  "required" : true
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_v1AppPost_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_v1AppPost_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1AppPost-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1AppPost-200-schema">
+                                  <div id='responses-v1AppPost-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Screen"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1AppPost-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1AppPost-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1AppPost-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
                     <div id="api-Default-v1HomeGet">
                       <article id="api-Default-v1HomeGet-0" data-group="User" data-name="v1HomeGet" data-version="0">
                         <div class="pull-left">
@@ -1166,10 +1690,9 @@ public class DefaultApiExample {
         
         DefaultApi apiInstance = new DefaultApi();
         String userId = userId_example; // String | 
-        Integer xAppVersion = 56; // Integer | 
         String type = type_example; // String | 
         try {
-            Screen result = apiInstance.v1HomeGet(userId, xAppVersion, type);
+            Screen result = apiInstance.v1HomeGet(userId, type);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#v1HomeGet");
@@ -1187,10 +1710,9 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
         String userId = userId_example; // String | 
-        Integer xAppVersion = 56; // Integer | 
         String type = type_example; // String | 
         try {
-            Screen result = apiInstance.v1HomeGet(userId, xAppVersion, type);
+            Screen result = apiInstance.v1HomeGet(userId, type);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#v1HomeGet");
@@ -1205,14 +1727,12 @@ public class DefaultApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Default-v1HomeGet-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *userId = userId_example; //  (optional)
-Integer *xAppVersion = 56; //  (optional)
 String *type = type_example; //  (optional)
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
 // Get Home Screen
 [apiInstance v1HomeGetWith:userId
-    xAppVersion:xAppVersion
     type:type
               completionHandler: ^(Screen output, NSError* error) {
                             if (output) {
@@ -1231,7 +1751,6 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
 var api = new DLearnBffApi.DefaultApi()
 var opts = { 
   'userId': userId_example, // {{String}} 
-  'xAppVersion': 56, // {{Integer}} 
   'type': type_example // {{String}} 
 };
 var callback = function(error, data, response) {
@@ -1264,13 +1783,12 @@ namespace Example
 
             var apiInstance = new DefaultApi();
             var userId = userId_example;  // String |  (optional) 
-            var xAppVersion = 56;  // Integer |  (optional) 
             var type = type_example;  // String |  (optional) 
 
             try
             {
                 // Get Home Screen
-                Screen result = apiInstance.v1HomeGet(userId, xAppVersion, type);
+                Screen result = apiInstance.v1HomeGet(userId, type);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -1289,11 +1807,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
 $userId = userId_example; // String | 
-$xAppVersion = 56; // Integer | 
 $type = type_example; // String | 
 
 try {
-    $result = $api_instance->v1HomeGet($userId, $xAppVersion, $type);
+    $result = $api_instance->v1HomeGet($userId, $type);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->v1HomeGet: ', $e->getMessage(), PHP_EOL;
@@ -1308,11 +1825,10 @@ use WWW::SwaggerClient::DefaultApi;
 
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
 my $userId = userId_example; # String | 
-my $xAppVersion = 56; # Integer | 
 my $type = type_example; # String | 
 
 eval { 
-    my $result = $api_instance->v1HomeGet(userId => $userId, xAppVersion => $xAppVersion, type => $type);
+    my $result = $api_instance->v1HomeGet(userId => $userId, type => $type);
     print Dumper($result);
 };
 if ($@) {
@@ -1330,12 +1846,11 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
 userId = userId_example # String |  (optional)
-xAppVersion = 56 # Integer |  (optional)
 type = type_example # String |  (optional)
 
 try: 
     # Get Home Screen
-    api_response = api_instance.v1_home_get(userId=userId, xAppVersion=xAppVersion, type=type)
+    api_response = api_instance.v1_home_get(userId=userId, type=type)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->v1HomeGet: %s\n" % e)</code></pre>
@@ -1345,29 +1860,6 @@ except ApiException as e:
                           <h2>Parameters</h2>
 
 
-                            <div class="methodsubtabletitle">Header parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                  <tr><td style="width:150px;">X-App-Version</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_v1HomeGet_xAppVersion">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      Integer
-                                                  </span>
-                                  
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                            </table>
 
 
 
@@ -1457,6 +1949,354 @@ except ApiException as e:
                                     </script>
                                   </div>
                                   <input id='responses-v1HomeGet-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-v1MainGet">
+                      <article id="api-Default-v1MainGet-0" data-group="User" data-name="v1MainGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>v1MainGet</h1>
+                          <p>Get Main Shell</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Returns the main screen shell configuration (container with bottom navigation and initial components).</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/main</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-v1MainGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-v1MainGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-v1MainGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-v1MainGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-v1MainGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-v1MainGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-v1MainGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-v1MainGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-v1MainGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-v1MainGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-v1MainGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-v1MainGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"http://localhost:8081/v1/main?userId="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-v1MainGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        
+        DefaultApi apiInstance = new DefaultApi();
+        String userId = userId_example; // String | 
+        Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        try {
+            Screen result = apiInstance.v1MainGet(userId, xAppVersion, acceptLanguage);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#v1MainGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-v1MainGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String userId = userId_example; // String | 
+        Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        try {
+            Screen result = apiInstance.v1MainGet(userId, xAppVersion, acceptLanguage);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#v1MainGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-v1MainGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-v1MainGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *userId = userId_example; //  (optional)
+Integer *xAppVersion = 56; //  (optional)
+String *acceptLanguage = acceptLanguage_example; //  (optional)
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Get Main Shell
+[apiInstance v1MainGetWith:userId
+    xAppVersion:xAppVersion
+    acceptLanguage:acceptLanguage
+              completionHandler: ^(Screen output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1MainGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
+
+var api = new DLearnBffApi.DefaultApi()
+var opts = { 
+  'userId': userId_example, // {{String}} 
+  'xAppVersion': 56, // {{Integer}} 
+  'acceptLanguage': acceptLanguage_example // {{String}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.v1MainGet(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-v1MainGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-v1MainGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class v1MainGetExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new DefaultApi();
+            var userId = userId_example;  // String |  (optional) 
+            var xAppVersion = 56;  // Integer |  (optional) 
+            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
+
+            try
+            {
+                // Get Main Shell
+                Screen result = apiInstance.v1MainGet(userId, xAppVersion, acceptLanguage);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.v1MainGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1MainGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$userId = userId_example; // String | 
+$xAppVersion = 56; // Integer | 
+$acceptLanguage = acceptLanguage_example; // String | 
+
+try {
+    $result = $api_instance->v1MainGet($userId, $xAppVersion, $acceptLanguage);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->v1MainGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1MainGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $userId = userId_example; # String | 
+my $xAppVersion = 56; # Integer | 
+my $acceptLanguage = acceptLanguage_example; # String | 
+
+eval { 
+    my $result = $api_instance->v1MainGet(userId => $userId, xAppVersion => $xAppVersion, acceptLanguage => $acceptLanguage);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->v1MainGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1MainGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+userId = userId_example # String |  (optional)
+xAppVersion = 56 # Integer |  (optional)
+acceptLanguage = acceptLanguage_example # String |  (optional)
+
+try: 
+    # Get Main Shell
+    api_response = api_instance.v1_main_get(userId=userId, xAppVersion=xAppVersion, acceptLanguage=acceptLanguage)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->v1MainGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+                            <div class="methodsubtabletitle">Header parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                  <tr><td style="width:150px;">X-App-Version</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1MainGet_xAppVersion">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                                  <tr><td style="width:150px;">Accept-Language</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1MainGet_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">userId</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_v1MainGet_userId">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1MainGet-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1MainGet-200-schema">
+                                  <div id='responses-v1MainGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Screen"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1MainGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1MainGet-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1MainGet-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
@@ -1756,43 +2596,301 @@ except ApiException as e:
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Default-v1SearchContentGet">
-                      <article id="api-Default-v1SearchContentGet-0" data-group="User" data-name="v1SearchContentGet" data-version="0">
+                    <div id="api-Default-v1ProfileGet">
+                      <article id="api-Default-v1ProfileGet-0" data-group="User" data-name="v1ProfileGet" data-version="0">
                         <div class="pull-left">
-                          <h1>v1SearchContentGet</h1>
-                          <p>Search Content</p>
+                          <h1>v1ProfileGet</h1>
+                          <p>Get Profile Screen</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Returns the search content results based on the query, to be displayed inside the Search Shell.</p>
+                        <p class="marked">Returns the Profile screen configuration</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/search/content</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/profile</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Default-v1SearchContentGet-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Default-v1SearchContentGet-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Default-v1SearchContentGet-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Default-v1SearchContentGet-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Default-v1ProfileGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-v1ProfileGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-v1ProfileGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-v1ProfileGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-v1ProfileGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-v1ProfileGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-v1ProfileGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-v1ProfileGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-v1ProfileGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-v1ProfileGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-v1ProfileGet-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Default-v1SearchContentGet-0-curl">
+                          <div class="tab-pane active" id="examples-Default-v1ProfileGet-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"http://localhost:8081/v1/search/content?q="</code></pre>
+"http://localhost:8081/v1/profile"</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-java">
+                          <div class="tab-pane" id="examples-Default-v1ProfileGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        
+        DefaultApi apiInstance = new DefaultApi();
+        try {
+            Screen result = apiInstance.v1ProfileGet();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#v1ProfileGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-v1ProfileGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        try {
+            Screen result = apiInstance.v1ProfileGet();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#v1ProfileGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-v1ProfileGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-v1ProfileGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Get Profile Screen
+[apiInstance v1ProfileGetWithCompletionHandler: 
+              ^(Screen output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1ProfileGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
+
+var api = new DLearnBffApi.DefaultApi()
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.v1ProfileGet(callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-v1ProfileGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-v1ProfileGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class v1ProfileGetExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new DefaultApi();
+
+            try
+            {
+                // Get Profile Screen
+                Screen result = apiInstance.v1ProfileGet();
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.v1ProfileGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1ProfileGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+
+try {
+    $result = $api_instance->v1ProfileGet();
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->v1ProfileGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1ProfileGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+
+eval { 
+    my $result = $api_instance->v1ProfileGet();
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->v1ProfileGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-v1ProfileGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+
+try: 
+    # Get Profile Screen
+    api_response = api_instance.v1_profile_get()
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->v1ProfileGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1ProfileGet-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1ProfileGet-200-schema">
+                                  <div id='responses-v1ProfileGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Screen"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1ProfileGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1ProfileGet-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1ProfileGet-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-v1SearchMainGet">
+                      <article id="api-Default-v1SearchMainGet-0" data-group="User" data-name="v1SearchMainGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>v1SearchMainGet</h1>
+                          <p>Get Search Main Content</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Returns the initial search screen configuration.</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/search/main</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-v1SearchMainGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchMainGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchMainGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-v1SearchMainGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-v1SearchMainGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchMainGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-v1SearchMainGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-v1SearchMainGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchMainGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchMainGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchMainGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-v1SearchMainGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"http://localhost:8081/v1/search/main?q="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-v1SearchMainGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
@@ -1808,17 +2906,17 @@ public class DefaultApiExample {
         DefaultApi apiInstance = new DefaultApi();
         String q = q_example; // String | 
         try {
-            Screen result = apiInstance.v1SearchContentGet(q);
+            Screen result = apiInstance.v1SearchMainGet(q);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#v1SearchContentGet");
+            System.err.println("Exception when calling DefaultApi#v1SearchMainGet");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-android">
+                          <div class="tab-pane" id="examples-Default-v1SearchMainGet-0-android">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
 
 public class DefaultApiExample {
@@ -1827,26 +2925,26 @@ public class DefaultApiExample {
         DefaultApi apiInstance = new DefaultApi();
         String q = q_example; // String | 
         try {
-            Screen result = apiInstance.v1SearchContentGet(q);
+            Screen result = apiInstance.v1SearchMainGet(q);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#v1SearchContentGet");
+            System.err.println("Exception when calling DefaultApi#v1SearchMainGet");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-groovy">
+  <div class="tab-pane" id="examples-Default-v1SearchMainGet-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-objc">
+                            <div class="tab-pane" id="examples-Default-v1SearchMainGet-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *q = q_example; //  (optional)
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
-// Search Content
-[apiInstance v1SearchContentGetWith:q
+// Get Search Main Content
+[apiInstance v1SearchMainGetWith:q
               completionHandler: ^(Screen output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -1858,7 +2956,7 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-javascript">
+                            <div class="tab-pane" id="examples-Default-v1SearchMainGet-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
 
 var api = new DLearnBffApi.DefaultApi()
@@ -1872,14 +2970,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.v1SearchContentGet(opts, callback);
+api.v1SearchMainGet(opts, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Default-v1SearchContentGet-0-angular">
+                            <!--<div class="tab-pane" id="examples-Default-v1SearchMainGet-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-csharp">
+                            <div class="tab-pane" id="examples-Default-v1SearchMainGet-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -1888,7 +2986,7 @@ using IO.Swagger.Model;
 
 namespace Example
 {
-    public class v1SearchContentGetExample
+    public class v1SearchMainGetExample
     {
         public void main()
         {
@@ -1898,13 +2996,13 @@ namespace Example
 
             try
             {
-                // Search Content
-                Screen result = apiInstance.v1SearchContentGet(q);
+                // Get Search Main Content
+                Screen result = apiInstance.v1SearchMainGet(q);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling DefaultApi.v1SearchContentGet: " + e.Message );
+                Debug.Print("Exception when calling DefaultApi.v1SearchMainGet: " + e.Message );
             }
         }
     }
@@ -1912,7 +3010,7 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-php">
+                            <div class="tab-pane" id="examples-Default-v1SearchMainGet-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
@@ -1920,15 +3018,15 @@ $api_instance = new Swagger\Client\ApiDefaultApi();
 $q = q_example; // String | 
 
 try {
-    $result = $api_instance->v1SearchContentGet($q);
+    $result = $api_instance->v1SearchMainGet($q);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling DefaultApi->v1SearchContentGet: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling DefaultApi->v1SearchMainGet: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-perl">
+                            <div class="tab-pane" id="examples-Default-v1SearchMainGet-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::DefaultApi;
@@ -1937,15 +3035,15 @@ my $api_instance = WWW::SwaggerClient::DefaultApi->new();
 my $q = q_example; # String | 
 
 eval { 
-    my $result = $api_instance->v1SearchContentGet(q => $q);
+    my $result = $api_instance->v1SearchMainGet(q => $q);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling DefaultApi->v1SearchContentGet: $@\n";
+    warn "Exception when calling DefaultApi->v1SearchMainGet: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-v1SearchContentGet-0-python">
+                            <div class="tab-pane" id="examples-Default-v1SearchMainGet-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -1957,11 +3055,11 @@ api_instance = swagger_client.DefaultApi()
 q = q_example # String |  (optional)
 
 try: 
-    # Search Content
-    api_response = api_instance.v1_search_content_get(q=q)
+    # Get Search Main Content
+    api_response = api_instance.v1_search_main_get(q=q)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling DefaultApi->v1SearchContentGet: %s\n" % e)</code></pre>
+    print("Exception when calling DefaultApi->v1SearchMainGet: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -1981,7 +3079,7 @@ except ApiException as e:
                                 <td>
                                 
                                 
-                                    <div id="d2e199_v1SearchContentGet_q">
+                                    <div id="d2e199_v1SearchMainGet_q">
                                         <div class="json-schema-view">
                                             <div class="primitive">
                                                 <span class="type">
@@ -2000,14 +3098,14 @@ except ApiException as e:
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-v1SearchContentGet-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-v1SearchMainGet-200-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-v1SearchContentGet-200-schema">
-                                  <div id='responses-v1SearchContentGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-v1SearchMainGet-200-schema">
+                                  <div id='responses-v1SearchMainGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
@@ -2033,57 +3131,57 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-v1SearchContentGet-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-v1SearchContentGet-200-schema-200');
+                                        $('#responses-v1SearchMainGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1SearchMainGet-200-schema-200');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-v1SearchContentGet-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-v1SearchMainGet-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Default-v1SearchGet">
-                      <article id="api-Default-v1SearchGet-0" data-group="User" data-name="v1SearchGet" data-version="0">
+                    <div id="api-Default-v1SearchResultGet">
+                      <article id="api-Default-v1SearchResultGet-0" data-group="User" data-name="v1SearchResultGet" data-version="0">
                         <div class="pull-left">
-                          <h1>v1SearchGet</h1>
-                          <p>Get Search Shell</p>
+                          <h1>v1SearchResultGet</h1>
+                          <p>Search Content Result</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Returns the search screen shell configuration (container and search bar layout).</p>
+                        <p class="marked">Returns the search results based on the query.</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/search</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/search/result</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Default-v1SearchGet-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Default-v1SearchGet-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Default-v1SearchGet-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Default-v1SearchGet-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Default-v1SearchGet-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Default-v1SearchGet-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Default-v1SearchGet-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Default-v1SearchGet-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Default-v1SearchGet-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Default-v1SearchGet-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Default-v1SearchGet-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Default-v1SearchResultGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchResultGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchResultGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-v1SearchResultGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-v1SearchResultGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchResultGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-v1SearchResultGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-v1SearchResultGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchResultGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchResultGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-v1SearchResultGet-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Default-v1SearchGet-0-curl">
+                          <div class="tab-pane active" id="examples-Default-v1SearchResultGet-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"http://localhost:8081/v1/search"</code></pre>
+"http://localhost:8081/v1/search/result?q="</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Default-v1SearchGet-0-java">
+                          <div class="tab-pane" id="examples-Default-v1SearchResultGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
@@ -2097,45 +3195,48 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         
         DefaultApi apiInstance = new DefaultApi();
+        String q = q_example; // String | 
         try {
-            Screen result = apiInstance.v1SearchGet();
+            Screen result = apiInstance.v1SearchResultGet(q);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#v1SearchGet");
+            System.err.println("Exception when calling DefaultApi#v1SearchResultGet");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Default-v1SearchGet-0-android">
+                          <div class="tab-pane" id="examples-Default-v1SearchResultGet-0-android">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
 
 public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        String q = q_example; // String | 
         try {
-            Screen result = apiInstance.v1SearchGet();
+            Screen result = apiInstance.v1SearchResultGet(q);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#v1SearchGet");
+            System.err.println("Exception when calling DefaultApi#v1SearchResultGet");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Default-v1SearchGet-0-groovy">
+  <div class="tab-pane" id="examples-Default-v1SearchResultGet-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Default-v1SearchGet-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">
+                            <div class="tab-pane" id="examples-Default-v1SearchResultGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *q = q_example; // 
+
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
-// Get Search Shell
-[apiInstance v1SearchGetWithCompletionHandler: 
-              ^(Screen output, NSError* error) {
+// Search Content Result
+[apiInstance v1SearchResultGetWith:q
+              completionHandler: ^(Screen output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -2146,10 +3247,12 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-v1SearchGet-0-javascript">
+                            <div class="tab-pane" id="examples-Default-v1SearchResultGet-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
 
 var api = new DLearnBffApi.DefaultApi()
+var q = q_example; // {{String}} 
+
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -2157,14 +3260,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.v1SearchGet(callback);
+api.v1SearchResultGet(q, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Default-v1SearchGet-0-angular">
+                            <!--<div class="tab-pane" id="examples-Default-v1SearchResultGet-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Default-v1SearchGet-0-csharp">
+                            <div class="tab-pane" id="examples-Default-v1SearchResultGet-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -2173,22 +3276,23 @@ using IO.Swagger.Model;
 
 namespace Example
 {
-    public class v1SearchGetExample
+    public class v1SearchResultGetExample
     {
         public void main()
         {
 
             var apiInstance = new DefaultApi();
+            var q = q_example;  // String | 
 
             try
             {
-                // Get Search Shell
-                Screen result = apiInstance.v1SearchGet();
+                // Search Content Result
+                Screen result = apiInstance.v1SearchResultGet(q);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling DefaultApi.v1SearchGet: " + e.Message );
+                Debug.Print("Exception when calling DefaultApi.v1SearchResultGet: " + e.Message );
             }
         }
     }
@@ -2196,38 +3300,40 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-v1SearchGet-0-php">
+                            <div class="tab-pane" id="examples-Default-v1SearchResultGet-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
+$q = q_example; // String | 
 
 try {
-    $result = $api_instance->v1SearchGet();
+    $result = $api_instance->v1SearchResultGet($q);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling DefaultApi->v1SearchGet: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling DefaultApi->v1SearchResultGet: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-v1SearchGet-0-perl">
+                            <div class="tab-pane" id="examples-Default-v1SearchResultGet-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::DefaultApi;
 
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $q = q_example; # String | 
 
 eval { 
-    my $result = $api_instance->v1SearchGet();
+    my $result = $api_instance->v1SearchResultGet(q => $q);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling DefaultApi->v1SearchGet: $@\n";
+    warn "Exception when calling DefaultApi->v1SearchResultGet: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-v1SearchGet-0-python">
+                            <div class="tab-pane" id="examples-Default-v1SearchResultGet-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -2236,13 +3342,14 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
+q = q_example # String | 
 
 try: 
-    # Get Search Shell
-    api_response = api_instance.v1_search_get()
+    # Search Content Result
+    api_response = api_instance.v1_search_result_get(q)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling DefaultApi->v1SearchGet: %s\n" % e)</code></pre>
+    print("Exception when calling DefaultApi->v1SearchResultGet: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -2252,20 +3359,46 @@ except ApiException as e:
 
 
 
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">q*</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_v1SearchResultGet_q">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                            </div>
+                                                <div class="inner required">
+                                                    Required
+                                                </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
 
                           <h2>Responses</h2>
                             <h3> Status: 200 - OK </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-v1SearchGet-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-v1SearchResultGet-200-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-v1SearchGet-200-schema">
-                                  <div id='responses-v1SearchGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-v1SearchResultGet-200-schema">
+                                  <div id='responses-v1SearchResultGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
@@ -2291,14 +3424,14 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-v1SearchGet-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-v1SearchGet-200-schema-200');
+                                        $('#responses-v1SearchResultGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1SearchResultGet-200-schema-200');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-v1SearchGet-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-v1SearchResultGet-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 

@@ -9,22 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
-import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
-import com.diegoferreiracaetano.dlearn.ui.screens.home.state.HomeUiState
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppErrorComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppLoadingComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.BannerCarouselComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavItem
-import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.ChipItem
-import com.diegoferreiracaetano.dlearn.ui.sdui.FullScreenBannerComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.MovieCarouselComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.Render
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
@@ -58,29 +45,11 @@ fun HomeScreen(
 
 @Composable
 fun HomeContent(
-    uiState: HomeUiState,
+    uiState: UIState,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
-    when (val state = uiState) {
-        is HomeUiState.Loading -> RenderComponentFactory.Render(
-            component = AppLoadingComponent,
-            actions = actions,
-            modifier = modifier
-        )
-        is HomeUiState.Error ->  RenderComponentFactory.Render(
-            component = AppErrorComponent(state.throwable),
-            actions = actions,
-            modifier = modifier
-        )
-        is HomeUiState.Success -> {
-            RenderComponentFactory.Render(
-                components = state.screen.components,
-                actions = actions,
-                modifier = modifier
-            )
-        }
-    }
+    uiState.Render(actions, modifier)
 }
 
 @Preview
@@ -96,7 +65,7 @@ fun HomeScreenPreview() {
                 selectedRoute = NavigationRoutes.HOME
             ),
             components = listOf(
-                ChipGroupComponent(id = "2", items = listOf(ChipItem(id = "1", label = "Séries"))),
+                ChipGroupComponent(items = listOf(ChipItem(id = "1", label = "Séries"))),
                 FullScreenBannerComponent(id = "3", title = "Banner", subtitle = "2024", imageUrl = ""),
                 MovieCarouselComponent(title = "Top 10", items = listOf()),
                 BannerCarouselComponent(title = "Populares", items = listOf())
@@ -106,7 +75,7 @@ fun HomeScreenPreview() {
 
     DLearnTheme {
         HomeContent(
-            uiState = HomeUiState.Success(Screen(id = "home", components = components)),
+            uiState = UIState.Success(Screen(components = components)),
             actions = ComponentActions()
         )
     }

@@ -1,37 +1,74 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 
-object RenderComponentFactory {
+/**
+ * CompositionLocal to provide the [RenderComponentFactory] throughout the UI hierarchy.
+ */
+val LocalRenderComponentFactory = staticCompositionLocalOf<RenderComponentFactory> {
+    error("No RenderComponentFactory provided")
+}
 
-    private val appLoadingRenderer = AppLoadingRenderer()
-    private val appErrorRenderer = AppErrorRenderer()
-    private val appEmptyStateRenderer = AppEmptyStateRenderer()
-    private val appFeedbackRenderer = AppFeedbackRenderer()
-    private val appContainerRenderer = AppContainerRenderer()
-    private val appListRenderer = AppListRenderer()
-    private val appTopBarRenderer = AppTopBarRenderer()
-    private val appSearchBarRenderer = AppSearchBarRenderer()
-    private val bottomNavigationRenderer = BottomNavigationRenderer()
-    private val movieCarouselRenderer = MovieCarouselRenderer()
-    private val bannerCarouselRenderer = BannerCarouselRenderer()
-    private val carouselRenderer = CarouselRenderer()
-    private val fullScreenBannerRenderer = FullScreenBannerRenderer()
-    private val chipGroupRenderer = ChipGroupRenderer()
-    private val profileRenderer = ProfileRowRenderer()
-    private val userRenderer = UserRowRenderer()
-    private val premiumBannerRenderer = PremiumBannerRenderer()
-    private val sectionRenderer = SectionRenderer()
-    private val footerRenderer = FooterRenderer()
-    private val movieDetailHeaderRenderer = AppMovieDetailHeaderRenderer()
-    private val expandableSectionRenderer = AppExpandableSectionRenderer()
-    private val mainContentRenderer = AppMainContentRenderer()
-    private val movieItemRenderer = MovieItemRenderer()
-    private val searchContentRenderer = AppSearchContentRenderer()
-    private val appSectionTitleRenderer = AppSectionTitleRenderer()
+/**
+ * Top-level Composable function to render a SDUI component using the provided factory.
+ */
+@Composable
+fun RenderComponent(
+    component: Component,
+    actions: ComponentActions,
+    modifier: Modifier = Modifier
+) {
+    LocalRenderComponentFactory.current.Render(component, actions, modifier)
+}
+
+/**
+ * Top-level Composable function to render a list of SDUI components.
+ */
+@Composable
+fun RenderComponents(
+    components: List<Component>,
+    actions: ComponentActions,
+    modifier: Modifier = Modifier
+) {
+    LocalRenderComponentFactory.current.Render(components, actions, modifier)
+}
+
+/**
+ * Factory responsible for rendering UI components based on their type.
+ * Uses Dependency Injection to provide specific renderers for each component.
+ */
+class RenderComponentFactory(
+    private val appLoadingRenderer: AppLoadingRenderer,
+    private val appErrorRenderer: AppErrorRenderer,
+    private val appEmptyStateRenderer: AppEmptyStateRenderer,
+    private val appFeedbackRenderer: AppFeedbackRenderer,
+    private val appContainerRenderer: AppContainerRenderer,
+    private val appListRenderer: AppListRenderer,
+    private val appTopBarRenderer: AppTopBarRenderer,
+    private val appTopBarListRenderer: AppTopBarListRenderer,
+    private val appSearchBarRenderer: AppSearchBarRenderer,
+    private val bottomNavigationRenderer: BottomNavigationRenderer,
+    private val movieCarouselRenderer: MovieCarouselRenderer,
+    private val bannerCarouselRenderer: BannerCarouselRenderer,
+    private val carouselRenderer: CarouselRenderer,
+    private val fullScreenBannerRenderer: FullScreenBannerRenderer,
+    private val chipGroupRenderer: ChipGroupRenderer,
+    private val profileRenderer: ProfileRowRenderer,
+    private val userRenderer: UserRowRenderer,
+    private val premiumBannerRenderer: PremiumBannerRenderer,
+    private val sectionRenderer: SectionRenderer,
+    private val footerRenderer: FooterRenderer,
+    private val movieDetailHeaderRenderer: AppMovieDetailHeaderRenderer,
+    private val expandableSectionRenderer: AppExpandableSectionRenderer,
+    private val mainContentRenderer: AppMainContentRenderer,
+    private val movieItemRenderer: MovieItemRenderer,
+    private val searchContentRenderer: AppSearchContentRenderer,
+    private val appSectionTitleRenderer: AppSectionTitleRenderer,
+) {
 
     @Composable
     fun Render(
@@ -58,6 +95,7 @@ object RenderComponentFactory {
             is AppContainerComponent -> appContainerRenderer.Render(component, actions, modifier)
             is AppListComponent -> appListRenderer.Render(component, actions, modifier)
             is AppTopBarComponent -> appTopBarRenderer.Render(component, actions, modifier)
+            is AppTopBarListComponent -> appTopBarListRenderer.Render(component, actions, modifier)
             is AppSearchBarComponent -> appSearchBarRenderer.Render(component, actions, modifier)
             is BottomNavigationComponent -> bottomNavigationRenderer.Render(component, actions, modifier)
             is MovieCarouselComponent -> movieCarouselRenderer.Render(component, actions, modifier)

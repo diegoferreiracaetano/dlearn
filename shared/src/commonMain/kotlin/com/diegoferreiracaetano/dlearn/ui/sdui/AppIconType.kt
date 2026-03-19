@@ -8,7 +8,7 @@ enum class AppIconType {
     SEARCH,
     FAVORITE,
     PERSON,
-    NEW,
+    WATCHLIST,
     LOCK,
     NOTIFICATIONS,
     LANGUAGE,

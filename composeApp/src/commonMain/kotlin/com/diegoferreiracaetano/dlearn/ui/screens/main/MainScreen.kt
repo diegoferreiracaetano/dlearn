@@ -10,6 +10,8 @@ import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarItem
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarListComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavItem
 import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -23,7 +25,6 @@ import org.koin.compose.koinInject
 fun MainScreen(
     onItemClick: (String) -> Unit,
     onTabSelected: (String) -> Unit,
-    onClose: () -> Unit,
     onSearchClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = koinInject(),
@@ -36,7 +37,6 @@ fun MainScreen(
             currentRoute = currentRoute,
             onSearchClick = onSearchClick,
             onItemClick = onItemClick,
-            onClose = onClose,
             onTabSelected = onTabSelected,
             onRetry = viewModel::retry
         )
@@ -51,7 +51,7 @@ fun MainScreen(
 
 @Composable
 fun MainContent(
-    uiState: UIState<Screen>,
+    uiState: UIState,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
@@ -66,26 +66,35 @@ fun MainContent(
 fun MainScreenPreview() {
     val bottomNavItems = listOf(
         BottomNavItem(NavigationRoutes.HOME, NavigationRoutes.HOME, AppIconType.HOME),
-        BottomNavItem(NavigationRoutes.NEW, NavigationRoutes.NEW, AppIconType.NEW),
-        BottomNavItem(NavigationRoutes.FAVORITE, NavigationRoutes.FAVORITE, AppIconType.STAR),
+        BottomNavItem(NavigationRoutes.WATCHLIST, NavigationRoutes.WATCHLIST, AppIconType.WATCHLIST),
+        BottomNavItem(NavigationRoutes.FAVORITE, NavigationRoutes.FAVORITE, AppIconType.FAVORITE),
         BottomNavItem(NavigationRoutes.PROFILE, NavigationRoutes.PROFILE, AppIconType.PERSON)
     )
 
+    val selectedRoute = NavigationRoutes.HOME
+
     val components = listOf(
         AppContainerComponent(
-            topBar = AppTopBarComponent(title = "DLearn", showSearch = true),
+            topBar = AppTopBarListComponent(
+                listOf(
+                    AppTopBarItem(
+                        AppTopBarComponent(title = "DLearn", showSearch = true),
+                        selectedRoute)
+                ),
+                selectedRoute =selectedRoute
+            ),
             bottomBar = BottomNavigationComponent(
                 items = bottomNavItems,
-                selectedRoute = NavigationRoutes.HOME
+                selectedRoute = selectedRoute
             ),
             components = listOf()
         )
     )
 
     DLearnTheme {
-         MainContent(
-             uiState = UIState.Success(Screen(id = "main", components = components)),
-             actions = ComponentActions()
-         )
+        MainContent(
+            uiState = UIState.Success(Screen(components = components)),
+            actions = ComponentActions()
+        )
     }
 }

@@ -1,5 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.diegoferreiracaetano.dlearn.designsystem.components.feedback.AppFeedback
@@ -7,6 +9,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSou
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppFeedbackComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.LocalContentMaxHeight
 
 class AppFeedbackRenderer : ComponentRenderer {
     @Composable
@@ -16,6 +19,7 @@ class AppFeedbackRenderer : ComponentRenderer {
         modifier: Modifier
     ) {
         val feedbackComponent = component as? AppFeedbackComponent ?: return
+        val maxHeight = LocalContentMaxHeight.current
 
         AppFeedback(
             title = feedbackComponent.title,
@@ -25,7 +29,7 @@ class AppFeedbackRenderer : ComponentRenderer {
             onPrimary = actions.onRetry,
             secondaryText = feedbackComponent.secondaryText,
             onSecondary = actions.onClose,
-            modifier = modifier
+            modifier = modifier.fillMaxSize().height(maxHeight)
         )
     }
 }

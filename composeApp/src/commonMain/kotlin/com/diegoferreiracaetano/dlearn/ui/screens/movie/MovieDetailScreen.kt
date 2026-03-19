@@ -47,7 +47,7 @@ fun MovieDetailScreen(
 
 @Composable
 fun MovieDetailContent(
-    uiState: UIState<Screen>,
+    uiState: UIState,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
@@ -100,7 +100,7 @@ fun MovieDetailContentPreview() {
 
     DLearnTheme(darkTheme = true) {
         MovieDetailContent(
-            uiState = UIState.Success(Screen(id = "home", components = components)),
+            uiState = UIState.Success(Screen(components = components)),
             actions = ComponentActions()
         )
     }

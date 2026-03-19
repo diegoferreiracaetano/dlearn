@@ -55,4 +55,7 @@
     <string name="action_watch">Assistir</string>
     <string name="action_add_to_list">Minha lista</string>
     <string name="error_provider_link">Não foi possível abrir o link do provedor no momento.</string>
+
+    <string name="watchlist_empty_title">Sua lista de interesses está vazia</string>
+    <string name="watchlist_empty_description">Salve filmes e séries para assistir mais tarde e eles aparecerão aqui.</string>
 </resources>

@@ -1,0 +1,12 @@
+{
+    "id": "watchlist",
+    "showSearch": false,
+    "components": [
+      {
+        "type": "com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent",
+        "title": "WATCHLIST_EMPTY_TITLE",
+        "description": "WATCHLIST_EMPTY_DESCRIPTION",
+        "image": "WATCHLIST"
+      }
+    ]
+}

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="76dp"
+    android:height="76dp"
+    android:viewportWidth="76"
+    android:viewportHeight="76">
+
+    <group>
+
+        <!-- Background circle -->
+        <path
+            android:fillColor="#12CDD9"
+            android:fillType="evenOdd"
+            android:pathData="M38 4C19.2 4 4 19.2 4 38C4 56.8 19.2 72 38 72C56.8 72 72 56.8 72 38C72 19.2 56.8 4 38 4Z"/>
+
+        <!-- Card / screen -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillType="evenOdd"
+            android:pathData="M18 20H58C60.2 20 62 21.8 62 24V48C62 50.2 60.2 52 58 52H18C15.8 52 14 50.2 14 48V24C14 21.8 15.8 20 18 20Z"/>
+
+        <!-- Play icon -->
+        <path
+            android:fillColor="#FF8700"
+            android:pathData="M34 30L46 36L34 42Z"/>
+
+        <!-- Checklist lines -->
+        <path
+            android:fillColor="#12CDD9"
+            android:pathData="M20 56H40V59H20Z"/>
+        <path
+            android:fillColor="#12CDD9"
+            android:pathData="M20 62H50V65H20Z"/>
+
+        <!-- Check icon -->
+        <path
+            android:fillColor="#FFC144"
+            android:pathData="M52 56C54.2 56 56 57.8 56 60C56 62.2 54.2 64 52 64C49.8 64 48 62.2 48 60C48 57.8 49.8 56 52 56Z"/>
+
+        <path
+            android:fillColor="#000000"
+            android:pathData="M50.5 60L51.8 61.5L54 58.8L55.2 60L51.8 64L49.2 61.2Z"/>
+
+        <!-- Top dots (like items) -->
+        <path
+            android:fillColor="#000000"
+            android:pathData="M26 25C27 25 28 26 28 27C28 28 27 29 26 29C25 29 24 28 24 27C24 26 25 25 26 25Z"/>
+
+        <path
+            android:fillColor="#000000"
+            android:pathData="M32 25C33 25 34 26 34 27C34 28 33 29 32 29C31 29 30 28 30 27C30 26 31 25 32 25Z"/>
+
+    </group>
+</vector>

@@ -39,7 +39,7 @@ fun ProfileScreen(
 
 @Composable
 fun ProfileContent(
-    uiState: UIState<Screen>,
+    uiState: UIState,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
@@ -54,7 +54,6 @@ fun ProfileContent(
 @Composable
 fun ProfileContentPreview() {
     val screen = Screen(
-        id = "profile",
         components = listOf(
             AppContainerComponent(
                 topBar = AppTopBarComponent(title = "Profile"),

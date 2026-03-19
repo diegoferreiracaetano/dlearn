@@ -9,7 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
 import com.diegoferreiracaetano.dlearn.designsystem.components.movie.MovieItem
-import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
+import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponent
+import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponents
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,32 +32,37 @@ data class UiState<out T>(
 )
 
 @Composable
-fun UIState<Screen>.Render(
+fun Screen.Render(
+    actions: ComponentActions,
+    modifier: Modifier = Modifier
+) {
+    RenderComponents(
+        components = this.components,
+        actions = actions,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun UIState.Render(
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
     when (this) {
-        is UIState.Loading -> {
-            RenderComponentFactory.Render(
-                component = AppLoadingComponent,
-                actions = actions,
-                modifier = modifier
-            )
-        }
+        is UIState.Loading -> RenderComponent(
+            component = AppLoadingComponent,
+            actions = actions,
+            modifier = modifier
+        )
 
-        is UIState.Error -> {
-            RenderComponentFactory.Render(
-                component = AppErrorComponent(
-                    throwable = this.throwable
-                ),
-                actions = actions,
-                modifier = modifier
-            )
-        }
+        is UIState.Error -> RenderComponent(
+            component = AppErrorComponent(this.throwable),
+            actions = actions,
+            modifier = modifier
+        )
 
         is UIState.Success -> {
-            RenderComponentFactory.Render(
-                components = data.components,
+            this.Render(
                 actions = actions,
                 modifier = modifier
             )

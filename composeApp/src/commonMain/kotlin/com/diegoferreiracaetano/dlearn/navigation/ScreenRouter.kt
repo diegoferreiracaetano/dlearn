@@ -7,19 +7,19 @@ sealed class ScreenRouter(
     val route: String,
 ) {
     object Home : ScreenRouter(NavigationRoutes.HOME)
-    object New : ScreenRouter(NavigationRoutes.NEW)
-    object Favorites : ScreenRouter(NavigationRoutes.FAVORITE)
     object Profile : ScreenRouter(NavigationRoutes.PROFILE)
+    object Watchlist : ScreenRouter(NavigationRoutes.WATCHLIST)
+    object Favorite : ScreenRouter(NavigationRoutes.FAVORITE)
 
-    object Search : ScreenRouter("search")
-    object Welcome : ScreenRouter("welcome")
-    object Login : ScreenRouter("login")
-    object SignUp : ScreenRouter("signup")
-    object ResetPassword : ScreenRouter("reset_password")
-    object VerifyAccount : ScreenRouter("verify_account")
-    object CreateNewPassword : ScreenRouter("create_new_password")
-    object Onboarding : ScreenRouter("onboarding1")
-    object MovieDetail : ScreenRouter("movie_detail/{movieId}") {
-        fun createRoute(movieId: String) = "movie_detail/${movieId.encodeURL()}"
+    object Search : ScreenRouter(NavigationRoutes.SEARCH)
+    object Welcome : ScreenRouter(NavigationRoutes.WELCOME)
+    object Login : ScreenRouter(NavigationRoutes.LOGIN)
+    object SignUp : ScreenRouter(NavigationRoutes.SIGNUP)
+    object ResetPassword : ScreenRouter(NavigationRoutes.RESET_PASSWORD)
+    object VerifyAccount : ScreenRouter(NavigationRoutes.VERIFY_ACCOUNT)
+    object CreateNewPassword : ScreenRouter(NavigationRoutes.CREATE_NEW_PASSWORD)
+    object Onboarding : ScreenRouter(NavigationRoutes.ONBOARDING)
+    object MovieDetail : ScreenRouter(NavigationRoutes.MOVIE_DETAIL_ROUTE) {
+        fun createRoute(movieId: String) = "${NavigationRoutes.MOVIE_DETAIL}/${movieId.encodeURL()}"
     }
 }

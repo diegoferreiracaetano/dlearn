@@ -1,16 +1,16 @@
 openapi: 3.0.3
 info:
   title: DLearn BFF API
-  description: API for Server-Driven UI in DLearn App
+  description: API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows.
   version: 1.0.0
 servers:
   - url: http://localhost:8081
     description: Local Server
 paths:
-  /v1/home:
+  /v1/main:
     get:
-      summary: Get Home Screen
-      description: Returns the Home screen configuration with SDUI components
+      summary: Get Main Shell
+      description: Returns the main screen shell configuration (container with bottom navigation and initial components).
       parameters: &common_params
         - name: userId
           in: query
@@ -24,6 +24,42 @@ paths:
           schema:
             type: integer
           example: 1
+        - name: Accept-Language
+          in: header
+          required: false
+          schema:
+            type: string
+          example: pt-BR
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
+  /v1/app:
+    post:
+      summary: SDUI Gateway / BFF Generic Endpoint
+      description: Handles all dynamic screens and actions (Favorites, Watchlist, etc.) based on the request path.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
+  /v1/home:
+    get:
+      summary: Get Home Screen
+      description: Returns the Home screen configuration with SDUI components
+      parameters: 
+        - <<: *common_params
         - name: type
           in: query
           required: false
@@ -38,12 +74,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Screen'
-  /v1/search:
+  /v1/search/main:
     get:
-      summary: Get Search Shell
-      description: Returns the search screen shell configuration (container and search bar layout).
+      summary: Get Search Main Content
+      description: Returns the initial search screen configuration.
       parameters:
         - *common_params
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -51,18 +92,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Screen'
-  /v1/search/content:
+  /v1/search/result:
     get:
-      summary: Search Content
-      description: Returns the search content results based on the query, to be displayed inside the Search Shell.
+      summary: Search Content Result
+      description: Returns the search results based on the query.
       parameters:
+        - *common_params
         - name: q
           in: query
-          required: false
+          required: true
           schema:
             type: string
           example: Spider-Man
-        - *common_params
       responses:
         '200':
           description: OK
@@ -89,9 +130,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Screen'
+  /v1/profile:
+    get:
+      summary: Get Profile Screen
+      description: Returns the Profile screen configuration
+      parameters:
+        - *common_params
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
 
 components:
   schemas:
+    AppRequest:
+      type: object
+      required:
+        - path
+      properties:
+        path:
+          type: string
+          description: The target route or action (e.g., 'watchlist', 'favorite')
+        params:
+          type: object
+          additionalProperties:
+            type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
     Screen:
       type: object
       properties:
@@ -202,11 +272,13 @@ components:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
-    MovieHeaderComponent:
+    AppMovieDetailHeaderComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
           properties:
+            title:
+              type: string
             imageUrl:
               type: string
             year:
@@ -216,30 +288,37 @@ components:
             genre:
               type: string
             rating:
+              type: number
+            trailerId:
               type: string
-    ActionButtonsComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            primaryButton:
-              $ref: '#/components/schemas/ActionButton'
-            secondaryButtons:
+            downloadActionUrl:
+              type: string
+            shareActionUrl:
+              type: string
+            isFavorite:
+              type: boolean
+            isInList:
+              type: boolean
+            providers:
               type: array
               items:
-                $ref: '#/components/schemas/ActionButton'
-    ActionButton:
+                $ref: '#/components/schemas/WatchProviderComponent'
+    WatchProviderComponent:
       type: object
       properties:
-        id:
+        name:
           type: string
-        label:
+        iconUrl:
           type: string
-        icon:
+        priceInfo:
           type: string
-        actionUrl:
+        appUrl:
           type: string
-    ExpandableTextComponent:
+        webUrl:
+          type: string
+        tmdbUrl:
+          type: string
+    AppExpandableSectionComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
@@ -248,64 +327,167 @@ components:
               type: string
             text:
               type: string
-            moreLabel:
-              type: string
-    CastCarouselComponent:
+            maxLines:
+              type: integer
+    CarouselComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
           properties:
             title:
               type: string
-            cast:
+            items:
               type: array
               items:
-                $ref: '#/components/schemas/CastMember'
-    CastMember:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        role:
-          type: string
-        imageUrl:
-          type: string
-    EpisodeListComponent:
+                $ref: '#/components/schemas/Component'
+    MovieCarouselComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
           properties:
             title:
               type: string
-            seasons:
+            items:
               type: array
               items:
-                type: string
-            selectedSeason:
+                $ref: '#/components/schemas/MovieItemComponent'
+    BannerCarouselComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
               type: string
-            episodes:
+            items:
               type: array
               items:
-                $ref: '#/components/schemas/EpisodeItem'
-    EpisodeItem:
+                $ref: '#/components/schemas/MovieItemComponent'
+    FullScreenBannerComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+            subtitle:
+              type: string
+            imageUrl:
+              type: string
+            actionUrl:
+              type: string
+    ChipGroupComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/ChipItem'
+    ChipItem:
       type: object
       properties:
         id:
           type: string
-        title:
+        label:
           type: string
-        duration:
-          type: string
-        description:
-          type: string
-        imageUrl:
-          type: string
-        isPremium:
+        isSelected:
           type: boolean
+        hasDropDown:
+          type: boolean
+        isFilter:
+          type: boolean
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChipItem'
+    UserRowComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            role:
+              type: string
+            imageUrl:
+              type: string
+    ProfileRowComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            imageUrl:
+              type: string
+            actionUrl:
+              type: string
+    PremiumBannerComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+            description:
+              type: string
+            icon:
+              type: string
+            actionUrl:
+              type: string
+    SectionComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/SectionItem'
+    SectionItem:
+      type: object
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+        icon:
+          type: string
         actionUrl:
           type: string
+    AppSectionTitleComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+    FooterComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            label:
+              type: string
+            actionUrl:
+              type: string
+    AppLoadingComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+    AppErrorComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
     BottomNavigationComponent:
       allOf:
         - $ref: '#/components/schemas/Component'

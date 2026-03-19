@@ -16,7 +16,7 @@ class AppListRenderer : ComponentRenderer {
         
         AppList(modifier = modifier.fillMaxSize()) {
             items(listComponent.components) { child ->
-                RenderComponentFactory.Render(
+                RenderComponent(
                     component = child,
                     actions = actions
                 )

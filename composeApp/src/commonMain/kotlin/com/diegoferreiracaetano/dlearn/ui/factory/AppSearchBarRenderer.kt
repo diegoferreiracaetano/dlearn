@@ -33,7 +33,7 @@ class AppSearchBarRenderer : ComponentRenderer {
             placeholder = searchComponent.placeholder,
             modifier = modifier.focusRequester(focusRequester),
             content = {
-                RenderComponentFactory.Render(
+                RenderComponents(
                     components = searchComponent.components,
                     actions = actions
                 )

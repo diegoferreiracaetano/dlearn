@@ -2,37 +2,48 @@ package com.diegoferreiracaetano.dlearn.ui.screens.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
+import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppAction
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class AppViewModel(
-    private val repository: MainRepository
+    private val repository: AppRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
-    val uiState = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
+    val uiState: StateFlow<UIState> = _uiState.asStateFlow()
 
-    init {
-        loadContent()
+    private var lastRequest: AppRequest? = null
+
+    fun loadContent(path: String, params: Map<String, String>? = null, metadata: Map<String, String>? = null) {
+        val request = AppRequest(path, params, metadata)
+        lastRequest = request
+        executeRequest(request)
     }
 
-    fun loadContent() {
+    fun handleAction(action: AppAction) {
+        when (action) {
+            is AppAction.AppCall -> {
+                executeRequest(AppRequest(action.path, action.params, action.metadata))
+            }
+            else -> { /* Navigation and Deeplink are handled by the UI/Navigation layer */ }
+        }
+    }
+
+    private fun executeRequest(request: AppRequest) {
         viewModelScope.launch {
-            repository.getContent()
-                .onStart { _uiState.update { UIState.Loading } }
-                .catch { error -> _uiState.update { UIState.Error(error) } }
-                .collect { screen -> _uiState.update { UIState.Success(screen) } }
+            repository.execute(request.path, request.params, request.metadata)
+                .onStart { _uiState.value = UIState.Loading }
+                .catch { error -> _uiState.value = UIState.Error(error) }
+                .collect { screen -> _uiState.value = UIState.Success(screen) }
         }
     }
 
     fun retry() {
-        loadContent()
+        lastRequest?.let { executeRequest(it) }
     }
 }

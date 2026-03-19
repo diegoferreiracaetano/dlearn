@@ -1,6 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
-import com.diegoferreiracaetano.dlearn.ComponentIds
+import com.diegoferreiracaetano.dlearn.AppConstants
 import com.diegoferreiracaetano.dlearn.HomeFilterIds
 import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
 import com.diegoferreiracaetano.dlearn.domain.models.HomeDomainData
@@ -22,7 +22,6 @@ class HomeScreenBuilder(
 
         components.add(
             ChipGroupComponent(
-                id = ComponentIds.FILTERS,
                 items = listOf(
                     ChipItem(
                         id = HomeFilterIds.SERIES,
@@ -37,7 +36,6 @@ class HomeScreenBuilder(
                 )
             )
         )
-
         data.banner?.let {
             components.add(mapper.toBannerMain(it))
         }
@@ -57,9 +55,7 @@ class HomeScreenBuilder(
         }
 
         return Screen(
-            id = ComponentIds.HOME_SCREEN,
-            components = components,
-            showSearch = true
+            components = components
         )
     }
 }

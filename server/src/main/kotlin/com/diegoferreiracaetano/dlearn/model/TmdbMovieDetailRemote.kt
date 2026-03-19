@@ -1,5 +1,9 @@
 package com.diegoferreiracaetano.dlearn.model
 
+import com.diegoferreiracaetano.dlearn.TmdbConstants
+import com.diegoferreiracaetano.dlearn.domain.video.MediaType
+import com.diegoferreiracaetano.dlearn.domain.video.Video
+import com.diegoferreiracaetano.dlearn.domain.video.VideoCategory
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -21,6 +25,22 @@ data class TmdbMovieDetailRemote(
     @SerialName("external_ids") val externalIds: TmdbExternalIdsRemote? = null,
     @SerialName("watch/providers") val watchProviders: TmdbWatchProvidersResponse? = null
 )
+
+fun TmdbMovieDetailRemote.toVideo(
+    mediaType: MediaType
+): Video {
+    return Video(
+        id = id.toString(),
+        title = title ?: name ?: "",
+        subtitle = (releaseDate ?: firstAirDate ?: "").take(4),
+        description = overview ?: "",
+        url = "",
+        imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}$posterPath",
+        rating = voteAverage?.toFloat(),
+        mediaType = mediaType,
+        categories = genres.map { VideoCategory(id = it.id.toString(), title = it.name) }
+    )
+}
 
 @Serializable
 data class TmdbExternalIdsRemote(

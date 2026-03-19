@@ -1,37 +1,20 @@
 package com.diegoferreiracaetano.dlearn.orchestrator
 
-import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetSearchDataUseCase
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetHomeDataUseCase
+import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.SearchScreenBuilder
-import com.diegoferreiracaetano.dlearn.ui.sdui.MovieItemComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
-import java.util.Locale
 
 class SearchOrchestrator(
     private val getSearchDataUseCase: GetSearchDataUseCase,
     private val getHomeDataUseCase: GetHomeDataUseCase,
+    private val videoMapper: VideoMapper,
     private val searchScreenBuilder: SearchScreenBuilder
 ) {
     suspend fun searchMain(userId: String, lang: String): Screen {
         val homeData = getHomeDataUseCase.execute(userId)
-        val popularItems = homeData.popular.map { video ->
-            MovieItemComponent(
-                id = video.id,
-                title = video.title,
-                subtitle = video.subtitle,
-                imageUrl = video.imageUrl,
-                rating = video.rating?.let { String.format(Locale.US, "%.1f", it) },
-                year = video.subtitle,
-                duration = null,
-                contentRating = "L",
-                genre = video.categories.firstOrNull()?.title,
-                movieType = "Filme",
-                actionUrl = "/video/${video.id}"
-            ) as Component
-        }
-        
+        val popularItems = videoMapper.toMovieItemComponents(homeData.popular)
         return searchScreenBuilder.buildMain(lang, popularItems)
     }
 
@@ -41,21 +24,7 @@ class SearchOrchestrator(
         query: String
     ): Screen {
         val videos = getSearchDataUseCase.execute(query)
-        val results = videos.map { video ->
-             MovieItemComponent(
-                id = video.id,
-                title = video.title,
-                subtitle = video.subtitle,
-                imageUrl = video.imageUrl,
-                rating = video.rating?.let { String.format(Locale.US, "%.1f", it) },
-                year = video.subtitle,
-                duration = null,
-                contentRating = "L",
-                genre = video.categories.firstOrNull()?.title,
-                movieType = if (video.mediaType == MediaType.MOVIE) "Filme" else "Série",
-                actionUrl = "/video/${video.id}"
-            ) as Component
-        }
+        val results = videoMapper.toMovieItemComponents(videos)
         return searchScreenBuilder.buildContent(query, results, lang)
     }
 }

@@ -9,9 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
 import com.diegoferreiracaetano.dlearn.designsystem.components.movie.MovieItem
+import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponent
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponents
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
+import dlearn.composeapp.generated.resources.Res
+import dlearn.composeapp.generated.resources.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -23,6 +26,7 @@ import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import org.jetbrains.compose.resources.StringResource
 
 @Immutable
 data class UiState<out T>(
@@ -126,4 +130,32 @@ fun MovieItemComponent.toMovieItem(): MovieItem {
         isPremium = this.isPremium,
         rank = this.rank
     )
+}
+
+fun AppStringType?.toResource(): StringResource? {
+    return when (this) {
+        AppStringType.PROFILE_TITLE -> Res.string.profile_title
+        AppStringType.HOME_TITLE -> Res.string.home_title
+        AppStringType.NAV_HOME -> Res.string.nav_home
+        AppStringType.NAV_WATCHLIST -> Res.string.nav_watchlist
+        AppStringType.NAV_SEARCH -> Res.string.nav_search
+        AppStringType.NAV_FAVORITES -> Res.string.nav_favorites
+        AppStringType.NAV_PROFILE -> Res.string.nav_profile
+        AppStringType.EDIT_PROFILE_TITLE -> Res.string.edit_profile_title
+        AppStringType.FIELD_FULL_NAME -> Res.string.field_full_name
+        AppStringType.FIELD_EMAIL -> Res.string.field_email
+        AppStringType.FIELD_PASSWORD -> Res.string.field_password
+        AppStringType.FIELD_PHONE_NUMBER -> Res.string.field_phone_number
+        AppStringType.SAVE_CHANGES -> Res.string.save_changes
+        else -> null
+    }
+}
+
+fun AppTextFieldType.toTextFieldType(): TextFieldType {
+    return when (this) {
+        AppTextFieldType.EMAIL -> TextFieldType.EMAIL
+        AppTextFieldType.PASSWORD -> TextFieldType.PASSWORD
+        AppTextFieldType.PHONE -> TextFieldType.PHONE
+        else -> TextFieldType.TEXT
+    }
 }

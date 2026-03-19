@@ -14,6 +14,58 @@ class ProfileMapper(private val i18n: I18nProvider) {
         )
     }
 
+    fun toEditHeader(data: ProfileDomainData): AppProfileHeaderComponent {
+        return AppProfileHeaderComponent(
+            name = data.name,
+            email = data.email,
+            imageUrl = data.imageUrl,
+            onImagePickedAction = AppAction.AppCall(
+                path = "/v1/profile/image",
+                metadata = mapOf("userId" to data.id)
+            )
+        )
+    }
+
+    fun toEditFields(data: ProfileDomainData, lang: String): List<Component> {
+        return listOf(
+            AppTextFieldComponent(
+                key = "full_name",
+                value = data.name,
+                label = AppStringType.FIELD_FULL_NAME,
+                placeholder = AppStringType.FIELD_FULL_NAME,
+                fieldType = AppTextFieldType.NONE
+            ),
+            AppTextFieldComponent(
+                key = "email",
+                value = data.email,
+                label = AppStringType.FIELD_EMAIL,
+                placeholder = AppStringType.FIELD_EMAIL,
+                fieldType = AppTextFieldType.EMAIL
+            ),
+            AppTextFieldComponent(
+                key = "password",
+                value = data.password ?: "************",
+                label = AppStringType.FIELD_PASSWORD,
+                placeholder = AppStringType.FIELD_PASSWORD,
+                fieldType = AppTextFieldType.PASSWORD
+            ),
+            AppTextFieldComponent(
+                key = "phone",
+                value = data.phoneNumber ?: "",
+                label = AppStringType.FIELD_PHONE_NUMBER,
+                placeholder = AppStringType.FIELD_PHONE_NUMBER,
+                fieldType = AppTextFieldType.PHONE
+            )
+        )
+    }
+
+    fun toSaveButton(lang: String): FooterComponent {
+        return FooterComponent(
+            label = i18n.getString(AppStringType.SAVE_CHANGES, lang),
+            actionUrl = "/v1/profile/update"
+        )
+    }
+
     fun toPremiumBanner(data: ProfileDomainData, lang: String): PremiumBannerComponent? {
         if (!data.isPremium) return null
         return PremiumBannerComponent(

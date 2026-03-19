@@ -13,4 +13,8 @@ class InMemoryCache<K, V>(private val expiration: Duration) {
         }
         return block().also { cache[key] = it to now }
     }
+
+    fun clear() {
+        cache.clear()
+    }
 }

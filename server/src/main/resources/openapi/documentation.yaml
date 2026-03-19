@@ -143,6 +143,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Screen'
+  /v1/profile/edit:
+    get:
+      summary: Get Edit Profile Screen
+      description: Returns the Edit Profile screen configuration with input fields
+      parameters:
+        - *common_params
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
+  /v1/profile/update:
+    post:
+      summary: Update Profile Data
+      description: Updates the user profile data based on form submission
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
 
 components:
   schemas:
@@ -449,6 +490,38 @@ components:
               type: string
             editActionUrl:
               type: string
+    AppProfileHeaderComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            imageUrl:
+              type: string
+            onImagePickedAction:
+              $ref: '#/components/schemas/AppAction'
+    AppTextFieldComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            value:
+              type: string
+            placeholder:
+              $ref: '#/components/schemas/AppStringType'
+            label:
+              $ref: '#/components/schemas/AppStringType'
+            supportingText:
+              $ref: '#/components/schemas/AppStringType'
+            isError:
+              type: boolean
+            fieldType:
+              $ref: '#/components/schemas/AppTextFieldType'
+            key:
+              type: string
     AppFeedbackComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
@@ -581,6 +654,65 @@ components:
         - FAVORITE
         - EMPTY_STATE
         - UNKNOWN
+    AppStringType:
+      type: string
+      enum:
+        - PROFILE_TITLE
+        - PREMIUM_MEMBER
+        - PREMIUM_DESCRIPTION
+        - SECTION_ACCOUNT
+        - ITEM_MEMBER
+        - ITEM_PASSWORD
+        - SECTION_GENERAL
+        - ITEM_NOTIFICATION
+        - ITEM_LANGUAGE
+        - ITEM_COUNTRY
+        - ITEM_CLEAR_CACHE
+        - SECTION_MORE
+        - ITEM_LEGAL
+        - ITEM_HELP
+        - ITEM_ABOUT
+        - LOGOUT
+        - HOME_TITLE
+        - HOME_SUBTITLE
+        - FILTER_SERIES
+        - FILTER_MOVIES
+        - FILTER_CATEGORIES
+        - SECTION_TOP_10
+        - SECTION_POPULAR
+        - NAV_HOME
+        - NAV_WATCHLIST
+        - NAV_SEARCH
+        - NAV_FAVORITES
+        - NAV_PROFILE
+        - APP_NAME
+        - EDIT_PROFILE_TITLE
+        - FIELD_FULL_NAME
+        - FIELD_EMAIL
+        - FIELD_PASSWORD
+        - FIELD_PHONE_NUMBER
+        - SAVE_CHANGES
+        - ERROR_NAME_EXIST
+        - DETAIL_TRAILER
+        - DETAIL_STORY_LINE
+        - DETAIL_CAST_CREW
+        - DETAIL_EPISODE
+        - DETAIL_WATCH_NOW
+        - SEARCH_PLACEHOLDER
+        - SEARCH_EMPTY_TITLE
+        - SEARCH_EMPTY_DESCRIPTION
+        - WATCHLIST_EMPTY_TITLE
+        - WATCHLIST_EMPTY_DESCRIPTION
+        - FAVORITE_EMPTY_TITLE
+        - FAVORITE_EMPTY_DESCRIPTION
+        - UNKNOWN
+    AppTextFieldType:
+      type: string
+      enum:
+        - NONE
+        - EMAIL
+        - PASSWORD
+        - PHONE
     AppAction:
       type: object
       discriminator:

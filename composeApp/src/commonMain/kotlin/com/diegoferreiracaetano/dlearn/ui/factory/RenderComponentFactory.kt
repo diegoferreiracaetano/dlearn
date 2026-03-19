@@ -68,6 +68,8 @@ class RenderComponentFactory(
     private val movieItemRenderer: MovieItemRenderer,
     private val searchContentRenderer: AppSearchContentRenderer,
     private val appSectionTitleRenderer: AppSectionTitleRenderer,
+    private val appProfileHeaderRenderer: AppProfileHeaderRenderer,
+    private val appTextFieldRenderer: AppTextFieldRenderer,
 ) {
 
     @Composable
@@ -114,6 +116,8 @@ class RenderComponentFactory(
             is MovieItemComponent -> movieItemRenderer.Render(component, actions, modifier)
             is AppSearchContentComponent -> searchContentRenderer.Render(component, actions, modifier)
             is AppSectionTitleComponent -> appSectionTitleRenderer.Render(component, actions, modifier)
+            is AppProfileHeaderComponent -> appProfileHeaderRenderer.Render(component, actions, modifier)
+            is AppTextFieldComponent -> appTextFieldRenderer.Render(component, actions, modifier)
         }
     }
 }

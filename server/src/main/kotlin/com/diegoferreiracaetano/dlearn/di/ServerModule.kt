@@ -46,9 +46,11 @@ val serverModule = module {
     // Profile
     single { ProfileDataService() }
     single { GetProfileDataUseCase(get()) }
+    single { UpdateProfileDataUseCase(get()) }
     single { ProfileMapper(get()) }
     single { ProfileScreenBuilder(get(), get()) }
-    single { ProfileOrchestrator(get(), get()) }
+    single { EditProfileScreenBuilder(get(), get()) }
+    single { ProfileOrchestrator(get(), get(), get(), get()) }
 
     // Movie Detail
     single { MovieDetailDataService(get(), get()) }

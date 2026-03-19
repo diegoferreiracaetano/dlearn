@@ -9,13 +9,13 @@ class UserNetworkDataSource {
     private var users =
         listOf(
             UserRemote(
-                id = 1,
+                id = "",
                 name = "Diego",
                 email = "diego@gmail.com",
                 password = "teste",
             ),
             UserRemote(
-                id = 2,
+                id = "",
                 name = "Lucas",
                 email = "lucas@gmail.com",
                 password = "teste",

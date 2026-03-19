@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
+import kotlin.random.Random
 
 class CreateAccountUseCase(
     private val repository: UserRepository,
@@ -30,8 +31,9 @@ class CreateAccountUseCase(
 
     private fun user() =
         User(
-            name = savedData.value[CreateAccountStepType.NAME]!!,
-            email = savedData.value[CreateAccountStepType.EMAIL]!!,
-            password = savedData.value[CreateAccountStepType.PASSWORD]!!,
+            id = Random.nextInt(0, 1000000).toString(),
+            name = savedData.value[CreateAccountStepType.NAME] ?: "",
+            email = savedData.value[CreateAccountStepType.EMAIL] ?: "",
+            password = savedData.value[CreateAccountStepType.PASSWORD] ?: "",
         )
 }

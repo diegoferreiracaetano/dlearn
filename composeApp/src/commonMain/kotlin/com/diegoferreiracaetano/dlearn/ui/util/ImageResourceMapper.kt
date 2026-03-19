@@ -17,3 +17,7 @@ fun AppImageType?.toImageSource(): AppImageSource? {
     }
     return resource?.let { AppImageSource.Resource(it) }
 }
+
+fun String?.toImageSource(): AppImageSource? {
+    return this?.let { AppImageSource.Url(it) }
+}

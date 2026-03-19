@@ -58,4 +58,19 @@
 
     <string name="watchlist_empty_title">Sua lista de interesses está vazia</string>
     <string name="watchlist_empty_description">Salve filmes e séries para assistir mais tarde e eles aparecerão aqui.</string>
+
+    <!-- Profile & Edit Profile -->
+    <string name="profile_title">Perfil</string>
+    <string name="home_title">Início</string>
+    <string name="nav_home">Início</string>
+    <string name="nav_watchlist">Lista</string>
+    <string name="nav_search">Buscar</string>
+    <string name="nav_favorites">Favoritos</string>
+    <string name="nav_profile">Perfil</string>
+    <string name="edit_profile_title">Editar Perfil</string>
+    <string name="field_full_name">Nome Completo</string>
+    <string name="field_email">E-mail</string>
+    <string name="field_password">Senha</string>
+    <string name="field_phone_number">Telefone</string>
+    <string name="save_changes">Salvar Alterações</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.ButtonType
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppAction
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.FooterComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
@@ -21,7 +22,16 @@ class FooterRenderer : ComponentRenderer {
         val footer = component as? FooterComponent ?: return
         AppButton(
             text = footer.label,
-            onClick = { footer.actionUrl?.let { actions.onItemClick(it) } },
+            onClick = {
+                val url = footer.actionUrl
+                if (url != null) {
+                    if (url.startsWith("/v1/")) {
+                        actions.onAction(AppAction.AppCall(path = url))
+                    } else {
+                        actions.onItemClick(url)
+                    }
+                }
+            },
             type = ButtonType.SECONDARY,
             modifier = modifier
                 .fillMaxWidth()

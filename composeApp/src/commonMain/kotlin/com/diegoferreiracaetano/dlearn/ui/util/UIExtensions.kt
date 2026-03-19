@@ -62,7 +62,8 @@ fun UIState.Render(
         )
 
         is UIState.Success -> {
-            this.Render(
+            RenderComponents(
+                components = screen.components,
                 actions = actions,
                 modifier = modifier
             )

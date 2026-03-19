@@ -184,9 +184,13 @@ components:
         - type: object
           properties:
             topBar:
-              $ref: '#/components/schemas/AppTopBarComponent'
+              $ref: '#/components/schemas/Component'
+            searchBar:
+              $ref: '#/components/schemas/Component'
+            chipGroup:
+              $ref: '#/components/schemas/Component'
             bottomBar:
-              $ref: '#/components/schemas/BottomNavigationComponent'
+              $ref: '#/components/schemas/Component'
             components:
               type: array
               items:
@@ -204,6 +208,24 @@ components:
               type: string
             showSearch:
               type: boolean
+    AppTopBarListComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/AppTopBarItem'
+            selectedRoute:
+              type: string
+    AppTopBarItem:
+      type: object
+      properties:
+        topBar:
+          $ref: '#/components/schemas/AppTopBarComponent'
+        route:
+          type: string
     AppSearchBarComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
@@ -213,7 +235,7 @@ components:
               type: string
             placeholder:
               type: string
-            content:
+            components:
               type: array
               items:
                 $ref: '#/components/schemas/Component'
@@ -226,8 +248,8 @@ components:
               type: string
             description:
               type: string
-            imageSource:
-              type: string
+            image:
+              $ref: '#/components/schemas/AppImageType'
     AppListComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
@@ -237,7 +259,7 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Component'
-    MovieItemComponent:
+    movie_item:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
@@ -268,7 +290,7 @@ components:
               type: integer
             actionUrl:
               type: string
-    AppSearchContentComponent:
+    app_search_content:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
@@ -350,7 +372,7 @@ components:
             items:
               type: array
               items:
-                $ref: '#/components/schemas/MovieItemComponent'
+                $ref: '#/components/schemas/movie_item'
     BannerCarouselComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
@@ -361,19 +383,19 @@ components:
             items:
               type: array
               items:
-                $ref: '#/components/schemas/MovieItemComponent'
+                $ref: '#/components/schemas/movie_item'
     FullScreenBannerComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
           properties:
+            id:
+              type: string
             title:
               type: string
             subtitle:
               type: string
             imageUrl:
-              type: string
-            actionUrl:
               type: string
     ChipGroupComponent:
       allOf:
@@ -406,13 +428,13 @@ components:
         - $ref: '#/components/schemas/Component'
         - type: object
           properties:
-            id:
-              type: string
             name:
               type: string
             role:
               type: string
             imageUrl:
+              type: string
+            actionUrl:
               type: string
     ProfileRowComponent:
       allOf:
@@ -425,7 +447,22 @@ components:
               type: string
             imageUrl:
               type: string
-            actionUrl:
+            editActionUrl:
+              type: string
+    AppFeedbackComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+            description:
+              type: string
+            imageSource:
+              type: string
+            primaryText:
+              type: string
+            secondaryText:
               type: string
     PremiumBannerComponent:
       allOf:
@@ -437,7 +474,7 @@ components:
             description:
               type: string
             icon:
-              type: string
+              $ref: '#/components/schemas/AppIconType'
             actionUrl:
               type: string
     SectionComponent:
@@ -461,7 +498,7 @@ components:
         value:
           type: string
         icon:
-          type: string
+          $ref: '#/components/schemas/AppIconType'
         actionUrl:
           type: string
     AppSectionTitleComponent:
@@ -488,6 +525,10 @@ components:
       allOf:
         - $ref: '#/components/schemas/Component'
         - type: object
+    AppMainContentComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
     BottomNavigationComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
@@ -496,17 +537,95 @@ components:
             items:
               type: array
               items:
-                $ref: '#/components/schemas/BottomNavigationItem'
-    BottomNavigationItem:
+                $ref: '#/components/schemas/BottomNavItem'
+            selectedRoute:
+              type: string
+    BottomNavItem:
       type: object
       properties:
-        id:
-          type: string
         label:
           type: string
+        route:
+          type: string
         icon:
+          $ref: '#/components/schemas/AppIconType'
+    AppIconType:
+      type: string
+      enum:
+        - HOME
+        - SEARCH
+        - FAVORITE
+        - PERSON
+        - WATCHLIST
+        - LOCK
+        - NOTIFICATIONS
+        - LANGUAGE
+        - PUBLIC
+        - DELETE
+        - POLICY
+        - HELP
+        - INFO
+        - WORKSPACE_PREMIUM
+        - PLAY_ARROW
+        - DOWNLOAD
+        - SHARE
+        - CALENDAR_MONTH
+        - SCHEDULE
+        - STAR
+        - UNKNOWN
+    AppImageType:
+      type: string
+      enum:
+        - SEARCH
+        - WATCHLIST
+        - FAVORITE
+        - EMPTY_STATE
+        - UNKNOWN
+    AppAction:
+      type: object
+      discriminator:
+        propertyName: type
+      properties:
+        type:
           type: string
-        selectedIcon:
-          type: string
-        actionUrl:
-          type: string
+    deeplink:
+      allOf:
+        - $ref: '#/components/schemas/AppAction'
+        - type: object
+          properties:
+            url:
+              type: string
+            params:
+              type: object
+              additionalProperties:
+                type: string
+    navigation:
+      allOf:
+        - $ref: '#/components/schemas/AppAction'
+        - type: object
+          properties:
+            route:
+              type: string
+            params:
+              type: object
+              additionalProperties:
+                type: string
+    app_call:
+      allOf:
+        - $ref: '#/components/schemas/AppAction'
+        - type: object
+          properties:
+            path:
+              type: string
+            params:
+              type: object
+              additionalProperties:
+                type: string
+            metadata:
+              type: object
+              additionalProperties:
+                type: string
+            onSuccess:
+              $ref: '#/components/schemas/AppAction'
+            onFailure:
+              $ref: '#/components/schemas/AppAction'

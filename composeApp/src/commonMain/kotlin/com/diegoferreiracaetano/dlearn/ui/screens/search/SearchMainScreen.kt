@@ -37,7 +37,7 @@ fun SearchMainScreen(
         )
     }
 
-    SearchScreenContent(
+    SearchMainContent(
         uiState = uiState,
         actions = actions,
         modifier = modifier
@@ -45,7 +45,7 @@ fun SearchMainScreen(
 }
 
 @Composable
-private fun SearchScreenContent(
+private fun SearchMainContent(
     uiState: UIState,
     actions: ComponentActions,
     modifier: Modifier = Modifier
@@ -61,7 +61,7 @@ private fun SearchScreenContent(
 @Composable
 fun SearchScreenLoadingPreview() {
     DLearnTheme {
-        SearchScreenContent(
+        SearchMainContent(
             uiState = UIState.Loading,
             actions = ComponentActions()
         )
@@ -72,7 +72,7 @@ fun SearchScreenLoadingPreview() {
 @Composable
 fun SearchScreenErrorPreview() {
     DLearnTheme {
-        SearchScreenContent(
+        SearchMainContent(
             uiState = UIState.Error(Throwable("Erro de conexão")),
             actions = ComponentActions()
         )
@@ -91,7 +91,7 @@ fun SearchScreenSuccessPreview() {
         )
     )
     DLearnTheme {
-        SearchScreenContent(
+        SearchMainContent(
             uiState = UIState.Success(screen),
             actions = ComponentActions(searchQuery = "Spider-Man")
         )

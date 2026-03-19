@@ -6,23 +6,27 @@ O servidor do DLearn atua como um **Backend for Frontend (BFF)**, fornecendo a e
 
 O servidor segue uma estrutura de **Clean Architecture**:
 
-- `api/controllers/`: Define os endpoints e recebe requisições (ex: `HomeController.kt`).
+- `api/controllers/`: Define os endpoints e recebe requisições (ex: `HomeController.kt`, `AppController.kt`).
 - `orchestrator/`: A camada principal de lógica de negócio do BFF. Coordena a busca de dados e a construção da tela (`Screen`).
 - `domain/`: Entidades de negócio e interfaces dos repositórios.
 - `infrastructure/`: Implementações de repositórios que acessam APIs de terceiros (TMDB) e gerenciam o cache de memória.
+- `ui/screens/`: Builders que transformam dados de domínio em componentes SDUI.
 
 ## 📡 Endpoints Principais
 
+- `GET /v1/main`: Retorna a casca (shell) principal do app (BottomNav + Container).
 - `GET /v1/home`: Retorna a configuração completa da tela inicial.
-- `GET /v1/search`: Retorna os resultados da busca formatados para SDUI.
-- `GET /v1/favorites`: Retorna a lista de favoritos do usuário.
-- `GET /v1/account`: Retorna os detalhes da conta do usuário.
+- `GET /v1/search/main`: Retorna a tela inicial de busca.
+- `GET /v1/search/result?q={query}`: Retorna os resultados da busca.
+- `GET /v1/movie/{movieId}`: Detalhes de um filme/série específicos.
+- `GET /v1/profile`: Dados e estrutura da tela de perfil.
+- `POST /v1/app`: **Gateway SDUI**. Resolve rotas dinâmicas como `favorite` e `watchlist`.
 
 ## ⚡ Performance & Cache
 
-O projeto utiliza **InMemoryCache<K, V>** genérico que armazena os objetos de tela renderizados por **5 minutos**, reduzindo drasticamente o número de chamadas para APIs externas.
+O projeto utiliza um sistema de **Cache** genérico para armazenar objetos de tela renderizados, reduzindo o número de chamadas para APIs externas.
 
-Além disso, o header `Cache-Control: max-age=300` é enviado automaticamente em todas as respostas JSON, permitindo que o App gerencie seu próprio cache HTTP de forma eficiente.
+Além disso, o servidor está preparado para lidar com múltiplos idiomas através do header `Accept-Language` e versões de app via `X-App-Version`.
 
 ## 🏃 Como Rodar Localmente
 

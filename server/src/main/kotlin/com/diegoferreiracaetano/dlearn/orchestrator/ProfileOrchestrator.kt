@@ -28,8 +28,9 @@ class ProfileOrchestrator(
         return editScreenBuilder.build(domainData, lang)
     }
 
-    suspend fun updateProfile(userId: String, data: Map<String, String>) {
-        updateProfileDataUseCase.execute(userId, data)
+    suspend fun updateProfile(userId: String, data: Map<String, String>, lang: String): Screen {
+        val domainData = updateProfileDataUseCase.execute(userId, data)
         profileCache.clear()
+        return editScreenBuilder.build(domainData, lang)
     }
 }

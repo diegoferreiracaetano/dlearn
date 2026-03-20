@@ -8,7 +8,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppAction
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppImageType
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -26,8 +25,8 @@ fun AppScreen(
     onBackClick: () -> Unit = {},
     onTabSelected: (String) -> Unit = {},
     onItemClick: (String) -> Unit = {},
-    onNavigate: (AppAction.Navigation) -> Unit = {},
-    onDeeplink: (AppAction.Deeplink) -> Unit = {},
+    onNavigate: (String) -> Unit = {},
+    onDeeplink: (String) -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: AppViewModel = koinInject(),
 ) {
@@ -37,33 +36,26 @@ fun AppScreen(
         viewModel.loadContent(path, params)
     }
 
-    val actions = remember(onBackClick, onTabSelected, onItemClick, onNavigate, onDeeplink, viewModel) {
+    val actions = remember {
         ComponentActions(
             onItemClick = onItemClick,
             onTabSelected = onTabSelected,
             onBackClick = onBackClick,
-            onAction = { action ->
-                when (action) {
-                    is AppAction.Navigation -> onNavigate(action)
-                    is AppAction.Deeplink -> onDeeplink(action)
-                    is AppAction.AppCall -> viewModel.handleAction(action)
-                }
-            },
             onRetry = viewModel::retry,
-            onQueryChange = { query ->
-                val parts = query.split(":", limit = 2)
-                if (parts.size == 2) {
-                    viewModel.updateFormField(parts[0], parts[1])
+            onQueryChange = viewModel::handleQuery,
+            onAction = { action ->
+                if (action.startsWith("http") || action.startsWith("https")) {
+                    onDeeplink(action)
+                } else if (action.startsWith("app://")) {
+                     onNavigate(action)
+                } else {
+                    viewModel.handleAction(action)
                 }
             }
         )
     }
 
-    AppContent(
-        uiState = uiState,
-        actions = actions,
-        modifier = modifier
-    )
+    AppContent(uiState, actions, modifier)
 }
 
 @Composable

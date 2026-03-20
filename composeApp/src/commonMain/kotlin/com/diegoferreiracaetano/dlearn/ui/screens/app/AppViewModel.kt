@@ -3,9 +3,7 @@ package com.diegoferreiracaetano.dlearn.ui.screens.app
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppAction
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
-import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -15,44 +13,40 @@ class AppViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
-    val uiState: StateFlow<UIState> = _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()
 
-    private val _formData = MutableStateFlow<Map<String, String>>(emptyMap())
-    val formData: StateFlow<Map<String, String>> = _formData.asStateFlow()
-
+    private var formData: Map<String, String> = emptyMap()
     private var lastRequest: AppRequest? = null
 
-    fun loadContent(path: String, params: Map<String, String>? = null, metadata: Map<String, String>? = null) {
-        val request = AppRequest(path, params, metadata)
-        lastRequest = request
-        executeRequest(request)
-    }
-
-    fun updateFormField(key: String, value: String) {
-        _formData.update { it + (key to value) }
-    }
-
-    fun handleAction(action: AppAction) {
-        when (action) {
-            is AppAction.AppCall -> {
-                val combinedParams = (action.params ?: emptyMap()) + _formData.value
-                executeRequest(AppRequest(action.path, combinedParams, action.metadata))
-                // Clear form data after submission if needed, or wait for success
-            }
-            else -> { /* Navigation and Deeplink are handled by the UI/Navigation layer */ }
-        }
-    }
-
-    private fun executeRequest(request: AppRequest) {
-        viewModelScope.launch {
-            repository.execute(request.path, request.params, request.metadata)
-                .onStart { _uiState.value = UIState.Loading }
-                .catch { error -> _uiState.value = UIState.Error(error) }
-                .collect { screen -> _uiState.value = UIState.Success(screen) }
-        }
+    fun loadContent(path: String, params: Map<String, String>? = null) {
+        execute(AppRequest(path, params))
     }
 
     fun retry() {
-        lastRequest?.let { executeRequest(it) }
+        lastRequest?.let(::execute)
+    }
+
+    fun handleQuery(query: String) {
+        val parts = query.split(":", limit = 2)
+        if (parts.size == 2) {
+            formData = formData + (parts[0] to parts[1])
+        }
+    }
+
+    fun handleAction(path: String) {
+        val params = formData
+        execute(AppRequest(path, params))
+        formData = emptyMap()
+    }
+
+    private fun execute(request: AppRequest) {
+        lastRequest = request
+
+        viewModelScope.launch {
+            repository.execute(request.path, request.params, request.metadata)
+                .onStart { _uiState.value = UIState.Loading }
+                .catch { _uiState.value = UIState.Error(it) }
+                .collect { _uiState.value = UIState.Success(it) }
+        }
     }
 }

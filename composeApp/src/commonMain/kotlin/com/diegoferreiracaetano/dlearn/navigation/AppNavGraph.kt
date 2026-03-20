@@ -26,7 +26,6 @@ import com.diegoferreiracaetano.dlearn.ui.screens.main.MainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.onboarding.OnboardingScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchMainScreen
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppAction
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.koinInject
 
@@ -171,8 +170,8 @@ fun AppNavGraph(
                 onBackClick = { navController.popBackStack() },
                 onTabSelected = { route -> navController.navigateToRoute(route) },
                 onItemClick = { route -> navController.navigate(route) },
-                onNavigate = { action -> navController.navigateToRoute(NavigationRoutes.fromAction(action)) },
-                onDeeplink = { action -> uriHandler.openUri(action.url) },
+                onNavigate = { route -> navController.navigateToRoute(route) },
+                onDeeplink = { url -> uriHandler.openUri(url) },
                 modifier = modifier
             )
         }

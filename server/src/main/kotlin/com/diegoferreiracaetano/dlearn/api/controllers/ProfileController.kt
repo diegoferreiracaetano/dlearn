@@ -35,7 +35,9 @@ fun Route.profileController() {
         post("/update") {
             val userId = call.parameters["userId"] ?: "default_user"
             val data = call.receive<Map<String, String>>()
-            orchestrator.updateProfile(userId, data)
+            val lang = call.request.acceptLanguage() ?: "en"
+
+            orchestrator.updateProfile(userId, data, lang)
             call.respond(mapOf("status" to "success"))
         }
     }

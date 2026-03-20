@@ -1,7 +1,5 @@
 package com.diegoferreiracaetano.dlearn
 
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppAction
-
 object NavigationRoutes {
     const val APP_PREFIX = "app"
     const val HOME = "home"
@@ -37,10 +35,6 @@ object NavigationRoutes {
             builder.append("&$PARAMS_ARG=$query")
         }
         return builder.toString()
-    }
-
-    fun fromAction(action: AppAction.Navigation): String {
-        return buildRoute(action.route, action.params)
     }
 
     fun extractPath(route: String?): String {

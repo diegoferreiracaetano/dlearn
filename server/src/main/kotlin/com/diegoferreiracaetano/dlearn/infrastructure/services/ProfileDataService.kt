@@ -17,13 +17,17 @@ class ProfileDataService {
         return currentUser!!
     }
 
-    fun updateProfileData(userId: String, updates: Map<String, String>) {
+    fun updateProfileData(userId: String, updates: Map<String, String>): ProfileDomainData {
         val current = fetchProfileData(userId)
         currentUser = current.copy(
             name = updates["full_name"] ?: current.name,
             email = updates["email"] ?: current.email,
             phoneNumber = updates["phone"] ?: current.phoneNumber
-            // Password logic can be added here if needed
         )
+
+        return if(currentUser != null)
+            currentUser!!
+        else
+            throw IllegalStateException("profile.json not found")
     }
 }

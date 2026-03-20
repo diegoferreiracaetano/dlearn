@@ -1,19 +1,15 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.ButtonType
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppAction
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.FooterComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
-import com.diegoferreiracaetano.dlearn.ui.util.LocalContentMaxHeight
 
 class FooterRenderer : ComponentRenderer {
     @Composable
@@ -29,11 +25,7 @@ class FooterRenderer : ComponentRenderer {
             onClick = {
                 val url = footer.actionUrl
                 if (url != null) {
-                    if (url.startsWith("/v1/")) {
-                        actions.onAction(AppAction.AppCall(path = url))
-                    } else {
-                        actions.onItemClick(url)
-                    }
+                    actions.onAction(url)
                 }
             },
             type = ButtonType.PRIMARY,

@@ -1,6 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.mappers
 
- import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.models.ProfileDomainData
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
@@ -20,10 +20,7 @@ class ProfileMapper(private val i18n: I18nProvider) {
             name = data.name,
             email = data.email,
             imageUrl = data.imageUrl,
-            onImagePickedAction = AppAction.AppCall(
-                path = "/v1/profile/image",
-                metadata = mapOf("userId" to data.id)
-            )
+            onImagePickedAction = "/v1/profile/image"
         )
     }
 

@@ -7,5 +7,5 @@ data class AppProfileHeaderComponent(
     val name: String,
     val email: String,
     val imageUrl: String? = null,
-    val onImagePickedAction: AppAction? = null
+    val onImagePickedAction: String? = null
 ) : Component

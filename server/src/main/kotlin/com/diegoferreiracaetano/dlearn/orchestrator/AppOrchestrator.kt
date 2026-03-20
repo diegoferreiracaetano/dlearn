@@ -23,7 +23,7 @@ class AppOrchestrator(
             NavigationRoutes.WATCHLIST -> handleWatchlistRequest(request, userId, lang)
             NavigationRoutes.PROFILE -> profileOrchestrator.getProfileData(userId, appVersion, lang)
             NavigationRoutes.EDIT_PROFILE -> profileOrchestrator.getEditProfileData(userId, lang)
-            NavigationRoutes.UPDATE_PROFILE -> handleUpdateProfileRequest(request, userId, appVersion, lang)
+            NavigationRoutes.UPDATE_PROFILE -> profileOrchestrator.updateProfile(userId, request.params  ?: emptyMap(), lang)
             else ->  throw IllegalArgumentException("Invalid path: ${request.path} (extracted: $path)")
         }
     }
@@ -44,11 +44,5 @@ class AppOrchestrator(
         } else {
             watchlistOrchestrator.getWatchlist(userId, lang)
         }
-    }
-
-    private suspend fun handleUpdateProfileRequest(request: AppRequest, userId: String, appVersion: Int, lang: String): Screen {
-        val data = request.params ?: emptyMap()
-        profileOrchestrator.updateProfile(userId, data)
-        return profileOrchestrator.getProfileData(userId, appVersion, lang)
     }
 }

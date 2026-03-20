@@ -155,7 +155,6 @@ fun AppTextFieldType.toTextFieldType(): TextFieldType {
     return when (this) {
         AppTextFieldType.EMAIL -> TextFieldType.EMAIL
         AppTextFieldType.PASSWORD -> TextFieldType.PASSWORD
-        AppTextFieldType.PHONE -> TextFieldType.PHONE
-        else -> TextFieldType.TEXT
+        else -> TextFieldType.NONE
     }
 }

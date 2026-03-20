@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.mappers
 
+ import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.models.ProfileDomainData
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
@@ -10,7 +11,7 @@ class ProfileMapper(private val i18n: I18nProvider) {
             name = data.name,
             email = data.email,
             imageUrl = data.imageUrl,
-            editActionUrl = "/edit-profile"
+            editActionUrl = NavigationRoutes.EDIT_PROFILE
         )
     }
 
@@ -62,7 +63,7 @@ class ProfileMapper(private val i18n: I18nProvider) {
     fun toSaveButton(lang: String): FooterComponent {
         return FooterComponent(
             label = i18n.getString(AppStringType.SAVE_CHANGES, lang),
-            actionUrl = "/v1/profile/update"
+            actionUrl = NavigationRoutes.UPDATE_PROFILE
         )
     }
 

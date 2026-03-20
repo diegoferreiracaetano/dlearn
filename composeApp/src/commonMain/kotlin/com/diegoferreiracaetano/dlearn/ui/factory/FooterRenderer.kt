@@ -1,6 +1,8 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,6 +13,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.AppAction
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.FooterComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.LocalContentMaxHeight
 
 class FooterRenderer : ComponentRenderer {
     @Composable
@@ -20,6 +23,7 @@ class FooterRenderer : ComponentRenderer {
         modifier: Modifier
     ) {
         val footer = component as? FooterComponent ?: return
+
         AppButton(
             text = footer.label,
             onClick = {
@@ -32,7 +36,7 @@ class FooterRenderer : ComponentRenderer {
                     }
                 }
             },
-            type = ButtonType.SECONDARY,
+            type = ButtonType.PRIMARY,
             modifier = modifier
                 .fillMaxWidth()
                 .padding(16.dp)

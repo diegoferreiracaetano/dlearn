@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.api.controllers
 
 import com.diegoferreiracaetano.dlearn.orchestrator.AppOrchestrator
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
-import io.ktor.server.application.call
 import io.ktor.server.request.acceptLanguage
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond

@@ -23,10 +23,11 @@ import org.koin.compose.koinInject
 fun AppScreen(
     path: String,
     params: Map<String, String>? = null,
-    onTabSelected: (String) -> Unit,
-    onItemClick: (String) -> Unit,
-    onNavigate: (AppAction.Navigation) -> Unit,
-    onDeeplink: (AppAction.Deeplink) -> Unit,
+    onBackClick: () -> Unit = {},
+    onTabSelected: (String) -> Unit = {},
+    onItemClick: (String) -> Unit = {},
+    onNavigate: (AppAction.Navigation) -> Unit = {},
+    onDeeplink: (AppAction.Deeplink) -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: AppViewModel = koinInject(),
 ) {
@@ -36,10 +37,11 @@ fun AppScreen(
         viewModel.loadContent(path, params)
     }
 
-    val actions = remember(onTabSelected, onItemClick, onNavigate, onDeeplink, viewModel) {
+    val actions = remember(onBackClick, onTabSelected, onItemClick, onNavigate, onDeeplink, viewModel) {
         ComponentActions(
             onItemClick = onItemClick,
             onTabSelected = onTabSelected,
+            onBackClick = onBackClick,
             onAction = { action ->
                 when (action) {
                     is AppAction.Navigation -> onNavigate(action)
@@ -47,7 +49,13 @@ fun AppScreen(
                     is AppAction.AppCall -> viewModel.handleAction(action)
                 }
             },
-            onRetry = viewModel::retry
+            onRetry = viewModel::retry,
+            onQueryChange = { query ->
+                val parts = query.split(":", limit = 2)
+                if (parts.size == 2) {
+                    viewModel.updateFormField(parts[0], parts[1])
+                }
+            }
         )
     }
 
@@ -68,6 +76,7 @@ fun AppScreen(
     AppScreen(
         path = path,
         params = params,
+        onBackClick = actions.onBackClick,
         onTabSelected = actions.onTabSelected,
         onItemClick = actions.onItemClick,
         onNavigate = { action -> actions.onAction(action) },

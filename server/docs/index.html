@@ -906,19 +906,22 @@
   "properties" : {
     "path" : {
       "type" : "string",
-      "description" : "The target route or action (e.g., 'watchlist', 'favorite')"
+      "description" : "The target route or action (e.g., 'home', 'profile/edit')",
+      "example" : "home"
     },
     "params" : {
       "type" : "object",
       "additionalProperties" : {
         "type" : "string"
-      }
+      },
+      "example" : { }
     },
     "metadata" : {
       "type" : "object",
       "additionalProperties" : {
         "type" : "string"
-      }
+      },
+      "example" : { }
     }
   }
 };
@@ -1550,7 +1553,14 @@
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Handles all dynamic screens and actions (Favorites, Watchlist, etc.) based on the request path.</p>
+                        <p class="marked">Central gateway for dynamic screens and actions.
+Handles the following paths via SDUI:
+- &#x60;home&#x60;: Main dashboard
+- &#x60;favorite&#x60;: User favorites list or toggle action
+- &#x60;watchlist&#x60;: User watchlist or toggle action
+- &#x60;profile&#x60;: User profile details
+- &#x60;profile/edit&#x60;: Edit profile form
+</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/app</span></code></pre>
@@ -1592,7 +1602,11 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         
         DefaultApi apiInstance = new DefaultApi();
-        AppRequest body = ; // AppRequest | 
+        AppRequest body = {
+  "path" : "home",
+  "params" : { },
+  "metadata" : { }
+}; // AppRequest | 
         try {
             Screen result = apiInstance.v1AppPost(body);
             System.out.println(result);
@@ -1611,7 +1625,11 @@ public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        AppRequest body = ; // AppRequest | 
+        AppRequest body = {
+  "path" : "home",
+  "params" : { },
+  "metadata" : { }
+}; // AppRequest | 
         try {
             Screen result = apiInstance.v1AppPost(body);
             System.out.println(result);
@@ -1627,7 +1645,11 @@ public class DefaultApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Default-v1AppPost-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">AppRequest *body = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">AppRequest *body = {
+  "path" : "home",
+  "params" : { },
+  "metadata" : { }
+}; // 
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
@@ -1648,7 +1670,11 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
 
 var api = new DLearnBffApi.DefaultApi()
-var body = ; // {{AppRequest}} 
+var body = {
+  "path" : "home",
+  "params" : { },
+  "metadata" : { }
+}; // {{AppRequest}} 
 
 var callback = function(error, data, response) {
   if (error) {
@@ -1702,7 +1728,11 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
-$body = ; // AppRequest | 
+$body = {
+  "path" : "home",
+  "params" : { },
+  "metadata" : { }
+}; // AppRequest | 
 
 try {
     $result = $api_instance->v1AppPost($body);
@@ -1739,7 +1769,11 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
-body =  # AppRequest | 
+body = {
+  "path" : "home",
+  "params" : { },
+  "metadata" : { }
+} # AppRequest | 
 
 try: 
     # SDUI Gateway / BFF Generic Endpoint
@@ -1771,6 +1805,11 @@ except ApiException as e:
     "application/json" : {
       "schema" : {
         "$ref" : "#/components/schemas/AppRequest"
+      },
+      "example" : {
+        "path" : "home",
+        "params" : { },
+        "metadata" : { }
       }
     }
   },
@@ -3376,7 +3415,11 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         
         DefaultApi apiInstance = new DefaultApi();
-        map[String, String] body = ; // map[String, String] | 
+        map[String, String] body = {
+  "full_name" : "Tiffany Jearsey",
+  "email" : "tiffany@example.com",
+  "phone" : "+1 234 567 890"
+}; // map[String, String] | 
         String userId = userId_example; // String | 
         try {
             Object result = apiInstance.v1ProfileUpdatePost(body, userId);
@@ -3396,7 +3439,11 @@ public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        map[String, String] body = ; // map[String, String] | 
+        map[String, String] body = {
+  "full_name" : "Tiffany Jearsey",
+  "email" : "tiffany@example.com",
+  "phone" : "+1 234 567 890"
+}; // map[String, String] | 
         String userId = userId_example; // String | 
         try {
             Object result = apiInstance.v1ProfileUpdatePost(body, userId);
@@ -3413,7 +3460,11 @@ public class DefaultApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Default-v1ProfileUpdatePost-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">map[String, String] *body = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">map[String, String] *body = {
+  "full_name" : "Tiffany Jearsey",
+  "email" : "tiffany@example.com",
+  "phone" : "+1 234 567 890"
+}; // 
 String *userId = userId_example; //  (optional)
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
@@ -3436,7 +3487,11 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
 
 var api = new DLearnBffApi.DefaultApi()
-var body = ; // {{map[String, String]}} 
+var body = {
+  "full_name" : "Tiffany Jearsey",
+  "email" : "tiffany@example.com",
+  "phone" : "+1 234 567 890"
+}; // {{map[String, String]}} 
 var opts = { 
   'userId': userId_example // {{String}} 
 };
@@ -3493,7 +3548,11 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
-$body = ; // map[String, String] | 
+$body = {
+  "full_name" : "Tiffany Jearsey",
+  "email" : "tiffany@example.com",
+  "phone" : "+1 234 567 890"
+}; // map[String, String] | 
 $userId = userId_example; // String | 
 
 try {
@@ -3532,7 +3591,11 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
-body =  # map[String, String] | 
+body = {
+  "full_name" : "Tiffany Jearsey",
+  "email" : "tiffany@example.com",
+  "phone" : "+1 234 567 890"
+} # map[String, String] | 
 userId = userId_example # String |  (optional)
 
 try: 
@@ -3568,6 +3631,11 @@ except ApiException as e:
         "additionalProperties" : {
           "type" : "string"
         }
+      },
+      "example" : {
+        "full_name" : "Tiffany Jearsey",
+        "email" : "tiffany@example.com",
+        "phone" : "+1 234 567 890"
       }
     }
   },

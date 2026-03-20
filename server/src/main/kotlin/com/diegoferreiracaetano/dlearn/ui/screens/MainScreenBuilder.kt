@@ -69,12 +69,12 @@ class MainScreenBuilder(
                 ),
                 BottomNavItem(
                     label = i18n.getString(AppStringType.NAV_WATCHLIST, lang),
-                    route = NavigationRoutes.buildRoute(NavigationRoutes.WATCHLIST),
+                    route = NavigationRoutes.WATCHLIST,
                     icon = AppIconType.WATCHLIST
                 ),
                 BottomNavItem(
                     label = i18n.getString(AppStringType.NAV_FAVORITES, lang),
-                    route = NavigationRoutes.buildRoute(NavigationRoutes.FAVORITE),
+                    route = NavigationRoutes.FAVORITE,
                     icon = AppIconType.FAVORITE
                 ),
                 BottomNavItem(

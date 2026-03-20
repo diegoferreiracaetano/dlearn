@@ -4,8 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.ui.screens.app.AppScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.home.HomeScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.profile.ProfileScreen
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 
@@ -14,16 +12,13 @@ class AppMainContentRenderer : ComponentRenderer {
     override fun Render(component: Component, actions: ComponentActions, modifier: Modifier) {
 
         when (actions.currentRoute) {
-            NavigationRoutes.HOME -> HomeScreen(
-                onTabSelected = actions.onTabSelected,
-                onItemClick = actions.onItemClick,
-                onSearchClick = actions.onSearchClick,
+            NavigationRoutes.HOME -> AppScreen(
+                actions = actions,
                 modifier = modifier
             )
 
-            NavigationRoutes.PROFILE -> ProfileScreen(
-                onTabSelected = actions.onTabSelected,
-                onItemClick = actions.onItemClick,
+            NavigationRoutes.PROFILE -> AppScreen(
+                actions = actions,
                 modifier = modifier
             )
 

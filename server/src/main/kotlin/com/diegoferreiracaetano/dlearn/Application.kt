@@ -7,6 +7,7 @@ import com.diegoferreiracaetano.dlearn.orchestrator.MovieDetailOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.SearchOrchestrator
 import io.ktor.http.CacheControl
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.CachingOptions
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
@@ -15,7 +16,9 @@ import io.ktor.server.netty.EngineMain
 import io.ktor.server.plugins.cachingheaders.CachingHeaders
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.openapi.openAPI
+import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.plugins.swagger.swaggerUI
+import io.ktor.server.response.respondText
 import io.ktor.server.routing.routing
 import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
@@ -33,6 +36,15 @@ fun Application.module() {
             ignoreUnknownKeys = true
             encodeDefaults = true
         })
+    }
+
+    install(StatusPages) {
+        exception<Throwable> { call, cause ->
+            call.respondText(
+                text = "Internal Server Error: ${cause.localizedMessage ?: "Unknown error"}",
+                status = HttpStatusCode.InternalServerError
+            )
+        }
     }
 
     install(CachingHeaders) {

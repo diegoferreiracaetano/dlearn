@@ -41,7 +41,7 @@ val serverModule = module {
     single { WatchlistOrchestrator(get(), get(), get(), get()) }
     single { FavoriteOrchestrator(get(), get(), get(), get()) }
     single { MainOrchestrator(get()) }
-    single { AppOrchestrator(get(), get()) }
+    single { AppOrchestrator(get(), get(), get(), get()) }
 
     // Profile
     single { ProfileDataService() }

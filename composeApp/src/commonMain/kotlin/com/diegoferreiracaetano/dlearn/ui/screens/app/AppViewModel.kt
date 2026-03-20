@@ -17,6 +17,9 @@ class AppViewModel(
     private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
     val uiState: StateFlow<UIState> = _uiState.asStateFlow()
 
+    private val _formData = MutableStateFlow<Map<String, String>>(emptyMap())
+    val formData: StateFlow<Map<String, String>> = _formData.asStateFlow()
+
     private var lastRequest: AppRequest? = null
 
     fun loadContent(path: String, params: Map<String, String>? = null, metadata: Map<String, String>? = null) {
@@ -25,10 +28,16 @@ class AppViewModel(
         executeRequest(request)
     }
 
+    fun updateFormField(key: String, value: String) {
+        _formData.update { it + (key to value) }
+    }
+
     fun handleAction(action: AppAction) {
         when (action) {
             is AppAction.AppCall -> {
-                executeRequest(AppRequest(action.path, action.params, action.metadata))
+                val combinedParams = (action.params ?: emptyMap()) + _formData.value
+                executeRequest(AppRequest(action.path, combinedParams, action.metadata))
+                // Clear form data after submission if needed, or wait for success
             }
             else -> { /* Navigation and Deeplink are handled by the UI/Navigation layer */ }
         }

@@ -38,6 +38,9 @@ dependencies {
     // Caching
     implementation(libs.ktor.server.caching.headers)
 
+    // Status Pages
+    implementation(libs.ktor.server.status.pages)
+
     testImplementation(libs.ktor.serverTestHost)
     testImplementation(libs.kotlin.testJunit)
 }

@@ -1,7 +1,14 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTextFieldComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
@@ -19,17 +26,22 @@ class AppTextFieldRenderer : ComponentRenderer {
         modifier: Modifier
     ) {
         val textField = component as? AppTextFieldComponent ?: return
-        
+        var text by remember { mutableStateOf(textField.value) }
+
         AppTextField(
-            value = textField.value,
+            value = text,
             onValueChange = { newValue ->
-                // SDUI text updates usually need a key to identify the field in the state
-                actions.onQueryChange(newValue) 
+                text = newValue
+                actions.onQueryChange(textField.key + ":" + newValue) 
             },
             label = textField.label.toResource(),
-            placeholder = textField.placeholder.toResource() ?: Res.string.app_name, // Fallback
+            placeholder = textField.placeholder.toResource() ?: Res.string.app_name,
+            supportingText = textField.supportingText.toResource(),
+            isError = textField.isError,
             type = textField.fieldType.toTextFieldType(),
             modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         )
     }
 }

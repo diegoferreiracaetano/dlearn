@@ -40,13 +40,24 @@ paths:
   /v1/app:
     post:
       summary: SDUI Gateway / BFF Generic Endpoint
-      description: Handles all dynamic screens and actions (Favorites, Watchlist, etc.) based on the request path.
+      description: |
+        Central gateway for dynamic screens and actions.
+        Handles the following paths via SDUI:
+        - `home`: Main dashboard
+        - `favorite`: User favorites list or toggle action
+        - `watchlist`: User watchlist or toggle action
+        - `profile`: User profile details
+        - `profile/edit`: Edit profile form
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/AppRequest'
+            example:
+              path: "home"
+              params: {}
+              metadata: {}
       responses:
         '200':
           description: OK
@@ -174,6 +185,10 @@ paths:
               type: object
               additionalProperties:
                 type: string
+            example:
+              full_name: "Tiffany Jearsey"
+              email: "tiffany@example.com"
+              phone: "+1 234 567 890"
       responses:
         '200':
           description: Success
@@ -194,15 +209,18 @@ components:
       properties:
         path:
           type: string
-          description: The target route or action (e.g., 'watchlist', 'favorite')
+          description: The target route or action (e.g., 'home', 'profile/edit')
+          example: "home"
         params:
           type: object
           additionalProperties:
             type: string
+          example: {}
         metadata:
           type: object
           additionalProperties:
             type: string
+          example: {}
     Screen:
       type: object
       properties:

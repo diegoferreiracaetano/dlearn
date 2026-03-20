@@ -1,7 +1,7 @@
 package com.diegoferreiracaetano.dlearn.navigation
 
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import com.diegoferreiracaetano.dlearn.util.encodeURL
+import io.ktor.http.encodeURLParameter
 
 sealed class ScreenRouter(
     val route: String,
@@ -19,7 +19,8 @@ sealed class ScreenRouter(
     object VerifyAccount : ScreenRouter(NavigationRoutes.VERIFY_ACCOUNT)
     object CreateNewPassword : ScreenRouter(NavigationRoutes.CREATE_NEW_PASSWORD)
     object Onboarding : ScreenRouter(NavigationRoutes.ONBOARDING)
+
     object MovieDetail : ScreenRouter(NavigationRoutes.MOVIE_DETAIL_ROUTE) {
-        fun createRoute(movieId: String) = "${NavigationRoutes.MOVIE_DETAIL}/${movieId.encodeURL()}"
+        fun createRoute(movieId: String) = "${NavigationRoutes.MOVIE_DETAIL}/${movieId.encodeURLParameter()}"
     }
 }

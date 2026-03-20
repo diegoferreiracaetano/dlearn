@@ -1,9 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
 import com.diegoferreiracaetano.dlearn.designsystem.components.profile.AppProfileRow
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
@@ -23,7 +21,7 @@ class ProfileRowRenderer : ComponentRenderer {
             email = profileRow.email,
             imageSource = profileRow.imageUrl?.let { AppImageSource.Url(it) },
             onEditClick = { profileRow.editActionUrl?.let { actions.onItemClick(it) } },
-            modifier = modifier.padding(16.dp)
+            modifier = modifier
         )
     }
 }

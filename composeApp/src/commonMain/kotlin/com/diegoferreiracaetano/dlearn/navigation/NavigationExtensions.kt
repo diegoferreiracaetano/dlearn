@@ -1,11 +1,8 @@
 package com.diegoferreiracaetano.dlearn.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.savedstate.read
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 
@@ -49,22 +46,10 @@ fun NavController.navigateToRoute(route: String) {
     }
 }
 
-fun NavController.navigateClearBackStackTo(route: String) {
-    navigate(route) {
-        popUpTo(0) { inclusive = true }
-        launchSingleTop = true
-    }
+fun NavController.navigateToPath(path: String, params: Map<String, String>? = null) {
+    val router =  NavigationRoutes.buildRoute(path, params)
+    navigate(router)
 }
-
-@Composable
-fun NavController.currentRoute(): String? {
-    val navBackStackEntry by this.currentBackStackEntryAsState()
-    return navBackStackEntry?.destination?.route
-}
-
-// ==========================================
-// SDUI Dynamic Routing Extensions
-// ==========================================
 
 val NavBackStackEntry.sduiPath: String
     get() = arguments?.read { 
@@ -72,6 +57,10 @@ val NavBackStackEntry.sduiPath: String
     }.orEmpty()
 
 val NavBackStackEntry.sduiParams: Map<String, String>?
-    get() = NavigationRoutes.parseParams(arguments?.read { 
-        if (contains(NavigationRoutes.PARAMS_ARG)) getString(NavigationRoutes.PARAMS_ARG) else null 
-    })
+    get() {
+        val paramsString = readOrDefault(NavigationRoutes.PARAMS_ARG, "")
+        return paramsString.takeIf { it.isNotEmpty() }?.split(",")?.associate {
+            val parts = it.split(":")
+            parts[0] to parts.getOrElse(1) { "" }
+        }
+    }

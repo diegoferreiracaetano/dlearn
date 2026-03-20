@@ -1,13 +1,14 @@
 package com.diegoferreiracaetano.dlearn.orchestrator
 
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 
 class AppOrchestrator(
+    private val homeOrchestrator: HomeOrchestrator,
     private val favoriteOrchestrator: FavoriteOrchestrator,
     private val watchlistOrchestrator: WatchlistOrchestrator,
+    private val profileOrchestrator: ProfileOrchestrator,
 ) {
     suspend fun execute(
         request: AppRequest,
@@ -15,10 +16,15 @@ class AppOrchestrator(
         lang: String,
         appVersion: Int
     ): Screen {
-        return when (request.path) {
+        val path = NavigationRoutes.extractPath(request.path)
+        return when (path) {
+            NavigationRoutes.HOME -> homeOrchestrator.getHomeData(userId, appVersion, lang)
             NavigationRoutes.FAVORITE -> handleFavoriteRequest(request, userId, lang)
             NavigationRoutes.WATCHLIST -> handleWatchlistRequest(request, userId, lang)
-            else ->  throw IllegalArgumentException("Invalid path: ${request.path}")
+            NavigationRoutes.PROFILE -> profileOrchestrator.getProfileData(userId, appVersion, lang)
+            NavigationRoutes.EDIT_PROFILE -> profileOrchestrator.getEditProfileData(userId, lang)
+            NavigationRoutes.UPDATE_PROFILE -> handleUpdateProfileRequest(request, userId, appVersion, lang)
+            else ->  throw IllegalArgumentException("Invalid path: ${request.path} (extracted: $path)")
         }
     }
 
@@ -38,5 +44,11 @@ class AppOrchestrator(
         } else {
             watchlistOrchestrator.getWatchlist(userId, lang)
         }
+    }
+
+    private suspend fun handleUpdateProfileRequest(request: AppRequest, userId: String, appVersion: Int, lang: String): Screen {
+        val data = request.params ?: emptyMap()
+        profileOrchestrator.updateProfile(userId, data)
+        return profileOrchestrator.getProfileData(userId, appVersion, lang)
     }
 }

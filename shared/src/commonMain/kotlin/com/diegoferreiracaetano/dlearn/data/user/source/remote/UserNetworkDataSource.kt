@@ -9,13 +9,15 @@ class UserNetworkDataSource {
     private var users =
         listOf(
             UserRemote(
-                id = "",
+                id = "1",
                 name = "Diego",
                 email = "diego@gmail.com",
                 password = "teste",
+                imageUrl = "https://avatars.githubusercontent.com/u/1023?v=4",
+                isPremium = true
             ),
             UserRemote(
-                id = "",
+                id = "2",
                 name = "Lucas",
                 email = "lucas@gmail.com",
                 password = "teste",
@@ -31,8 +33,7 @@ class UserNetworkDataSource {
     suspend fun saveUser(newUser: UserRemote) =
         accessMutex.withLock {
             delay(SERVICE_LATENCY_IN_MILLIS)
-            users + newUser
-
+            users = users + newUser
             Unit
         }
 

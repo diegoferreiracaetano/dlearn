@@ -26,6 +26,7 @@ import com.diegoferreiracaetano.dlearn.ui.screens.main.MainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.onboarding.OnboardingScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchMainScreen
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppAction
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.koinInject
 
@@ -144,35 +145,37 @@ fun AppNavGraph(
 
         composable(Profile.route) {
             MainScreen(
-                onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
-                onTabSelected = { route -> navController.navigateToRoute(route) },
+                onItemClick = { route ->
+                    navController.navigateToPath(route) },
+                onTabSelected = { route ->
+                    navController.navigateToRoute(route) },
                 modifier = modifier,
                 currentRoute = Profile.route
             )
         }
 
-//        composable(
-//            route = NavigationRoutes.APP_ROUTE,
-//            arguments = listOf(
-//                navArgument(NavigationRoutes.PATH_ARG) { type = NavType.StringType },
-//                navArgument(NavigationRoutes.PARAMS_ARG) {
-//                    type = NavType.StringType
-//                    nullable = true
-//                    defaultValue = null
-//                }
-//            )
-//        ) { backStackEntry ->
-//            AppScreen(
-//                path = backStackEntry.sduiPath,
-//                params = backStackEntry.sduiParams,
-//                onBackClick = { navController.popBackStack() },
-//                onTabSelected = { route -> navController.navigateToRoute(route) },
-//                onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
-//                onNavigate = { action -> navController.navigateToRoute(NavigationRoutes.fromAction(action)) },
-//                onDeeplink = { action -> uriHandler.openUri(action.url) },
-//                modifier = modifier
-//            )
-//        }
+        composable(
+            route = NavigationRoutes.APP_ROUTE,
+            arguments = listOf(
+                navArgument(NavigationRoutes.PATH_ARG) { type = NavType.StringType },
+                navArgument(NavigationRoutes.PARAMS_ARG) {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { backStackEntry ->
+            AppScreen(
+                path = backStackEntry.sduiPath,
+                params = backStackEntry.sduiParams,
+                onBackClick = { navController.popBackStack() },
+                onTabSelected = { route -> navController.navigateToRoute(route) },
+                onItemClick = { route -> navController.navigate(route) },
+                onNavigate = { action -> navController.navigateToRoute(NavigationRoutes.fromAction(action)) },
+                onDeeplink = { action -> uriHandler.openUri(action.url) },
+                modifier = modifier
+            )
+        }
 
         composable(
             route = MovieDetail.route,

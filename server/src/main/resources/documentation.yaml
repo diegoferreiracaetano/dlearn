@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
   title: "DLearn BFF API"
-  version: "1.2.0"
-  description: "API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows. Security and MFA are handled by a Generic Challenge Engine."
+  version: "1.2.3"
+  description: "API for Server-Driven UI in DLearn App. Security and MFA are handled by a Generic Challenge Engine."
 
 servers:
   - url: "http://localhost:8081"
@@ -13,89 +13,40 @@ paths:
     get:
       tags: ["SDUI"]
       summary: "Get Main Shell"
-      description: "Returns the main screen shell configuration (BottomNav, AppContainer)."
       parameters:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
       responses:
         '200':
           description: "OK"
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
+              schema: { $ref: '#/components/schemas/Screen' }
 
   /v1/app:
     post:
       tags: ["SDUI"]
       summary: "SDUI Gateway"
-      description: "Central gateway for dynamic screens and actions."
       parameters:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
       requestBody:
         required: true
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/AppRequest'
+            schema: { $ref: '#/components/schemas/AppRequest' }
       responses:
         '200':
           description: "OK"
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
-
-  /v1/home:
-    get:
-      tags: ["Business"]
-      summary: "Get Home Screen"
-      parameters: 
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
-        - name: "type"
-          in: query
-          required: false
-          schema:
-            type: string
-            enum: ["ALL", "MOVIE", "SERIES"]
-      responses:
-        '200':
-          description: "OK"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
-
-  /v1/movie/{movieId}:
-    get:
-      tags: ["Business"]
-      summary: "Get Movie Detail Screen"
-      parameters:
-        - name: "movieId"
-          in: path
-          required: true
-          schema:
-            type: string
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-      responses:
-        '200':
-          description: "OK"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
+              schema: { $ref: '#/components/schemas/Screen' }
 
   /v1/password/change:
     post:
       tags: ["Security"]
       summary: "Change User Password (MFA Protected)"
-      description: "Protegido pelo Motor de Desafios. Requer o header X-Challenge-Token após a resolução."
+      description: "Exige o header X-Challenge-Token após a resolução."
       parameters:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/challengeToken'
@@ -103,32 +54,32 @@ paths:
         required: true
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/ChangePasswordRequest'
+            schema: { $ref: '#/components/schemas/ChangePasswordRequest' }
       responses:
         '200':
-          description: "Senha alterada com sucesso"
+          description: "OK"
         '428':
-          description: "Precondition Required - MFA Challenge Necessary"
+          description: "MFA Required"
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/ChallengeSession'
+              schema: { $ref: '#/components/schemas/ChallengeSession' }
 
   /v1/auth/challenge/resolve:
     post:
       tags: ["Security"]
       summary: "Resolve Security Challenge"
-      description: "Valida as respostas do desafio (OTP/Biometria) e retorna um token de prova."
+      description: "Valida as respostas do desafio. O Transaction ID deve vir no Header."
+      parameters:
+        - $ref: '#/components/parameters/transactionId'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ResolveChallengeRequest'
+              $ref: '#/components/schemas/ResolveChallengeRequestBody'
       responses:
         '200':
-          description: "Desafio resolvido com sucesso"
+          description: "OK"
           content:
             application/json:
               schema:
@@ -138,16 +89,12 @@ paths:
     post:
       tags: ["Security"]
       summary: "Resend Security Challenge"
-      description: "Gera um novo código para a transação atual."
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ResendChallengeRequest'
+      description: "Gera um novo código. O Transaction ID deve vir no Header."
+      parameters:
+        - $ref: '#/components/parameters/transactionId'
       responses:
         '200':
-          description: "Desafio reenviado com sucesso"
+          description: "Reenviado com sucesso"
         '404':
           description: "Transação não encontrada"
 
@@ -161,149 +108,60 @@ components:
       name: "X-App-Version"
       in: header
       schema: { type: "integer" }
-    acceptLanguage:
-      name: "Accept-Language"
-      in: header
-      schema: { type: "string" }
     challengeToken:
       name: "X-Challenge-Token"
       in: header
       schema: { type: "string" }
-
-  securitySchemes:
-    ChallengeAuth:
-      type: "apiKey"
+    transactionId:
+      name: "X-Transaction-Id"
       in: header
-      name: "X-Challenge-Token"
+      required: true
+      description: "O ID da transação de desafio recebido no erro 428."
+      schema: { type: "string" }
 
   schemas:
-    # --- Challenge Engine Models ---
-    ChallengeType:
-      type: string
-      enum: ["OTP_SMS", "OTP_EMAIL", "BIOMETRIC", "PASSWORD", "TOTP", "UNKNOWN"]
-    
     ChallengeSession:
       type: object
       required: ["transactionId", "message"]
       properties:
-        transactionId: { type: "string" }
-        message: { type: "string" }
-        code: { type: "string", enum: ["CHALLENGE_REQUIRED", "INVALID_TOKEN", "EXPIRED_TOKEN"] }
+        transactionId: { type: "string", example: "CHALLENGE_1711045039000" }
+        message: { type: "string", example: "Please enter the code sent to your email" }
 
-    ResolveChallengeRequest:
+    ResolveChallengeRequestBody:
       type: object
-      required: ["transactionId", "answers"]
+      required: ["type", "answers"]
       properties:
-        transactionId: { type: "string" }
+        type: { $ref: '#/components/schemas/ChallengeType' }
         answers:
           type: object
+          example: { "otp": "123456" }
           additionalProperties: { type: "string" }
-    
+
     ResolveChallengeResponse:
       type: object
       properties:
-        validatedToken: { type: "string" }
-        success: { type: "boolean" }
+        validatedToken: { type: "string", example: "VALIDATED_CHALLENGE_1711045039000" }
+        success: { type: "boolean", example: true }
 
-    ResendChallengeRequest:
-      type: object
-      required: ["transactionId"]
-      properties:
-        transactionId: { type: "string" }
+    ChallengeType:
+      type: string
+      enum: ["OTP_SMS", "OTP_EMAIL", "BIOMETRIC", "PASSWORD", "TOTP", "UNKNOWN"]
 
-    # --- Business Models ---
     ChangePasswordRequest:
       type: object
-      required: ["currentPassword", "newPassword"]
+      required: ["userId", "newPassword"]
       properties:
-        currentPassword: { type: "string" }
-        newPassword: { type: "string" }
+        userId: { type: "string", example: "user_123" }
+        newPassword: { type: "string", example: "NewPass@2024" }
 
-    # --- SDUI Core Models ---
+    # --- SDUI Models (Simplificados para brevidade) ---
+    Screen:
+      type: object
+      properties:
+        id: { type: "string" }
+        components: { type: array, items: { type: object } }
     AppRequest:
       type: object
       required: ["path"]
       properties:
         path: { type: "string" }
-        params:
-          type: object
-          additionalProperties: { type: "string" }
-
-    Screen:
-      type: object
-      properties:
-        id: { type: "string" }
-        components:
-          type: array
-          items: { $ref: '#/components/schemas/Component' }
-
-    Component:
-      type: object
-      discriminator:
-        propertyName: "type"
-      properties:
-        type: { type: "string" }
-
-    # --- SDUI Components ---
-    AppContainerComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            topBar: { $ref: '#/components/schemas/Component' }
-            bottomBar: { $ref: '#/components/schemas/Component' }
-            components: { type: array, items: { $ref: '#/components/schemas/Component' } }
-    
-    MovieCarouselComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            title: { type: "string" }
-            items:
-              type: array
-              items:
-                type: object
-                properties:
-                  id: { type: "string" }
-                  title: { type: "string" }
-                  imageUrl: { type: "string" }
-                  rating: { type: "string" }
-    
-    AppTextFieldComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            value: { type: "string" }
-            label: { $ref: '#/components/schemas/AppStringType' }
-            fieldType: { $ref: '#/components/schemas/AppTextFieldType' }
-            key: { type: "string" }
-
-    BottomNavigationComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            items:
-              type: array
-              items:
-                type: object
-                properties:
-                  label: { type: "string" }
-                  route: { type: "string" }
-                  icon: { $ref: '#/components/schemas/AppIconType' }
-            selectedRoute: { type: "string" }
-
-    # --- Enums & Types ---
-    AppIconType:
-      type: string
-      enum: ["HOME", "SEARCH", "FAVORITE", "PERSON", "WATCHLIST", "LOCK", "UNKNOWN"]
-    
-    AppStringType:
-      type: string
-      enum: ["HOME_TITLE", "NAV_HOME", "NAV_PROFILE", "FIELD_PASSWORD", "UNKNOWN"]
-    
-    AppTextFieldType:
-      type: string
-      enum: ["NONE", "EMAIL", "PASSWORD", "PHONE"]

@@ -689,117 +689,26 @@
   <script>
     // Script section to load models into a JS Var
     var defs = {}
-            defs["AppContainerComponent"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/Component"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "topBar" : {
-        "$ref" : "#/components/schemas/Component"
-      },
-      "bottomBar" : {
-        "$ref" : "#/components/schemas/Component"
-      },
-      "components" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/Component"
-        }
-      }
-    }
-  } ]
-};
-            defs["AppIconType"] = {
-  "type" : "string",
-  "enum" : [ "HOME", "SEARCH", "FAVORITE", "PERSON", "WATCHLIST", "LOCK", "UNKNOWN" ]
-};
             defs["AppRequest"] = {
   "required" : [ "path" ],
   "type" : "object",
   "properties" : {
     "path" : {
       "type" : "string"
-    },
-    "params" : {
-      "type" : "object",
-      "additionalProperties" : {
-        "type" : "string"
-      }
     }
   }
-};
-            defs["AppStringType"] = {
-  "type" : "string",
-  "enum" : [ "HOME_TITLE", "NAV_HOME", "NAV_PROFILE", "FIELD_PASSWORD", "UNKNOWN" ]
-};
-            defs["AppTextFieldComponent"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/Component"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "value" : {
-        "type" : "string"
-      },
-      "label" : {
-        "$ref" : "#/components/schemas/AppStringType"
-      },
-      "fieldType" : {
-        "$ref" : "#/components/schemas/AppTextFieldType"
-      },
-      "key" : {
-        "type" : "string"
-      }
-    }
-  } ]
-};
-            defs["AppTextFieldType"] = {
-  "type" : "string",
-  "enum" : [ "NONE", "EMAIL", "PASSWORD", "PHONE" ]
-};
-            defs["BottomNavigationComponent"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/Component"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "items" : {
-        "type" : "array",
-        "items" : {
-          "type" : "object",
-          "properties" : {
-            "label" : {
-              "type" : "string"
-            },
-            "route" : {
-              "type" : "string"
-            },
-            "icon" : {
-              "$ref" : "#/components/schemas/AppIconType"
-            }
-          }
-        }
-      },
-      "selectedRoute" : {
-        "type" : "string"
-      }
-    }
-  } ]
 };
             defs["ChallengeSession"] = {
   "required" : [ "message", "transactionId" ],
   "type" : "object",
   "properties" : {
     "transactionId" : {
-      "type" : "string"
+      "type" : "string",
+      "example" : "CHALLENGE_1711045039000"
     },
     "message" : {
-      "type" : "string"
-    },
-    "code" : {
       "type" : "string",
-      "enum" : [ "CHALLENGE_REQUIRED", "INVALID_TOKEN", "EXPIRED_TOKEN" ]
+      "example" : "Please enter the code sent to your email"
     }
   }
 };
@@ -808,80 +717,33 @@
   "enum" : [ "OTP_SMS", "OTP_EMAIL", "BIOMETRIC", "PASSWORD", "TOTP", "UNKNOWN" ]
 };
             defs["ChangePasswordRequest"] = {
-  "required" : [ "currentPassword", "newPassword" ],
+  "required" : [ "newPassword", "userId" ],
   "type" : "object",
   "properties" : {
-    "currentPassword" : {
-      "type" : "string"
+    "userId" : {
+      "type" : "string",
+      "example" : "user_123"
     },
     "newPassword" : {
-      "type" : "string"
+      "type" : "string",
+      "example" : "NewPass@2024"
     }
   }
 };
-            defs["Component"] = {
+            defs["ResolveChallengeRequestBody"] = {
+  "required" : [ "answers", "type" ],
   "type" : "object",
   "properties" : {
     "type" : {
-      "type" : "string"
-    }
-  },
-  "discriminator" : {
-    "propertyName" : "type"
-  }
-};
-            defs["MovieCarouselComponent"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/Component"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "title" : {
-        "type" : "string"
-      },
-      "items" : {
-        "type" : "array",
-        "items" : {
-          "type" : "object",
-          "properties" : {
-            "id" : {
-              "type" : "string"
-            },
-            "title" : {
-              "type" : "string"
-            },
-            "imageUrl" : {
-              "type" : "string"
-            },
-            "rating" : {
-              "type" : "string"
-            }
-          }
-        }
-      }
-    }
-  } ]
-};
-            defs["ResendChallengeRequest"] = {
-  "required" : [ "transactionId" ],
-  "type" : "object",
-  "properties" : {
-    "transactionId" : {
-      "type" : "string"
-    }
-  }
-};
-            defs["ResolveChallengeRequest"] = {
-  "required" : [ "answers", "transactionId" ],
-  "type" : "object",
-  "properties" : {
-    "transactionId" : {
-      "type" : "string"
+      "$ref" : "#/components/schemas/ChallengeType"
     },
     "answers" : {
       "type" : "object",
       "additionalProperties" : {
         "type" : "string"
+      },
+      "example" : {
+        "otp" : "123456"
       }
     }
   }
@@ -890,10 +752,12 @@
   "type" : "object",
   "properties" : {
     "validatedToken" : {
-      "type" : "string"
+      "type" : "string",
+      "example" : "VALIDATED_CHALLENGE_1711045039000"
     },
     "success" : {
-      "type" : "boolean"
+      "type" : "boolean",
+      "example" : true
     }
   }
 };
@@ -906,7 +770,7 @@
     "components" : {
       "type" : "array",
       "items" : {
-        "$ref" : "#/components/schemas/Component"
+        "type" : "object"
       }
     }
   }
@@ -927,13 +791,6 @@
             -->
             <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">API Summary</a></li>
 
-                  <li class="nav-header" data-group="Business"><a href="#api-Business">API Methods - Business</a></li>
-                    <li data-group="Business" data-name="v1HomeGet" class="">
-                      <a href="#api-Business-v1HomeGet">v1HomeGet</a>
-                    </li>
-                    <li data-group="Business" data-name="v1MovieMovieIdGet" class="">
-                      <a href="#api-Business-v1MovieMovieIdGet">v1MovieMovieIdGet</a>
-                    </li>
                   <li class="nav-header" data-group="SDUI"><a href="#api-SDUI">API Methods - SDUI</a></li>
                     <li data-group="SDUI" data-name="v1AppPost" class="">
                       <a href="#api-SDUI-v1AppPost">v1AppPost</a>
@@ -964,746 +821,12 @@
         <div id="header">
           <div id="api-_">
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
-              <div class="app-desc">Version: 1.2.0</div>
+              <div class="app-desc">Version: 1.2.3</div>
             <hr>
-            <div>API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows. Security and MFA are handled by a Generic Challenge Engine.</div>
+            <div>API for Server-Driven UI in DLearn App. Security and MFA are handled by a Generic Challenge Engine.</div>
           </div>
         </div>
         <div id="sections">
-                <section id="api-Business">
-                  <h1>Business</h1>
-                    <div id="api-Business-v1HomeGet">
-                      <article id="api-Business-v1HomeGet-0" data-group="User" data-name="v1HomeGet" data-version="0">
-                        <div class="pull-left">
-                          <h1>v1HomeGet</h1>
-                          <p>Get Home Screen</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked"></p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/home</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Business-v1HomeGet-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Business-v1HomeGet-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Business-v1HomeGet-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Business-v1HomeGet-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Business-v1HomeGet-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Business-v1HomeGet-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Business-v1HomeGet-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Business-v1HomeGet-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Business-v1HomeGet-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Business-v1HomeGet-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Business-v1HomeGet-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Business-v1HomeGet-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
--H "Accept: application/json"\
-"http://localhost:8081/v1/home?userId=&type="</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Business-v1HomeGet-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.BusinessApi;
-
-import java.io.File;
-import java.util.*;
-
-public class BusinessApiExample {
-
-    public static void main(String[] args) {
-        
-        BusinessApi apiInstance = new BusinessApi();
-        String userId = userId_example; // String | 
-        Integer xAppVersion = 56; // Integer | 
-        String acceptLanguage = acceptLanguage_example; // String | 
-        String type = type_example; // String | 
-        try {
-            Screen result = apiInstance.v1HomeGet(userId, xAppVersion, acceptLanguage, type);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling BusinessApi#v1HomeGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Business-v1HomeGet-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.BusinessApi;
-
-public class BusinessApiExample {
-
-    public static void main(String[] args) {
-        BusinessApi apiInstance = new BusinessApi();
-        String userId = userId_example; // String | 
-        Integer xAppVersion = 56; // Integer | 
-        String acceptLanguage = acceptLanguage_example; // String | 
-        String type = type_example; // String | 
-        try {
-            Screen result = apiInstance.v1HomeGet(userId, xAppVersion, acceptLanguage, type);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling BusinessApi#v1HomeGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Business-v1HomeGet-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Business-v1HomeGet-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *userId = userId_example; //  (optional)
-Integer *xAppVersion = 56; //  (optional)
-String *acceptLanguage = acceptLanguage_example; //  (optional)
-String *type = type_example; //  (optional)
-
-BusinessApi *apiInstance = [[BusinessApi alloc] init];
-
-// Get Home Screen
-[apiInstance v1HomeGetWith:userId
-    xAppVersion:xAppVersion
-    acceptLanguage:acceptLanguage
-    type:type
-              completionHandler: ^(Screen output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Business-v1HomeGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
-
-var api = new DLearnBffApi.BusinessApi()
-var opts = { 
-  'userId': userId_example, // {{String}} 
-  'xAppVersion': 56, // {{Integer}} 
-  'acceptLanguage': acceptLanguage_example, // {{String}} 
-  'type': type_example // {{String}} 
-};
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.v1HomeGet(opts, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Business-v1HomeGet-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Business-v1HomeGet-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class v1HomeGetExample
-    {
-        public void main()
-        {
-
-            var apiInstance = new BusinessApi();
-            var userId = userId_example;  // String |  (optional) 
-            var xAppVersion = 56;  // Integer |  (optional) 
-            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
-            var type = type_example;  // String |  (optional) 
-
-            try
-            {
-                // Get Home Screen
-                Screen result = apiInstance.v1HomeGet(userId, xAppVersion, acceptLanguage, type);
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling BusinessApi.v1HomeGet: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Business-v1HomeGet-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$api_instance = new Swagger\Client\ApiBusinessApi();
-$userId = userId_example; // String | 
-$xAppVersion = 56; // Integer | 
-$acceptLanguage = acceptLanguage_example; // String | 
-$type = type_example; // String | 
-
-try {
-    $result = $api_instance->v1HomeGet($userId, $xAppVersion, $acceptLanguage, $type);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling BusinessApi->v1HomeGet: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Business-v1HomeGet-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::BusinessApi;
-
-my $api_instance = WWW::SwaggerClient::BusinessApi->new();
-my $userId = userId_example; # String | 
-my $xAppVersion = 56; # Integer | 
-my $acceptLanguage = acceptLanguage_example; # String | 
-my $type = type_example; # String | 
-
-eval { 
-    my $result = $api_instance->v1HomeGet(userId => $userId, xAppVersion => $xAppVersion, acceptLanguage => $acceptLanguage, type => $type);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling BusinessApi->v1HomeGet: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Business-v1HomeGet-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-# create an instance of the API class
-api_instance = swagger_client.BusinessApi()
-userId = userId_example # String |  (optional)
-xAppVersion = 56 # Integer |  (optional)
-acceptLanguage = acceptLanguage_example # String |  (optional)
-type = type_example # String |  (optional)
-
-try: 
-    # Get Home Screen
-    api_response = api_instance.v1_home_get(userId=userId, xAppVersion=xAppVersion, acceptLanguage=acceptLanguage, type=type)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling BusinessApi->v1HomeGet: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-
-                            <div class="methodsubtabletitle">Header parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                  <tr><td style="width:150px;">X-App-Version</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_v1HomeGet_xAppVersion">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      Integer
-                                                  </span>
-                                  
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                                  <tr><td style="width:150px;">Accept-Language</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_v1HomeGet_acceptLanguage">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      String
-                                                  </span>
-                                  
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                            </table>
-
-
-
-                            <div class="methodsubtabletitle">Query parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                <tr><td style="width:150px;">userId</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_v1HomeGet_userId">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    String
-                                                </span>
-                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                                <tr><td style="width:150px;">type</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_v1HomeGet_type">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    String
-                                                </span>
-                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                            </table>
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - OK </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-v1HomeGet-200-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-v1HomeGet-200-schema">
-                                  <div id='responses-v1HomeGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "OK",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/Screen"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-v1HomeGet-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-v1HomeGet-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-v1HomeGet-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
-                    <div id="api-Business-v1MovieMovieIdGet">
-                      <article id="api-Business-v1MovieMovieIdGet-0" data-group="User" data-name="v1MovieMovieIdGet" data-version="0">
-                        <div class="pull-left">
-                          <h1>v1MovieMovieIdGet</h1>
-                          <p>Get Movie Detail Screen</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked"></p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/movie/{movieId}</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Business-v1MovieMovieIdGet-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Business-v1MovieMovieIdGet-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
--H "Accept: application/json"\
-"http://localhost:8081/v1/movie/{movieId}?userId="</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.BusinessApi;
-
-import java.io.File;
-import java.util.*;
-
-public class BusinessApiExample {
-
-    public static void main(String[] args) {
-        
-        BusinessApi apiInstance = new BusinessApi();
-        String movieId = movieId_example; // String | 
-        String userId = userId_example; // String | 
-        Integer xAppVersion = 56; // Integer | 
-        try {
-            Screen result = apiInstance.v1MovieMovieIdGet(movieId, userId, xAppVersion);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling BusinessApi#v1MovieMovieIdGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.BusinessApi;
-
-public class BusinessApiExample {
-
-    public static void main(String[] args) {
-        BusinessApi apiInstance = new BusinessApi();
-        String movieId = movieId_example; // String | 
-        String userId = userId_example; // String | 
-        Integer xAppVersion = 56; // Integer | 
-        try {
-            Screen result = apiInstance.v1MovieMovieIdGet(movieId, userId, xAppVersion);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling BusinessApi#v1MovieMovieIdGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *movieId = movieId_example; // 
-String *userId = userId_example; //  (optional)
-Integer *xAppVersion = 56; //  (optional)
-
-BusinessApi *apiInstance = [[BusinessApi alloc] init];
-
-// Get Movie Detail Screen
-[apiInstance v1MovieMovieIdGetWith:movieId
-    userId:userId
-    xAppVersion:xAppVersion
-              completionHandler: ^(Screen output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
-
-var api = new DLearnBffApi.BusinessApi()
-var movieId = movieId_example; // {{String}} 
-var opts = { 
-  'userId': userId_example, // {{String}} 
-  'xAppVersion': 56 // {{Integer}} 
-};
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.v1MovieMovieIdGet(movieId, opts, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class v1MovieMovieIdGetExample
-    {
-        public void main()
-        {
-
-            var apiInstance = new BusinessApi();
-            var movieId = movieId_example;  // String | 
-            var userId = userId_example;  // String |  (optional) 
-            var xAppVersion = 56;  // Integer |  (optional) 
-
-            try
-            {
-                // Get Movie Detail Screen
-                Screen result = apiInstance.v1MovieMovieIdGet(movieId, userId, xAppVersion);
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling BusinessApi.v1MovieMovieIdGet: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$api_instance = new Swagger\Client\ApiBusinessApi();
-$movieId = movieId_example; // String | 
-$userId = userId_example; // String | 
-$xAppVersion = 56; // Integer | 
-
-try {
-    $result = $api_instance->v1MovieMovieIdGet($movieId, $userId, $xAppVersion);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling BusinessApi->v1MovieMovieIdGet: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::BusinessApi;
-
-my $api_instance = WWW::SwaggerClient::BusinessApi->new();
-my $movieId = movieId_example; # String | 
-my $userId = userId_example; # String | 
-my $xAppVersion = 56; # Integer | 
-
-eval { 
-    my $result = $api_instance->v1MovieMovieIdGet(movieId => $movieId, userId => $userId, xAppVersion => $xAppVersion);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling BusinessApi->v1MovieMovieIdGet: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-# create an instance of the API class
-api_instance = swagger_client.BusinessApi()
-movieId = movieId_example # String | 
-userId = userId_example # String |  (optional)
-xAppVersion = 56 # Integer |  (optional)
-
-try: 
-    # Get Movie Detail Screen
-    api_response = api_instance.v1_movie_movie_id_get(movieId, userId=userId, xAppVersion=xAppVersion)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling BusinessApi->v1MovieMovieIdGet: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-                            <div class="methodsubtabletitle">Path parameters</div>
-                            <table id="methodsubtable">
-                                <tr>
-                                  <th width="150px">Name</th>
-                                  <th>Description</th>
-                                </tr>
-                                  <tr><td style="width:150px;">movieId*</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_v1MovieMovieIdGet_movieId">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      String
-                                                  </span>
-                                  
-                                              </div>
-                                                  <div class="inner required">
-                                                      Required
-                                                  </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                            </table>
-
-                            <div class="methodsubtabletitle">Header parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                  <tr><td style="width:150px;">X-App-Version</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_v1MovieMovieIdGet_xAppVersion">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      Integer
-                                                  </span>
-                                  
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                            </table>
-
-
-
-                            <div class="methodsubtabletitle">Query parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                <tr><td style="width:150px;">userId</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_v1MovieMovieIdGet_userId">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    String
-                                                </span>
-                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                            </table>
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - OK </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-v1MovieMovieIdGet-200-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-v1MovieMovieIdGet-200-schema">
-                                  <div id='responses-v1MovieMovieIdGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "OK",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/Screen"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-v1MovieMovieIdGet-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-v1MovieMovieIdGet-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-v1MovieMovieIdGet-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
-                  </section>
                 <section id="api-SDUI">
                   <h1>SDUI</h1>
                     <div id="api-SDUI-v1AppPost">
@@ -1715,7 +838,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Central gateway for dynamic screens and actions.</p>
+                        <p class="marked"></p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/app</span></code></pre>
@@ -1759,10 +882,9 @@ public class SDUIApiExample {
         SDUIApi apiInstance = new SDUIApi();
         AppRequest body = ; // AppRequest | 
         Integer xAppVersion = 56; // Integer | 
-        String acceptLanguage = acceptLanguage_example; // String | 
         String userId = userId_example; // String | 
         try {
-            Screen result = apiInstance.v1AppPost(body, xAppVersion, acceptLanguage, userId);
+            Screen result = apiInstance.v1AppPost(body, xAppVersion, userId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SDUIApi#v1AppPost");
@@ -1781,10 +903,9 @@ public class SDUIApiExample {
         SDUIApi apiInstance = new SDUIApi();
         AppRequest body = ; // AppRequest | 
         Integer xAppVersion = 56; // Integer | 
-        String acceptLanguage = acceptLanguage_example; // String | 
         String userId = userId_example; // String | 
         try {
-            Screen result = apiInstance.v1AppPost(body, xAppVersion, acceptLanguage, userId);
+            Screen result = apiInstance.v1AppPost(body, xAppVersion, userId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SDUIApi#v1AppPost");
@@ -1800,7 +921,6 @@ public class SDUIApiExample {
                             <div class="tab-pane" id="examples-SDUI-v1AppPost-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">AppRequest *body = ; // 
 Integer *xAppVersion = 56; //  (optional)
-String *acceptLanguage = acceptLanguage_example; //  (optional)
 String *userId = userId_example; //  (optional)
 
 SDUIApi *apiInstance = [[SDUIApi alloc] init];
@@ -1808,7 +928,6 @@ SDUIApi *apiInstance = [[SDUIApi alloc] init];
 // SDUI Gateway
 [apiInstance v1AppPostWith:body
     xAppVersion:xAppVersion
-    acceptLanguage:acceptLanguage
     userId:userId
               completionHandler: ^(Screen output, NSError* error) {
                             if (output) {
@@ -1828,7 +947,6 @@ var api = new DLearnBffApi.SDUIApi()
 var body = ; // {{AppRequest}} 
 var opts = { 
   'xAppVersion': 56 // {{Integer}} 
-  'acceptLanguage': acceptLanguage_example // {{String}} 
   'userId': userId_example // {{String}} 
 };
 var callback = function(error, data, response) {
@@ -1862,13 +980,12 @@ namespace Example
             var apiInstance = new SDUIApi();
             var body = new AppRequest(); // AppRequest | 
             var xAppVersion = 56;  // Integer |  (optional) 
-            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
             var userId = userId_example;  // String |  (optional) 
 
             try
             {
                 // SDUI Gateway
-                Screen result = apiInstance.v1AppPost(body, xAppVersion, acceptLanguage, userId);
+                Screen result = apiInstance.v1AppPost(body, xAppVersion, userId);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -1888,11 +1005,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 $api_instance = new Swagger\Client\ApiSDUIApi();
 $body = ; // AppRequest | 
 $xAppVersion = 56; // Integer | 
-$acceptLanguage = acceptLanguage_example; // String | 
 $userId = userId_example; // String | 
 
 try {
-    $result = $api_instance->v1AppPost($body, $xAppVersion, $acceptLanguage, $userId);
+    $result = $api_instance->v1AppPost($body, $xAppVersion, $userId);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling SDUIApi->v1AppPost: ', $e->getMessage(), PHP_EOL;
@@ -1908,11 +1024,10 @@ use WWW::SwaggerClient::SDUIApi;
 my $api_instance = WWW::SwaggerClient::SDUIApi->new();
 my $body = WWW::SwaggerClient::Object::AppRequest->new(); # AppRequest | 
 my $xAppVersion = 56; # Integer | 
-my $acceptLanguage = acceptLanguage_example; # String | 
 my $userId = userId_example; # String | 
 
 eval { 
-    my $result = $api_instance->v1AppPost(body => $body, xAppVersion => $xAppVersion, acceptLanguage => $acceptLanguage, userId => $userId);
+    my $result = $api_instance->v1AppPost(body => $body, xAppVersion => $xAppVersion, userId => $userId);
     print Dumper($result);
 };
 if ($@) {
@@ -1931,12 +1046,11 @@ from pprint import pprint
 api_instance = swagger_client.SDUIApi()
 body =  # AppRequest | 
 xAppVersion = 56 # Integer |  (optional)
-acceptLanguage = acceptLanguage_example # String |  (optional)
 userId = userId_example # String |  (optional)
 
 try: 
     # SDUI Gateway
-    api_response = api_instance.v1_app_post(body, xAppVersion=xAppVersion, acceptLanguage=acceptLanguage, userId=userId)
+    api_response = api_instance.v1_app_post(body, xAppVersion=xAppVersion, userId=userId)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling SDUIApi->v1AppPost: %s\n" % e)</code></pre>
@@ -1961,22 +1075,6 @@ except ApiException as e:
                                               <div class="primitive">
                                                   <span class="type">
                                                       Integer
-                                                  </span>
-                                  
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                                  <tr><td style="width:150px;">Accept-Language</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_v1AppPost_acceptLanguage">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      String
                                                   </span>
                                   
                                               </div>
@@ -2116,7 +1214,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Returns the main screen shell configuration (BottomNav, AppContainer).</p>
+                        <p class="marked"></p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/main</span></code></pre>
@@ -2159,9 +1257,8 @@ public class SDUIApiExample {
         SDUIApi apiInstance = new SDUIApi();
         String userId = userId_example; // String | 
         Integer xAppVersion = 56; // Integer | 
-        String acceptLanguage = acceptLanguage_example; // String | 
         try {
-            Screen result = apiInstance.v1MainGet(userId, xAppVersion, acceptLanguage);
+            Screen result = apiInstance.v1MainGet(userId, xAppVersion);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SDUIApi#v1MainGet");
@@ -2180,9 +1277,8 @@ public class SDUIApiExample {
         SDUIApi apiInstance = new SDUIApi();
         String userId = userId_example; // String | 
         Integer xAppVersion = 56; // Integer | 
-        String acceptLanguage = acceptLanguage_example; // String | 
         try {
-            Screen result = apiInstance.v1MainGet(userId, xAppVersion, acceptLanguage);
+            Screen result = apiInstance.v1MainGet(userId, xAppVersion);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SDUIApi#v1MainGet");
@@ -2198,14 +1294,12 @@ public class SDUIApiExample {
                             <div class="tab-pane" id="examples-SDUI-v1MainGet-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *userId = userId_example; //  (optional)
 Integer *xAppVersion = 56; //  (optional)
-String *acceptLanguage = acceptLanguage_example; //  (optional)
 
 SDUIApi *apiInstance = [[SDUIApi alloc] init];
 
 // Get Main Shell
 [apiInstance v1MainGetWith:userId
     xAppVersion:xAppVersion
-    acceptLanguage:acceptLanguage
               completionHandler: ^(Screen output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -2223,8 +1317,7 @@ SDUIApi *apiInstance = [[SDUIApi alloc] init];
 var api = new DLearnBffApi.SDUIApi()
 var opts = { 
   'userId': userId_example, // {{String}} 
-  'xAppVersion': 56, // {{Integer}} 
-  'acceptLanguage': acceptLanguage_example // {{String}} 
+  'xAppVersion': 56 // {{Integer}} 
 };
 var callback = function(error, data, response) {
   if (error) {
@@ -2257,12 +1350,11 @@ namespace Example
             var apiInstance = new SDUIApi();
             var userId = userId_example;  // String |  (optional) 
             var xAppVersion = 56;  // Integer |  (optional) 
-            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
 
             try
             {
                 // Get Main Shell
-                Screen result = apiInstance.v1MainGet(userId, xAppVersion, acceptLanguage);
+                Screen result = apiInstance.v1MainGet(userId, xAppVersion);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -2282,10 +1374,9 @@ require_once(__DIR__ . '/vendor/autoload.php');
 $api_instance = new Swagger\Client\ApiSDUIApi();
 $userId = userId_example; // String | 
 $xAppVersion = 56; // Integer | 
-$acceptLanguage = acceptLanguage_example; // String | 
 
 try {
-    $result = $api_instance->v1MainGet($userId, $xAppVersion, $acceptLanguage);
+    $result = $api_instance->v1MainGet($userId, $xAppVersion);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling SDUIApi->v1MainGet: ', $e->getMessage(), PHP_EOL;
@@ -2301,10 +1392,9 @@ use WWW::SwaggerClient::SDUIApi;
 my $api_instance = WWW::SwaggerClient::SDUIApi->new();
 my $userId = userId_example; # String | 
 my $xAppVersion = 56; # Integer | 
-my $acceptLanguage = acceptLanguage_example; # String | 
 
 eval { 
-    my $result = $api_instance->v1MainGet(userId => $userId, xAppVersion => $xAppVersion, acceptLanguage => $acceptLanguage);
+    my $result = $api_instance->v1MainGet(userId => $userId, xAppVersion => $xAppVersion);
     print Dumper($result);
 };
 if ($@) {
@@ -2323,11 +1413,10 @@ from pprint import pprint
 api_instance = swagger_client.SDUIApi()
 userId = userId_example # String |  (optional)
 xAppVersion = 56 # Integer |  (optional)
-acceptLanguage = acceptLanguage_example # String |  (optional)
 
 try: 
     # Get Main Shell
-    api_response = api_instance.v1_main_get(userId=userId, xAppVersion=xAppVersion, acceptLanguage=acceptLanguage)
+    api_response = api_instance.v1_main_get(userId=userId, xAppVersion=xAppVersion)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling SDUIApi->v1MainGet: %s\n" % e)</code></pre>
@@ -2352,22 +1441,6 @@ except ApiException as e:
                                               <div class="primitive">
                                                   <span class="type">
                                                       Integer
-                                                  </span>
-                                  
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                                  <tr><td style="width:150px;">Accept-Language</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_v1MainGet_acceptLanguage">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      String
                                                   </span>
                                   
                                               </div>
@@ -2467,7 +1540,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Gera um novo código para a transação atual.</p>
+                        <p class="marked">Gera um novo código. O Transaction ID deve vir no Header.</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/auth/challenge/resend</span></code></pre>
@@ -2491,7 +1564,6 @@ except ApiException as e:
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Security-v1AuthChallengeResendPost-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
--H "Content-Type: application/json"\
 "http://localhost:8081/v1/auth/challenge/resend"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Security-v1AuthChallengeResendPost-0-java">
@@ -2508,9 +1580,9 @@ public class SecurityApiExample {
     public static void main(String[] args) {
         
         SecurityApi apiInstance = new SecurityApi();
-        ResendChallengeRequest body = ; // ResendChallengeRequest | 
+        String xTransactionId = xTransactionId_example; // String | O ID da transação de desafio recebido no erro 428.
         try {
-            apiInstance.v1AuthChallengeResendPost(body);
+            apiInstance.v1AuthChallengeResendPost(xTransactionId);
         } catch (ApiException e) {
             System.err.println("Exception when calling SecurityApi#v1AuthChallengeResendPost");
             e.printStackTrace();
@@ -2526,9 +1598,9 @@ public class SecurityApiExample {
 
     public static void main(String[] args) {
         SecurityApi apiInstance = new SecurityApi();
-        ResendChallengeRequest body = ; // ResendChallengeRequest | 
+        String xTransactionId = xTransactionId_example; // String | O ID da transação de desafio recebido no erro 428.
         try {
-            apiInstance.v1AuthChallengeResendPost(body);
+            apiInstance.v1AuthChallengeResendPost(xTransactionId);
         } catch (ApiException e) {
             System.err.println("Exception when calling SecurityApi#v1AuthChallengeResendPost");
             e.printStackTrace();
@@ -2541,12 +1613,12 @@ public class SecurityApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Security-v1AuthChallengeResendPost-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">ResendChallengeRequest *body = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">String *xTransactionId = xTransactionId_example; // O ID da transação de desafio recebido no erro 428.
 
 SecurityApi *apiInstance = [[SecurityApi alloc] init];
 
 // Resend Security Challenge
-[apiInstance v1AuthChallengeResendPostWith:body
+[apiInstance v1AuthChallengeResendPostWith:xTransactionId
               completionHandler: ^(NSError* error) {
                             if (error) {
                                 NSLog(@"Error: %@", error);
@@ -2559,7 +1631,7 @@ SecurityApi *apiInstance = [[SecurityApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
 
 var api = new DLearnBffApi.SecurityApi()
-var body = ; // {{ResendChallengeRequest}} 
+var xTransactionId = xTransactionId_example; // {{String}} O ID da transação de desafio recebido no erro 428.
 
 var callback = function(error, data, response) {
   if (error) {
@@ -2568,7 +1640,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.v1AuthChallengeResendPost(body, callback);
+api.v1AuthChallengeResendPost(xTransactionId, callback);
 </code></pre>
                             </div>
 
@@ -2590,12 +1662,12 @@ namespace Example
         {
 
             var apiInstance = new SecurityApi();
-            var body = new ResendChallengeRequest(); // ResendChallengeRequest | 
+            var xTransactionId = xTransactionId_example;  // String | O ID da transação de desafio recebido no erro 428.
 
             try
             {
                 // Resend Security Challenge
-                apiInstance.v1AuthChallengeResendPost(body);
+                apiInstance.v1AuthChallengeResendPost(xTransactionId);
             }
             catch (Exception e)
             {
@@ -2612,10 +1684,10 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiSecurityApi();
-$body = ; // ResendChallengeRequest | 
+$xTransactionId = xTransactionId_example; // String | O ID da transação de desafio recebido no erro 428.
 
 try {
-    $api_instance->v1AuthChallengeResendPost($body);
+    $api_instance->v1AuthChallengeResendPost($xTransactionId);
 } catch (Exception $e) {
     echo 'Exception when calling SecurityApi->v1AuthChallengeResendPost: ', $e->getMessage(), PHP_EOL;
 }
@@ -2628,10 +1700,10 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::SecurityApi;
 
 my $api_instance = WWW::SwaggerClient::SecurityApi->new();
-my $body = WWW::SwaggerClient::Object::ResendChallengeRequest->new(); # ResendChallengeRequest | 
+my $xTransactionId = xTransactionId_example; # String | O ID da transação de desafio recebido no erro 428.
 
 eval { 
-    $api_instance->v1AuthChallengeResendPost(body => $body);
+    $api_instance->v1AuthChallengeResendPost(xTransactionId => $xTransactionId);
 };
 if ($@) {
     warn "Exception when calling SecurityApi->v1AuthChallengeResendPost: $@\n";
@@ -2647,11 +1719,11 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.SecurityApi()
-body =  # ResendChallengeRequest | 
+xTransactionId = xTransactionId_example # String | O ID da transação de desafio recebido no erro 428.
 
 try: 
     # Resend Security Challenge
-    api_instance.v1_auth_challenge_resend_post(body)
+    api_instance.v1_auth_challenge_resend_post(xTransactionId)
 except ApiException as e:
     print("Exception when calling SecurityApi->v1AuthChallengeResendPost: %s\n" % e)</code></pre>
                             </div>
@@ -2660,55 +1732,41 @@ except ApiException as e:
                           <h2>Parameters</h2>
 
 
-
-                            <div class="methodsubtabletitle">Body parameters</div>
+                            <div class="methodsubtabletitle">Header parameters</div>
                             <table id="methodsubtable">
                               <tr>
                                 <th width="150px">Name</th>
                                 <th>Description</th>
                               </tr>
-                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
-                                <td>
-                                
-                                
-                                <script>
-                                $(document).ready(function() {
-                                  var schemaWrapper = {
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/ResendChallengeRequest"
-      }
-    }
-  },
-  "required" : true
-};
-                                  var schema = schemaWrapper.content["application/json"].schema;
-                                  if (schema.$ref != null) {
-                                    schema = defsParser.$refs.get(schema.$ref);
-                                  } else {
-                                    schemaWrapper.components = {};
-                                    schemaWrapper.components.schemas = Object.assign({}, defs);
-                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                      console.log(err);
-                                    });
-                                  }
-                                
-                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-                                  var result = $('#d2e199_v1AuthChallengeResendPost_body');
-                                  result.empty();
-                                  result.append(view.render());
-                                });
-                                </script>
-                                <div id="d2e199_v1AuthChallengeResendPost_body"></div>
-                                </td>
-                                </tr>
+                                  <tr><td style="width:150px;">X-Transaction-Id*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1AuthChallengeResendPost_xTransactionId">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                                      <div class="inner description">
+                                                          O ID da transação de desafio recebido no erro 428.
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
                             </table>
 
 
 
+
                           <h2>Responses</h2>
-                            <h3> Status: 200 - Desafio reenviado com sucesso </h3>
+                            <h3> Status: 200 - Reenviado com sucesso </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                             </ul>
@@ -2736,7 +1794,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Valida as respostas do desafio (OTP/Biometria) e retorna um token de prova.</p>
+                        <p class="marked">Valida as respostas do desafio. O Transaction ID deve vir no Header.</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/auth/challenge/resolve</span></code></pre>
@@ -2778,9 +1836,10 @@ public class SecurityApiExample {
     public static void main(String[] args) {
         
         SecurityApi apiInstance = new SecurityApi();
-        ResolveChallengeRequest body = ; // ResolveChallengeRequest | 
+        ResolveChallengeRequestBody body = ; // ResolveChallengeRequestBody | 
+        String xTransactionId = xTransactionId_example; // String | O ID da transação de desafio recebido no erro 428.
         try {
-            ResolveChallengeResponse result = apiInstance.v1AuthChallengeResolvePost(body);
+            ResolveChallengeResponse result = apiInstance.v1AuthChallengeResolvePost(body, xTransactionId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SecurityApi#v1AuthChallengeResolvePost");
@@ -2797,9 +1856,10 @@ public class SecurityApiExample {
 
     public static void main(String[] args) {
         SecurityApi apiInstance = new SecurityApi();
-        ResolveChallengeRequest body = ; // ResolveChallengeRequest | 
+        ResolveChallengeRequestBody body = ; // ResolveChallengeRequestBody | 
+        String xTransactionId = xTransactionId_example; // String | O ID da transação de desafio recebido no erro 428.
         try {
-            ResolveChallengeResponse result = apiInstance.v1AuthChallengeResolvePost(body);
+            ResolveChallengeResponse result = apiInstance.v1AuthChallengeResolvePost(body, xTransactionId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SecurityApi#v1AuthChallengeResolvePost");
@@ -2813,12 +1873,14 @@ public class SecurityApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Security-v1AuthChallengeResolvePost-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">ResolveChallengeRequest *body = ; // 
+                              <pre class="prettyprint"><code class="language-cpp">ResolveChallengeRequestBody *body = ; // 
+String *xTransactionId = xTransactionId_example; // O ID da transação de desafio recebido no erro 428.
 
 SecurityApi *apiInstance = [[SecurityApi alloc] init];
 
 // Resolve Security Challenge
 [apiInstance v1AuthChallengeResolvePostWith:body
+    xTransactionId:xTransactionId
               completionHandler: ^(ResolveChallengeResponse output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -2834,7 +1896,8 @@ SecurityApi *apiInstance = [[SecurityApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
 
 var api = new DLearnBffApi.SecurityApi()
-var body = ; // {{ResolveChallengeRequest}} 
+var body = ; // {{ResolveChallengeRequestBody}} 
+var xTransactionId = xTransactionId_example; // {{String}} O ID da transação de desafio recebido no erro 428.
 
 var callback = function(error, data, response) {
   if (error) {
@@ -2843,7 +1906,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.v1AuthChallengeResolvePost(body, callback);
+api.v1AuthChallengeResolvePost(bodyxTransactionId, callback);
 </code></pre>
                             </div>
 
@@ -2865,12 +1928,13 @@ namespace Example
         {
 
             var apiInstance = new SecurityApi();
-            var body = new ResolveChallengeRequest(); // ResolveChallengeRequest | 
+            var body = new ResolveChallengeRequestBody(); // ResolveChallengeRequestBody | 
+            var xTransactionId = xTransactionId_example;  // String | O ID da transação de desafio recebido no erro 428.
 
             try
             {
                 // Resolve Security Challenge
-                ResolveChallengeResponse result = apiInstance.v1AuthChallengeResolvePost(body);
+                ResolveChallengeResponse result = apiInstance.v1AuthChallengeResolvePost(body, xTransactionId);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -2888,10 +1952,11 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiSecurityApi();
-$body = ; // ResolveChallengeRequest | 
+$body = ; // ResolveChallengeRequestBody | 
+$xTransactionId = xTransactionId_example; // String | O ID da transação de desafio recebido no erro 428.
 
 try {
-    $result = $api_instance->v1AuthChallengeResolvePost($body);
+    $result = $api_instance->v1AuthChallengeResolvePost($body, $xTransactionId);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling SecurityApi->v1AuthChallengeResolvePost: ', $e->getMessage(), PHP_EOL;
@@ -2905,10 +1970,11 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::SecurityApi;
 
 my $api_instance = WWW::SwaggerClient::SecurityApi->new();
-my $body = WWW::SwaggerClient::Object::ResolveChallengeRequest->new(); # ResolveChallengeRequest | 
+my $body = WWW::SwaggerClient::Object::ResolveChallengeRequestBody->new(); # ResolveChallengeRequestBody | 
+my $xTransactionId = xTransactionId_example; # String | O ID da transação de desafio recebido no erro 428.
 
 eval { 
-    my $result = $api_instance->v1AuthChallengeResolvePost(body => $body);
+    my $result = $api_instance->v1AuthChallengeResolvePost(body => $body, xTransactionId => $xTransactionId);
     print Dumper($result);
 };
 if ($@) {
@@ -2925,11 +1991,12 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.SecurityApi()
-body =  # ResolveChallengeRequest | 
+body =  # ResolveChallengeRequestBody | 
+xTransactionId = xTransactionId_example # String | O ID da transação de desafio recebido no erro 428.
 
 try: 
     # Resolve Security Challenge
-    api_response = api_instance.v1_auth_challenge_resolve_post(body)
+    api_response = api_instance.v1_auth_challenge_resolve_post(body, xTransactionId)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling SecurityApi->v1AuthChallengeResolvePost: %s\n" % e)</code></pre>
@@ -2939,6 +2006,35 @@ except ApiException as e:
                           <h2>Parameters</h2>
 
 
+                            <div class="methodsubtabletitle">Header parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                  <tr><td style="width:150px;">X-Transaction-Id*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1AuthChallengeResolvePost_xTransactionId">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                                      <div class="inner description">
+                                                          O ID da transação de desafio recebido no erro 428.
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
 
                             <div class="methodsubtabletitle">Body parameters</div>
                             <table id="methodsubtable">
@@ -2956,7 +2052,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ResolveChallengeRequest"
+        "$ref" : "#/components/schemas/ResolveChallengeRequestBody"
       }
     }
   },
@@ -2987,7 +2083,7 @@ except ApiException as e:
 
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - Desafio resolvido com sucesso </h3>
+                            <h3> Status: 200 - OK </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
@@ -3002,7 +2098,7 @@ except ApiException as e:
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "Desafio resolvido com sucesso",
+  "description" : "OK",
   "content" : {
     "application/json" : {
       "schema" : {
@@ -3047,7 +2143,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Protegido pelo Motor de Desafios. Requer o header X-Challenge-Token após a resolução.</p>
+                        <p class="marked">Exige o header X-Challenge-Token após a resolução.</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/password/change</span></code></pre>
@@ -3354,7 +2450,7 @@ except ApiException as e:
                             </table>
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - Senha alterada com sucesso </h3>
+                            <h3> Status: 200 - OK </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                             </ul>
@@ -3362,7 +2458,7 @@ except ApiException as e:
                             <div class="tab-content" style='margin-bottom: 10px;'>
                             </div>
 
-                            <h3> Status: 428 - Precondition Required - MFA Challenge Necessary </h3>
+                            <h3> Status: 428 - MFA Required </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
@@ -3377,7 +2473,7 @@ except ApiException as e:
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "Precondition Required - MFA Challenge Necessary",
+  "description" : "MFA Required",
   "content" : {
     "application/json" : {
       "schema" : {

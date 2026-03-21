@@ -74,5 +74,6 @@ fun Application.module() {
         movieDetailController(movieDetailOrchestrator)
         searchController(searchOrchestrator)
         appController()
+        passwordController()
     }
 }

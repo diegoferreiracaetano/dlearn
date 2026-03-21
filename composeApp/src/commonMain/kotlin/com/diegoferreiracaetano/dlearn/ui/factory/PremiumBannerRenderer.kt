@@ -25,7 +25,6 @@ class PremiumBannerRenderer : ComponentRenderer {
             icon = banner.icon.toIcon(),
             modifier = modifier
                 .padding(horizontal = 16.dp, vertical = 8.dp)
-                .clickable { banner.actionUrl?.let { actions.onItemClick(it) } }
         )
     }
 }

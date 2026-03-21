@@ -31,6 +31,7 @@ class FooterRenderer : ComponentRenderer {
             type = ButtonType.PRIMARY,
             modifier = modifier
                 .fillMaxWidth()
+                .padding(top = 32.dp)
                 .padding(16.dp)
         )
     }

@@ -104,6 +104,14 @@ fun AppNavGraph(
             )
         }
 
+        composable(ChangePassword.route) {
+            CreateNewPasswordScreen(
+                onBackClick = { navController.popBackStack() },
+                onResetClick = { navController.popBackStack() },
+                modifier = modifier
+            )
+        }
+
         composable(Search.route) {
             SearchMainScreen(
                 onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
@@ -170,7 +178,7 @@ fun AppNavGraph(
                 onBackClick = { navController.popBackStack() },
                 onTabSelected = { route -> navController.navigateToRoute(route) },
                 onItemClick = { route -> navController.navigate(route) },
-                onNavigate = { route -> navController.navigateToRoute(route) },
+                onNavigate = { route -> navController.navigate(route) },
                 onDeeplink = { url -> uriHandler.openUri(url) },
                 modifier = modifier
             )

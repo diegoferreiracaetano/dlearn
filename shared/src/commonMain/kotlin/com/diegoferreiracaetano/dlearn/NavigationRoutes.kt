@@ -8,6 +8,7 @@ object NavigationRoutes {
     const val PROFILE = "profile"
     const val EDIT_PROFILE = "profile/edit"
     const val UPDATE_PROFILE = "profile/update"
+    const val CHANGE_PASSWORD = "profile/change_password"
     const val SEARCH = "search"
     const val MOVIE_DETAIL = "movie_detail"
     const val WELCOME = "welcome"

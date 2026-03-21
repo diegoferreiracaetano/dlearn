@@ -70,6 +70,7 @@ class RenderComponentFactory(
     private val appSectionTitleRenderer: AppSectionTitleRenderer,
     private val appProfileHeaderRenderer: AppProfileHeaderRenderer,
     private val appTextFieldRenderer: AppTextFieldRenderer,
+    private val appSnackbarRenderer: AppSnackbarRenderer,
 ) {
 
     @Composable
@@ -118,6 +119,7 @@ class RenderComponentFactory(
             is AppSectionTitleComponent -> appSectionTitleRenderer.Render(component, actions, modifier)
             is AppProfileHeaderComponent -> appProfileHeaderRenderer.Render(component, actions, modifier)
             is AppTextFieldComponent -> appTextFieldRenderer.Render(component, actions, modifier)
+            is AppSnackbarComponent -> appSnackbarRenderer.Render(component, actions, modifier)
         }
     }
 }

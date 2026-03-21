@@ -41,13 +41,6 @@ class ProfileMapper(private val i18n: I18nProvider) {
                 fieldType = AppTextFieldType.EMAIL
             ),
             AppTextFieldComponent(
-                key = "password",
-                value = data.password ?: "************",
-                label = AppStringType.FIELD_PASSWORD,
-                placeholder = AppStringType.FIELD_PASSWORD,
-                fieldType = AppTextFieldType.PASSWORD
-            ),
-            AppTextFieldComponent(
                 key = "phone",
                 value = data.phoneNumber ?: "",
                 label = AppStringType.FIELD_PHONE_NUMBER,
@@ -69,8 +62,7 @@ class ProfileMapper(private val i18n: I18nProvider) {
         return PremiumBannerComponent(
             title = i18n.getString(AppStringType.PREMIUM_MEMBER, lang),
             description = i18n.getString(AppStringType.PREMIUM_DESCRIPTION, lang),
-            icon = AppIconType.PERSON,
-            actionUrl = "/premium"
+            icon = AppIconType.PERSON
         )
     }
 
@@ -88,7 +80,7 @@ class ProfileMapper(private val i18n: I18nProvider) {
                     id = "password",
                     label = i18n.getString(AppStringType.ITEM_PASSWORD, lang),
                     icon = AppIconType.LOCK,
-                    actionUrl = "/change-password"
+                    actionUrl = NavigationRoutes.CHANGE_PASSWORD
                 )
             )
         )

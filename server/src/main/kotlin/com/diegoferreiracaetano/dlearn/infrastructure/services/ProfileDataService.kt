@@ -4,10 +4,10 @@ import com.diegoferreiracaetano.dlearn.domain.models.ProfileDomainData
 import kotlinx.serialization.json.Json
 import java.io.InputStream
 
-class ProfileDataService {
+open class ProfileDataService {
     private var currentUser: ProfileDomainData? = null
 
-    fun fetchProfileData(userId: String): ProfileDomainData {
+    open fun fetchProfileData(userId: String): ProfileDomainData {
         if (currentUser == null) {
             val inputStream: InputStream = this.javaClass.classLoader.getResourceAsStream("profile.json")
                 ?: throw IllegalStateException("profile.json not found")
@@ -17,7 +17,7 @@ class ProfileDataService {
         return currentUser!!
     }
 
-    fun updateProfileData(userId: String, updates: Map<String, String>): ProfileDomainData {
+    open fun updateProfileData(userId: String, updates: Map<String, String>): ProfileDomainData {
         val current = fetchProfileData(userId)
         currentUser = current.copy(
             name = updates["full_name"] ?: current.name,

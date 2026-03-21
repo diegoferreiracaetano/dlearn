@@ -37,8 +37,8 @@ fun Route.profileController() {
             val data = call.receive<Map<String, String>>()
             val lang = call.request.acceptLanguage() ?: "en"
 
-            orchestrator.updateProfile(userId, data, lang)
-            call.respond(mapOf("status" to "success"))
+            val screen = orchestrator.updateProfile(userId, data, lang)
+            call.respond(screen)
         }
     }
 }

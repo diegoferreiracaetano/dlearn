@@ -35,6 +35,7 @@ val renderModule = module {
     factory { AppSectionTitleRenderer() }
     factory { AppProfileHeaderRenderer() }
     factory { AppTextFieldRenderer() }
+    factory { AppSnackbarRenderer() }
 
     single<RenderComponentFactory> {
         RenderComponentFactory(
@@ -65,7 +66,8 @@ val renderModule = module {
             searchContentRenderer = get(),
             appSectionTitleRenderer = get(),
             appProfileHeaderRenderer = get(),
-            appTextFieldRenderer = get()
+            appTextFieldRenderer = get(),
+            appSnackbarRenderer = get()
         )
     }
 }

@@ -23,3 +23,8 @@ object AppConstants {
     const val DEFAULT_LANG = "en"
     const val AVATAR_PLACEHOLDER = "https://avatars.githubusercontent.com/u/1023?v=4"
 }
+
+object SecurityConstants {
+    const val HEADER_CHALLENGE_TOKEN = "X-Challenge-Token"
+    const val CHALLENGE_TOKEN_PREFIX = "generated-challenge-token-"
+}

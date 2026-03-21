@@ -7,6 +7,34 @@ Este projeto é um ecossistema completo desenvolvido em **Kotlin Multiplatform (
 - **Documentação Técnica (GitHub Pages):** [https://diegoferreiracaetano.github.io/dlearn](https://diegoferreiracaetano.github.io/dlearn)
 - **Swagger UI (BFF):** [http://localhost:8081/swagger](http://localhost:8081/swagger) - Documentação interativa das rotas SDUI.
 - **API App Gateway:** `POST http://localhost:8081/v1/app` - Endpoint genérico para resoluções de tela e ações.
+- **Componentes SDUI:** [Docs de Componentes](docs/sdui/components.md) - Guia de referência de componentes.
+
+---
+
+## 🔐 Fluxo de Segurança: Alteração de Senha com Desafio OTP
+
+O projeto implementa um fluxo de segurança de dois passos (Two-Step Challenge) para operações críticas, como a troca de senha.
+
+### Passo a Passo do Fluxo:
+
+1. **Tentativa de Troca (`POST /v1/password/change`)**:
+   - O App envia a nova senha.
+   - O servidor retorna `428 Precondition Required` com um `challengeToken`.
+   - **Resultado:** A senha NÃO é alterada neste momento.
+
+2. **Desafio OTP (Tela de Verificação)**:
+   - O App captura o erro `428` e abre a tela de OTP (`VerifyAccountScreen`).
+   - O usuário insere o código (Ex: `123456` ou `000000` para Debug).
+
+3. **Verificação do Código (`POST /v1/password/verify-otp`)**:
+   - O App envia o código e o `challengeToken`.
+   - O servidor valida e retorna um `validatedToken`.
+   - **Mensagem:** `PASSWORD_OTP_VERIFIED` (Indica que o código está correto, mas a senha ainda não mudou).
+
+4. **Conclusão da Troca (`POST /v1/password/change`)**:
+   - O App reenvia a troca de senha incluindo o header `X-Challenge-Token: <validatedToken>`.
+   - O servidor valida o token e efetiva a alteração da senha.
+   - **Resposta:** `200 OK` com `PASSWORD_CHANGE_SUCCESS`.
 
 ---
 
@@ -38,35 +66,10 @@ O App processa essa intenção, transformando-a em uma chamada ao gateway ou uma
 
 ---
 
-## 🛠️ Como Adicionar uma Nova Tela (Fluxo Completo)
-
-Para criar um novo fluxo (ex: "Minha Lista", "Histórico"):
-
-### Passo 1: Backend (Server)
-1. **Defina o Layout**: Crie um `ScreenBuilder` (ex: `MyListScreenBuilder.kt`) que monte a árvore de `Component`.
-2. **Orquestre os Dados**: Crie um `Orchestrator` para buscar os dados necessários.
-3. **Registre no Gateway**: No `AppOrchestrator.kt`, adicione o novo path ao mapeamento `when (request.path)`.
-
-### Passo 2: Swagger
-Valide sua nova rota acessando `http://localhost:8081/swagger`. Teste o payload JSON e verifique a resposta.
-
-### Passo 3: Mobile (App)
-**Automático!** Se os componentes usados já existem no Design System, o App renderizará a nova tela assim que receber a resposta do servidor.
-
----
-
-## 🧩 Componentes e Design System
-O projeto utiliza um mapeamento rigoroso entre o Backend e o Design System:
-- **Componentes**: Cada `Component` (JSON) possui um `Renderer` correspondente no Compose.
-- **Ícones**: Definidos no enum `AppIconType`.
-- **Tematização**: Cores e dimensões são controladas via tokens no Design System.
-
----
-
 ## 🏗️ Estrutura do Projeto
 
 - **`:shared`**: Contratos, Enums, Modelos SDUI, Repositórios e lógica de rede.
-- **`:server`**: Ktor BFF, Orchestrators, Screen Builders e Integração TMDB.
+- **`:server`**: Ktor BFF, Orchestrators, UseCase e Gestão de Desafios (OTP).
 - **`:composeApp`**: UI Multiplatform (Android/iOS), Engine SDUI e Injeção de Dependência (Koin).
 
 ---

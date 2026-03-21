@@ -199,9 +199,119 @@ paths:
                 properties:
                   status:
                     type: string
+  /v1/password/change:
+    post:
+      summary: Change User Password
+      description: |
+        Changes the user password. 
+        This endpoint may return a 428 Precondition Required if a second factor (OTP) is needed.
+        In case of 428, the client should capture the 'challengeToken' from the response, 
+        trigger the OTP flow (VerifyAccountScreen), and then retry this request with the 
+        token in the 'X-Challenge-Token' header.
+      parameters:
+        - name: X-Challenge-Token
+          in: header
+          required: false
+          description: Token obtained after a successful OTP verification.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+      responses:
+        '200':
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangePasswordResponse'
+        '428':
+          description: Precondition Required (Challenge Needed)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordChallengeError'
+        '500':
+          description: Internal Server Error
+  /v1/password/verify-otp:
+    post:
+      summary: Verify OTP Code
+      description: Verifies the OTP code sent to the user. If successful, returns a validated token.
+      parameters:
+        - name: X-Challenge-Token
+          in: header
+          required: true
+          description: The challenge token received in the 428 error response.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyOtpRequest'
+      responses:
+        '200':
+          description: OTP verified successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyOtpResponse'
+        '400':
+          description: Invalid OTP code or challenge token
 
 components:
   schemas:
+    ChangePasswordRequest:
+      type: object
+      required:
+        - userId
+        - newPassword
+      properties:
+        userId:
+          type: string
+        newPassword:
+          type: string
+    ChangePasswordResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        status:
+          type: string
+          enum: [SUCCESS, CHALLENGE_REQUIRED, ERROR]
+    PasswordChallengeError:
+      type: object
+      properties:
+        code:
+          type: string
+          enum: [OTP_REQUIRED]
+        message:
+          type: string
+        challengeToken:
+          type: string
+    VerifyOtpRequest:
+      type: object
+      required:
+        - userId
+        - otpCode
+      properties:
+        userId:
+          type: string
+        otpCode:
+          type: string
+    VerifyOtpResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        validatedToken:
+          type: string
     AppRequest:
       type: object
       required:
@@ -476,8 +586,7 @@ components:
           type: boolean
         hasDropDown:
           type: boolean
-        isFilter:
-          type: boolean
+        isFilter: boolean
         options:
           type: array
           items:
@@ -723,6 +832,10 @@ components:
         - WATCHLIST_EMPTY_DESCRIPTION
         - FAVORITE_EMPTY_TITLE
         - FAVORITE_EMPTY_DESCRIPTION
+        - PASSWORD_CHANGE_SUCCESS
+        - PASSWORD_OTP_REQUIRED
+        - PASSWORD_OTP_VERIFIED
+        - INTERNAL_SERVER_ERROR
         - UNKNOWN
     AppTextFieldType:
       type: string

@@ -18,6 +18,7 @@ sealed class ScreenRouter(
     object ResetPassword : ScreenRouter(NavigationRoutes.RESET_PASSWORD)
     object VerifyAccount : ScreenRouter(NavigationRoutes.VERIFY_ACCOUNT)
     object CreateNewPassword : ScreenRouter(NavigationRoutes.CREATE_NEW_PASSWORD)
+    object ChangePassword : ScreenRouter(NavigationRoutes.CHANGE_PASSWORD)
     object Onboarding : ScreenRouter(NavigationRoutes.ONBOARDING)
 
     object MovieDetail : ScreenRouter(NavigationRoutes.MOVIE_DETAIL_ROUTE) {

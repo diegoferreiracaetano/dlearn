@@ -64,4 +64,9 @@ val serverModule = module {
     single { GetSearchDataUseCase(get()) }
     single { SearchScreenBuilder(get()) }
     single { SearchOrchestrator(get(), get(), get(), get()) }
+
+    // Password
+    single { PasswordDataService() }
+    single { ChangePasswordUseCase(get()) }
+    single { PasswordOrchestrator(get(), get(), get()) }
 }

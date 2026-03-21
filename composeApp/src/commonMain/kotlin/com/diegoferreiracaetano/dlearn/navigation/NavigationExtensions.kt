@@ -47,8 +47,13 @@ fun NavController.navigateToRoute(route: String) {
 }
 
 fun NavController.navigateToPath(path: String, params: Map<String, String>? = null) {
-    val router =  NavigationRoutes.buildRoute(path, params)
-    navigate(router)
+    val isNativeRoute = graph.findNode(path) != null
+    if (isNativeRoute) {
+        navigate(path)
+    } else {
+        val router = NavigationRoutes.buildRoute(path, params)
+        navigate(router)
+    }
 }
 
 val NavBackStackEntry.sduiPath: String

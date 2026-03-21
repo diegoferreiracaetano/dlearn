@@ -25,13 +25,14 @@ fun Route.homeController(orchestrator: HomeOrchestrator) {
                 HomeFilterType.ALL
             }
             
-            val screen = orchestrator.getHomeData(
+            orchestrator.getHomeData(
                 userId = userId,
                 appVersion = appVersion,
                 lang = lang,
                 type = type
-            )
-            call.respond(screen)
+            ).collect { screen ->
+                call.respond(screen)
+            }
         }
     }
 }

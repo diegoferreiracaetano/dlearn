@@ -20,13 +20,14 @@ fun Route.appController() {
             val lang = call.request.acceptLanguage() ?: "en"
             val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
 
-            val screen = orchestrator.execute(
+            orchestrator.execute(
                 request = request,
                 userId = userId,
                 lang = lang,
                 appVersion = appVersion
-            )
-            call.respond(screen)
+            ).collect { screen ->
+                call.respond(screen)
+            }
         }
     }
 }

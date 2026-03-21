@@ -5,47 +5,58 @@ import com.diegoferreiracaetano.dlearn.domain.usecases.ChangePasswordUseCase
 import com.diegoferreiracaetano.dlearn.infrastructure.services.PasswordDataService
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class PasswordOrchestrator(
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val passwordDataService: PasswordDataService,
     private val i18nProvider: I18nProvider
 ) {
+    /**
+     * Realiza a alteração de senha utilizando Flow.
+     * Lança PasswordChallengeException se o desafio (MFA) for necessário.
+     */
     fun changePassword(
         request: ChangePasswordRequest,
         challengeToken: String?,
         lang: String
-    ): Result<ChangePasswordResponse> {
+    ): Flow<ChangePasswordResponse> = flow {
         if (challengeToken == null || !passwordDataService.validateChallenge(challengeToken)) {
             val newToken = passwordDataService.generateChallenge(request.userId)
-            return Result.failure(
-                PasswordChallengeException(
-                    PasswordChallengeError(
-                        code = PasswordChallengeCode.OTP_REQUIRED,
-                        message = i18nProvider.getString(AppStringType.PASSWORD_OTP_REQUIRED, lang),
-                        challengeToken = newToken
-                    )
+            throw PasswordChallengeException(
+                PasswordChallengeError(
+                    code = PasswordChallengeCode.OTP_REQUIRED,
+                    message = i18nProvider.getString(AppStringType.PASSWORD_OTP_REQUIRED, lang),
+                    challengeToken = newToken
                 )
             )
         }
 
-        return try {
-            Result.success(changePasswordUseCase.execute(request, challengeToken))
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+        val response = changePasswordUseCase.execute(request, challengeToken)
+        emit(response)
     }
 
-    fun verifyOtp(request: VerifyOtpRequest, challengeToken: String?, lang: String): VerifyOtpResponse {
+    /**
+     * Verifica o OTP e retorna o token validado.
+     */
+    fun verifyOtp(
+        request: VerifyOtpRequest,
+        challengeToken: String?,
+        lang: String
+    ): Flow<VerifyOtpResponse> = flow {
         if (challengeToken == null) {
-            return VerifyOtpResponse(
-                success = false,
-                message = i18nProvider.getString(AppStringType.UPDATE_PROFILE_ERROR, lang)
+            emit(
+                VerifyOtpResponse(
+                    success = false,
+                    message = i18nProvider.getString(AppStringType.UPDATE_PROFILE_ERROR, lang)
+                )
             )
+            return@flow
         }
 
         val validatedToken = passwordDataService.verifyOtp(request.otpCode, challengeToken)
-        return if (validatedToken != null) {
+        val response = if (validatedToken != null) {
             VerifyOtpResponse(
                 success = true,
                 message = i18nProvider.getString(AppStringType.PASSWORD_OTP_VERIFIED, lang),
@@ -57,6 +68,7 @@ class PasswordOrchestrator(
                 message = i18nProvider.getString(AppStringType.UPDATE_PROFILE_ERROR, lang)
             )
         }
+        emit(response)
     }
 }
 

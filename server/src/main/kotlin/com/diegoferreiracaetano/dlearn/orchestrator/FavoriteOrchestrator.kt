@@ -10,6 +10,8 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class FavoriteOrchestrator(
     private val favoriteScreenBuilder: FavoriteScreenBuilder,
@@ -17,24 +19,28 @@ class FavoriteOrchestrator(
     private val videoMapper: VideoMapper,
     private val tmdbClient: TmdbClient
 ) {
-    suspend fun getFavorite(userId: String, lang: String): Screen = coroutineScope {
-        val favoriteIds = favoriteRepository.getFavorites(userId)
-        
-        val videos = favoriteIds.map { id ->
-            async {
-                runCatching {
-                    // In a production app we should store the media type or try both
-                    tmdbClient.getMovieDetail(id).toVideo(MediaType.MOVIE) 
-                }.getOrNull()
-            }
-        }.awaitAll().filterNotNull()
+    fun getFavorite(userId: String, lang: String): Flow<Screen> = flow {
+        coroutineScope {
+            val favoriteIds = favoriteRepository.getFavorites(userId)
 
-        val items = videoMapper.toMovieItemComponents(videos)
-        favoriteScreenBuilder.build(lang, items)
+            val videos = favoriteIds.map { id ->
+                async {
+                    runCatching {
+                        // In a production app we should store the media type or try both
+                        tmdbClient.getMovieDetail(id).toVideo(MediaType.MOVIE)
+                    }.getOrNull()
+                }
+            }.awaitAll().filterNotNull()
+
+            val items = videoMapper.toMovieItemComponents(videos)
+            emit(favoriteScreenBuilder.build(lang, items))
+        }
     }
 
-    suspend fun toggleFavorite(userId: String, movieId: String, lang: String): Screen {
+    fun toggleFavorite(userId: String, movieId: String, lang: String): Flow<Screen> = flow {
         favoriteRepository.toggleFavorite(userId, movieId)
-        return getFavorite(userId, lang)
+        getFavorite(userId, lang).collect {
+            emit(it)
+        }
     }
 }

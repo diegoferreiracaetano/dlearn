@@ -79,7 +79,7 @@ fun AppScreen(
 
 @Composable
 fun AppContent(
-    uiState: UIState,
+    uiState: UIState<Screen>,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {

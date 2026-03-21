@@ -9,6 +9,8 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.AppSnackbarType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.util.getLogger
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlin.time.Duration.Companion.minutes
 
 class ProfileOrchestrator(
@@ -19,36 +21,41 @@ class ProfileOrchestrator(
 ) {
     private val profileCache = InMemoryCache<String, Screen>(5.minutes)
 
-    suspend fun getProfileData(userId: String, appVersion: Int, lang: String): Screen {
-        return profileCache.getOrPut("$userId-$appVersion-$lang") {
+    fun getProfileData(userId: String, appVersion: Int, lang: String): Flow<Screen> = flow {
+        val screen = profileCache.getOrPut("$userId-$appVersion-$lang") {
             val domainData = getProfileDataUseCase.execute(userId)
             screenBuilder.build(domainData, appVersion, lang)
         }
+        emit(screen)
     }
 
-    suspend fun getEditProfileData(userId: String, lang: String): Screen {
+    fun getEditProfileData(userId: String, lang: String): Flow<Screen> = flow {
         val domainData = getProfileDataUseCase.execute(userId)
-        return editScreenBuilder.build(domainData, lang)
+        emit(editScreenBuilder.build(domainData, lang))
     }
 
-    suspend fun updateProfile(userId: String, data: Map<String, String>, lang: String): Screen {
-        return try {
+    fun updateProfile(userId: String, data: Map<String, String>, lang: String): Flow<Screen> = flow {
+        try {
             val domainData = updateProfileDataUseCase.execute(userId, data)
             profileCache.clear()
-            editScreenBuilder.build(
-                data = domainData,
-                lang = lang,
-                status = AppStringType.UPDATE_PROFILE_SUCCESS,
-                type = AppSnackbarType.SUCCESS
+            emit(
+                editScreenBuilder.build(
+                    data = domainData,
+                    lang = lang,
+                    status = AppStringType.UPDATE_PROFILE_SUCCESS,
+                    type = AppSnackbarType.SUCCESS
+                )
             )
         } catch (e: Exception) {
             getLogger().d("Error Profile", e.message.toString())
             val domainData = getProfileDataUseCase.execute(userId)
-            editScreenBuilder.build(
-                data = domainData,
-                lang = lang,
-                status = AppStringType.UPDATE_PROFILE_ERROR,
-                type = AppSnackbarType.ERROR
+            emit(
+                editScreenBuilder.build(
+                    data = domainData,
+                    lang = lang,
+                    status = AppStringType.UPDATE_PROFILE_ERROR,
+                    type = AppSnackbarType.ERROR
+                )
             )
         }
     }

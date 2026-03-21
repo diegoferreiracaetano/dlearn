@@ -4,15 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
+import com.diegoferreiracaetano.dlearn.ui.util.collectIn
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 class AppViewModel(
     private val repository: AppRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
+    private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
     val uiState = _uiState.asStateFlow()
 
     private var formData: Map<String, String> = emptyMap()
@@ -41,12 +42,7 @@ class AppViewModel(
 
     private fun execute(request: AppRequest) {
         lastRequest = request
-
-        viewModelScope.launch {
-            repository.execute(request.path, request.params, request.metadata)
-                .onStart { _uiState.value = UIState.Loading }
-                .catch { _uiState.value = UIState.Error(it) }
-                .collect { _uiState.value = UIState.Success(it) }
-        }
+        repository.execute(request.path, request.params, request.metadata)
+            .collectIn(viewModelScope, _uiState)
     }
 }

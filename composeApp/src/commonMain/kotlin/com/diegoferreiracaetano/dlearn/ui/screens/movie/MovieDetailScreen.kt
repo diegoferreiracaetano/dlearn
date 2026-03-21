@@ -47,7 +47,7 @@ fun MovieDetailScreen(
 
 @Composable
 fun MovieDetailContent(
-    uiState: UIState,
+    uiState: UIState<Screen>,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {

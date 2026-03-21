@@ -1,6 +1,8 @@
 package com.diegoferreiracaetano.dlearn.di
 
 import com.diegoferreiracaetano.dlearn.ui.screens.app.AppViewModel
+import com.diegoferreiracaetano.dlearn.ui.screens.auth.password.CreateNewPasswordViewModel
+import com.diegoferreiracaetano.dlearn.ui.screens.auth.verify.VerifyAccountViewModel
 import com.diegoferreiracaetano.dlearn.ui.screens.main.MainViewModel
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailViewModel
 import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchContentViewModel
@@ -15,9 +17,13 @@ fun initKoin() {
 }
 
 val appModule = module {
+
     factory { MainViewModel(get()) }
     factory { AppViewModel(get()) }
-    single { SearchMainViewModel(get()) }
-    single { SearchContentViewModel(get()) }
+    factory { SearchMainViewModel(get()) }
+    factory { SearchContentViewModel(get()) }
     factory { (movieId: String) -> MovieDetailViewModel(movieId, get()) }
+
+    factory { CreateNewPasswordViewModel(get()) }
+    factory { VerifyAccountViewModel(get()) }
 }

@@ -5,6 +5,8 @@ import com.diegoferreiracaetano.dlearn.domain.usecases.GetHomeDataUseCase
 import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.SearchScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class SearchOrchestrator(
     private val getSearchDataUseCase: GetSearchDataUseCase,
@@ -12,19 +14,19 @@ class SearchOrchestrator(
     private val videoMapper: VideoMapper,
     private val searchScreenBuilder: SearchScreenBuilder
 ) {
-    suspend fun searchMain(userId: String, lang: String): Screen {
+    fun searchMain(userId: String, lang: String): Flow<Screen> = flow {
         val homeData = getHomeDataUseCase.execute(userId)
         val popularItems = videoMapper.toMovieItemComponents(homeData.popular)
-        return searchScreenBuilder.buildMain(lang, popularItems)
+        emit(searchScreenBuilder.buildMain(lang, popularItems))
     }
 
-    suspend fun searchContent(
+    fun searchContent(
         userId: String,
         lang: String,
         query: String
-    ): Screen {
+    ): Flow<Screen> = flow {
         val videos = getSearchDataUseCase.execute(query)
         val results = videoMapper.toMovieItemComponents(videos)
-        return searchScreenBuilder.buildContent(query, results, lang)
+        emit(searchScreenBuilder.buildContent(query, results, lang))
     }
 }

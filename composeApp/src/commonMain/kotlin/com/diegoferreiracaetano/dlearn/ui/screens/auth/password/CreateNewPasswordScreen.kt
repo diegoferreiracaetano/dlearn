@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.login
+package com.diegoferreiracaetano.dlearn.ui.screens.auth.password
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,43 +9,53 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.diegoferreiracaetano.dlearn.AppConstants
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
+import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
-import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
-import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.create_password_action
-import dlearn.composeapp.generated.resources.create_password_confirm
-import dlearn.composeapp.generated.resources.create_password_subtitle
-import dlearn.composeapp.generated.resources.create_password_title
-import dlearn.composeapp.generated.resources.title_password
+import com.diegoferreiracaetano.dlearn.ui.screens.auth.password.state.CreateNewPasswordUiState
+import dlearn.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateNewPasswordScreen(
     onBackClick: () -> Unit,
-    onResetClick: () -> Unit,
+    onSuccess: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: CreateNewPasswordViewModel = koinInject()
 ) {
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is CreateNewPasswordUiState.Success -> {
+                println("TESTE   Success()")
+                // Mostra a mensagem e navega para o sucesso (volta para tela anterior ou login)
+                onSuccess()
+            }
+            is CreateNewPasswordUiState.Error -> snackbarHostState.showSnackbar(state.message)
+            else -> {}
+        }
+    }
 
     AppContainer(
         modifier = modifier,
+        snackBarHostState = snackbarHostState,
         topBar = {
             AppTopBar(
                 title = stringResource(Res.string.create_password_title),
@@ -53,6 +63,10 @@ fun CreateNewPasswordScreen(
             )
         }
     ) { innerModifier ->
+        if (uiState is CreateNewPasswordUiState.Loading) {
+            AppLoading(modifier = Modifier.fillMaxSize())
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -101,17 +115,12 @@ fun CreateNewPasswordScreen(
 
             AppButton(
                 text = stringResource(Res.string.create_password_action),
-                onClick = onResetClick,
+                enabled = uiState !is CreateNewPasswordUiState.Loading,
+                onClick = {
+                    viewModel.changePassword(AppConstants.GUEST_USER_ID, password)
+                },
                 modifier = Modifier.fillMaxWidth()
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun CreateNewPasswordScreenPreview() {
-    DLearnTheme {
-        CreateNewPasswordScreen(onBackClick = {}, onResetClick = {})
     }
 }

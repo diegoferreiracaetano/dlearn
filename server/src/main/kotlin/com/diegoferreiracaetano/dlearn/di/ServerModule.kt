@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.di
 
+import com.diegoferreiracaetano.dlearn.api.exception.ChallengeMapper
 import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
 import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
 import com.diegoferreiracaetano.dlearn.domain.usecases.*
@@ -23,6 +24,9 @@ val serverModule = module {
     single { TmdbMapper(get()) }
     single { VideoMapper() }
     
+    // API / Exception Handling
+    single { ChallengeMapper() }
+    
     // Repositories / Services
     single<FavoriteRepository> { FavoriteDataService() }
     single<WatchlistRepository> { WatchlistDataService() }
@@ -38,10 +42,11 @@ val serverModule = module {
     single { WatchlistScreenBuilder(get()) }
     single { FavoriteScreenBuilder(get()) }
     single { MainScreenBuilder(get()) }
+    single { VerifyAccountScreenBuilder() }
     single { WatchlistOrchestrator(get(), get(), get(), get()) }
     single { FavoriteOrchestrator(get(), get(), get(), get()) }
     single { MainOrchestrator(get()) }
-    single { AppOrchestrator(get(), get(), get(), get()) }
+    single { AppOrchestrator(get(), get(), get(), get(), get()) }
 
     // Profile
     single { ProfileDataService() }

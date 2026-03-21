@@ -11,30 +11,22 @@ Este projeto é um ecossistema completo desenvolvido em **Kotlin Multiplatform (
 
 ---
 
-## 🔐 Fluxo de Segurança: Alteração de Senha com Desafio OTP
+## 🔐 Segurança e Multi-Factor Authentication (MFA)
 
-O projeto implementa um fluxo de segurança de dois passos (Two-Step Challenge) para operações críticas, como a troca de senha.
+O projeto implementa um motor de desafios (**Challenge Engine**) centralizado para operações críticas, suportando múltiplos fatores de autenticação de forma transparente para as camadas de UI.
 
-### Passo a Passo do Fluxo:
+### 🧩 Challenge Engine (Shared Module)
+Localizado no módulo `:shared`, o `ChallengeEngine` intercepta erros de rede (ex: `428 Precondition Required`) e orquestra a resolução do desafio antes de repetir a requisição original.
 
-1. **Tentativa de Troca (`POST /v1/password/change`)**:
-   - O App envia a nova senha.
-   - O servidor retorna `428 Precondition Required` com um `challengeToken`.
-   - **Resultado:** A senha NÃO é alterada neste momento.
+#### Fatores Suportados:
+- **OTP (One-Time Password)**: Suporte para SMS e E-mail via rota dinâmica `verify_account` (SDUI).
+- **Biometria**: Integração com Face ID e Touch ID (Biometric Prompt) para validação local e remota.
 
-2. **Desafio OTP (Tela de Verificação)**:
-   - O App captura o erro `428` e abre a tela de OTP (`VerifyAccountScreen`).
-   - O usuário insere o código (Ex: `123456` ou `000000` para Debug).
-
-3. **Verificação do Código (`POST /v1/password/verify-otp`)**:
-   - O App envia o código e o `challengeToken`.
-   - O servidor valida e retorna um `validatedToken`.
-   - **Mensagem:** `PASSWORD_OTP_VERIFIED` (Indica que o código está correto, mas a senha ainda não mudou).
-
-4. **Conclusão da Troca (`POST /v1/password/change`)**:
-   - O App reenvia a troca de senha incluindo o header `X-Challenge-Token: <validatedToken>`.
-   - O servidor valida o token e efetiva a alteração da senha.
-   - **Resposta:** `200 OK` com `PASSWORD_CHANGE_SUCCESS`.
+### 🔄 Fluxo de Desafio OTP:
+1. **Tentativa de Operação**: O App envia uma requisição protegida (ex: troca de senha).
+2. **Intercepção**: O `ChallengeInterceptor` captura o erro `428` e o `challengeToken`.
+3. **Resolução**: O `OtpChallengeHandler` navega o usuário para a tela de verificação.
+4. **Conclusão**: Após a inserção do código, o `challengeToken` é validado e a requisição original é repetida automaticamente com o novo header de autorização.
 
 ---
 
@@ -68,8 +60,8 @@ O App processa essa intenção, transformando-a em uma chamada ao gateway ou uma
 
 ## 🏗️ Estrutura do Projeto
 
-- **`:shared`**: Contratos, Enums, Modelos SDUI, Repositórios e lógica de rede.
-- **`:server`**: Ktor BFF, Orchestrators, UseCase e Gestão de Desafios (OTP).
+- **`:shared`**: Contratos, Enums, Modelos SDUI, Repositórios, `ChallengeEngine` e lógica de rede.
+- **`:server`**: Ktor BFF, Orchestrators, UseCase e Gestão de Desafios (OTP/Biometria).
 - **`:composeApp`**: UI Multiplatform (Android/iOS), Engine SDUI e Injeção de Dependência (Koin).
 
 ---

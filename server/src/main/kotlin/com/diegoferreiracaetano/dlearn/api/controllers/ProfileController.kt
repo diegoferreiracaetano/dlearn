@@ -20,16 +20,18 @@ fun Route.profileController() {
             val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
             val lang = call.request.acceptLanguage() ?: "en"
             
-            val screen = orchestrator.getProfileData(userId, appVersion, lang)
-            call.respond(screen)
+            orchestrator.getProfileData(userId, appVersion, lang).collect { screen ->
+                call.respond(screen)
+            }
         }
 
         get("/edit") {
             val userId = call.parameters["userId"] ?: "default_user"
             val lang = call.request.acceptLanguage() ?: "en"
 
-            val screen = orchestrator.getEditProfileData(userId, lang)
-            call.respond(screen)
+            orchestrator.getEditProfileData(userId, lang).collect { screen ->
+                call.respond(screen)
+            }
         }
 
         post("/update") {
@@ -37,8 +39,9 @@ fun Route.profileController() {
             val data = call.receive<Map<String, String>>()
             val lang = call.request.acceptLanguage() ?: "en"
 
-            val screen = orchestrator.updateProfile(userId, data, lang)
-            call.respond(screen)
+            orchestrator.updateProfile(userId, data, lang).collect { screen ->
+                call.respond(screen)
+            }
         }
     }
 }

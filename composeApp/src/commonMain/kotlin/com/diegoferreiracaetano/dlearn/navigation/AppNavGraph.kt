@@ -1,11 +1,11 @@
 package com.diegoferreiracaetano.dlearn.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -13,33 +13,67 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.domain.challenge.ChallengeType
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.*
 import com.diegoferreiracaetano.dlearn.ui.screens.app.AppScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.login.CreateNewPasswordScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.auth.password.CreateNewPasswordScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.auth.verify.VerifyAccountScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.LoginScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.ResetPasswordScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.SignUpScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.login.VerifyAccountScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.WelcomeScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.main.MainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.onboarding.OnboardingScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchMainScreen
+import com.diegoferreiracaetano.dlearn.util.event.GlobalEvent
+import com.diegoferreiracaetano.dlearn.util.event.GlobalEventDispatcher
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.koinInject
 
 @Composable
 fun AppNavGraph(
     sessionManager: SessionManager = koinInject(),
+    navigationManager: NavigationManager = koinInject(),
+    eventDispatcher: GlobalEventDispatcher = koinInject(),
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ) {
-    val isLoggedIn by sessionManager.isLoggedIn.collectAsStateWithLifecycle()
-    // val startDestination = if (isLoggedIn) Main.route else Onboarding.route
+    // Observador Central de Eventos Globais
+    LaunchedEffect(eventDispatcher) {
+        eventDispatcher.events.collect { event ->
+            when (event) {
+                is GlobalEvent.Challenge -> {
+                    when (event.request.type) {
+                        ChallengeType.OTP_SMS, ChallengeType.OTP_EMAIL -> {
+                            // Navegação direta para a tela de verificação (MFA)
+                            navController.navigate(NavigationRoutes.VERIFY_ACCOUNT)
+                        }
+                        else -> { /* Outros desafios podem abrir dialogs ou overlays */ }
+                    }
+                }
+                is GlobalEvent.Navigation -> {
+                    navController.navigate(event.route)
+                }
+                is GlobalEvent.Message -> {
+                    // Mostrar Snackbar ou Toast Global
+                }
+            }
+        }
+    }
 
-    val startDestination = Home.route
+    DisposableEffect(navController) {
+        navigationManager.registerNavigator { route ->
+            navController.navigate(route)
+        }
+        onDispose {
+            navigationManager.unregisterNavigator()
+        }
+    }
+
+    val startDestination = ChangePassword.route
     val uriHandler = LocalUriHandler.current
 
     NavHost(
@@ -74,7 +108,9 @@ fun AppNavGraph(
         composable(SignUp.route) {
             SignUpScreen(
                 onBackClick = { navController.popBackStack() },
-                onSignUpClick = { navController.navigate(VerifyAccount.route) },
+                onSignUpClick = { 
+                    navController.navigate(NavigationRoutes.VERIFY_ACCOUNT) 
+                },
                 modifier = modifier
             )
         }
@@ -82,16 +118,9 @@ fun AppNavGraph(
         composable(ResetPassword.route) {
             ResetPasswordScreen(
                 onBackClick = { navController.popBackStack() },
-                onNextClick = { navController.navigate(VerifyAccount.route) },
-                modifier = modifier
-            )
-        }
-
-        composable(VerifyAccount.route) {
-            VerifyAccountScreen(
-                onBackClick = { navController.popBackStack() },
-                onContinueClick = { navController.navigate(CreateNewPassword.route) },
-                onResendClick = { /* Handle resend */ },
+                onNextClick = { 
+                    navController.navigate(NavigationRoutes.VERIFY_ACCOUNT) 
+                },
                 modifier = modifier
             )
         }
@@ -99,7 +128,7 @@ fun AppNavGraph(
         composable(CreateNewPassword.route) {
             CreateNewPasswordScreen(
                 onBackClick = { navController.popBackStack() },
-                onResetClick = { navController.navigate(Login.route) },
+                onSuccess = { navController.navigate(Login.route) },
                 modifier = modifier
             )
         }
@@ -107,7 +136,7 @@ fun AppNavGraph(
         composable(ChangePassword.route) {
             CreateNewPasswordScreen(
                 onBackClick = { navController.popBackStack() },
-                onResetClick = { navController.popBackStack() },
+                onSuccess = { navController.popBackStack() },
                 modifier = modifier
             )
         }
@@ -123,9 +152,7 @@ fun AppNavGraph(
         composable(Home.route) {
             MainScreen(
                 onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
-                onTabSelected = {
-                    route -> navController.navigateToRoute(route)
-                                },
+                onTabSelected = { route -> navController.navigateToRoute(route) },
                 onSearchClick = { navController.navigate(Search.route) },
                 modifier = modifier,
                 currentRoute = Home.route
@@ -152,10 +179,8 @@ fun AppNavGraph(
 
         composable(Profile.route) {
             MainScreen(
-                onItemClick = { route ->
-                    navController.navigateToPath(route) },
-                onTabSelected = { route ->
-                    navController.navigateToRoute(route) },
+                onItemClick = { route -> navController.navigateToPath(route) },
+                onTabSelected = { route -> navController.navigateToRoute(route) },
                 modifier = modifier,
                 currentRoute = Profile.route
             )
@@ -180,6 +205,16 @@ fun AppNavGraph(
                 onItemClick = { route -> navController.navigate(route) },
                 onNavigate = { route -> navController.navigate(route) },
                 onDeeplink = { url -> uriHandler.openUri(url) },
+                modifier = modifier
+            )
+        }
+
+        composable(route = NavigationRoutes.VERIFY_ACCOUNT) {
+            VerifyAccountScreen(
+                userId = "",
+                onBackClick = { navController.popBackStack() },
+                onContinueClick = { navController.popBackStack() },
+                onResendClick = { /* No op */ },
                 modifier = modifier
             )
         }

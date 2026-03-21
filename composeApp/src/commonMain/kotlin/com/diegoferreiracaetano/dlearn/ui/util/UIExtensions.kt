@@ -12,12 +12,31 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.movie.MovieItem
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponent
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponents
-import com.diegoferreiracaetano.dlearn.ui.sdui.*
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppErrorComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppLoadingComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTextFieldType
+import com.diegoferreiracaetano.dlearn.ui.sdui.MovieItemComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.*
+import dlearn.composeapp.generated.resources.edit_profile_title
+import dlearn.composeapp.generated.resources.field_email
+import dlearn.composeapp.generated.resources.field_full_name
+import dlearn.composeapp.generated.resources.field_password
+import dlearn.composeapp.generated.resources.field_phone_number
+import dlearn.composeapp.generated.resources.home_title
+import dlearn.composeapp.generated.resources.nav_favorites
+import dlearn.composeapp.generated.resources.nav_home
+import dlearn.composeapp.generated.resources.nav_profile
+import dlearn.composeapp.generated.resources.nav_search
+import dlearn.composeapp.generated.resources.nav_watchlist
+import dlearn.composeapp.generated.resources.profile_title
+import dlearn.composeapp.generated.resources.save_changes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -26,6 +45,7 @@ import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
 @Immutable
@@ -48,7 +68,7 @@ fun Screen.Render(
 }
 
 @Composable
-fun UIState.Render(
+fun UIState<Screen>.Render(
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
@@ -60,18 +80,30 @@ fun UIState.Render(
         )
 
         is UIState.Error -> RenderComponent(
-            component = AppErrorComponent(this.throwable),
+            component = AppErrorComponent(throwable),
             actions = actions,
             modifier = modifier
         )
 
         is UIState.Success -> {
             RenderComponents(
-                components = screen.components,
+                components = data.components,
                 actions = actions,
                 modifier = modifier
             )
         }
+    }
+}
+
+fun <T> Flow<T>.collectIn(
+    scope: CoroutineScope,
+    uiState: MutableStateFlow<UIState<T>>
+) {
+    scope.launch {
+        this@collectIn
+            .onStart { uiState.value = UIState.Loading }
+            .catch { e -> uiState.value = UIState.Error(e) }
+            .collect { uiState.value = UIState.Success(it) }
     }
 }
 

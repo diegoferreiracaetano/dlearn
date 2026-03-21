@@ -17,7 +17,7 @@ class SearchContentViewModel(
     private val searchRepository: SearchRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
+    private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
     val uiState = _uiState.asStateFlow()
 
     private var searchJob: Job? = null

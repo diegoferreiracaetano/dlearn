@@ -1,13 +1,13 @@
 package com.diegoferreiracaetano.dlearn
 
 import com.diegoferreiracaetano.dlearn.api.controllers.*
+import com.diegoferreiracaetano.dlearn.api.exception.configureStatusPages
 import com.diegoferreiracaetano.dlearn.di.serverModule
 import com.diegoferreiracaetano.dlearn.orchestrator.HomeOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.MovieDetailOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.SearchOrchestrator
 import io.ktor.http.CacheControl
 import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.CachingOptions
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
@@ -16,9 +16,7 @@ import io.ktor.server.netty.EngineMain
 import io.ktor.server.plugins.cachingheaders.CachingHeaders
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.openapi.openAPI
-import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.plugins.swagger.swaggerUI
-import io.ktor.server.response.respondText
 import io.ktor.server.routing.routing
 import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
@@ -29,6 +27,10 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    install(Koin) {
+        modules(serverModule)
+    }
+
     install(ContentNegotiation) {
         json(Json {
             prettyPrint = true
@@ -38,14 +40,7 @@ fun Application.module() {
         })
     }
 
-    install(StatusPages) {
-        exception<Throwable> { call, cause ->
-            call.respondText(
-                text = "Internal Server Error: ${cause.localizedMessage ?: "Unknown error"}",
-                status = HttpStatusCode.InternalServerError
-            )
-        }
-    }
+    configureStatusPages()
 
     install(CachingHeaders) {
         options { _, outgoingContent ->
@@ -54,10 +49,6 @@ fun Application.module() {
                 else -> null
             }
         }
-    }
-
-    install(Koin) {
-        modules(serverModule)
     }
 
     val homeOrchestrator by inject<HomeOrchestrator>()

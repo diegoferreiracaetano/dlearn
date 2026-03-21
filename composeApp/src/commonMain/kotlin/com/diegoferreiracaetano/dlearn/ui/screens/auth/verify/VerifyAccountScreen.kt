@@ -1,22 +1,8 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.login
+package com.diegoferreiracaetano.dlearn.ui.screens.auth.verify
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -25,25 +11,35 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppOtpVerification
-import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
-import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.otp_resend_now
-import dlearn.composeapp.generated.resources.otp_resend_prompt
-import dlearn.composeapp.generated.resources.verify_account_action
-import dlearn.composeapp.generated.resources.verify_account_subtitle
-import dlearn.composeapp.generated.resources.verify_account_title
+import com.diegoferreiracaetano.dlearn.ui.screens.auth.verify.state.VerifyAccountUiState
+import dlearn.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VerifyAccountScreen(
+    userId: String,
     onBackClick: () -> Unit,
     onContinueClick: () -> Unit,
     onResendClick: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: VerifyAccountViewModel = koinInject()
 ) {
     var otpCode by remember { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsState()
+    var otpError by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is VerifyAccountUiState.Success ->{
+                println("TESTE   onContinueClick()")
+                onContinueClick()
+            }
+            is VerifyAccountUiState.Error -> otpError = state.message
+            else -> otpError = null
+        }
+    }
 
     AppContainer(
         modifier = modifier,
@@ -80,17 +76,25 @@ fun VerifyAccountScreen(
 
             AppOtpVerification(
                 otpText = otpCode,
-                onOtpTextChange = { text, _ -> otpCode = text },
+                onOtpTextChange = { text, _ -> 
+                    otpCode = text
+                    otpError = null 
+                },
                 onResendClick = onResendClick,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = otpError != null,
+                errorText = otpError
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             AppButton(
                 text = stringResource(Res.string.verify_account_action),
-                onClick = onContinueClick,
-                modifier = Modifier.fillMaxWidth()
+                onClick = {
+                    viewModel.verifyOtp(userId, otpCode)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = otpCode.length == 6 && uiState !is VerifyAccountUiState.Loading
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -112,13 +116,5 @@ fun VerifyAccountScreen(
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun VerifyAccountScreenPreview() {
-    DLearnTheme {
-        VerifyAccountScreen(onBackClick = {}, onContinueClick = {}, onResendClick = {})
     }
 }

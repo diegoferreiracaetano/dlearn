@@ -15,20 +15,30 @@ fun Route.searchController(orchestrator: SearchOrchestrator) {
             val lang = call.request.acceptLanguage() ?: AppConstants.DEFAULT_LANG
             val query = call.request.queryParameters["q"] ?: ""
 
-            if (query.isEmpty())
-                call.respond(orchestrator.searchMain(userId, lang))
-            else
-                call.respond(orchestrator.searchContent(userId, lang, query))
+            if (query.isEmpty()) {
+                orchestrator.searchMain(userId, lang).collect { screen ->
+                    call.respond(screen)
+                }
+            } else {
+                orchestrator.searchContent(userId, lang, query).collect { screen ->
+                    call.respond(screen)
+                }
+            }
         }
         get("/result") {
             val userId = call.request.queryParameters["userId"] ?: AppConstants.GUEST_USER_ID
             val lang = call.request.acceptLanguage() ?: AppConstants.DEFAULT_LANG
             val query = call.request.queryParameters["q"] ?: ""
 
-            if (query.isEmpty())
-                call.respond(orchestrator.searchMain(userId, lang))
-            else
-                call.respond(orchestrator.searchContent(userId, lang, query))
+            if (query.isEmpty()) {
+                orchestrator.searchMain(userId, lang).collect { screen ->
+                    call.respond(screen)
+                }
+            } else {
+                orchestrator.searchContent(userId, lang, query).collect { screen ->
+                    call.respond(screen)
+                }
+            }
         }
 
     }

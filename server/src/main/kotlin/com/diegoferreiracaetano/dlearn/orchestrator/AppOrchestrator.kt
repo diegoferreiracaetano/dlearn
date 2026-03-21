@@ -3,19 +3,23 @@ package com.diegoferreiracaetano.dlearn.orchestrator
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.ui.screens.VerifyAccountScreenBuilder
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class AppOrchestrator(
     private val homeOrchestrator: HomeOrchestrator,
     private val favoriteOrchestrator: FavoriteOrchestrator,
     private val watchlistOrchestrator: WatchlistOrchestrator,
     private val profileOrchestrator: ProfileOrchestrator,
+    private val verifyAccountScreenBuilder: VerifyAccountScreenBuilder
 ) {
-    suspend fun execute(
+    fun execute(
         request: AppRequest,
         userId: String,
         lang: String,
         appVersion: Int
-    ): Screen {
+    ): Flow<Screen> {
         val path = NavigationRoutes.extractPath(request.path)
         return when (path) {
             NavigationRoutes.HOME -> homeOrchestrator.getHomeData(userId, appVersion, lang)
@@ -23,12 +27,13 @@ class AppOrchestrator(
             NavigationRoutes.WATCHLIST -> handleWatchlistRequest(request, userId, lang)
             NavigationRoutes.PROFILE -> profileOrchestrator.getProfileData(userId, appVersion, lang)
             NavigationRoutes.EDIT_PROFILE -> profileOrchestrator.getEditProfileData(userId, lang)
-            NavigationRoutes.UPDATE_PROFILE -> profileOrchestrator.updateProfile(userId, request.params  ?: emptyMap(), lang)
-            else ->  throw IllegalArgumentException("Invalid path: ${request.path} (extracted: $path)")
+            NavigationRoutes.UPDATE_PROFILE -> profileOrchestrator.updateProfile(userId, request.params ?: emptyMap(), lang)
+            NavigationRoutes.VERIFY_ACCOUNT -> flow { emit(verifyAccountScreenBuilder.build()) }
+            else -> throw IllegalArgumentException("Invalid path: ${request.path} (extracted: $path)")
         }
     }
 
-    private suspend fun handleFavoriteRequest(request: AppRequest, userId: String, lang: String): Screen {
+    private fun handleFavoriteRequest(request: AppRequest, userId: String, lang: String): Flow<Screen> {
         val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
         return if (movieId != null) {
             favoriteOrchestrator.toggleFavorite(userId, movieId, lang)
@@ -37,7 +42,7 @@ class AppOrchestrator(
         }
     }
 
-    private suspend fun handleWatchlistRequest(request: AppRequest, userId: String, lang: String): Screen {
+    private fun handleWatchlistRequest(request: AppRequest, userId: String, lang: String): Flow<Screen> {
         val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
         return if (movieId != null) {
             watchlistOrchestrator.toggleWatchlist(userId, movieId, lang)

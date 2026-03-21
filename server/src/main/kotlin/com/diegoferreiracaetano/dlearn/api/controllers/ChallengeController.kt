@@ -8,6 +8,10 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class ResendChallengeRequest(val transactionId: String)
 
 fun Route.challengeController() {
     val challengeDataService by inject<ChallengeDataService>()
@@ -17,7 +21,6 @@ fun Route.challengeController() {
         post("/resolve") {
             val request = call.receive<ResolveChallengeRequest>()
             
-            // Valida a resposta do desafio usando o serviço especializado
             val validatedToken = challengeDataService.resolveChallenge(
                 transactionId = request.transactionId,
                 answers = request.answers
@@ -31,7 +34,15 @@ fun Route.challengeController() {
         }
 
         post("/resend") {
-            call.respond(HttpStatusCode.OK)
+            val request = call.receive<ResendChallengeRequest>()
+            
+            val success = challengeDataService.resendChallenge(request.transactionId)
+
+            if (success) {
+                call.respond(HttpStatusCode.OK, mapOf("success" to true, "message" to "Challenge resent successfully"))
+            } else {
+                call.respond(HttpStatusCode.NotFound, mapOf("success" to false, "message" to "Transaction not found"))
+            }
         }
     }
 }

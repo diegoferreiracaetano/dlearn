@@ -7,9 +7,14 @@ import com.diegoferreiracaetano.dlearn.domain.models.ChallengeError
 import com.diegoferreiracaetano.dlearn.infrastructure.services.ChallengeDataService
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
-import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.routing.*
+import io.ktor.server.application.ApplicationCall
+import io.ktor.server.application.createRouteScopedPlugin
+import io.ktor.server.request.acceptLanguage
+import io.ktor.server.request.header
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.RouteSelector
+import io.ktor.server.routing.RouteSelectorEvaluation
+import io.ktor.server.routing.RoutingResolveContext
 import io.ktor.util.AttributeKey
 import org.koin.ktor.ext.get
 
@@ -41,7 +46,6 @@ val ChallengePlugin = createRouteScopedPlugin("ChallengePlugin", ::ChallengeConf
         val token = call.request.header(SecurityConstants.HEADER_CHALLENGE_TOKEN)
         val lang = call.request.acceptLanguage() ?: "en"
 
-        // Verifica se o token é nulo ou se ainda não foi validado pelo motor de desafios
         if (token == null || !challengeDataService.isTokenValidated(token)) {
             val userId = call.request.queryParameters["userId"] ?: "system_user"
             val transactionId = challengeDataService.generateChallenge(userId) 

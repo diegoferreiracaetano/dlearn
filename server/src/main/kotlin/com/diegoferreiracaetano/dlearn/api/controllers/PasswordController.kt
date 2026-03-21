@@ -23,13 +23,13 @@ fun Route.passwordController() {
          * Rota protegida por desafio genérico via DSL.
          * O parâmetro 'challengeToken' na lambda é o provedor seguro.
          */
-      challengePreference(ChallengeType.OTP_EMAIL) { challengeToken->
+      challengePreference(ChallengeType.OTP_EMAIL) {
             post("/change") {
                 val request = call.receive<ChangePasswordRequest>()
 
                 orchestrator.changePassword(
                     request = request,
-                    challengeToken = challengeToken
+                    challengeToken = call.challengeToken
                 ).collect { response ->
                     call.respond(HttpStatusCode.OK, response)
                 }

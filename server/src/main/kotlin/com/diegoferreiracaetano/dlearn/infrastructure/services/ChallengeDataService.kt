@@ -19,6 +19,15 @@ class ChallengeDataService {
         return transactionId
     }
 
+    fun resendChallenge(transactionId: String): Boolean {
+        if (!pendingChallenges.containsKey(transactionId)) return false
+        
+        // Em um cenário real, aqui dispararíamos o e-mail/SMS novamente
+        // Para o mock, apenas renovamos o valor no mapa
+        pendingChallenges[transactionId] = Constants.DEFAULT_MOCK_OTP
+        return true
+    }
+
     fun resolveChallenge(transactionId: String, answers: Map<String, String>): String? {
         val otp = answers[Constants.OTP_KEY] ?: return null
         val expectedCode = pendingChallenges[transactionId]

@@ -1,31 +1,39 @@
 package com.diegoferreiracaetano.dlearn.domain.challenge
 
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class ChallengeType {
-    OTP_SMS,
-    OTP_EMAIL,
-    BIOMETRIC,
-    DEVICE_BINDING,
-    UNKNOWN
+enum class ChallengeStatus {
+    SUCCESS,
+    CHALLENGE_REQUIRED,
+    ERROR
 }
 
 @Serializable
-data class Challenge(
-    val challengeType: ChallengeType,
-    val data: Map<String, String> = emptyMap()
+enum class ChallengeCode {
+    CHALLENGE_REQUIRED
+}
+
+@Serializable
+data class ChallengeError(
+    val code: ChallengeCode,
+    val message: String,
+    val challengeToken: String
 )
 
 @Serializable
-data class ChallengeSession(
+data class ResolveChallengeRequest(
     val transactionId: String,
-    val challenges: List<Challenge>,
-    val expiresAt: Long? = null
+    val type: ChallengeType,
+    val answers: Map<String, String>
 )
 
-sealed interface ChallengeResult {
-    data class Success(val data: Map<String, String>) : ChallengeResult
-    data object Cancelled : ChallengeResult
-    data class Failure(val error: Throwable) : ChallengeResult
-}
+@Serializable
+data class ResolveChallengeResponse(
+    val validatedToken: String? = null,
+    val success: Boolean = true,
+    val message: String? = null
+)
+
+class ChallengeException(val error: ChallengeError) : Exception(error.message)

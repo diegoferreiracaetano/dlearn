@@ -1,7 +1,7 @@
 package com.diegoferreiracaetano.dlearn.di
 
+import com.diegoferreiracaetano.dlearn.auth.network.ChallengeInterceptor
 import com.diegoferreiracaetano.dlearn.data.app.remote.AppRepositoryRemote
-import com.diegoferreiracaetano.dlearn.data.challenge.OtpChallengeHandler
 import com.diegoferreiracaetano.dlearn.data.home.remote.HomeRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.main.remote.MainRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.movie.remote.MovieDetailRepositoryRemote
@@ -14,20 +14,15 @@ import com.diegoferreiracaetano.dlearn.data.user.UserRepository
 import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserNetworkDataSource
 import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserRepositoryRemote
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
-import com.diegoferreiracaetano.dlearn.domain.challenge.ChallengeCoordinator
-import com.diegoferreiracaetano.dlearn.domain.challenge.ChallengeEngine
-import com.diegoferreiracaetano.dlearn.domain.challenge.ChallengeHandler
 import com.diegoferreiracaetano.dlearn.domain.home.HomeRepository
 import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
 import com.diegoferreiracaetano.dlearn.domain.movie.MovieDetailRepository
 import com.diegoferreiracaetano.dlearn.domain.password.PasswordRepository
-import com.diegoferreiracaetano.dlearn.domain.password.VerifyOtpUseCase
 import com.diegoferreiracaetano.dlearn.domain.profile.ProfileRepository
 import com.diegoferreiracaetano.dlearn.domain.search.SearchRepository
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.NavigationManager
 import com.diegoferreiracaetano.dlearn.util.event.GlobalEventDispatcher
-import com.diegoferreiracaetano.dlearn.util.network.ChallengeInterceptor
 import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -39,17 +34,17 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
+/**
+ * Módulo principal compartilhado que integra os sub-módulos específicos.
+ */
 val sharedModule = module {
-    // Shared components
+    // Importa o módulo de Auth isolado
+    includes(authModule)
+
+    // Componentes de Infraestrutura e Core
     single { NavigationManager() }
-    
-    // Despachante de Eventos Global
     single { GlobalEventDispatcher() }
     
-    // Coordenador Global de Desafios
-    single { ChallengeCoordinator(get()) }
-
-    // Configuração do JSON global
     single { 
         Json {
             ignoreUnknownKeys = true
@@ -58,16 +53,7 @@ val sharedModule = module {
         }
     }
 
-    // Handlers de Desafio
-    single<ChallengeHandler> { OtpChallengeHandler(get()) }
-
-    // Motor de Desafios
-    single { 
-        ChallengeEngine(
-            handlers = getAll<ChallengeHandler>()
-        ) 
-    }
-
+    // Configuração do Cliente HTTP com Interceptor de Auth
     single {
         HttpClient {
             install(ContentNegotiation) {
@@ -85,6 +71,7 @@ val sharedModule = module {
                 }
             }
             
+            // O interceptor agora usa o engine provido pelo authModule
             install(ChallengeInterceptor) {
                 engine = get()
                 json = get()
@@ -92,15 +79,15 @@ val sharedModule = module {
         }
     }
 
+    // Session e User
     single { UserNetworkDataSource() }
     single<UserRepository> { UserRepositoryRemote(get()) }
-    single { VerifyOtpUseCase(get(), get()) }
     single { Settings() }
     single<SessionStorage> { SettingsSessionStorage(get()) }
     single { SessionManager(get()) }
 
-
-    single<PasswordRepository> { PasswordRepositoryRemote(get(), get()) }
+    // Repositórios de Domínio
+    single<PasswordRepository> { PasswordRepositoryRemote(get()) }
     single<HomeRepository> { HomeRepositoryRemote(get()) }
     single<ProfileRepository> { ProfileRepositoryRemote(get()) }
     single<MovieDetailRepository> { MovieDetailRepositoryRemote(get()) }

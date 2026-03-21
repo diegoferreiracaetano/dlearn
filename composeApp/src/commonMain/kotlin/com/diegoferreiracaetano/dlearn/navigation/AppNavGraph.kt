@@ -15,7 +15,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import com.diegoferreiracaetano.dlearn.domain.challenge.ChallengeType
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.*
 import com.diegoferreiracaetano.dlearn.ui.screens.app.AppScreen
@@ -48,12 +48,14 @@ fun AppNavGraph(
         eventDispatcher.events.collect { event ->
             when (event) {
                 is GlobalEvent.Challenge -> {
-                    when (event.request.type) {
-                        ChallengeType.OTP_SMS, ChallengeType.OTP_EMAIL -> {
-                            // Abre o desafio como um DIALOG por cima da tela atual
-                            navController.navigate(NavigationRoutes.VERIFY_ACCOUNT)
-                        }
-                        else -> { /* Outros desafios */ }
+                    // Verificamos se há algum desafio pendente na sessão que requer ação do usuário
+                    val hasOtpChallenge = event.session.challenges.any { 
+                        it.challengeType == ChallengeType.OTP_SMS || it.challengeType == ChallengeType.OTP_EMAIL 
+                    }
+                    
+                    if (hasOtpChallenge) {
+                        // Abre o desafio como um DIALOG por cima da tela atual
+                        navController.navigate(NavigationRoutes.VERIFY_ACCOUNT)
                     }
                 }
                 is GlobalEvent.Navigation -> {
@@ -64,14 +66,14 @@ fun AppNavGraph(
         }
     }
 
-    DisposableEffect(navController) {
-        navigationManager.registerNavigator { route ->
-            navController.navigate(route)
-        }
-        onDispose {
-            navigationManager.unregisterNavigator()
-        }
-    }
+//    DisposableEffect(navController) {
+//        navigationManager.registerNavigator { route ->
+//            navController.navigate(route)
+//        }
+//        onDispose {
+//            navigationManager.unregisterNavigator()
+//        }
+//    }
 
     val startDestination = ChangePassword.route
     val uriHandler = LocalUriHandler.current
@@ -147,17 +149,16 @@ fun AppNavGraph(
         dialog(
             route = NavigationRoutes.VERIFY_ACCOUNT,
             dialogProperties = DialogProperties(
-                usePlatformDefaultWidth = false, // Permite tela cheia se o componente DS for assim
+                usePlatformDefaultWidth = false,
                 dismissOnBackPress = true,
                 dismissOnClickOutside = false
             )
         ) {
             VerifyAccountScreen(
-                userId = "",
+                userId = "", // TODO: Pegar do cache/sessão se necessário
                 onBackClick = { navController.popBackStack() },
                 onContinueClick = { navController.popBackStack() },
-                onResendClick = { /* No op */ },
-                modifier = Modifier // Ocupa o espaço do dialog
+                modifier = Modifier
             )
         }
 

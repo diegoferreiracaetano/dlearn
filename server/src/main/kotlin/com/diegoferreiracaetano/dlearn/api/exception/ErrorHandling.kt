@@ -1,10 +1,13 @@
 package com.diegoferreiracaetano.dlearn.api.exception
 
+import com.diegoferreiracaetano.dlearn.auth.network.SecurityConstants
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 import com.diegoferreiracaetano.dlearn.util.PreconditionRequired
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.request.header
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import org.koin.ktor.ext.inject
@@ -15,8 +18,19 @@ fun Application.configureStatusPages() {
     install(StatusPages) {
         // Trata Desafios (428)
         exception<Throwable> { call, cause ->
-            val challenge = challengeMapper.toChallengeSession(cause)
+            // 1. Tenta pegar a preferência definida na DSL do Controller via Plugin
+            val preferenceFromController = call.attributes.getOrNull(ChallengeAttributes.Preference)
+            
+            // 2. Se não houver, tenta pegar o header enviado pelo App (X-Challenge-Preference)
+            val preferenceHeader = call.request.header(SecurityConstants.HEADER_CHALLENGE_PREFERENCE)
+            
+            val preferredType = preferenceFromController 
+                ?: ChallengeType.entries.find { it.name == preferenceHeader }
+
+            val challenge = challengeMapper.toChallengeSession(cause, preferredType)
+
             if (challenge != null) {
+                // Usa a extensão personalizada para o status 428
                 call.respond(HttpStatusCode.PreconditionRequired, challenge)
                 return@exception
             }

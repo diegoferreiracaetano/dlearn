@@ -2,8 +2,9 @@ package com.diegoferreiracaetano.dlearn.ui.screens.auth.verify
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.diegoferreiracaetano.dlearn.domain.password.PasswordRepository
-import com.diegoferreiracaetano.dlearn.domain.password.VerifyOtpRequest
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeRepository
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeResult
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 import com.diegoferreiracaetano.dlearn.ui.screens.auth.verify.state.VerifyAccountUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,29 +12,71 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel para a tela de verificação de conta.
+ * Utiliza o motor genérico de desafios para validar o OTP de e-mail.
+ */
 class VerifyAccountViewModel(
-    private val passwordRepository: PasswordRepository
+    private val challengeRepository: ChallengeRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<VerifyAccountUiState>(VerifyAccountUiState.Idle)
     val uiState = _uiState.asStateFlow()
 
+    /**
+     * Verifica o código OTP utilizando o fluxo genérico de resolução de desafios.
+     */
     fun verifyOtp(userId: String, otpCode: String) {
         viewModelScope.launch {
-            passwordRepository.verifyOtp(VerifyOtpRequest(userId, otpCode))
-                .onStart {
-                    _uiState.value = VerifyAccountUiState.Loading
-                }
-                .catch { error ->
-                    _uiState.value = VerifyAccountUiState.Error(error.message.toString())
-                }
-                .collect { response ->
-                    if (response.success) {
+            challengeRepository.resolveChallenge(
+                transactionId = userId,
+                type = ChallengeType.OTP_EMAIL,
+                answer = mapOf("otp" to otpCode)
+            )
+            .onStart {
+                _uiState.value = VerifyAccountUiState.Loading
+            }
+            .catch { error ->
+                _uiState.value = VerifyAccountUiState.Error(error.message.toString())
+            }
+            .collect { result ->
+                when (result) {
+                    is ChallengeResult.Success -> {
                         _uiState.value = VerifyAccountUiState.Success
-                    } else {
-                        _uiState.value = VerifyAccountUiState.Error(response.message)
+                    }
+                    is ChallengeResult.Failure -> {
+                        _uiState.value = VerifyAccountUiState.Error(result.error.message ?: "Erro na verificação")
+                    }
+                    is ChallengeResult.Cancelled -> {
+                        _uiState.value = VerifyAccountUiState.Idle
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Solicita o reenvio do código OTP.
+     */
+    fun resendOtp(userId: String) {
+        viewModelScope.launch {
+            challengeRepository.resendChallenge(
+                transactionId = userId,
+                type = ChallengeType.OTP_EMAIL
+            )
+            .onStart {
+                _uiState.value = VerifyAccountUiState.Loading
+            }
+            .catch { error ->
+                _uiState.value = VerifyAccountUiState.Error(error.message.toString())
+            }
+            .collect { success ->
+                if (success) {
+                    _uiState.value = VerifyAccountUiState.Idle // Ou um estado de "Reenviado com sucesso"
+                } else {
+                    _uiState.value = VerifyAccountUiState.Error("Falha ao reenviar código")
+                }
+            }
         }
     }
 }

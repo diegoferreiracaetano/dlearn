@@ -73,5 +73,5 @@ val serverModule = module {
     // Password
     single { PasswordDataService() }
     single { ChangePasswordUseCase(get()) }
-    single { PasswordOrchestrator(get(), get(), get()) }
+    single { PasswordOrchestrator(get()) }
 }

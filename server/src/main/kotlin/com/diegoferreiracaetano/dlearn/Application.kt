@@ -56,8 +56,8 @@ fun Application.module() {
     val searchOrchestrator by inject<SearchOrchestrator>()
 
     routing {
-        swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml")
-        openAPI(path = "openapi", swaggerFile = "openapi/documentation.yaml")
+        swaggerUI(path = "swagger", swaggerFile = "documentation.yaml")
+        openAPI(path = "openapi", swaggerFile = "documentation.yaml")
 
         mainController()
         homeController(homeOrchestrator)
@@ -66,5 +66,6 @@ fun Application.module() {
         searchController(searchOrchestrator)
         appController()
         passwordController()
+        challengeController() // Registrado!
     }
 }

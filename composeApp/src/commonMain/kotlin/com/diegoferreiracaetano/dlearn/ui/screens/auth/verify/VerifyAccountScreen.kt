@@ -23,7 +23,6 @@ fun VerifyAccountScreen(
     userId: String,
     onBackClick: () -> Unit,
     onContinueClick: () -> Unit,
-    onResendClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: VerifyAccountViewModel = koinInject()
 ) {
@@ -34,7 +33,6 @@ fun VerifyAccountScreen(
     LaunchedEffect(uiState) {
         when (val state = uiState) {
             is VerifyAccountUiState.Success -> {
-                println("VERIFY_SCREEN: OTP Success, calling onContinueClick")
                 onContinueClick()
             }
             is VerifyAccountUiState.Error -> otpError = state.message
@@ -81,7 +79,7 @@ fun VerifyAccountScreen(
                     otpCode = text
                     otpError = null 
                 },
-                onResendClick = onResendClick,
+                onResendClick = { viewModel.resendOtp(userId) },
                 modifier = Modifier.fillMaxWidth(),
                 isError = otpError != null,
                 errorText = otpError
@@ -108,11 +106,17 @@ fun VerifyAccountScreen(
                     text = stringResource(Res.string.otp_resend_prompt),
                     style = MaterialTheme.typography.bodyMedium
                 )
-                TextButton(onClick = onResendClick) {
+                TextButton(
+                    onClick = { viewModel.resendOtp(userId) },
+                    enabled = uiState !is VerifyAccountUiState.Loading
+                ) {
                     Text(
                         text = stringResource(Res.string.otp_resend_now),
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = if (uiState is VerifyAccountUiState.Loading) 
+                            MaterialTheme.colorScheme.onSurfaceVariant 
+                        else 
+                            MaterialTheme.colorScheme.primary
                     )
                 }
             }

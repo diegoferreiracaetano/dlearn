@@ -36,4 +36,12 @@ open class PasswordDataService {
         }
         return null
     }
+
+    /**
+     * Resolve um desafio genérico.
+     */
+    open fun resolveChallenge(transactionId: String, answers: Map<String, String>): String? {
+        val otp = answers["otp"] ?: return null
+        return verifyOtp(otp, transactionId)
+    }
 }

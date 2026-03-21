@@ -1,6 +1,11 @@
-package com.diegoferreiracaetano.dlearn.data.challenge
+package com.diegoferreiracaetano.dlearn.data.auth.challenge
 
-import com.diegoferreiracaetano.dlearn.domain.challenge.*
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.Challenge
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeCoordinator
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeHandler
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeResult
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeSession
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 import kotlinx.coroutines.CompletableDeferred
 
 /**
@@ -20,15 +25,8 @@ class OtpChallengeHandler(
         val deferred = CompletableDeferred<ChallengeResult>()
         currentDeferred = deferred
 
-        val request = ChallengeRequest(
-            type = challenge.challengeType,
-            session = session,
-            challenge = challenge,
-            resolver = deferred
-        )
-
-        // Emite para o Coordenador Global. O App Root ou NavGraph estará observando isso.
-        coordinator.emit(request)
+        // O coordinator agora recebe uma sessão de desafio que a UI deve resolver
+        coordinator.emit(session)
 
         return try {
             deferred.await()

@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
@@ -27,13 +28,13 @@ fun VerifyAccountScreen(
     viewModel: VerifyAccountViewModel = koinInject()
 ) {
     var otpCode by remember { mutableStateOf("") }
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var otpError by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(uiState) {
         when (val state = uiState) {
-            is VerifyAccountUiState.Success ->{
-                println("TESTE   onContinueClick()")
+            is VerifyAccountUiState.Success -> {
+                println("VERIFY_SCREEN: OTP Success, calling onContinueClick")
                 onContinueClick()
             }
             is VerifyAccountUiState.Error -> otpError = state.message

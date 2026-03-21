@@ -6,10 +6,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
@@ -48,18 +50,16 @@ fun AppNavGraph(
                 is GlobalEvent.Challenge -> {
                     when (event.request.type) {
                         ChallengeType.OTP_SMS, ChallengeType.OTP_EMAIL -> {
-                            // Navegação direta para a tela de verificação (MFA)
+                            // Abre o desafio como um DIALOG por cima da tela atual
                             navController.navigate(NavigationRoutes.VERIFY_ACCOUNT)
                         }
-                        else -> { /* Outros desafios podem abrir dialogs ou overlays */ }
+                        else -> { /* Outros desafios */ }
                     }
                 }
                 is GlobalEvent.Navigation -> {
                     navController.navigate(event.route)
                 }
-                is GlobalEvent.Message -> {
-                    // Mostrar Snackbar ou Toast Global
-                }
+                is GlobalEvent.Message -> { }
             }
         }
     }
@@ -108,9 +108,7 @@ fun AppNavGraph(
         composable(SignUp.route) {
             SignUpScreen(
                 onBackClick = { navController.popBackStack() },
-                onSignUpClick = { 
-                    navController.navigate(NavigationRoutes.VERIFY_ACCOUNT) 
-                },
+                onSignUpClick = { navController.navigate(NavigationRoutes.VERIFY_ACCOUNT) },
                 modifier = modifier
             )
         }
@@ -118,9 +116,7 @@ fun AppNavGraph(
         composable(ResetPassword.route) {
             ResetPasswordScreen(
                 onBackClick = { navController.popBackStack() },
-                onNextClick = { 
-                    navController.navigate(NavigationRoutes.VERIFY_ACCOUNT) 
-                },
+                onNextClick = { navController.navigate(NavigationRoutes.VERIFY_ACCOUNT) },
                 modifier = modifier
             )
         }
@@ -128,7 +124,11 @@ fun AppNavGraph(
         composable(CreateNewPassword.route) {
             CreateNewPasswordScreen(
                 onBackClick = { navController.popBackStack() },
-                onSuccess = { navController.navigate(Login.route) },
+                onSuccess = { 
+                    navController.navigate(Login.route) {
+                        popUpTo(CreateNewPassword.route) { inclusive = true }
+                    }
+                },
                 modifier = modifier
             )
         }
@@ -136,8 +136,28 @@ fun AppNavGraph(
         composable(ChangePassword.route) {
             CreateNewPasswordScreen(
                 onBackClick = { navController.popBackStack() },
-                onSuccess = { navController.popBackStack() },
+                onSuccess = { 
+                    navController.popBackStack() 
+                },
                 modifier = modifier
+            )
+        }
+
+        // Rota de Desafio como DIALOG (Abre por cima e mantém a tela de baixo)
+        dialog(
+            route = NavigationRoutes.VERIFY_ACCOUNT,
+            dialogProperties = DialogProperties(
+                usePlatformDefaultWidth = false, // Permite tela cheia se o componente DS for assim
+                dismissOnBackPress = true,
+                dismissOnClickOutside = false
+            )
+        ) {
+            VerifyAccountScreen(
+                userId = "",
+                onBackClick = { navController.popBackStack() },
+                onContinueClick = { navController.popBackStack() },
+                onResendClick = { /* No op */ },
+                modifier = Modifier // Ocupa o espaço do dialog
             )
         }
 
@@ -205,16 +225,6 @@ fun AppNavGraph(
                 onItemClick = { route -> navController.navigate(route) },
                 onNavigate = { route -> navController.navigate(route) },
                 onDeeplink = { url -> uriHandler.openUri(url) },
-                modifier = modifier
-            )
-        }
-
-        composable(route = NavigationRoutes.VERIFY_ACCOUNT) {
-            VerifyAccountScreen(
-                userId = "",
-                onBackClick = { navController.popBackStack() },
-                onContinueClick = { navController.popBackStack() },
-                onResendClick = { /* No op */ },
                 modifier = modifier
             )
         }

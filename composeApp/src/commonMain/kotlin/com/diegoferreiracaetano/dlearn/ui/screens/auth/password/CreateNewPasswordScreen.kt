@@ -16,7 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.AppConstants
+import com.diegoferreiracaetano.dlearn.designsystem.components.alert.SnackbarType
+import com.diegoferreiracaetano.dlearn.designsystem.components.alert.showAppSnackBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
 import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
@@ -24,6 +27,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTop
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.ui.screens.auth.password.state.CreateNewPasswordUiState
+import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 import dlearn.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -38,89 +42,104 @@ fun CreateNewPasswordScreen(
 ) {
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    
+    // Como esta é a raiz da tela manual, criamos o estado aqui para evitar o crash
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(uiState) {
         when (val state = uiState) {
             is CreateNewPasswordUiState.Success -> {
-                println("TESTE   Success()")
-                // Mostra a mensagem e navega para o sucesso (volta para tela anterior ou login)
+                snackbarHostState.showAppSnackBar(
+                    scope = scope,
+                    message = state.message,
+                    type = SnackbarType.SUCCESS
+                )
                 onSuccess()
             }
-            is CreateNewPasswordUiState.Error -> snackbarHostState.showSnackbar(state.message)
+            is CreateNewPasswordUiState.Error -> {
+                snackbarHostState.showAppSnackBar(
+                    scope = scope,
+                    message = state.message,
+                    type = SnackbarType.ERROR
+                )
+            }
             else -> {}
         }
     }
 
-    AppContainer(
-        modifier = modifier,
-        snackBarHostState = snackbarHostState,
-        topBar = {
-            AppTopBar(
-                title = stringResource(Res.string.create_password_title),
-                onBack = onBackClick
-            )
-        }
-    ) { innerModifier ->
-        if (uiState is CreateNewPasswordUiState.Loading) {
-            AppLoading(modifier = Modifier.fillMaxSize())
-        }
+    // Provê o estado para o AppContainer e sub-componentes
+    CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
+        AppContainer(
+            modifier = modifier,
+            snackBarHostState = snackbarHostState,
+            topBar = {
+                AppTopBar(
+                    title = stringResource(Res.string.create_password_title),
+                    onBack = onBackClick
+                )
+            }
+        ) { innerModifier ->
+            if (uiState is CreateNewPasswordUiState.Loading) {
+                AppLoading(modifier = Modifier.fillMaxSize())
+            }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .then(innerModifier)
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
-            Text(
-                text = stringResource(Res.string.create_password_title),
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.fillMaxWidth()
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(innerModifier)
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
+            ) {
+                Text(
+                    text = stringResource(Res.string.create_password_title),
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Text(
-                text = stringResource(Res.string.create_password_subtitle),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth()
-            )
+                Text(
+                    text = stringResource(Res.string.create_password_subtitle),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
-            AppTextField(
-                value = password,
-                onValueChange = { password = it },
-                placeholder = Res.string.title_password,
-                label = Res.string.title_password,
-                type = TextFieldType.PASSWORD,
-                modifier = Modifier.fillMaxWidth()
-            )
+                AppTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    placeholder = Res.string.title_password,
+                    label = Res.string.title_password,
+                    type = TextFieldType.PASSWORD,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            AppTextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
-                placeholder = Res.string.create_password_confirm,
-                label = Res.string.create_password_confirm,
-                type = TextFieldType.PASSWORD,
-                modifier = Modifier.fillMaxWidth()
-            )
+                AppTextField(
+                    value = confirmPassword,
+                    onValueChange = { confirmPassword = it },
+                    placeholder = Res.string.create_password_confirm,
+                    label = Res.string.create_password_confirm,
+                    type = TextFieldType.PASSWORD,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
-            AppButton(
-                text = stringResource(Res.string.create_password_action),
-                enabled = uiState !is CreateNewPasswordUiState.Loading,
-                onClick = {
-                    viewModel.changePassword(AppConstants.GUEST_USER_ID, password)
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
+                AppButton(
+                    text = stringResource(Res.string.create_password_action),
+                    enabled = uiState !is CreateNewPasswordUiState.Loading,
+                    onClick = {
+                        viewModel.changePassword(AppConstants.GUEST_USER_ID, password)
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }

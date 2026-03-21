@@ -12,6 +12,7 @@ import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.client.request.takeFrom
 import io.ktor.client.statement.HttpReceivePipeline
+import io.ktor.client.statement.HttpResponse
 import io.ktor.util.AttributeKey
 import kotlinx.serialization.json.Json
 
@@ -33,44 +34,41 @@ class ChallengeInterceptor(
         }
 
         override fun install(plugin: ChallengeInterceptor, scope: HttpClient) {
-            // Usamos o interceptor no pipeline de recebimento
-            scope.receivePipeline.intercept(HttpReceivePipeline.After) { response ->
+            scope.receivePipeline.intercept(HttpReceivePipeline.After) { 
+                val response = subject as? HttpResponse ?: return@intercept
+                
                 if (response.status.value == 428) {
                     val responseBody = response.body<String>()
                     
                     val session = try {
                         plugin.json.decodeFromString<ChallengeSession>(responseBody)
                     } catch (e: Exception) {
-                        proceedWith(response)
                         return@intercept
                     }
 
-                    // Suspende a requisição original e aguarda a resolução do desafio (UI)
+                    // Aguarda a resolução do desafio pela UI
                     val result = plugin.engine.resolve(session)
 
                     if (result is ChallengeResult.Success) {
                         val originalRequest = response.call.request
                         
-                        // Executa a requisição novamente com os tokens de validação
-                        val retryResponse = scope.request {
+                        // Faz o RETRY da requisição original com os novos headers de validação
+                        val retryCall = scope.request {
                             takeFrom(originalRequest)
                             originalRequest.content.let { setBody(it) }
                             
-                            // Adiciona os headers resultantes do desafio (ex: token validado)
+                            // Remove headers antigos de desafio para evitar duplicidade
+                            headers.remove(SecurityConstants.HEADER_CHALLENGE_TOKEN)
+                            
+                            // Adiciona os novos headers (que contêm o token validado)
                             result.data.forEach { (key, value) ->
                                 header(key, value)
                             }
-                            // Garante o envio do transactionId se necessário
-                            header(SecurityConstants.HEADER_CHALLENGE_TOKEN, session.transactionId)
                         }
                         
-                        // Substitui a resposta original pela resposta da nova tentativa
-                        proceedWith(retryResponse)
-                    } else {
-                        proceedWith(response)
+                        // Substitui o subject pela resposta do retry
+                        proceedWith(retryCall)
                     }
-                } else {
-                    proceedWith(response)
                 }
             }
         }

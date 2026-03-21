@@ -8,7 +8,7 @@ import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 
 /**
  * Handler genérico para desafios de Biometria.
- * A implementação real da biometria deve ser injetada via [BiometricProvider].
+ * TODO: Implementar BiometricProvider nativo (iOS/Android) para capturar a credencial local.
  */
 class BiometricChallengeHandler(
     private val biometricProvider: BiometricProvider
@@ -20,11 +20,11 @@ class BiometricChallengeHandler(
 
     override suspend fun handle(challenge: Challenge, session: ChallengeSession): ChallengeResult {
         return try {
+            // Chama a interface que será implementada via Expect/Actual ou Injeção Nativa
             val result = biometricProvider.authenticate()
             if (result is BiometricResult.Success) {
-                // Em um cenário real, o token viria da validação da biometria com o backend
-                // ou de um Keystore local que assina a transação.
-                ChallengeResult.Success(mapOf("X-Challenge-Token" to result.token))
+                // Padronizado para "validatedToken" para que o Interceptor possa repetir a requisição original
+                ChallengeResult.Success(mapOf("validatedToken" to result.token))
             } else {
                 ChallengeResult.Cancelled
             }
@@ -34,6 +34,9 @@ class BiometricChallengeHandler(
     }
 }
 
+/**
+ * Interface para abstração da Biometria nativa.
+ */
 interface BiometricProvider {
     suspend fun authenticate(): BiometricResult
 }

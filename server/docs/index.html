@@ -689,26 +689,368 @@
   <script>
     // Script section to load models into a JS Var
     var defs = {}
+            defs["AppContainerComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "topBar" : {
+        "$ref" : "#/components/schemas/Component"
+      },
+      "bottomBar" : {
+        "$ref" : "#/components/schemas/Component"
+      },
+      "components" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/Component"
+        }
+      }
+    }
+  } ]
+};
+            defs["AppFeedbackComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "description" : {
+        "type" : "string"
+      },
+      "imageSource" : {
+        "type" : "string"
+      },
+      "primaryText" : {
+        "type" : "string"
+      },
+      "secondaryText" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
+            defs["AppIconType"] = {
+  "type" : "string",
+  "enum" : [ "HOME", "SEARCH", "FAVORITE", "PERSON", "WATCHLIST", "LOCK", "NOTIFICATIONS", "LANGUAGE", "PUBLIC", "DELETE", "POLICY", "HELP", "INFO", "WORKSPACE_PREMIUM", "PLAY_ARROW", "DOWNLOAD", "SHARE", "CALENDAR_MONTH", "SCHEDULE", "STAR", "UNKNOWN" ]
+};
+            defs["AppListComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "components" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/Component"
+        }
+      }
+    }
+  } ]
+};
+            defs["AppMovieDetailHeaderComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "imageUrl" : {
+        "type" : "string"
+      },
+      "rating" : {
+        "type" : "number"
+      },
+      "year" : {
+        "type" : "string"
+      },
+      "duration" : {
+        "type" : "string"
+      },
+      "genre" : {
+        "type" : "string"
+      },
+      "isFavorite" : {
+        "type" : "boolean"
+      },
+      "isInList" : {
+        "type" : "boolean"
+      },
+      "downloadActionUrl" : {
+        "type" : "string"
+      },
+      "shareActionUrl" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
+            defs["AppProfileHeaderComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "name" : {
+        "type" : "string"
+      },
+      "email" : {
+        "type" : "string"
+      },
+      "imageUrl" : {
+        "type" : "string"
+      },
+      "onImagePickedAction" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
             defs["AppRequest"] = {
   "required" : [ "path" ],
   "type" : "object",
   "properties" : {
     "path" : {
       "type" : "string"
+    },
+    "params" : {
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "string"
+      }
+    },
+    "metadata" : {
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "string"
+      }
+    }
+  }
+};
+            defs["AppSearchBarComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "query" : {
+        "type" : "string"
+      },
+      "placeholder" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
+            defs["AppSearchContentComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object"
+  } ]
+};
+            defs["AppSectionTitleComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
+            defs["AppSnackbarComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "message" : {
+        "type" : "string"
+      },
+      "snackbarType" : {
+        "type" : "string",
+        "enum" : [ "SUCCESS", "ERROR", "WARNING" ]
+      },
+      "durationMillis" : {
+        "type" : "integer",
+        "format" : "int64"
+      }
+    }
+  } ]
+};
+            defs["AppStringType"] = {
+  "type" : "string",
+  "enum" : [ "PROFILE_TITLE", "PREMIUM_MEMBER", "PREMIUM_DESCRIPTION", "SECTION_ACCOUNT", "ITEM_MEMBER", "ITEM_PASSWORD", "SECTION_GENERAL", "ITEM_NOTIFICATION", "ITEM_LANGUAGE", "ITEM_COUNTRY", "ITEM_CLEAR_CACHE", "SECTION_MORE", "ITEM_LEGAL", "ITEM_HELP", "ITEM_ABOUT", "LOGOUT", "HOME_TITLE", "HOME_SUBTITLE", "NAV_HOME", "NAV_WATCHLIST", "NAV_SEARCH", "NAV_FAVORITES", "NAV_PROFILE", "APP_NAME", "EDIT_PROFILE_TITLE", "FIELD_FULL_NAME", "FIELD_EMAIL", "FIELD_PASSWORD", "FIELD_PHONE_NUMBER", "SAVE_CHANGES", "ERROR_NAME_EXIST", "UPDATE_PROFILE_SUCCESS", "UPDATE_PROFILE_ERROR", "DETAIL_TRAILER", "DETAIL_STORY_LINE", "DETAIL_CAST_CREW", "DETAIL_EPISODE", "DETAIL_WATCH_NOW", "SEARCH_PLACEHOLDER", "SEARCH_EMPTY_TITLE", "SEARCH_EMPTY_DESCRIPTION", "WATCHLIST_EMPTY_TITLE", "WATCHLIST_EMPTY_DESCRIPTION", "FAVORITE_EMPTY_TITLE", "FAVORITE_EMPTY_DESCRIPTION", "PASSWORD_OTP_REQUIRED", "PASSWORD_OTP_VERIFIED", "UNKNOWN" ]
+};
+            defs["AppTextFieldComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "value" : {
+        "type" : "string"
+      },
+      "label" : {
+        "$ref" : "#/components/schemas/AppStringType"
+      },
+      "placeholder" : {
+        "$ref" : "#/components/schemas/AppStringType"
+      },
+      "fieldType" : {
+        "$ref" : "#/components/schemas/AppTextFieldType"
+      },
+      "key" : {
+        "type" : "string"
+      },
+      "isError" : {
+        "type" : "boolean"
+      }
+    }
+  } ]
+};
+            defs["AppTextFieldType"] = {
+  "type" : "string",
+  "enum" : [ "NONE", "EMAIL", "PASSWORD", "PHONE" ]
+};
+            defs["AppTopBarComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "subtitle" : {
+        "type" : "string"
+      },
+      "imageUrl" : {
+        "type" : "string"
+      },
+      "showSearch" : {
+        "type" : "boolean"
+      }
+    }
+  } ]
+};
+            defs["AppTopBarListComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "selectedRoute" : {
+        "type" : "string"
+      },
+      "items" : {
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "route" : {
+              "type" : "string"
+            },
+            "topBar" : {
+              "$ref" : "#/components/schemas/AppTopBarComponent"
+            }
+          }
+        }
+      }
+    }
+  } ]
+};
+            defs["BannerCarouselComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "items" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/movie_item"
+        }
+      }
+    }
+  } ]
+};
+            defs["BottomNavigationComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "items" : {
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "label" : {
+              "type" : "string"
+            },
+            "route" : {
+              "type" : "string"
+            },
+            "icon" : {
+              "$ref" : "#/components/schemas/AppIconType"
+            }
+          }
+        }
+      },
+      "selectedRoute" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
+            defs["Challenge"] = {
+  "required" : [ "challengeType" ],
+  "type" : "object",
+  "properties" : {
+    "challengeType" : {
+      "$ref" : "#/components/schemas/ChallengeType"
+    },
+    "data" : {
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "string"
+      }
     }
   }
 };
             defs["ChallengeSession"] = {
-  "required" : [ "message", "transactionId" ],
+  "required" : [ "challenges", "transactionId" ],
   "type" : "object",
   "properties" : {
     "transactionId" : {
-      "type" : "string",
-      "example" : "CHALLENGE_1711045039000"
+      "type" : "string"
     },
     "message" : {
-      "type" : "string",
-      "example" : "Please enter the code sent to your email"
+      "type" : "string"
+    },
+    "challenges" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/Challenge"
+      }
+    },
+    "expiresAt" : {
+      "type" : "integer",
+      "format" : "int64"
     }
   }
 };
@@ -717,20 +1059,116 @@
   "enum" : [ "OTP_SMS", "OTP_EMAIL", "BIOMETRIC", "PASSWORD", "TOTP", "UNKNOWN" ]
 };
             defs["ChangePasswordRequest"] = {
-  "required" : [ "newPassword", "userId" ],
+  "required" : [ "newPassword" ],
   "type" : "object",
   "properties" : {
     "userId" : {
-      "type" : "string",
-      "example" : "user_123"
+      "type" : "string"
+    },
+    "currentPassword" : {
+      "type" : "string"
     },
     "newPassword" : {
-      "type" : "string",
-      "example" : "NewPass@2024"
+      "type" : "string"
     }
   }
 };
-            defs["ResolveChallengeRequestBody"] = {
+            defs["Component"] = {
+  "type" : "object",
+  "properties" : {
+    "type" : {
+      "type" : "string"
+    }
+  },
+  "discriminator" : {
+    "propertyName" : "type"
+  }
+};
+            defs["FullScreenBannerComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "id" : {
+        "type" : "string"
+      },
+      "title" : {
+        "type" : "string"
+      },
+      "imageUrl" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
+            defs["MovieCarouselComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "items" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/movie_item"
+        }
+      }
+    }
+  } ]
+};
+            defs["movie_item"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "id" : {
+        "type" : "string"
+      },
+      "title" : {
+        "type" : "string"
+      },
+      "imageUrl" : {
+        "type" : "string"
+      },
+      "rating" : {
+        "type" : "string"
+      },
+      "year" : {
+        "type" : "string"
+      },
+      "duration" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
+            defs["ProfileRowComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "name" : {
+        "type" : "string"
+      },
+      "email" : {
+        "type" : "string"
+      },
+      "imageUrl" : {
+        "type" : "string"
+      },
+      "editActionUrl" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
+            defs["ResolveChallengeRequest"] = {
   "required" : [ "answers", "type" ],
   "type" : "object",
   "properties" : {
@@ -741,9 +1179,6 @@
       "type" : "object",
       "additionalProperties" : {
         "type" : "string"
-      },
-      "example" : {
-        "otp" : "123456"
       }
     }
   }
@@ -752,12 +1187,13 @@
   "type" : "object",
   "properties" : {
     "validatedToken" : {
-      "type" : "string",
-      "example" : "VALIDATED_CHALLENGE_1711045039000"
+      "type" : "string"
     },
     "success" : {
-      "type" : "boolean",
-      "example" : true
+      "type" : "boolean"
+    },
+    "message" : {
+      "type" : "string"
     }
   }
 };
@@ -770,10 +1206,39 @@
     "components" : {
       "type" : "array",
       "items" : {
-        "type" : "object"
+        "$ref" : "#/components/schemas/Component"
       }
     }
   }
+};
+            defs["SectionComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "items" : {
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "label" : {
+              "type" : "string"
+            },
+            "icon" : {
+              "$ref" : "#/components/schemas/AppIconType"
+            },
+            "actionUrl" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    }
+  } ]
 };
   </script>
 
@@ -791,12 +1256,36 @@
             -->
             <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">API Summary</a></li>
 
+                  <li class="nav-header" data-group="Business"><a href="#api-Business">API Methods - Business</a></li>
+                    <li data-group="Business" data-name="v1HomeGet" class="">
+                      <a href="#api-Business-v1HomeGet">v1HomeGet</a>
+                    </li>
+                    <li data-group="Business" data-name="v1MovieMovieIdGet" class="">
+                      <a href="#api-Business-v1MovieMovieIdGet">v1MovieMovieIdGet</a>
+                    </li>
+                  <li class="nav-header" data-group="Profile"><a href="#api-Profile">API Methods - Profile</a></li>
+                    <li data-group="Profile" data-name="v1ProfileEditGet" class="">
+                      <a href="#api-Profile-v1ProfileEditGet">v1ProfileEditGet</a>
+                    </li>
+                    <li data-group="Profile" data-name="v1ProfileGet" class="">
+                      <a href="#api-Profile-v1ProfileGet">v1ProfileGet</a>
+                    </li>
+                    <li data-group="Profile" data-name="v1ProfileUpdatePost" class="">
+                      <a href="#api-Profile-v1ProfileUpdatePost">v1ProfileUpdatePost</a>
+                    </li>
                   <li class="nav-header" data-group="SDUI"><a href="#api-SDUI">API Methods - SDUI</a></li>
                     <li data-group="SDUI" data-name="v1AppPost" class="">
                       <a href="#api-SDUI-v1AppPost">v1AppPost</a>
                     </li>
                     <li data-group="SDUI" data-name="v1MainGet" class="">
                       <a href="#api-SDUI-v1MainGet">v1MainGet</a>
+                    </li>
+                  <li class="nav-header" data-group="Search"><a href="#api-Search">API Methods - Search</a></li>
+                    <li data-group="Search" data-name="v1SearchMainGet" class="">
+                      <a href="#api-Search-v1SearchMainGet">v1SearchMainGet</a>
+                    </li>
+                    <li data-group="Search" data-name="v1SearchResultGet" class="">
+                      <a href="#api-Search-v1SearchResultGet">v1SearchResultGet</a>
                     </li>
                   <li class="nav-header" data-group="Security"><a href="#api-Security">API Methods - Security</a></li>
                     <li data-group="Security" data-name="v1AuthChallengeResendPost" class="">
@@ -821,12 +1310,1750 @@
         <div id="header">
           <div id="api-_">
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
-              <div class="app-desc">Version: 1.2.3</div>
+              <div class="app-desc">Version: 1.3.1</div>
             <hr>
-            <div>API for Server-Driven UI in DLearn App. Security and MFA are handled by a Generic Challenge Engine.</div>
+            <div>API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows.
+Security and Multi-Factor Authentication (MFA) are handled by a Generic Challenge Engine.</div>
           </div>
         </div>
         <div id="sections">
+                <section id="api-Business">
+                  <h1>Business</h1>
+                    <div id="api-Business-v1HomeGet">
+                      <article id="api-Business-v1HomeGet-0" data-group="User" data-name="v1HomeGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>v1HomeGet</h1>
+                          <p>Get Home Screen</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/home</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Business-v1HomeGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Business-v1HomeGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Business-v1HomeGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Business-v1HomeGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Business-v1HomeGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Business-v1HomeGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Business-v1HomeGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Business-v1HomeGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Business-v1HomeGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Business-v1HomeGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Business-v1HomeGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Business-v1HomeGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"http://localhost:8081/v1/home?userId=&type="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Business-v1HomeGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.BusinessApi;
+
+import java.io.File;
+import java.util.*;
+
+public class BusinessApiExample {
+
+    public static void main(String[] args) {
+        
+        BusinessApi apiInstance = new BusinessApi();
+        String userId = userId_example; // String | 
+        Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        String type = type_example; // String | 
+        try {
+            Screen result = apiInstance.v1HomeGet(userId, xAppVersion, acceptLanguage, type);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling BusinessApi#v1HomeGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Business-v1HomeGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.BusinessApi;
+
+public class BusinessApiExample {
+
+    public static void main(String[] args) {
+        BusinessApi apiInstance = new BusinessApi();
+        String userId = userId_example; // String | 
+        Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        String type = type_example; // String | 
+        try {
+            Screen result = apiInstance.v1HomeGet(userId, xAppVersion, acceptLanguage, type);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling BusinessApi#v1HomeGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Business-v1HomeGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Business-v1HomeGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *userId = userId_example; //  (optional)
+Integer *xAppVersion = 56; //  (optional)
+String *acceptLanguage = acceptLanguage_example; //  (optional)
+String *type = type_example; //  (optional)
+
+BusinessApi *apiInstance = [[BusinessApi alloc] init];
+
+// Get Home Screen
+[apiInstance v1HomeGetWith:userId
+    xAppVersion:xAppVersion
+    acceptLanguage:acceptLanguage
+    type:type
+              completionHandler: ^(Screen output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Business-v1HomeGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
+
+var api = new DLearnBffApi.BusinessApi()
+var opts = { 
+  'userId': userId_example, // {{String}} 
+  'xAppVersion': 56, // {{Integer}} 
+  'acceptLanguage': acceptLanguage_example, // {{String}} 
+  'type': type_example // {{String}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.v1HomeGet(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Business-v1HomeGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Business-v1HomeGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class v1HomeGetExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new BusinessApi();
+            var userId = userId_example;  // String |  (optional) 
+            var xAppVersion = 56;  // Integer |  (optional) 
+            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
+            var type = type_example;  // String |  (optional) 
+
+            try
+            {
+                // Get Home Screen
+                Screen result = apiInstance.v1HomeGet(userId, xAppVersion, acceptLanguage, type);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling BusinessApi.v1HomeGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Business-v1HomeGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiBusinessApi();
+$userId = userId_example; // String | 
+$xAppVersion = 56; // Integer | 
+$acceptLanguage = acceptLanguage_example; // String | 
+$type = type_example; // String | 
+
+try {
+    $result = $api_instance->v1HomeGet($userId, $xAppVersion, $acceptLanguage, $type);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling BusinessApi->v1HomeGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Business-v1HomeGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::BusinessApi;
+
+my $api_instance = WWW::SwaggerClient::BusinessApi->new();
+my $userId = userId_example; # String | 
+my $xAppVersion = 56; # Integer | 
+my $acceptLanguage = acceptLanguage_example; # String | 
+my $type = type_example; # String | 
+
+eval { 
+    my $result = $api_instance->v1HomeGet(userId => $userId, xAppVersion => $xAppVersion, acceptLanguage => $acceptLanguage, type => $type);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling BusinessApi->v1HomeGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Business-v1HomeGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.BusinessApi()
+userId = userId_example # String |  (optional)
+xAppVersion = 56 # Integer |  (optional)
+acceptLanguage = acceptLanguage_example # String |  (optional)
+type = type_example # String |  (optional)
+
+try: 
+    # Get Home Screen
+    api_response = api_instance.v1_home_get(userId=userId, xAppVersion=xAppVersion, acceptLanguage=acceptLanguage, type=type)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling BusinessApi->v1HomeGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+                            <div class="methodsubtabletitle">Header parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                  <tr><td style="width:150px;">X-App-Version</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1HomeGet_xAppVersion">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                                  <tr><td style="width:150px;">Accept-Language</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1HomeGet_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">userId</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_v1HomeGet_userId">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">type</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_v1HomeGet_type">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1HomeGet-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1HomeGet-200-schema">
+                                  <div id='responses-v1HomeGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Screen"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1HomeGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1HomeGet-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1HomeGet-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Business-v1MovieMovieIdGet">
+                      <article id="api-Business-v1MovieMovieIdGet-0" data-group="User" data-name="v1MovieMovieIdGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>v1MovieMovieIdGet</h1>
+                          <p>Get Movie Detail Screen</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/movie/{movieId}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Business-v1MovieMovieIdGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Business-v1MovieMovieIdGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Business-v1MovieMovieIdGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"http://localhost:8081/v1/movie/{movieId}?userId="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.BusinessApi;
+
+import java.io.File;
+import java.util.*;
+
+public class BusinessApiExample {
+
+    public static void main(String[] args) {
+        
+        BusinessApi apiInstance = new BusinessApi();
+        String movieId = movieId_example; // String | 
+        String userId = userId_example; // String | 
+        Integer xAppVersion = 56; // Integer | 
+        try {
+            Screen result = apiInstance.v1MovieMovieIdGet(movieId, userId, xAppVersion);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling BusinessApi#v1MovieMovieIdGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.BusinessApi;
+
+public class BusinessApiExample {
+
+    public static void main(String[] args) {
+        BusinessApi apiInstance = new BusinessApi();
+        String movieId = movieId_example; // String | 
+        String userId = userId_example; // String | 
+        Integer xAppVersion = 56; // Integer | 
+        try {
+            Screen result = apiInstance.v1MovieMovieIdGet(movieId, userId, xAppVersion);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling BusinessApi#v1MovieMovieIdGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *movieId = movieId_example; // 
+String *userId = userId_example; //  (optional)
+Integer *xAppVersion = 56; //  (optional)
+
+BusinessApi *apiInstance = [[BusinessApi alloc] init];
+
+// Get Movie Detail Screen
+[apiInstance v1MovieMovieIdGetWith:movieId
+    userId:userId
+    xAppVersion:xAppVersion
+              completionHandler: ^(Screen output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
+
+var api = new DLearnBffApi.BusinessApi()
+var movieId = movieId_example; // {{String}} 
+var opts = { 
+  'userId': userId_example, // {{String}} 
+  'xAppVersion': 56 // {{Integer}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.v1MovieMovieIdGet(movieId, opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class v1MovieMovieIdGetExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new BusinessApi();
+            var movieId = movieId_example;  // String | 
+            var userId = userId_example;  // String |  (optional) 
+            var xAppVersion = 56;  // Integer |  (optional) 
+
+            try
+            {
+                // Get Movie Detail Screen
+                Screen result = apiInstance.v1MovieMovieIdGet(movieId, userId, xAppVersion);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling BusinessApi.v1MovieMovieIdGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiBusinessApi();
+$movieId = movieId_example; // String | 
+$userId = userId_example; // String | 
+$xAppVersion = 56; // Integer | 
+
+try {
+    $result = $api_instance->v1MovieMovieIdGet($movieId, $userId, $xAppVersion);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling BusinessApi->v1MovieMovieIdGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::BusinessApi;
+
+my $api_instance = WWW::SwaggerClient::BusinessApi->new();
+my $movieId = movieId_example; # String | 
+my $userId = userId_example; # String | 
+my $xAppVersion = 56; # Integer | 
+
+eval { 
+    my $result = $api_instance->v1MovieMovieIdGet(movieId => $movieId, userId => $userId, xAppVersion => $xAppVersion);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling BusinessApi->v1MovieMovieIdGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Business-v1MovieMovieIdGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.BusinessApi()
+movieId = movieId_example # String | 
+userId = userId_example # String |  (optional)
+xAppVersion = 56 # Integer |  (optional)
+
+try: 
+    # Get Movie Detail Screen
+    api_response = api_instance.v1_movie_movie_id_get(movieId, userId=userId, xAppVersion=xAppVersion)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling BusinessApi->v1MovieMovieIdGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">movieId*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1MovieMovieIdGet_movieId">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+                            <div class="methodsubtabletitle">Header parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                  <tr><td style="width:150px;">X-App-Version</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1MovieMovieIdGet_xAppVersion">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">userId</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_v1MovieMovieIdGet_userId">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1MovieMovieIdGet-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1MovieMovieIdGet-200-schema">
+                                  <div id='responses-v1MovieMovieIdGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Screen"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1MovieMovieIdGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1MovieMovieIdGet-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1MovieMovieIdGet-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                  </section>
+                <section id="api-Profile">
+                  <h1>Profile</h1>
+                    <div id="api-Profile-v1ProfileEditGet">
+                      <article id="api-Profile-v1ProfileEditGet-0" data-group="User" data-name="v1ProfileEditGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>v1ProfileEditGet</h1>
+                          <p>Get Edit Profile Screen</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/profile/edit</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Profile-v1ProfileEditGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileEditGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileEditGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Profile-v1ProfileEditGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Profile-v1ProfileEditGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileEditGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Profile-v1ProfileEditGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Profile-v1ProfileEditGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileEditGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileEditGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileEditGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Profile-v1ProfileEditGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"http://localhost:8081/v1/profile/edit?userId="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Profile-v1ProfileEditGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.ProfileApi;
+
+import java.io.File;
+import java.util.*;
+
+public class ProfileApiExample {
+
+    public static void main(String[] args) {
+        
+        ProfileApi apiInstance = new ProfileApi();
+        String userId = userId_example; // String | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        try {
+            Screen result = apiInstance.v1ProfileEditGet(userId, acceptLanguage);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ProfileApi#v1ProfileEditGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Profile-v1ProfileEditGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ProfileApi;
+
+public class ProfileApiExample {
+
+    public static void main(String[] args) {
+        ProfileApi apiInstance = new ProfileApi();
+        String userId = userId_example; // String | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        try {
+            Screen result = apiInstance.v1ProfileEditGet(userId, acceptLanguage);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ProfileApi#v1ProfileEditGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Profile-v1ProfileEditGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Profile-v1ProfileEditGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *userId = userId_example; //  (optional)
+String *acceptLanguage = acceptLanguage_example; //  (optional)
+
+ProfileApi *apiInstance = [[ProfileApi alloc] init];
+
+// Get Edit Profile Screen
+[apiInstance v1ProfileEditGetWith:userId
+    acceptLanguage:acceptLanguage
+              completionHandler: ^(Screen output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Profile-v1ProfileEditGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
+
+var api = new DLearnBffApi.ProfileApi()
+var opts = { 
+  'userId': userId_example, // {{String}} 
+  'acceptLanguage': acceptLanguage_example // {{String}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.v1ProfileEditGet(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Profile-v1ProfileEditGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Profile-v1ProfileEditGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class v1ProfileEditGetExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new ProfileApi();
+            var userId = userId_example;  // String |  (optional) 
+            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
+
+            try
+            {
+                // Get Edit Profile Screen
+                Screen result = apiInstance.v1ProfileEditGet(userId, acceptLanguage);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling ProfileApi.v1ProfileEditGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Profile-v1ProfileEditGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiProfileApi();
+$userId = userId_example; // String | 
+$acceptLanguage = acceptLanguage_example; // String | 
+
+try {
+    $result = $api_instance->v1ProfileEditGet($userId, $acceptLanguage);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling ProfileApi->v1ProfileEditGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Profile-v1ProfileEditGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::ProfileApi;
+
+my $api_instance = WWW::SwaggerClient::ProfileApi->new();
+my $userId = userId_example; # String | 
+my $acceptLanguage = acceptLanguage_example; # String | 
+
+eval { 
+    my $result = $api_instance->v1ProfileEditGet(userId => $userId, acceptLanguage => $acceptLanguage);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling ProfileApi->v1ProfileEditGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Profile-v1ProfileEditGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.ProfileApi()
+userId = userId_example # String |  (optional)
+acceptLanguage = acceptLanguage_example # String |  (optional)
+
+try: 
+    # Get Edit Profile Screen
+    api_response = api_instance.v1_profile_edit_get(userId=userId, acceptLanguage=acceptLanguage)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ProfileApi->v1ProfileEditGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+                            <div class="methodsubtabletitle">Header parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                  <tr><td style="width:150px;">Accept-Language</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1ProfileEditGet_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">userId</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_v1ProfileEditGet_userId">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1ProfileEditGet-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1ProfileEditGet-200-schema">
+                                  <div id='responses-v1ProfileEditGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Screen"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1ProfileEditGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1ProfileEditGet-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1ProfileEditGet-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Profile-v1ProfileGet">
+                      <article id="api-Profile-v1ProfileGet-0" data-group="User" data-name="v1ProfileGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>v1ProfileGet</h1>
+                          <p>Get Profile Screen</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/profile</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Profile-v1ProfileGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Profile-v1ProfileGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Profile-v1ProfileGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Profile-v1ProfileGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Profile-v1ProfileGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Profile-v1ProfileGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"http://localhost:8081/v1/profile?userId="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Profile-v1ProfileGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.ProfileApi;
+
+import java.io.File;
+import java.util.*;
+
+public class ProfileApiExample {
+
+    public static void main(String[] args) {
+        
+        ProfileApi apiInstance = new ProfileApi();
+        String userId = userId_example; // String | 
+        Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        try {
+            Screen result = apiInstance.v1ProfileGet(userId, xAppVersion, acceptLanguage);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ProfileApi#v1ProfileGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Profile-v1ProfileGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ProfileApi;
+
+public class ProfileApiExample {
+
+    public static void main(String[] args) {
+        ProfileApi apiInstance = new ProfileApi();
+        String userId = userId_example; // String | 
+        Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        try {
+            Screen result = apiInstance.v1ProfileGet(userId, xAppVersion, acceptLanguage);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ProfileApi#v1ProfileGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Profile-v1ProfileGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Profile-v1ProfileGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *userId = userId_example; //  (optional)
+Integer *xAppVersion = 56; //  (optional)
+String *acceptLanguage = acceptLanguage_example; //  (optional)
+
+ProfileApi *apiInstance = [[ProfileApi alloc] init];
+
+// Get Profile Screen
+[apiInstance v1ProfileGetWith:userId
+    xAppVersion:xAppVersion
+    acceptLanguage:acceptLanguage
+              completionHandler: ^(Screen output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Profile-v1ProfileGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
+
+var api = new DLearnBffApi.ProfileApi()
+var opts = { 
+  'userId': userId_example, // {{String}} 
+  'xAppVersion': 56, // {{Integer}} 
+  'acceptLanguage': acceptLanguage_example // {{String}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.v1ProfileGet(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Profile-v1ProfileGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Profile-v1ProfileGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class v1ProfileGetExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new ProfileApi();
+            var userId = userId_example;  // String |  (optional) 
+            var xAppVersion = 56;  // Integer |  (optional) 
+            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
+
+            try
+            {
+                // Get Profile Screen
+                Screen result = apiInstance.v1ProfileGet(userId, xAppVersion, acceptLanguage);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling ProfileApi.v1ProfileGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Profile-v1ProfileGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiProfileApi();
+$userId = userId_example; // String | 
+$xAppVersion = 56; // Integer | 
+$acceptLanguage = acceptLanguage_example; // String | 
+
+try {
+    $result = $api_instance->v1ProfileGet($userId, $xAppVersion, $acceptLanguage);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling ProfileApi->v1ProfileGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Profile-v1ProfileGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::ProfileApi;
+
+my $api_instance = WWW::SwaggerClient::ProfileApi->new();
+my $userId = userId_example; # String | 
+my $xAppVersion = 56; # Integer | 
+my $acceptLanguage = acceptLanguage_example; # String | 
+
+eval { 
+    my $result = $api_instance->v1ProfileGet(userId => $userId, xAppVersion => $xAppVersion, acceptLanguage => $acceptLanguage);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling ProfileApi->v1ProfileGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Profile-v1ProfileGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.ProfileApi()
+userId = userId_example # String |  (optional)
+xAppVersion = 56 # Integer |  (optional)
+acceptLanguage = acceptLanguage_example # String |  (optional)
+
+try: 
+    # Get Profile Screen
+    api_response = api_instance.v1_profile_get(userId=userId, xAppVersion=xAppVersion, acceptLanguage=acceptLanguage)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ProfileApi->v1ProfileGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+                            <div class="methodsubtabletitle">Header parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                  <tr><td style="width:150px;">X-App-Version</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1ProfileGet_xAppVersion">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                                  <tr><td style="width:150px;">Accept-Language</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1ProfileGet_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">userId</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_v1ProfileGet_userId">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1ProfileGet-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1ProfileGet-200-schema">
+                                  <div id='responses-v1ProfileGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Screen"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1ProfileGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1ProfileGet-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1ProfileGet-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Profile-v1ProfileUpdatePost">
+                      <article id="api-Profile-v1ProfileUpdatePost-0" data-group="User" data-name="v1ProfileUpdatePost" data-version="0">
+                        <div class="pull-left">
+                          <h1>v1ProfileUpdatePost</h1>
+                          <p>Update Profile Data</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/profile/update</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Profile-v1ProfileUpdatePost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileUpdatePost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileUpdatePost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Profile-v1ProfileUpdatePost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Profile-v1ProfileUpdatePost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileUpdatePost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Profile-v1ProfileUpdatePost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Profile-v1ProfileUpdatePost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileUpdatePost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileUpdatePost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Profile-v1ProfileUpdatePost-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Profile-v1ProfileUpdatePost-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+-H "Content-Type: application/json"\
+"http://localhost:8081/v1/profile/update?userId="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Profile-v1ProfileUpdatePost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.ProfileApi;
+
+import java.io.File;
+import java.util.*;
+
+public class ProfileApiExample {
+
+    public static void main(String[] args) {
+        
+        ProfileApi apiInstance = new ProfileApi();
+        map[String, String] body = ; // map[String, String] | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        String userId = userId_example; // String | 
+        try {
+            apiInstance.v1ProfileUpdatePost(body, acceptLanguage, userId);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ProfileApi#v1ProfileUpdatePost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Profile-v1ProfileUpdatePost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ProfileApi;
+
+public class ProfileApiExample {
+
+    public static void main(String[] args) {
+        ProfileApi apiInstance = new ProfileApi();
+        map[String, String] body = ; // map[String, String] | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        String userId = userId_example; // String | 
+        try {
+            apiInstance.v1ProfileUpdatePost(body, acceptLanguage, userId);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ProfileApi#v1ProfileUpdatePost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Profile-v1ProfileUpdatePost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Profile-v1ProfileUpdatePost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">map[String, String] *body = ; // 
+String *acceptLanguage = acceptLanguage_example; //  (optional)
+String *userId = userId_example; //  (optional)
+
+ProfileApi *apiInstance = [[ProfileApi alloc] init];
+
+// Update Profile Data
+[apiInstance v1ProfileUpdatePostWith:body
+    acceptLanguage:acceptLanguage
+    userId:userId
+              completionHandler: ^(NSError* error) {
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Profile-v1ProfileUpdatePost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
+
+var api = new DLearnBffApi.ProfileApi()
+var body = ; // {{map[String, String]}} 
+var opts = { 
+  'acceptLanguage': acceptLanguage_example // {{String}} 
+  'userId': userId_example // {{String}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.v1ProfileUpdatePost(body, opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Profile-v1ProfileUpdatePost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Profile-v1ProfileUpdatePost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class v1ProfileUpdatePostExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new ProfileApi();
+            var body = new map[String, String](); // map[String, String] | 
+            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
+            var userId = userId_example;  // String |  (optional) 
+
+            try
+            {
+                // Update Profile Data
+                apiInstance.v1ProfileUpdatePost(body, acceptLanguage, userId);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling ProfileApi.v1ProfileUpdatePost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Profile-v1ProfileUpdatePost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiProfileApi();
+$body = ; // map[String, String] | 
+$acceptLanguage = acceptLanguage_example; // String | 
+$userId = userId_example; // String | 
+
+try {
+    $api_instance->v1ProfileUpdatePost($body, $acceptLanguage, $userId);
+} catch (Exception $e) {
+    echo 'Exception when calling ProfileApi->v1ProfileUpdatePost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Profile-v1ProfileUpdatePost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::ProfileApi;
+
+my $api_instance = WWW::SwaggerClient::ProfileApi->new();
+my $body = WWW::SwaggerClient::Object::map[String, String]->new(); # map[String, String] | 
+my $acceptLanguage = acceptLanguage_example; # String | 
+my $userId = userId_example; # String | 
+
+eval { 
+    $api_instance->v1ProfileUpdatePost(body => $body, acceptLanguage => $acceptLanguage, userId => $userId);
+};
+if ($@) {
+    warn "Exception when calling ProfileApi->v1ProfileUpdatePost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Profile-v1ProfileUpdatePost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.ProfileApi()
+body =  # map[String, String] | 
+acceptLanguage = acceptLanguage_example # String |  (optional)
+userId = userId_example # String |  (optional)
+
+try: 
+    # Update Profile Data
+    api_instance.v1_profile_update_post(body, acceptLanguage=acceptLanguage, userId=userId)
+except ApiException as e:
+    print("Exception when calling ProfileApi->v1ProfileUpdatePost: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+                            <div class="methodsubtabletitle">Header parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                  <tr><td style="width:150px;">Accept-Language</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1ProfileUpdatePost_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "type" : "object",
+        "additionalProperties" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "required" : true
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_v1ProfileUpdatePost_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_v1ProfileUpdatePost_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">userId</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_v1ProfileUpdatePost_userId">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - Success </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                  </section>
                 <section id="api-SDUI">
                   <h1>SDUI</h1>
                     <div id="api-SDUI-v1AppPost">
@@ -838,7 +3065,7 @@
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Central gateway for dynamic screens and actions (home, favorite, watchlist, profile, edit, update, verify).</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/app</span></code></pre>
@@ -882,9 +3109,11 @@ public class SDUIApiExample {
         SDUIApi apiInstance = new SDUIApi();
         AppRequest body = ; // AppRequest | 
         Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        String xChallengeToken = xChallengeToken_example; // String | 
         String userId = userId_example; // String | 
         try {
-            Screen result = apiInstance.v1AppPost(body, xAppVersion, userId);
+            Screen result = apiInstance.v1AppPost(body, xAppVersion, acceptLanguage, xChallengeToken, userId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SDUIApi#v1AppPost");
@@ -903,9 +3132,11 @@ public class SDUIApiExample {
         SDUIApi apiInstance = new SDUIApi();
         AppRequest body = ; // AppRequest | 
         Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        String xChallengeToken = xChallengeToken_example; // String | 
         String userId = userId_example; // String | 
         try {
-            Screen result = apiInstance.v1AppPost(body, xAppVersion, userId);
+            Screen result = apiInstance.v1AppPost(body, xAppVersion, acceptLanguage, xChallengeToken, userId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SDUIApi#v1AppPost");
@@ -921,6 +3152,8 @@ public class SDUIApiExample {
                             <div class="tab-pane" id="examples-SDUI-v1AppPost-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">AppRequest *body = ; // 
 Integer *xAppVersion = 56; //  (optional)
+String *acceptLanguage = acceptLanguage_example; //  (optional)
+String *xChallengeToken = xChallengeToken_example; //  (optional)
 String *userId = userId_example; //  (optional)
 
 SDUIApi *apiInstance = [[SDUIApi alloc] init];
@@ -928,6 +3161,8 @@ SDUIApi *apiInstance = [[SDUIApi alloc] init];
 // SDUI Gateway
 [apiInstance v1AppPostWith:body
     xAppVersion:xAppVersion
+    acceptLanguage:acceptLanguage
+    xChallengeToken:xChallengeToken
     userId:userId
               completionHandler: ^(Screen output, NSError* error) {
                             if (output) {
@@ -947,6 +3182,8 @@ var api = new DLearnBffApi.SDUIApi()
 var body = ; // {{AppRequest}} 
 var opts = { 
   'xAppVersion': 56 // {{Integer}} 
+  'acceptLanguage': acceptLanguage_example // {{String}} 
+  'xChallengeToken': xChallengeToken_example // {{String}} 
   'userId': userId_example // {{String}} 
 };
 var callback = function(error, data, response) {
@@ -980,12 +3217,14 @@ namespace Example
             var apiInstance = new SDUIApi();
             var body = new AppRequest(); // AppRequest | 
             var xAppVersion = 56;  // Integer |  (optional) 
+            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
+            var xChallengeToken = xChallengeToken_example;  // String |  (optional) 
             var userId = userId_example;  // String |  (optional) 
 
             try
             {
                 // SDUI Gateway
-                Screen result = apiInstance.v1AppPost(body, xAppVersion, userId);
+                Screen result = apiInstance.v1AppPost(body, xAppVersion, acceptLanguage, xChallengeToken, userId);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -1005,10 +3244,12 @@ require_once(__DIR__ . '/vendor/autoload.php');
 $api_instance = new Swagger\Client\ApiSDUIApi();
 $body = ; // AppRequest | 
 $xAppVersion = 56; // Integer | 
+$acceptLanguage = acceptLanguage_example; // String | 
+$xChallengeToken = xChallengeToken_example; // String | 
 $userId = userId_example; // String | 
 
 try {
-    $result = $api_instance->v1AppPost($body, $xAppVersion, $userId);
+    $result = $api_instance->v1AppPost($body, $xAppVersion, $acceptLanguage, $xChallengeToken, $userId);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling SDUIApi->v1AppPost: ', $e->getMessage(), PHP_EOL;
@@ -1024,10 +3265,12 @@ use WWW::SwaggerClient::SDUIApi;
 my $api_instance = WWW::SwaggerClient::SDUIApi->new();
 my $body = WWW::SwaggerClient::Object::AppRequest->new(); # AppRequest | 
 my $xAppVersion = 56; # Integer | 
+my $acceptLanguage = acceptLanguage_example; # String | 
+my $xChallengeToken = xChallengeToken_example; # String | 
 my $userId = userId_example; # String | 
 
 eval { 
-    my $result = $api_instance->v1AppPost(body => $body, xAppVersion => $xAppVersion, userId => $userId);
+    my $result = $api_instance->v1AppPost(body => $body, xAppVersion => $xAppVersion, acceptLanguage => $acceptLanguage, xChallengeToken => $xChallengeToken, userId => $userId);
     print Dumper($result);
 };
 if ($@) {
@@ -1046,11 +3289,13 @@ from pprint import pprint
 api_instance = swagger_client.SDUIApi()
 body =  # AppRequest | 
 xAppVersion = 56 # Integer |  (optional)
+acceptLanguage = acceptLanguage_example # String |  (optional)
+xChallengeToken = xChallengeToken_example # String |  (optional)
 userId = userId_example # String |  (optional)
 
 try: 
     # SDUI Gateway
-    api_response = api_instance.v1_app_post(body, xAppVersion=xAppVersion, userId=userId)
+    api_response = api_instance.v1_app_post(body, xAppVersion=xAppVersion, acceptLanguage=acceptLanguage, xChallengeToken=xChallengeToken, userId=userId)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling SDUIApi->v1AppPost: %s\n" % e)</code></pre>
@@ -1075,6 +3320,38 @@ except ApiException as e:
                                               <div class="primitive">
                                                   <span class="type">
                                                       Integer
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                                  <tr><td style="width:150px;">Accept-Language</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1AppPost_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                                  <tr><td style="width:150px;">X-Challenge-Token</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1AppPost_xChallengeToken">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
                                                   </span>
                                   
                                               </div>
@@ -1214,7 +3491,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Returns the main screen shell configuration (BottomNav, AppContainer).</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/main</span></code></pre>
@@ -1257,8 +3534,9 @@ public class SDUIApiExample {
         SDUIApi apiInstance = new SDUIApi();
         String userId = userId_example; // String | 
         Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
         try {
-            Screen result = apiInstance.v1MainGet(userId, xAppVersion);
+            Screen result = apiInstance.v1MainGet(userId, xAppVersion, acceptLanguage);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SDUIApi#v1MainGet");
@@ -1277,8 +3555,9 @@ public class SDUIApiExample {
         SDUIApi apiInstance = new SDUIApi();
         String userId = userId_example; // String | 
         Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
         try {
-            Screen result = apiInstance.v1MainGet(userId, xAppVersion);
+            Screen result = apiInstance.v1MainGet(userId, xAppVersion, acceptLanguage);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SDUIApi#v1MainGet");
@@ -1294,12 +3573,14 @@ public class SDUIApiExample {
                             <div class="tab-pane" id="examples-SDUI-v1MainGet-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *userId = userId_example; //  (optional)
 Integer *xAppVersion = 56; //  (optional)
+String *acceptLanguage = acceptLanguage_example; //  (optional)
 
 SDUIApi *apiInstance = [[SDUIApi alloc] init];
 
 // Get Main Shell
 [apiInstance v1MainGetWith:userId
     xAppVersion:xAppVersion
+    acceptLanguage:acceptLanguage
               completionHandler: ^(Screen output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -1317,7 +3598,8 @@ SDUIApi *apiInstance = [[SDUIApi alloc] init];
 var api = new DLearnBffApi.SDUIApi()
 var opts = { 
   'userId': userId_example, // {{String}} 
-  'xAppVersion': 56 // {{Integer}} 
+  'xAppVersion': 56, // {{Integer}} 
+  'acceptLanguage': acceptLanguage_example // {{String}} 
 };
 var callback = function(error, data, response) {
   if (error) {
@@ -1350,11 +3632,12 @@ namespace Example
             var apiInstance = new SDUIApi();
             var userId = userId_example;  // String |  (optional) 
             var xAppVersion = 56;  // Integer |  (optional) 
+            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
 
             try
             {
                 // Get Main Shell
-                Screen result = apiInstance.v1MainGet(userId, xAppVersion);
+                Screen result = apiInstance.v1MainGet(userId, xAppVersion, acceptLanguage);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -1374,9 +3657,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 $api_instance = new Swagger\Client\ApiSDUIApi();
 $userId = userId_example; // String | 
 $xAppVersion = 56; // Integer | 
+$acceptLanguage = acceptLanguage_example; // String | 
 
 try {
-    $result = $api_instance->v1MainGet($userId, $xAppVersion);
+    $result = $api_instance->v1MainGet($userId, $xAppVersion, $acceptLanguage);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling SDUIApi->v1MainGet: ', $e->getMessage(), PHP_EOL;
@@ -1392,9 +3676,10 @@ use WWW::SwaggerClient::SDUIApi;
 my $api_instance = WWW::SwaggerClient::SDUIApi->new();
 my $userId = userId_example; # String | 
 my $xAppVersion = 56; # Integer | 
+my $acceptLanguage = acceptLanguage_example; # String | 
 
 eval { 
-    my $result = $api_instance->v1MainGet(userId => $userId, xAppVersion => $xAppVersion);
+    my $result = $api_instance->v1MainGet(userId => $userId, xAppVersion => $xAppVersion, acceptLanguage => $acceptLanguage);
     print Dumper($result);
 };
 if ($@) {
@@ -1413,10 +3698,11 @@ from pprint import pprint
 api_instance = swagger_client.SDUIApi()
 userId = userId_example # String |  (optional)
 xAppVersion = 56 # Integer |  (optional)
+acceptLanguage = acceptLanguage_example # String |  (optional)
 
 try: 
     # Get Main Shell
-    api_response = api_instance.v1_main_get(userId=userId, xAppVersion=xAppVersion)
+    api_response = api_instance.v1_main_get(userId=userId, xAppVersion=xAppVersion, acceptLanguage=acceptLanguage)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling SDUIApi->v1MainGet: %s\n" % e)</code></pre>
@@ -1441,6 +3727,22 @@ except ApiException as e:
                                               <div class="primitive">
                                                   <span class="type">
                                                       Integer
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                                  <tr><td style="width:150px;">Accept-Language</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1MainGet_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
                                                   </span>
                                   
                                               </div>
@@ -1529,6 +3831,758 @@ except ApiException as e:
                       </div>
                       <hr>
                   </section>
+                <section id="api-Search">
+                  <h1>Search</h1>
+                    <div id="api-Search-v1SearchMainGet">
+                      <article id="api-Search-v1SearchMainGet-0" data-group="User" data-name="v1SearchMainGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>v1SearchMainGet</h1>
+                          <p>Get Search Main Content</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/search/main</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Search-v1SearchMainGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Search-v1SearchMainGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Search-v1SearchMainGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Search-v1SearchMainGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Search-v1SearchMainGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Search-v1SearchMainGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Search-v1SearchMainGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Search-v1SearchMainGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Search-v1SearchMainGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Search-v1SearchMainGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Search-v1SearchMainGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Search-v1SearchMainGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"http://localhost:8081/v1/search/main?userId=&q="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Search-v1SearchMainGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.SearchApi;
+
+import java.io.File;
+import java.util.*;
+
+public class SearchApiExample {
+
+    public static void main(String[] args) {
+        
+        SearchApi apiInstance = new SearchApi();
+        String userId = userId_example; // String | 
+        Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        String q = q_example; // String | 
+        try {
+            Screen result = apiInstance.v1SearchMainGet(userId, xAppVersion, acceptLanguage, q);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling SearchApi#v1SearchMainGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Search-v1SearchMainGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.SearchApi;
+
+public class SearchApiExample {
+
+    public static void main(String[] args) {
+        SearchApi apiInstance = new SearchApi();
+        String userId = userId_example; // String | 
+        Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        String q = q_example; // String | 
+        try {
+            Screen result = apiInstance.v1SearchMainGet(userId, xAppVersion, acceptLanguage, q);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling SearchApi#v1SearchMainGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Search-v1SearchMainGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Search-v1SearchMainGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *userId = userId_example; //  (optional)
+Integer *xAppVersion = 56; //  (optional)
+String *acceptLanguage = acceptLanguage_example; //  (optional)
+String *q = q_example; //  (optional)
+
+SearchApi *apiInstance = [[SearchApi alloc] init];
+
+// Get Search Main Content
+[apiInstance v1SearchMainGetWith:userId
+    xAppVersion:xAppVersion
+    acceptLanguage:acceptLanguage
+    q:q
+              completionHandler: ^(Screen output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Search-v1SearchMainGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
+
+var api = new DLearnBffApi.SearchApi()
+var opts = { 
+  'userId': userId_example, // {{String}} 
+  'xAppVersion': 56, // {{Integer}} 
+  'acceptLanguage': acceptLanguage_example, // {{String}} 
+  'q': q_example // {{String}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.v1SearchMainGet(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Search-v1SearchMainGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Search-v1SearchMainGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class v1SearchMainGetExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new SearchApi();
+            var userId = userId_example;  // String |  (optional) 
+            var xAppVersion = 56;  // Integer |  (optional) 
+            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
+            var q = q_example;  // String |  (optional) 
+
+            try
+            {
+                // Get Search Main Content
+                Screen result = apiInstance.v1SearchMainGet(userId, xAppVersion, acceptLanguage, q);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling SearchApi.v1SearchMainGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Search-v1SearchMainGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiSearchApi();
+$userId = userId_example; // String | 
+$xAppVersion = 56; // Integer | 
+$acceptLanguage = acceptLanguage_example; // String | 
+$q = q_example; // String | 
+
+try {
+    $result = $api_instance->v1SearchMainGet($userId, $xAppVersion, $acceptLanguage, $q);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling SearchApi->v1SearchMainGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Search-v1SearchMainGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::SearchApi;
+
+my $api_instance = WWW::SwaggerClient::SearchApi->new();
+my $userId = userId_example; # String | 
+my $xAppVersion = 56; # Integer | 
+my $acceptLanguage = acceptLanguage_example; # String | 
+my $q = q_example; # String | 
+
+eval { 
+    my $result = $api_instance->v1SearchMainGet(userId => $userId, xAppVersion => $xAppVersion, acceptLanguage => $acceptLanguage, q => $q);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling SearchApi->v1SearchMainGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Search-v1SearchMainGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.SearchApi()
+userId = userId_example # String |  (optional)
+xAppVersion = 56 # Integer |  (optional)
+acceptLanguage = acceptLanguage_example # String |  (optional)
+q = q_example # String |  (optional)
+
+try: 
+    # Get Search Main Content
+    api_response = api_instance.v1_search_main_get(userId=userId, xAppVersion=xAppVersion, acceptLanguage=acceptLanguage, q=q)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling SearchApi->v1SearchMainGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+                            <div class="methodsubtabletitle">Header parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                  <tr><td style="width:150px;">X-App-Version</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1SearchMainGet_xAppVersion">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                                  <tr><td style="width:150px;">Accept-Language</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1SearchMainGet_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">userId</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_v1SearchMainGet_userId">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">q</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_v1SearchMainGet_q">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1SearchMainGet-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1SearchMainGet-200-schema">
+                                  <div id='responses-v1SearchMainGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Screen"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1SearchMainGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1SearchMainGet-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1SearchMainGet-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Search-v1SearchResultGet">
+                      <article id="api-Search-v1SearchResultGet-0" data-group="User" data-name="v1SearchResultGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>v1SearchResultGet</h1>
+                          <p>Search Content Result</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/search/result</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Search-v1SearchResultGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Search-v1SearchResultGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Search-v1SearchResultGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Search-v1SearchResultGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Search-v1SearchResultGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Search-v1SearchResultGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Search-v1SearchResultGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Search-v1SearchResultGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Search-v1SearchResultGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Search-v1SearchResultGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Search-v1SearchResultGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Search-v1SearchResultGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"http://localhost:8081/v1/search/result?userId=&q="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Search-v1SearchResultGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.SearchApi;
+
+import java.io.File;
+import java.util.*;
+
+public class SearchApiExample {
+
+    public static void main(String[] args) {
+        
+        SearchApi apiInstance = new SearchApi();
+        String q = q_example; // String | 
+        String userId = userId_example; // String | 
+        Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        try {
+            Screen result = apiInstance.v1SearchResultGet(q, userId, xAppVersion, acceptLanguage);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling SearchApi#v1SearchResultGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Search-v1SearchResultGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.SearchApi;
+
+public class SearchApiExample {
+
+    public static void main(String[] args) {
+        SearchApi apiInstance = new SearchApi();
+        String q = q_example; // String | 
+        String userId = userId_example; // String | 
+        Integer xAppVersion = 56; // Integer | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        try {
+            Screen result = apiInstance.v1SearchResultGet(q, userId, xAppVersion, acceptLanguage);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling SearchApi#v1SearchResultGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Search-v1SearchResultGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Search-v1SearchResultGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *q = q_example; // 
+String *userId = userId_example; //  (optional)
+Integer *xAppVersion = 56; //  (optional)
+String *acceptLanguage = acceptLanguage_example; //  (optional)
+
+SearchApi *apiInstance = [[SearchApi alloc] init];
+
+// Search Content Result
+[apiInstance v1SearchResultGetWith:q
+    userId:userId
+    xAppVersion:xAppVersion
+    acceptLanguage:acceptLanguage
+              completionHandler: ^(Screen output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Search-v1SearchResultGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
+
+var api = new DLearnBffApi.SearchApi()
+var q = q_example; // {{String}} 
+var opts = { 
+  'userId': userId_example, // {{String}} 
+  'xAppVersion': 56, // {{Integer}} 
+  'acceptLanguage': acceptLanguage_example // {{String}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.v1SearchResultGet(q, opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Search-v1SearchResultGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Search-v1SearchResultGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class v1SearchResultGetExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new SearchApi();
+            var q = q_example;  // String | 
+            var userId = userId_example;  // String |  (optional) 
+            var xAppVersion = 56;  // Integer |  (optional) 
+            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
+
+            try
+            {
+                // Search Content Result
+                Screen result = apiInstance.v1SearchResultGet(q, userId, xAppVersion, acceptLanguage);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling SearchApi.v1SearchResultGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Search-v1SearchResultGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiSearchApi();
+$q = q_example; // String | 
+$userId = userId_example; // String | 
+$xAppVersion = 56; // Integer | 
+$acceptLanguage = acceptLanguage_example; // String | 
+
+try {
+    $result = $api_instance->v1SearchResultGet($q, $userId, $xAppVersion, $acceptLanguage);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling SearchApi->v1SearchResultGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Search-v1SearchResultGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::SearchApi;
+
+my $api_instance = WWW::SwaggerClient::SearchApi->new();
+my $q = q_example; # String | 
+my $userId = userId_example; # String | 
+my $xAppVersion = 56; # Integer | 
+my $acceptLanguage = acceptLanguage_example; # String | 
+
+eval { 
+    my $result = $api_instance->v1SearchResultGet(q => $q, userId => $userId, xAppVersion => $xAppVersion, acceptLanguage => $acceptLanguage);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling SearchApi->v1SearchResultGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Search-v1SearchResultGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.SearchApi()
+q = q_example # String | 
+userId = userId_example # String |  (optional)
+xAppVersion = 56 # Integer |  (optional)
+acceptLanguage = acceptLanguage_example # String |  (optional)
+
+try: 
+    # Search Content Result
+    api_response = api_instance.v1_search_result_get(q, userId=userId, xAppVersion=xAppVersion, acceptLanguage=acceptLanguage)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling SearchApi->v1SearchResultGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+                            <div class="methodsubtabletitle">Header parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                  <tr><td style="width:150px;">X-App-Version</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1SearchResultGet_xAppVersion">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                                  <tr><td style="width:150px;">Accept-Language</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1SearchResultGet_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">userId</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_v1SearchResultGet_userId">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">q*</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_v1SearchResultGet_q">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                            </div>
+                                                <div class="inner required">
+                                                    Required
+                                                </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1SearchResultGet-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1SearchResultGet-200-schema">
+                                  <div id='responses-v1SearchResultGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Screen"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1SearchResultGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1SearchResultGet-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1SearchResultGet-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                  </section>
                 <section id="api-Security">
                   <h1>Security</h1>
                     <div id="api-Security-v1AuthChallengeResendPost">
@@ -1540,7 +4594,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Gera um novo código. O Transaction ID deve vir no Header.</p>
+                        <p class="marked">Gera um novo código para a transação atual.</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/auth/challenge/resend</span></code></pre>
@@ -1580,7 +4634,7 @@ public class SecurityApiExample {
     public static void main(String[] args) {
         
         SecurityApi apiInstance = new SecurityApi();
-        String xTransactionId = xTransactionId_example; // String | O ID da transação de desafio recebido no erro 428.
+        String xTransactionId = xTransactionId_example; // String | 
         try {
             apiInstance.v1AuthChallengeResendPost(xTransactionId);
         } catch (ApiException e) {
@@ -1598,7 +4652,7 @@ public class SecurityApiExample {
 
     public static void main(String[] args) {
         SecurityApi apiInstance = new SecurityApi();
-        String xTransactionId = xTransactionId_example; // String | O ID da transação de desafio recebido no erro 428.
+        String xTransactionId = xTransactionId_example; // String | 
         try {
             apiInstance.v1AuthChallengeResendPost(xTransactionId);
         } catch (ApiException e) {
@@ -1613,7 +4667,7 @@ public class SecurityApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Security-v1AuthChallengeResendPost-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *xTransactionId = xTransactionId_example; // O ID da transação de desafio recebido no erro 428.
+                              <pre class="prettyprint"><code class="language-cpp">String *xTransactionId = xTransactionId_example; // 
 
 SecurityApi *apiInstance = [[SecurityApi alloc] init];
 
@@ -1631,7 +4685,7 @@ SecurityApi *apiInstance = [[SecurityApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
 
 var api = new DLearnBffApi.SecurityApi()
-var xTransactionId = xTransactionId_example; // {{String}} O ID da transação de desafio recebido no erro 428.
+var xTransactionId = xTransactionId_example; // {{String}} 
 
 var callback = function(error, data, response) {
   if (error) {
@@ -1662,7 +4716,7 @@ namespace Example
         {
 
             var apiInstance = new SecurityApi();
-            var xTransactionId = xTransactionId_example;  // String | O ID da transação de desafio recebido no erro 428.
+            var xTransactionId = xTransactionId_example;  // String | 
 
             try
             {
@@ -1684,7 +4738,7 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiSecurityApi();
-$xTransactionId = xTransactionId_example; // String | O ID da transação de desafio recebido no erro 428.
+$xTransactionId = xTransactionId_example; // String | 
 
 try {
     $api_instance->v1AuthChallengeResendPost($xTransactionId);
@@ -1700,7 +4754,7 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::SecurityApi;
 
 my $api_instance = WWW::SwaggerClient::SecurityApi->new();
-my $xTransactionId = xTransactionId_example; # String | O ID da transação de desafio recebido no erro 428.
+my $xTransactionId = xTransactionId_example; # String | 
 
 eval { 
     $api_instance->v1AuthChallengeResendPost(xTransactionId => $xTransactionId);
@@ -1719,7 +4773,7 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.SecurityApi()
-xTransactionId = xTransactionId_example # String | O ID da transação de desafio recebido no erro 428.
+xTransactionId = xTransactionId_example # String | 
 
 try: 
     # Resend Security Challenge
@@ -1749,9 +4803,6 @@ except ApiException as e:
                                                       String
                                                   </span>
                                   
-                                                      <div class="inner description">
-                                                          O ID da transação de desafio recebido no erro 428.
-                                                      </div>
                                               </div>
                                                   <div class="inner required">
                                                       Required
@@ -1766,15 +4817,7 @@ except ApiException as e:
 
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - Reenviado com sucesso </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                            </div>
-
-                            <h3> Status: 404 - Transação não encontrada </h3>
+                            <h3> Status: 200 - Desafio reenviado com sucesso </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                             </ul>
@@ -1794,7 +4837,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Valida as respostas do desafio. O Transaction ID deve vir no Header.</p>
+                        <p class="marked">Valida as respostas do desafio (OTP/Biometria) e retorna um token de prova.</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/auth/challenge/resolve</span></code></pre>
@@ -1836,8 +4879,8 @@ public class SecurityApiExample {
     public static void main(String[] args) {
         
         SecurityApi apiInstance = new SecurityApi();
-        ResolveChallengeRequestBody body = ; // ResolveChallengeRequestBody | 
-        String xTransactionId = xTransactionId_example; // String | O ID da transação de desafio recebido no erro 428.
+        ResolveChallengeRequest body = ; // ResolveChallengeRequest | 
+        String xTransactionId = xTransactionId_example; // String | 
         try {
             ResolveChallengeResponse result = apiInstance.v1AuthChallengeResolvePost(body, xTransactionId);
             System.out.println(result);
@@ -1856,8 +4899,8 @@ public class SecurityApiExample {
 
     public static void main(String[] args) {
         SecurityApi apiInstance = new SecurityApi();
-        ResolveChallengeRequestBody body = ; // ResolveChallengeRequestBody | 
-        String xTransactionId = xTransactionId_example; // String | O ID da transação de desafio recebido no erro 428.
+        ResolveChallengeRequest body = ; // ResolveChallengeRequest | 
+        String xTransactionId = xTransactionId_example; // String | 
         try {
             ResolveChallengeResponse result = apiInstance.v1AuthChallengeResolvePost(body, xTransactionId);
             System.out.println(result);
@@ -1873,8 +4916,8 @@ public class SecurityApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Security-v1AuthChallengeResolvePost-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">ResolveChallengeRequestBody *body = ; // 
-String *xTransactionId = xTransactionId_example; // O ID da transação de desafio recebido no erro 428.
+                              <pre class="prettyprint"><code class="language-cpp">ResolveChallengeRequest *body = ; // 
+String *xTransactionId = xTransactionId_example; // 
 
 SecurityApi *apiInstance = [[SecurityApi alloc] init];
 
@@ -1896,8 +4939,8 @@ SecurityApi *apiInstance = [[SecurityApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
 
 var api = new DLearnBffApi.SecurityApi()
-var body = ; // {{ResolveChallengeRequestBody}} 
-var xTransactionId = xTransactionId_example; // {{String}} O ID da transação de desafio recebido no erro 428.
+var body = ; // {{ResolveChallengeRequest}} 
+var xTransactionId = xTransactionId_example; // {{String}} 
 
 var callback = function(error, data, response) {
   if (error) {
@@ -1928,8 +4971,8 @@ namespace Example
         {
 
             var apiInstance = new SecurityApi();
-            var body = new ResolveChallengeRequestBody(); // ResolveChallengeRequestBody | 
-            var xTransactionId = xTransactionId_example;  // String | O ID da transação de desafio recebido no erro 428.
+            var body = new ResolveChallengeRequest(); // ResolveChallengeRequest | 
+            var xTransactionId = xTransactionId_example;  // String | 
 
             try
             {
@@ -1952,8 +4995,8 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiSecurityApi();
-$body = ; // ResolveChallengeRequestBody | 
-$xTransactionId = xTransactionId_example; // String | O ID da transação de desafio recebido no erro 428.
+$body = ; // ResolveChallengeRequest | 
+$xTransactionId = xTransactionId_example; // String | 
 
 try {
     $result = $api_instance->v1AuthChallengeResolvePost($body, $xTransactionId);
@@ -1970,8 +5013,8 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::SecurityApi;
 
 my $api_instance = WWW::SwaggerClient::SecurityApi->new();
-my $body = WWW::SwaggerClient::Object::ResolveChallengeRequestBody->new(); # ResolveChallengeRequestBody | 
-my $xTransactionId = xTransactionId_example; # String | O ID da transação de desafio recebido no erro 428.
+my $body = WWW::SwaggerClient::Object::ResolveChallengeRequest->new(); # ResolveChallengeRequest | 
+my $xTransactionId = xTransactionId_example; # String | 
 
 eval { 
     my $result = $api_instance->v1AuthChallengeResolvePost(body => $body, xTransactionId => $xTransactionId);
@@ -1991,8 +5034,8 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.SecurityApi()
-body =  # ResolveChallengeRequestBody | 
-xTransactionId = xTransactionId_example # String | O ID da transação de desafio recebido no erro 428.
+body =  # ResolveChallengeRequest | 
+xTransactionId = xTransactionId_example # String | 
 
 try: 
     # Resolve Security Challenge
@@ -2023,9 +5066,6 @@ except ApiException as e:
                                                       String
                                                   </span>
                                   
-                                                      <div class="inner description">
-                                                          O ID da transação de desafio recebido no erro 428.
-                                                      </div>
                                               </div>
                                                   <div class="inner required">
                                                       Required
@@ -2052,7 +5092,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ResolveChallengeRequestBody"
+        "$ref" : "#/components/schemas/ResolveChallengeRequest"
       }
     }
   },
@@ -2083,7 +5123,7 @@ except ApiException as e:
 
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - OK </h3>
+                            <h3> Status: 200 - Desafio resolvido com sucesso </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
@@ -2098,7 +5138,7 @@ except ApiException as e:
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "OK",
+  "description" : "Desafio resolvido com sucesso",
   "content" : {
     "application/json" : {
       "schema" : {
@@ -2143,7 +5183,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Exige o header X-Challenge-Token após a resolução.</p>
+                        <p class="marked">Protegido pelo Motor de Desafios. Requer o header X-Challenge-Token após a resolução.</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/password/change</span></code></pre>
@@ -2450,7 +5490,7 @@ except ApiException as e:
                             </table>
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - OK </h3>
+                            <h3> Status: 200 - Senha alterada com sucesso </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                             </ul>
@@ -2458,7 +5498,7 @@ except ApiException as e:
                             <div class="tab-content" style='margin-bottom: 10px;'>
                             </div>
 
-                            <h3> Status: 428 - MFA Required </h3>
+                            <h3> Status: 428 - Precondition Required - MFA Challenge Necessary </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
@@ -2473,7 +5513,7 @@ except ApiException as e:
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "MFA Required",
+  "description" : "Precondition Required - MFA Challenge Necessary",
   "content" : {
     "application/json" : {
       "schema" : {

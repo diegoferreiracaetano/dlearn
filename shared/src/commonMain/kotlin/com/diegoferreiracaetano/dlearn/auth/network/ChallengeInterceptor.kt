@@ -20,6 +20,8 @@ import kotlinx.serialization.json.Json
 
 /**
  * Interceptor de rede inteligente para Desafios de Segurança (MFA).
+ * Detecta erros 428 (Precondition Required), dispara o fluxo de desafio
+ * e repete a requisição original com o token validado.
  */
 class ChallengeInterceptor(
     private val engine: ChallengeEngine,
@@ -42,6 +44,7 @@ class ChallengeInterceptor(
             scope.receivePipeline.intercept(HttpReceivePipeline.After) { 
                 val response = subject as? HttpResponse ?: return@intercept
                 
+                // 428 Precondition Required indica que um desafio de segurança é necessário
                 if (response.status.value == 428) {
                     val originalRequest = response.call.request
                     val responseBody = response.body<String>()
@@ -49,9 +52,11 @@ class ChallengeInterceptor(
                     val session = try {
                         plugin.json.decodeFromString<ChallengeSession>(responseBody)
                     } catch (e: Exception) {
+                        // Se não conseguirmos ler a sessão, deixamos o erro original prosseguir
                         return@intercept
                     }
 
+                    // Filtra o tipo preferido se o header X-Challenge-Preference estiver presente
                     val preferenceHeader = originalRequest.headers[SecurityConstants.HEADER_CHALLENGE_PREFERENCE]
                     val preferredType = ChallengeType.entries.find { it.name == preferenceHeader }
 
@@ -62,32 +67,34 @@ class ChallengeInterceptor(
                         } else session
                     } else session
 
+                    // Dispara o fluxo de UI/Resolução através do ChallengeEngine
                     val result = plugin.engine.resolve(filteredSession)
 
                     if (result is ChallengeResult.Success) {
+                        // O desafio foi resolvido! Pegamos o token resultante (validatedToken)
+                        val validatedToken = result.data["validatedToken"] ?: ""
+                        
                         val retryCall = scope.request {
                             takeFrom(originalRequest)
                             
-                            // Preserva o corpo da requisição original para o retry
+                            // Preserva o corpo da requisição original (importante para POST/PUT)
                             originalRequest.content.let { setBody(it) }
                             
-                            // Mantém o content type original
+                            // Garante o Content-Type original
                             contentType(ContentType.Application.Json)
                             
-                            // Remove headers de controle do interceptor para não sujar o retry
-                            headers.remove(SecurityConstants.HEADER_CHALLENGE_TOKEN)
-                            headers.remove(SecurityConstants.HEADER_CHALLENGE_PREFERENCE)
+                            // Injeta os headers de prova para que o backend aceite a requisição agora
+                            header(SecurityConstants.HEADER_CHALLENGE_TOKEN, validatedToken)
+                            header(SecurityConstants.HEADER_TRANSACTION_ID, session.transactionId)
                             
-                            // Injeta os novos headers de sucesso (ex: X-Challenge-Token)
-                            result.data.forEach { (key, value) ->
-                                header(key, value)
-                            }
+                            // Limpa headers de controle que não devem ser reenviados
+                            headers.remove(SecurityConstants.HEADER_CHALLENGE_PREFERENCE)
                         }
                         
+                        // Substitui a resposta de erro 428 pelo resultado da nova tentativa
                         proceedWith(retryCall)
                     } else {
-                        // Se o desafio falhou ou foi cancelado, permitimos que o erro 428 original 
-                        // prossiga, mas o interceptor já cumpriu seu papel de tentar resolver.
+                        // Se o usuário cancelou ou o desafio falhou, mantemos o 428 original
                         proceedWith(response)
                     }
                 }

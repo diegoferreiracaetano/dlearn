@@ -25,7 +25,7 @@ class OtpChallengeHandler(
         val deferred = CompletableDeferred<ChallengeResult>()
         currentDeferred = deferred
 
-        // O coordinator agora recebe uma sessão de desafio que a UI deve resolver
+        // O coordinator emite a sessão para que a UI (Compose) mostre o campo de OTP
         coordinator.emit(session)
 
         return try {
@@ -37,9 +37,11 @@ class OtpChallengeHandler(
 
     /**
      * Chamado quando o OTP é validado com sucesso pela UI/UseCase.
+     * @param token O validatedToken retornado pelo endpoint /resolve do backend.
      */
     fun onChallengeResolved(token: String) {
-        currentDeferred?.complete(ChallengeResult.Success(mapOf("X-Challenge-Token" to token)))
+        // A chave "validatedToken" deve bater com o esperado pelo ChallengeInterceptor
+        currentDeferred?.complete(ChallengeResult.Success(mapOf("validatedToken" to token)))
     }
 
     /**

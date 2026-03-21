@@ -70,8 +70,11 @@ val serverModule = module {
     single { SearchScreenBuilder(get()) }
     single { SearchOrchestrator(get(), get(), get(), get()) }
 
+    // Challenge Engine
+    single { ChallengeDataService() }
+
     // Password
-    single { PasswordDataService() }
+    single { PasswordDataService(get()) } // Agora injeta o ChallengeDataService
     single { ChangePasswordUseCase(get()) }
     single { PasswordOrchestrator(get()) }
 }

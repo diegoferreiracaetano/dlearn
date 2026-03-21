@@ -1,25 +1,24 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
 import com.diegoferreiracaetano.dlearn.domain.challenge.ResolveChallengeRequest
-import com.diegoferreiracaetano.dlearn.infrastructure.services.PasswordDataService
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.post
-import io.ktor.server.routing.route
+import com.diegoferreiracaetano.dlearn.infrastructure.services.ChallengeDataService
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
 fun Route.challengeController() {
-    val passwordDataService by inject<PasswordDataService>()
+    val challengeDataService by inject<ChallengeDataService>()
 
     route("/v1/auth/challenge") {
         
         post("/resolve") {
             val request = call.receive<ResolveChallengeRequest>()
             
-            // Valida a resposta do desafio (ex: confere o OTP)
-            val validatedToken = passwordDataService.resolveChallenge(
+            // Valida a resposta do desafio usando o serviço especializado
+            val validatedToken = challengeDataService.resolveChallenge(
                 transactionId = request.transactionId,
                 answers = request.answers
             )
@@ -32,7 +31,6 @@ fun Route.challengeController() {
         }
 
         post("/resend") {
-            // Lógica de reenvio
             call.respond(HttpStatusCode.OK)
         }
     }

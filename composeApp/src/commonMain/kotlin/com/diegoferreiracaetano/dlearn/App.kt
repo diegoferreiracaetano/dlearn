@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -13,16 +14,19 @@ import com.diegoferreiracaetano.dlearn.navigation.AppNavGraph
 import com.diegoferreiracaetano.dlearn.ui.factory.LocalRenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.splash.SplashScreen
+import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Composable
 fun App() {
     val renderFactory: RenderComponentFactory = koinInject()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     DLearnTheme {
         CompositionLocalProvider(
-            LocalRenderComponentFactory provides renderFactory
+            LocalRenderComponentFactory provides renderFactory,
+            LocalSnackbarHostState provides snackbarHostState
         ) {
             val sessionManager: SessionManager = koinInject()
             LaunchedEffect(Unit) {

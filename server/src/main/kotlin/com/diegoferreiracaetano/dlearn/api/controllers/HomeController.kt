@@ -1,7 +1,7 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
-import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
-import com.diegoferreiracaetano.dlearn.orchestrator.HomeOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.app.HomeOrchestrator
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import io.ktor.server.application.call
 import io.ktor.server.request.acceptLanguage
 import io.ktor.server.response.respond
@@ -15,21 +15,18 @@ fun Route.homeController(orchestrator: HomeOrchestrator) {
             val userId = call.request.queryParameters["userId"] ?: "guest"
             val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
             val lang = call.request.acceptLanguage() ?: "en"
-            
-            val typeParam = call.request.queryParameters["type"]
-            
-            val type = try {
-                if (typeParam != null) HomeFilterType.valueOf(typeParam.uppercase()) 
-                else HomeFilterType.ALL
-            } catch (e: Exception) {
-                HomeFilterType.ALL
-            }
-            
-            orchestrator.getHomeData(
+            val type = call.request.queryParameters["type"] ?: "ALL"
+
+            val request = AppRequest(
+                path = "/home",
+                params = mapOf("type" to type)
+            )
+
+            orchestrator.execute(
+                request = request,
                 userId = userId,
-                appVersion = appVersion,
                 lang = lang,
-                type = type
+                appVersion = appVersion
             ).collect { screen ->
                 call.respond(screen)
             }

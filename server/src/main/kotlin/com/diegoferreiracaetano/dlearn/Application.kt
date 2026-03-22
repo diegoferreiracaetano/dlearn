@@ -3,9 +3,9 @@ package com.diegoferreiracaetano.dlearn
 import com.diegoferreiracaetano.dlearn.api.controllers.*
 import com.diegoferreiracaetano.dlearn.api.exception.configureStatusPages
 import com.diegoferreiracaetano.dlearn.di.serverModule
-import com.diegoferreiracaetano.dlearn.orchestrator.HomeOrchestrator
-import com.diegoferreiracaetano.dlearn.orchestrator.MovieDetailOrchestrator
-import com.diegoferreiracaetano.dlearn.orchestrator.SearchOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.app.HomeOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.app.MovieDetailOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.app.SearchOrchestrator
 import io.ktor.http.CacheControl
 import io.ktor.http.ContentType
 import io.ktor.http.content.CachingOptions

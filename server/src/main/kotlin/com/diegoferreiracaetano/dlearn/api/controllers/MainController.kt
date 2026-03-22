@@ -1,6 +1,8 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
-import com.diegoferreiracaetano.dlearn.orchestrator.MainOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.app.MainOrchestrator
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
+import io.ktor.server.application.call
 import io.ktor.server.request.acceptLanguage
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
@@ -17,10 +19,13 @@ fun Route.mainController() {
             val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
             val lang = call.request.acceptLanguage() ?: "en"
 
-            orchestrator.getMainData(
+            val request = AppRequest(path = "/main")
+
+            orchestrator.execute(
+                request = request,
                 userId = userId,
-                appVersion = appVersion,
-                lang = lang
+                lang = lang,
+                appVersion = appVersion
             ).collect { screen ->
                 call.respond(screen)
             }

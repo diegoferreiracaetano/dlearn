@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
-import com.diegoferreiracaetano.dlearn.orchestrator.ProfileOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.app.ProfileOrchestrator
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import io.ktor.server.application.call
 import io.ktor.server.request.acceptLanguage
 import io.ktor.server.request.receive
@@ -16,30 +17,56 @@ fun Route.profileController() {
 
     route("/v1/profile") {
         get {
-            val userId = call.parameters["userId"] ?: "default_user"
+            val userId = call.request.queryParameters["userId"] ?: "guest"
             val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
             val lang = call.request.acceptLanguage() ?: "en"
-            
-            orchestrator.getProfileData(userId, appVersion, lang).collect { screen ->
+
+            val request = AppRequest(path = "/profile")
+
+            orchestrator.execute(
+                request = request,
+                userId = userId,
+                lang = lang,
+                appVersion = appVersion
+            ).collect { screen ->
                 call.respond(screen)
             }
         }
 
         get("/edit") {
-            val userId = call.parameters["userId"] ?: "default_user"
+            val userId = call.request.queryParameters["userId"] ?: "guest"
+            val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
             val lang = call.request.acceptLanguage() ?: "en"
 
-            orchestrator.getEditProfileData(userId, lang).collect { screen ->
+            val request = AppRequest(path = "/profile/edit")
+
+            orchestrator.execute(
+                request = request,
+                userId = userId,
+                lang = lang,
+                appVersion = appVersion
+            ).collect { screen ->
                 call.respond(screen)
             }
         }
 
         post("/update") {
-            val userId = call.parameters["userId"] ?: "default_user"
-            val data = call.receive<Map<String, String>>()
+            val userId = call.request.queryParameters["userId"] ?: "guest"
+            val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
             val lang = call.request.acceptLanguage() ?: "en"
+            val data = call.receive<Map<String, String>>()
 
-            orchestrator.updateProfile(userId, data, lang).collect { screen ->
+            val request = AppRequest(
+                path = "/profile/update",
+                params = data
+            )
+
+            orchestrator.execute(
+                request = request,
+                userId = userId,
+                lang = lang,
+                appVersion = appVersion
+            ).collect { screen ->
                 call.respond(screen)
             }
         }

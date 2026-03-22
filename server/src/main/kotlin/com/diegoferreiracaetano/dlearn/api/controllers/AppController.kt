@@ -24,7 +24,7 @@ fun Route.appController() {
                 request = request,
                 userId = userId,
                 lang = lang,
-                appVersion = appVersion
+                appVersion = appVersion,
             ).collect { screen ->
                 call.respond(screen)
             }

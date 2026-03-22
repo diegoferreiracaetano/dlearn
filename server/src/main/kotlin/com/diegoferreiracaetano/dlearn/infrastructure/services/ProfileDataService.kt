@@ -1,7 +1,7 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.services
 
 import com.diegoferreiracaetano.dlearn.domain.models.ProfileDomainData
-import kotlinx.serialization.json.Json
+import com.diegoferreiracaetano.dlearn.util.fromJson
 import java.io.InputStream
 
 open class ProfileDataService {
@@ -12,7 +12,7 @@ open class ProfileDataService {
             val inputStream: InputStream = this.javaClass.classLoader.getResourceAsStream("profile.json")
                 ?: throw IllegalStateException("profile.json not found")
             val jsonString = inputStream.bufferedReader().use { it.readText() }
-            currentUser = Json.decodeFromString<ProfileDomainData>(jsonString)
+            currentUser = jsonString.fromJson<ProfileDomainData>()
         }
         return currentUser!!
     }
@@ -25,9 +25,6 @@ open class ProfileDataService {
             phoneNumber = updates["phone"] ?: current.phoneNumber
         )
 
-        return if(currentUser != null)
-            currentUser!!
-        else
-            throw IllegalStateException("profile.json not found")
+        return currentUser ?: throw IllegalStateException("Profile update failed")
     }
 }

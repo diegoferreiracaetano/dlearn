@@ -36,7 +36,7 @@ fun Route.challengeController() {
     val service by inject<ChallengeDataService>()
 
     route("/v1/auth/challenge") {
-        
+
         post("/resolve") {
             val transactionId = call.request.header(SecurityConstants.HEADER_TRANSACTION_ID)
             val body = call.receive<ResolveChallengeBody>()
@@ -54,16 +54,22 @@ fun Route.challengeController() {
             )
 
             if (validatedToken != null) {
-                call.respond(HttpStatusCode.OK, ChallengeResponse(
-                    success = true,
-                    message = "Desafio resolvido",
-                    validatedToken = validatedToken
-                ))
+                call.respond(
+                    HttpStatusCode.OK,
+                    ChallengeResponse(
+                        success = true,
+                        message = "Desafio resolvido",
+                        validatedToken = validatedToken
+                    )
+                )
             } else {
-                call.respond(HttpStatusCode.Forbidden, ChallengeResponse(
-                    success = false,
-                    message = "Código ou tipo de desafio inválido"
-                ))
+                call.respond(
+                    HttpStatusCode.Forbidden,
+                    ChallengeResponse(
+                        success = false,
+                        message = "Código ou tipo de desafio inválido"
+                    )
+                )
             }
         }
 
@@ -73,7 +79,7 @@ fun Route.challengeController() {
                 call.respond(HttpStatusCode.BadRequest, "Transaction ID is required")
                 return@post
             }
-            
+
             val success = service.resendChallenge(transactionId)
             call.respond(HttpStatusCode.OK, mapOf("success" to success))
         }

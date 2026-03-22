@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -21,6 +22,7 @@ class AppHtmlTextRenderer : ComponentRenderer {
         
         AppHtmlText(
             html = htmlComponent.html,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = modifier
                 .fillMaxWidth()
                 .padding(16.dp)

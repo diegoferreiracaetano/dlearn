@@ -8,7 +8,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class PasswordOrchestratorTest {
+class PasswordAppOrchestratorTest {
 
     @Test
     fun `when challenge token is missing should return failure with OTP_REQUIRED`() {

@@ -7,10 +7,8 @@ class FaqScreenBuilder {
     fun build(faqItem: FaqItem): Screen {
         val components = mutableListOf<Component>()
 
-        components.add(
-            AppTopBarComponent(
-                title = faqItem.title
-            )
+        val topbar = AppTopBarComponent(
+            title = faqItem.title
         )
 
         components.add(
@@ -20,7 +18,12 @@ class FaqScreenBuilder {
         )
 
         return Screen(
-            components = components
+            components = listOf(
+                AppContainerComponent(
+                    topBar = topbar,
+                    components = components
+                )
+            )
         )
     }
 }

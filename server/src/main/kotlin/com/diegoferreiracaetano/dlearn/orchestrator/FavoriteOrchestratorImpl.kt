@@ -1,11 +1,13 @@
 package com.diegoferreiracaetano.dlearn.orchestrator
 
+import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.model.toVideo
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.FavoriteScreenBuilder
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -13,20 +15,34 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class FavoriteOrchestrator(
+class FavoriteOrchestratorImpl(
     private val favoriteScreenBuilder: FavoriteScreenBuilder,
     private val favoriteRepository: FavoriteRepository,
     private val videoMapper: VideoMapper,
     private val tmdbClient: TmdbClient
-) {
-    fun getFavorite(userId: String, lang: String): Flow<Screen> = flow {
+) : AppOrchestrator {
+
+    override fun execute(
+        request: AppRequest,
+        userId: String,
+        lang: String,
+        appVersion: Int
+    ): Flow<Screen> {
+        val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
+        return if (movieId != null) {
+            toggleFavorite(userId, movieId, lang)
+        } else {
+            getFavorite(userId, lang)
+        }
+    }
+
+    private fun getFavorite(userId: String, lang: String): Flow<Screen> = flow {
         coroutineScope {
             val favoriteIds = favoriteRepository.getFavorites(userId)
 
             val videos = favoriteIds.map { id ->
                 async {
                     runCatching {
-                        // In a production app we should store the media type or try both
                         tmdbClient.getMovieDetail(id).toVideo(MediaType.MOVIE)
                     }.getOrNull()
                 }
@@ -37,7 +53,7 @@ class FavoriteOrchestrator(
         }
     }
 
-    fun toggleFavorite(userId: String, movieId: String, lang: String): Flow<Screen> = flow {
+    private fun toggleFavorite(userId: String, movieId: String, lang: String): Flow<Screen> = flow {
         favoriteRepository.toggleFavorite(userId, movieId)
         getFavorite(userId, lang).collect {
             emit(it)

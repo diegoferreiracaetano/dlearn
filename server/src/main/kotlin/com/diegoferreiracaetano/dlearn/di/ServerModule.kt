@@ -37,7 +37,7 @@ val serverModule = module {
     single { GetHomeDataUseCase(get()) }
     single { HomeMapper(get()) }
     single { HomeScreenBuilder(get(), get()) }
-    single { HomeOrchestrator(get(), get()) }
+    single<HomeOrchestrator> { HomeOrchestratorImpl(get(), get()) }
 
     // Main / App SDUI
     single { WatchlistScreenBuilder(get()) }
@@ -45,11 +45,11 @@ val serverModule = module {
     single { MainScreenBuilder(get()) }
     single { VerifyAccountScreenBuilder() }
     single { FaqScreenBuilder() }
-    single { WatchlistOrchestrator(get(), get(), get(), get()) }
-    single { FavoriteOrchestrator(get(), get(), get(), get()) }
-    single { MainOrchestrator(get()) }
-    single { FaqOrchestrator(get(), get()) }
-    single { AppOrchestrator(get(), get(), get(), get(), get(), get()) }
+    single<WatchlistOrchestrator> { WatchlistOrchestratorImpl(get(), get(), get(), get()) }
+    single<FavoriteOrchestrator> { FavoriteOrchestratorImpl(get(), get(), get(), get()) }
+    single<MainOrchestrator> { MainOrchestratorImpl(get()) }
+    single<FaqOrchestrator> { FaqOrchestratorImpl(get(), get()) }
+    single<AppOrchestrator> { AppOrchestratorImpl(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
 
     // Profile
     single { ProfileDataService() }
@@ -58,26 +58,26 @@ val serverModule = module {
     single { ProfileMapper(get()) }
     single { ProfileScreenBuilder(get(), get()) }
     single { EditProfileScreenBuilder(get(), get()) }
-    single { ProfileOrchestrator(get(), get(), get(), get()) }
+    single<ProfileOrchestrator> { ProfileOrchestratorImpl(get(), get(), get(), get()) }
 
     // Movie Detail
     single { MovieDetailDataService(get(), get()) }
     single { GetMovieDetailUseCase(get()) }
     single { MovieDetailMapper(get()) }
     single { MovieDetailScreenBuilder(get(), get()) }
-    single { MovieDetailOrchestrator(get(), get()) }
+    single<MovieDetailOrchestrator> { MovieDetailOrchestratorImpl(get(), get()) }
 
     // Search
     single { SearchDataService(get()) }
     single { GetSearchDataUseCase(get()) }
     single { SearchScreenBuilder(get()) }
-    single { SearchOrchestrator(get(), get(), get(), get()) }
+    single<SearchOrchestrator> { SearchOrchestratorImpl(get(), get(), get(), get()) }
 
     // Challenge Engine
     single { ChallengeDataService() }
 
     // Password
-    single { PasswordDataService(get()) } // Agora injeta o ChallengeDataService
+    single { PasswordDataService(get()) }
     single { ChangePasswordUseCase(get()) }
-    single { PasswordOrchestrator(get()) }
+    single<PasswordOrchestrator> { PasswordOrchestratorImpl(get()) }
 }

@@ -11,7 +11,7 @@ import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 
 fun Route.appController() {
-    val orchestrator by inject<AppOrchestrator>()
+    val appOrchestrator by inject<AppOrchestrator>()
 
     route("/v1/app") {
         post {
@@ -20,7 +20,7 @@ fun Route.appController() {
             val lang = call.request.acceptLanguage() ?: "en"
             val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
 
-            orchestrator.execute(
+            appOrchestrator.execute(
                 request = request,
                 userId = userId,
                 lang = lang,

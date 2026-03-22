@@ -17,7 +17,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class ProfileOrchestratorTest {
+class ProfileAppOrchestratorTest {
 
     private val service = StubProfileDataService()
     private val getUseCase = GetProfileDataUseCase(service)

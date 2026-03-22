@@ -4,23 +4,38 @@ import com.diegoferreiracaetano.dlearn.domain.usecases.GetSearchDataUseCase
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetHomeDataUseCase
 import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.SearchScreenBuilder
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class SearchOrchestrator(
+interface SearchOrchestrator {
+    fun handleRequest(request: AppRequest, userId: String, lang: String): Flow<Screen>
+}
+
+class SearchOrchestratorImpl(
     private val getSearchDataUseCase: GetSearchDataUseCase,
     private val getHomeDataUseCase: GetHomeDataUseCase,
     private val videoMapper: VideoMapper,
     private val searchScreenBuilder: SearchScreenBuilder
-) {
-    fun searchMain(userId: String, lang: String): Flow<Screen> = flow {
+) : SearchOrchestrator {
+
+    override fun handleRequest(request: AppRequest, userId: String, lang: String): Flow<Screen> {
+        val query = request.params?.get("q")
+        return if (query != null) {
+            searchContent(userId, lang, query)
+        } else {
+            searchMain(userId, lang)
+        }
+    }
+
+    private fun searchMain(userId: String, lang: String): Flow<Screen> = flow {
         val homeData = getHomeDataUseCase.execute(userId)
         val popularItems = videoMapper.toMovieItemComponents(homeData.popular)
         emit(searchScreenBuilder.buildMain(lang, popularItems))
     }
 
-    fun searchContent(
+    private fun searchContent(
         userId: String,
         lang: String,
         query: String

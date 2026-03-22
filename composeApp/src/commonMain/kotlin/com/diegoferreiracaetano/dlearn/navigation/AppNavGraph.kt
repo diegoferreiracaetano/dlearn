@@ -55,7 +55,7 @@ fun AppNavGraph(
         }
     }
 
-    val startDestination = CreateNewPassword.route
+    val startDestination = Profile.route
     val uriHandler = LocalUriHandler.current
 
     NavHost(

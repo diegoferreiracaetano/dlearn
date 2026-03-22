@@ -1,10 +1,12 @@
 package com.diegoferreiracaetano.dlearn.orchestrator
 
+import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetProfileDataUseCase
 import com.diegoferreiracaetano.dlearn.domain.usecases.UpdateProfileDataUseCase
 import com.diegoferreiracaetano.dlearn.infrastructure.cache.InMemoryCache
 import com.diegoferreiracaetano.dlearn.ui.screens.EditProfileScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.screens.ProfileScreenBuilder
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppSnackbarType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -13,15 +15,29 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.time.Duration.Companion.minutes
 
-class ProfileOrchestrator(
+interface ProfileOrchestrator {
+    fun handleRequest(request: AppRequest, userId: String, appVersion: Int, lang: String): Flow<Screen>
+}
+
+class ProfileOrchestratorImpl(
     private val getProfileDataUseCase: GetProfileDataUseCase,
     private val updateProfileDataUseCase: UpdateProfileDataUseCase,
     private val screenBuilder: ProfileScreenBuilder,
     private val editScreenBuilder: EditProfileScreenBuilder
-) {
+) : ProfileOrchestrator {
     private val profileCache = InMemoryCache<String, Screen>(5.minutes)
 
-    fun getProfileData(userId: String, appVersion: Int, lang: String): Flow<Screen> = flow {
+    override fun handleRequest(request: AppRequest, userId: String, appVersion: Int, lang: String): Flow<Screen> {
+        val path = NavigationRoutes.extractPath(request.path)
+        return when (path) {
+            NavigationRoutes.PROFILE -> getProfileData(userId, appVersion, lang)
+            NavigationRoutes.EDIT_PROFILE -> getEditProfileData(userId, lang)
+            NavigationRoutes.UPDATE_PROFILE -> updateProfile(userId, request.params ?: emptyMap(), lang)
+            else -> throw IllegalArgumentException("Invalid profile path: $path")
+        }
+    }
+
+    private fun getProfileData(userId: String, appVersion: Int, lang: String): Flow<Screen> = flow {
         val screen = profileCache.getOrPut("$userId-$appVersion-$lang") {
             val domainData = getProfileDataUseCase.execute(userId)
             screenBuilder.build(domainData, appVersion, lang)
@@ -29,12 +45,12 @@ class ProfileOrchestrator(
         emit(screen)
     }
 
-    fun getEditProfileData(userId: String, lang: String): Flow<Screen> = flow {
+    private fun getEditProfileData(userId: String, lang: String): Flow<Screen> = flow {
         val domainData = getProfileDataUseCase.execute(userId)
         emit(editScreenBuilder.build(domainData, lang))
     }
 
-    fun updateProfile(userId: String, data: Map<String, String>, lang: String): Flow<Screen> = flow {
+    private fun updateProfile(userId: String, data: Map<String, String>, lang: String): Flow<Screen> = flow {
         try {
             val domainData = updateProfileDataUseCase.execute(userId, data)
             profileCache.clear()

@@ -29,7 +29,7 @@ scope.receivePipeline.intercept(HttpReceivePipeline.After) { response ->
     if (response.status.value == 428) { // Precondition Required
         val session = json.decodeFromString<ChallengeSession>(response.bodyAsText())
         
-        // Dispara o motor de desafio que abre a UI e aguarda resolution
+        // Dispara o motor de desafio que abre a UI e aguarda resolução
         val result = engine.resolve(session) 
 
         if (result is ChallengeResult.Success) {
@@ -100,12 +100,11 @@ O App utiliza o `AppRepository` para enviar requisições ao gateway.
 - **Funcionamento**: O BFF recebe o `path` e o `AppOrchestrator` resolve qual `Screen` ou `Action` retornar.
 
 ### 2. Formato de Rotas e Deeplinks
-As rotas seguem o padrão `app?path={path}&ref={ref}&params={csv_params}`.
+As rotas seguem o padrão `app?path={path}&ref={slug}&params={csv}`. O parâmetro `ref` é promovido a query param de primeiro nível para facilitar cache e SEO.
 - **Exemplo**: `app?path=faq&ref=privacy-policy`
-- **Parâmetros**: O parâmetro `ref` é tratado como query parameter de primeiro nível para facilitar o rastreio e cache, enquanto parâmetros de formulário ou filtros complexos são enviados no campo `params`.
 
 ### 3. Navegação via AppAction
-O Backend controla o fluxo enviando objetos `AppAction.Navigation`:
+O Backend controla o fluxo enviando objetos `AppAction.Navigation` com rotas parametrizadas:
 ```json
 {
   "type": "navigation",
@@ -114,10 +113,10 @@ O Backend controla o fluxo enviando objetos `AppAction.Navigation`:
 ```
 
 ### 4. FAQ e Conteúdo Dinâmico (HTML)
-Implementamos uma engine de conteúdo estático via SDUI para telas de suporte e legal (Privacidade, Sobre, Ajuda).
-- **Rota**: `app?path=faq&ref=[slug]` (ex: `ref=privacy-policy`)
-- **Componente**: `AppHtmlTextComponent` - Permite renderizar HTML básico (h1, b, i, a) utilizando o componente nativo do Design System.
-- **Armazenamento**: Os conteúdos ficam em um JSON centralizado no servidor (`faq_content.json`), simulando um CMS/Bucket.
+Implementamos uma engine de conteúdo estático via SDUI para telas de suporte e legal.
+- **Rota**: `app?path=faq&ref=[slug]`
+- **Componente**: `AppHtmlTextComponent` - Renderiza HTML básico (h1, b, a, etc) através do Design System.
+- **Armazenamento**: Conteúdos centralizados no servidor (`faq_content.json`).
 
 ---
 

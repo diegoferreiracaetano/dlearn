@@ -12,15 +12,15 @@ paths:
   /v1/app:
     post:
       summary: SDUI Gateway / BFF Generic Endpoint
+      tags:
+        - SDUI Gateway
       description: |
         Central gateway for dynamic screens and actions.
-        Handles the following paths via SDUI:
+        The client sends a `path` (slug) and optional `params`.
+        Examples:
         - `home`: Main dashboard
-        - `favorite`: User favorites list or toggle action
-        - `watchlist`: User watchlist or toggle action
-        - `profile`: User profile details
-        - `profile/edit`: Edit profile form
-        - `faq`: FAQ and Legal content (requires `ref` parameter)
+        - `profile`: User profile
+        - `faq?ref=privacy-policy`: FAQ content
       parameters:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/appVersion'
@@ -42,8 +42,10 @@ paths:
                 $ref: '#/components/schemas/Screen'
   /v1/main:
     get:
-      summary: Get Main Shell
-      description: Returns the main screen shell configuration (container with bottom navigation and initial components).
+      summary: Get Main Shell (Legacy/Initial)
+      tags:
+        - Legacy
+      description: Returns the main screen shell configuration.
       parameters:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/appVersion'
@@ -57,8 +59,9 @@ paths:
                 $ref: '#/components/schemas/Screen'
   /v1/home:
     get:
-      summary: Get Home Screen
-      description: Returns the Home screen configuration with SDUI components
+      summary: Get Home Screen (Legacy)
+      tags:
+        - Legacy
       parameters: 
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/appVersion'
@@ -79,17 +82,13 @@ paths:
                 $ref: '#/components/schemas/Screen'
   /v1/search/main:
     get:
-      summary: Get Search Main Content
-      description: Returns the initial search screen configuration.
+      summary: Get Search Main Content (Legacy)
+      tags:
+        - Legacy
       parameters:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/appVersion'
         - $ref: '#/components/parameters/acceptLanguage'
-        - name: q
-          in: query
-          required: false
-          schema:
-            type: string
       responses:
         '200':
           description: OK
@@ -99,8 +98,9 @@ paths:
                 $ref: '#/components/schemas/Screen'
   /v1/search/result:
     get:
-      summary: Search Content Result
-      description: Returns the search results based on the query.
+      summary: Search Content Result (Legacy)
+      tags:
+        - Legacy
       parameters:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/appVersion'
@@ -120,8 +120,9 @@ paths:
                 $ref: '#/components/schemas/Screen'
   /v1/movie/{movieId}:
     get:
-      summary: Get Movie Detail Screen
-      description: Returns the Movie Detail screen configuration for a specific movie
+      summary: Get Movie Detail Screen (Legacy)
+      tags:
+        - Legacy
       parameters:
         - name: movieId
           in: path
@@ -141,8 +142,9 @@ paths:
                 $ref: '#/components/schemas/Screen'
   /v1/profile:
     get:
-      summary: Get Profile Screen
-      description: Returns the Profile screen configuration
+      summary: Get Profile Screen (Legacy)
+      tags:
+        - Legacy
       parameters:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/appVersion'
@@ -156,8 +158,9 @@ paths:
                 $ref: '#/components/schemas/Screen'
   /v1/profile/edit:
     get:
-      summary: Get Edit Profile Screen
-      description: Returns the Edit Profile screen configuration with input fields
+      summary: Get Edit Profile Screen (Legacy)
+      tags:
+        - Legacy
       parameters:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/appVersion'
@@ -172,7 +175,8 @@ paths:
   /v1/profile/update:
     post:
       summary: Update Profile Data
-      description: Updates the user profile data based on form submission
+      tags:
+        - Profile
       parameters:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/appVersion'
@@ -202,6 +206,8 @@ paths:
   /v1/password/change:
     post:
       summary: Change User Password (MFA Protected)
+      tags:
+        - Security
       description: |
         Changes the user password. Protected by **Challenge Engine**.
         Requires a valid token from challenge resolution.
@@ -230,6 +236,8 @@ paths:
   /v1/auth/challenge/resolve:
     post:
       summary: Resolve Security Challenge
+      tags:
+        - Security
       description: |
         Validates the user response for a challenge and emits an authorization token.
       parameters:
@@ -357,12 +365,15 @@ components:
       properties:
         path:
           type: string
-          description: Route with support for query params (e.g. 'faq?ref=privacy-policy')
-          example: "faq?ref=privacy-policy"
+          description: Route path (e.g. 'home', 'profile', 'faq')
+          example: "faq"
         params:
           type: object
+          description: Query parameters or route arguments
           additionalProperties:
             type: string
+          example:
+            ref: "privacy-policy"
         metadata:
           type: object
           additionalProperties:
@@ -668,7 +679,7 @@ components:
             imageUrl:
               type: string
             onImagePickedAction:
-              $ref: '#/components/schemas/AppAction'
+              type: string
     AppTextFieldComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
@@ -714,80 +725,6 @@ components:
               type: string
             icon:
               $ref: '#/components/schemas/AppIconType'
-            actionUrl:
-              type: string
-    SectionComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            title:
-              type: string
-            items:
-              type: array
-              items:
-                $ref: '#/components/schemas/SectionItem'
-    SectionItem:
-      type: object
-      properties:
-        id:
-          type: string
-        label:
-          type: string
-        value:
-          type: string
-        icon:
-          $ref: '#/components/schemas/AppIconType'
-        actionUrl:
-          type: string
-    AppSectionTitleComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            title:
-              type: string
-    FooterComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            label:
-              type: string
-            actionUrl:
-              type: string
-    AppLoadingComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-    AppErrorComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-    AppMainContentComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-    BottomNavigationComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            items:
-              type: array
-              items:
-                $ref: '#/components/schemas/BottomNavItem'
-            selectedRoute:
-              type: string
-    BottomNavItem:
-      type: object
-      properties:
-        label:
-          type: string
-        route:
-          type: string
-        icon:
-          $ref: '#/components/schemas/AppIconType'
     AppHtmlTextComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
@@ -795,68 +732,55 @@ components:
           properties:
             html:
               type: string
+    AppSnackbarComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            message:
+              type: string
+            snackbarType:
+              $ref: '#/components/schemas/AppSnackbarType'
+            durationMillis:
+              type: integer
+              format: int64
 
-    # --- Actions ---
+    # --- Types & Enums ---
+    AppSnackbarType:
+      type: string
+      enum: [SUCCESS, ERROR, WARNING]
+    AppIconType:
+      type: string
+      enum: [IC_SEARCH, IC_BACK, IC_CLOSE, IC_SETTINGS, IC_CHEVRON_RIGHT, IC_USER, IC_LOCK, IC_INFO, IC_HELP]
+    AppImageType:
+      type: object
+      properties:
+        url:
+          type: string
+        placeholder:
+          type: string
     AppAction:
       type: object
-      discriminator:
-        propertyName: type
       properties:
         type:
           type: string
-    deeplink:
-      allOf:
-        - $ref: '#/components/schemas/AppAction'
-        - type: object
-          properties:
-            url:
-              type: string
-            params:
-              type: object
-              additionalProperties:
-                type: string
-    navigation:
-      allOf:
-        - $ref: '#/components/schemas/AppAction'
-        - type: object
-          properties:
-            route:
-              type: string
-              description: Example 'app?path=faq&ref=about-us'
-            params:
-              type: object
-              additionalProperties:
-                type: string
-    app_call:
-      allOf:
-        - $ref: '#/components/schemas/AppAction'
-        - type: object
-          properties:
-            path:
-              type: string
-            params:
-              type: object
-              additionalProperties:
-                type: string
-            metadata:
-              type: object
-              additionalProperties:
-                type: string
-            onSuccess:
-              $ref: '#/components/schemas/AppAction'
-            onFailure:
-              $ref: '#/components/schemas/AppAction'
-
-    # --- Enums & Types ---
-    AppIconType:
-      type: string
-      enum: [HOME, SEARCH, FAVORITE, PERSON, WATCHLIST, LOCK, NOTIFICATIONS, LANGUAGE, PUBLIC, DELETE, POLICY, HELP, INFO, WORKSPACE_PREMIUM, PLAY_ARROW, DOWNLOAD, SHARE, CALENDAR_MONTH, SCHEDULE, STAR, UNKNOWN]
-    AppImageType:
-      type: string
-      enum: [SEARCH, WATCHLIST, FAVORITE, EMPTY_STATE, UNKNOWN]
+        url:
+          type: string
+        params:
+          type: object
+          additionalProperties:
+            type: string
     AppStringType:
-      type: string
-      enum: [PROFILE_TITLE, PREMIUM_MEMBER, PREMIUM_DESCRIPTION, SECTION_ACCOUNT, ITEM_MEMBER, ITEM_PASSWORD, SECTION_GENERAL, ITEM_NOTIFICATION, ITEM_LANGUAGE, ITEM_COUNTRY, ITEM_CLEAR_CACHE, SECTION_MORE, ITEM_LEGAL, ITEM_HELP, ITEM_ABOUT, LOGOUT, HOME_TITLE, HOME_SUBTITLE, FILTER_SERIES, FILTER_MOVIES, FILTER_CATEGORIES, SECTION_TOP_10, SECTION_POPULAR, NAV_HOME, NAV_WATCHLIST, NAV_SEARCH, NAV_FAVORITES, NAV_PROFILE, APP_NAME, EDIT_PROFILE_TITLE, FIELD_FULL_NAME, FIELD_EMAIL, FIELD_PASSWORD, FIELD_PHONE_NUMBER, SAVE_CHANGES, ERROR_NAME_EXIST, DETAIL_TRAILER, DETAIL_STORY_LINE, DETAIL_CAST_CREW, DETAIL_EPISODE, DETAIL_WATCH_NOW, SEARCH_PLACEHOLDER, SEARCH_EMPTY_TITLE, SEARCH_EMPTY_DESCRIPTION, WATCHLIST_EMPTY_TITLE, WATCHLIST_EMPTY_DESCRIPTION, FAVORITE_EMPTY_TITLE, FAVORITE_EMPTY_DESCRIPTION, PASSWORD_CHANGE_SUCCESS, PASSWORD_OTP_REQUIRED, PASSWORD_OTP_VERIFIED, INTERNAL_SERVER_ERROR, UNKNOWN]
+      type: object
+      properties:
+        value:
+          type: string
+        isHtml:
+          type: boolean
+        args:
+          type: array
+          items:
+            type: string
     AppTextFieldType:
       type: string
-      enum: [NONE, EMAIL, PASSWORD, PHONE]
+      enum: [TEXT, EMAIL, PASSWORD, PHONE, NUMBER]

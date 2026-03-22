@@ -20,6 +20,7 @@ import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.*
 import com.diegoferreiracaetano.dlearn.ui.screens.app.AppScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.auth.password.CreateNewPasswordScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.auth.password.CreateNewPasswordViewModel
 import com.diegoferreiracaetano.dlearn.ui.screens.auth.verify.VerifyAccountScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.LoginScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.ResetPasswordScreen
@@ -37,7 +38,6 @@ import org.koin.compose.koinInject
 @Composable
 fun AppNavGraph(
     sessionManager: SessionManager = koinInject(),
-    navigationManager: NavigationManager = koinInject(),
     eventDispatcher: GlobalEventDispatcher = koinInject(),
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
@@ -49,8 +49,8 @@ fun AppNavGraph(
             when (event) {
                 is GlobalEvent.Challenge -> {
                     // Verificamos se há algum desafio pendente na sessão que requer ação do usuário
-                    val hasOtpChallenge = event.session.challenges.any { 
-                        it.challengeType == ChallengeType.OTP_SMS || it.challengeType == ChallengeType.OTP_EMAIL 
+                    val hasOtpChallenge = event.session.challenge.let {
+                        it.challengeType == ChallengeType.OTP_SMS || it.challengeType == ChallengeType.OTP_EMAIL
                     }
                     
                     if (hasOtpChallenge) {
@@ -63,15 +63,6 @@ fun AppNavGraph(
                 }
                 is GlobalEvent.Message -> { }
             }
-        }
-    }
-
-    DisposableEffect(navController) {
-        navigationManager.registerNavigator { route ->
-            navController.navigate(route)
-        }
-        onDispose {
-            navigationManager.unregisterNavigator()
         }
     }
 
@@ -124,7 +115,9 @@ fun AppNavGraph(
         }
 
         composable(CreateNewPassword.route) {
+            val viewModel: CreateNewPasswordViewModel = koinInject()
             CreateNewPasswordScreen(
+                viewModel = viewModel,
                 onBackClick = { navController.popBackStack() },
                 onSuccess = { 
                     navController.navigate(Login.route) {
@@ -136,7 +129,9 @@ fun AppNavGraph(
         }
 
         composable(ChangePassword.route) {
+            val viewModel: CreateNewPasswordViewModel = koinInject()
             CreateNewPasswordScreen(
+                viewModel = viewModel,
                 onBackClick = { navController.popBackStack() },
                 onSuccess = { 
                     navController.popBackStack() 
@@ -154,9 +149,16 @@ fun AppNavGraph(
                 dismissOnClickOutside = false
             )
         ) {
+            // No Compose, o koinInject dentro de um NavHost recupera a mesma instância do ViewModel 
+            // se o escopo for o mesmo (ou se for Single). Como queremos resetar a tela de origem:
+            val passwordViewModel: CreateNewPasswordViewModel = koinInject()
+
             VerifyAccountScreen(
                 userId = "", // TODO: Pegar do cache/sessão se necessário
-                onBackClick = { navController.popBackStack() },
+                onBackClick = { 
+                    passwordViewModel.resetState()
+                    navController.popBackStack() 
+                },
                 onContinueClick = { navController.popBackStack() },
                 modifier = Modifier
             )

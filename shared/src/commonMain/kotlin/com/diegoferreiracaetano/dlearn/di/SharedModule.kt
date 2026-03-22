@@ -21,7 +21,6 @@ import com.diegoferreiracaetano.dlearn.domain.password.PasswordRepository
 import com.diegoferreiracaetano.dlearn.domain.profile.ProfileRepository
 import com.diegoferreiracaetano.dlearn.domain.search.SearchRepository
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
-import com.diegoferreiracaetano.dlearn.navigation.NavigationManager
 import com.diegoferreiracaetano.dlearn.util.event.GlobalEventDispatcher
 import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
@@ -42,7 +41,6 @@ val sharedModule = module {
     includes(authModule)
 
     // Componentes de Infraestrutura e Core
-    single { NavigationManager() }
     single { GlobalEventDispatcher() }
     
     single { 

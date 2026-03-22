@@ -27,11 +27,9 @@ class VerifyAccountViewModel(
      * Envia o código OTP para validação no backend.
      * O answer aqui é apenas a String do código digitado.
      */
-    fun verifyOtp(userId: String, otpCode: String) {
+    fun verifyOtp(otpCode: String) {
         viewModelScope.launch {
             challengeRepository.resolveChallenge(
-                transactionId = userId,
-                type = ChallengeType.OTP_EMAIL,
                 answer = otpCode // Passando apenas a String
             )
             .onStart {
@@ -61,10 +59,7 @@ class VerifyAccountViewModel(
      */
     fun resendOtp(userId: String) {
         viewModelScope.launch {
-            challengeRepository.resendChallenge(
-                transactionId = userId,
-                type = ChallengeType.OTP_EMAIL
-            )
+            challengeRepository.resendChallenge()
             .onStart {
                 _uiState.value = VerifyAccountUiState.Loading
             }

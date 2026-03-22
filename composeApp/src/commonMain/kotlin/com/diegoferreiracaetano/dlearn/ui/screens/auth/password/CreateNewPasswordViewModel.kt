@@ -17,6 +17,10 @@ class CreateNewPasswordViewModel(
     private val _uiState = MutableStateFlow<CreateNewPasswordUiState>(CreateNewPasswordUiState.Idle)
     val uiState = _uiState.asStateFlow()
 
+    fun resetState() {
+        _uiState.value = CreateNewPasswordUiState.Idle
+    }
+
     fun changePassword(userId: String, newPassword: String) {
         viewModelScope.launch {
             _uiState.value = CreateNewPasswordUiState.Loading

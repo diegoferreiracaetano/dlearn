@@ -90,7 +90,7 @@ fun VerifyAccountScreen(
             AppButton(
                 text = stringResource(Res.string.verify_account_action),
                 onClick = {
-                    viewModel.verifyOtp(userId, otpCode)
+                    viewModel.verifyOtp(otpCode)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = otpCode.length == 6 && uiState !is VerifyAccountUiState.Loading

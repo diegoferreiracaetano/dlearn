@@ -29,12 +29,12 @@ data class Challenge(
 )
 
 /**
- * Sessão de desafio que agrupa um ou mais métodos disponíveis para uma transação.
+ * Sessão de desafio que contém o desafio específico selecionado pelo servidor.
  */
 @Serializable
 data class ChallengeSession(
     val transactionId: String,
-    val challenges: List<Challenge>,
+    val challenge: Challenge,
     val expiresAt: Long? = null
 )
 

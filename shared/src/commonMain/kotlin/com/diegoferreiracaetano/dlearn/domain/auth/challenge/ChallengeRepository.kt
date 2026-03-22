@@ -4,24 +4,19 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  * Interface única e genérica para resolução de qualquer desafio de segurança.
+ * A camada de UI agora só precisa enviar a resposta (answer),
+ * pois o contexto do desafio (ID e Tipo) é mantido internamente.
  */
 interface ChallengeRepository {
     
     /**
-     * Resolve um desafio de forma agnóstica.
-     * 
-     * @param transactionId O identificador da transação (pode ser um ID de MFA ou o próprio userId).
-     * @param type O tipo de desafio (OTP, Biometria, etc).
-     * @param answer Mapa de respostas (ex: ["otp": "123456"]).
+     * Resolve o desafio atual.
+     * @param answer A resposta do usuário (ex: o código "123456").
      */
-    fun resolveChallenge(
-        transactionId: String, 
-        type: ChallengeType, 
-        answer: Map<String, String>
-    ): Flow<ChallengeResult>
+    fun resolveChallenge(answer: String): Flow<ChallengeResult>
     
     /**
-     * Solicita o reenvio de um desafio.
+     * Solicita o reenvio do desafio atual.
      */
-    fun resendChallenge(transactionId: String, type: ChallengeType): Flow<Boolean>
+    fun resendChallenge(): Flow<Boolean>
 }

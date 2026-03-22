@@ -18,15 +18,16 @@ val authModule = module {
     single<ChallengeCoordinator> { ChallengeCoordinator(get()) }
 
     // Handlers de Desafio (Preparado para múltiplos handlers: OTP, Biometria, etc)
-    single<OtpChallengeHandler> { OtpChallengeHandler(get()) }
+    single { OtpChallengeHandler(get()) }
 
     // Motor de Desafios (Challenge Engine)
-    single<ChallengeEngine> { 
+    single { 
         ChallengeEngine(
+            coordinator = get(),
             handlers = listOf(get<OtpChallengeHandler>())
         ) 
     }
 
     // Repositório de Desafios
-    single<ChallengeRepository> { ChallengeRepositoryRemote(get()) }
+    single<ChallengeRepository> { ChallengeRepositoryRemote(get(), get(), get()) }
 }

@@ -25,8 +25,8 @@ class OtpChallengeHandler(
         val deferred = CompletableDeferred<ChallengeResult>()
         currentDeferred = deferred
 
-        // O coordinator emite a sessão para que a UI (Compose) mostre o campo de OTP
-        coordinator.emit(session)
+        // O coordinator emite a sessão e o desafio específico para que a UI mostre o campo correto
+        coordinator.emit(session, challenge)
 
         return try {
             deferred.await()

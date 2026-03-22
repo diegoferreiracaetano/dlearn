@@ -66,14 +66,14 @@ fun AppNavGraph(
         }
     }
 
-//    DisposableEffect(navController) {
-//        navigationManager.registerNavigator { route ->
-//            navController.navigate(route)
-//        }
-//        onDispose {
-//            navigationManager.unregisterNavigator()
-//        }
-//    }
+    DisposableEffect(navController) {
+        navigationManager.registerNavigator { route ->
+            navController.navigate(route)
+        }
+        onDispose {
+            navigationManager.unregisterNavigator()
+        }
+    }
 
     val startDestination = ChangePassword.route
     val uriHandler = LocalUriHandler.current

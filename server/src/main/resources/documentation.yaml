@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: "DLearn BFF API"
-  version: "1.3.1"
+  version: "1.3.3"
   description: |
     API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows.
     Security and Multi-Factor Authentication (MFA) are handled by a Generic Challenge Engine.
@@ -279,13 +279,12 @@ components:
 
     ChallengeSession:
       type: object
-      required: ["transactionId", "challenges"]
+      required: ["transactionId", "challenge"]
       properties:
         transactionId: { type: "string" }
         message: { type: "string" }
-        challenges:
-          type: array
-          items: { $ref: '#/components/schemas/Challenge' }
+        challenge:
+          $ref: '#/components/schemas/Challenge'
         expiresAt: { type: "integer", format: "int64" }
 
     Challenge:
@@ -302,9 +301,7 @@ components:
       required: ["type", "answers"]
       properties:
         type: { $ref: '#/components/schemas/ChallengeType' }
-        answers:
-          type: object
-          additionalProperties: { type: "string" }
+        answers: { type: "string" }
 
     ResolveChallengeResponse:
       type: object
@@ -318,8 +315,6 @@ components:
       type: object
       required: ["newPassword"]
       properties:
-        userId: { type: "string" }
-        currentPassword: { type: "string" }
         newPassword: { type: "string" }
 
     # --- SDUI Core Models ---

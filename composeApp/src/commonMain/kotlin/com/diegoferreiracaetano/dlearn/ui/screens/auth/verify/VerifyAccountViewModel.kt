@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 /**
  * ViewModel para a tela de verificação de conta.
- * Utiliza o motor genérico de desafios para validar o OTP de e-mail.
+ * Responsabilidade: Coletar o código do usuário e enviar ao backend via ChallengeRepository.
  */
 class VerifyAccountViewModel(
     private val challengeRepository: ChallengeRepository
@@ -24,14 +24,15 @@ class VerifyAccountViewModel(
     val uiState = _uiState.asStateFlow()
 
     /**
-     * Verifica o código OTP utilizando o fluxo genérico de resolução de desafios.
+     * Envia o código OTP para validação no backend.
+     * O answer aqui é apenas a String do código digitado.
      */
     fun verifyOtp(userId: String, otpCode: String) {
         viewModelScope.launch {
             challengeRepository.resolveChallenge(
                 transactionId = userId,
                 type = ChallengeType.OTP_EMAIL,
-                answer = mapOf("otp" to otpCode)
+                answer = otpCode // Passando apenas a String
             )
             .onStart {
                 _uiState.value = VerifyAccountUiState.Loading
@@ -56,7 +57,7 @@ class VerifyAccountViewModel(
     }
 
     /**
-     * Solicita o reenvio do código OTP.
+     * Solicita o reenvio do desafio ao backend.
      */
     fun resendOtp(userId: String) {
         viewModelScope.launch {
@@ -72,7 +73,7 @@ class VerifyAccountViewModel(
             }
             .collect { success ->
                 if (success) {
-                    _uiState.value = VerifyAccountUiState.Idle // Ou um estado de "Reenviado com sucesso"
+                    _uiState.value = VerifyAccountUiState.Idle
                 } else {
                     _uiState.value = VerifyAccountUiState.Error("Falha ao reenviar código")
                 }

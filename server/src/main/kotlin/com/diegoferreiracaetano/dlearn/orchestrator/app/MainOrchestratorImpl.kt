@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn.orchestrator
+package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.ui.screens.MainScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest

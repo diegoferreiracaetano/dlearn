@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn.orchestrator
+package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetProfileDataUseCase
@@ -15,19 +15,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.time.Duration.Companion.minutes
 
-interface ProfileOrchestrator {
-    fun handleRequest(request: AppRequest, userId: String, appVersion: Int, lang: String): Flow<Screen>
-}
-
 class ProfileOrchestratorImpl(
     private val getProfileDataUseCase: GetProfileDataUseCase,
     private val updateProfileDataUseCase: UpdateProfileDataUseCase,
     private val screenBuilder: ProfileScreenBuilder,
     private val editScreenBuilder: EditProfileScreenBuilder
-) : ProfileOrchestrator {
+) : AppOrchestrator {
     private val profileCache = InMemoryCache<String, Screen>(5.minutes)
 
-    override fun handleRequest(request: AppRequest, userId: String, appVersion: Int, lang: String): Flow<Screen> {
+    override fun execute(
+        request: AppRequest,
+        userId: String,
+        lang: String,
+        appVersion: Int
+    ): Flow<Screen> {
         val path = NavigationRoutes.extractPath(request.path)
         return when (path) {
             NavigationRoutes.PROFILE -> getProfileData(userId, appVersion, lang)

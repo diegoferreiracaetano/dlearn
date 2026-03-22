@@ -1,12 +1,12 @@
-package com.diegoferreiracaetano.dlearn.orchestrator
+package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
+import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.model.toVideo
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
-import com.diegoferreiracaetano.dlearn.ui.screens.WatchlistScreenBuilder
+import com.diegoferreiracaetano.dlearn.ui.screens.FavoriteScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.async
@@ -15,31 +15,32 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-interface WatchlistOrchestrator {
-    fun handleRequest(request: AppRequest, userId: String, lang: String): Flow<Screen>
-}
-
-class WatchlistOrchestratorImpl(
-    private val watchlistScreenBuilder: WatchlistScreenBuilder,
-    private val watchlistRepository: WatchlistRepository,
+class FavoriteOrchestratorImpl(
+    private val favoriteScreenBuilder: FavoriteScreenBuilder,
+    private val favoriteRepository: FavoriteRepository,
     private val videoMapper: VideoMapper,
     private val tmdbClient: TmdbClient
-) : WatchlistOrchestrator {
+) : AppOrchestrator {
 
-    override fun handleRequest(request: AppRequest, userId: String, lang: String): Flow<Screen> {
+    override fun execute(
+        request: AppRequest,
+        userId: String,
+        lang: String,
+        appVersion: Int
+    ): Flow<Screen> {
         val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
         return if (movieId != null) {
-            toggleWatchlist(userId, movieId, lang)
+            toggleFavorite(userId, movieId, lang)
         } else {
-            getWatchlist(userId, lang)
+            getFavorite(userId, lang)
         }
     }
 
-    private fun getWatchlist(userId: String, lang: String): Flow<Screen> = flow {
+    private fun getFavorite(userId: String, lang: String): Flow<Screen> = flow {
         coroutineScope {
-            val watchlistIds = watchlistRepository.getWatchlist(userId)
+            val favoriteIds = favoriteRepository.getFavorites(userId)
 
-            val videos = watchlistIds.map { id ->
+            val videos = favoriteIds.map { id ->
                 async {
                     runCatching {
                         tmdbClient.getMovieDetail(id).toVideo(MediaType.MOVIE)
@@ -48,13 +49,13 @@ class WatchlistOrchestratorImpl(
             }.awaitAll().filterNotNull()
 
             val items = videoMapper.toMovieItemComponents(videos)
-            emit(watchlistScreenBuilder.build(lang, items))
+            emit(favoriteScreenBuilder.build(lang, items))
         }
     }
 
-    private fun toggleWatchlist(userId: String, movieId: String, lang: String): Flow<Screen> = flow {
-        watchlistRepository.toggleWatchlist(userId, movieId)
-        getWatchlist(userId, lang).collect {
+    private fun toggleFavorite(userId: String, movieId: String, lang: String): Flow<Screen> = flow {
+        favoriteRepository.toggleFavorite(userId, movieId)
+        getFavorite(userId, lang).collect {
             emit(it)
         }
     }

@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn.orchestrator
+package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetHomeDataUseCase

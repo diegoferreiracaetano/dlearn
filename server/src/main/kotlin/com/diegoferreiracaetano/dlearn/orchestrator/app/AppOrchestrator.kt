@@ -1,5 +1,4 @@
-
-package com.diegoferreiracaetano.dlearn.orchestrator
+package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen

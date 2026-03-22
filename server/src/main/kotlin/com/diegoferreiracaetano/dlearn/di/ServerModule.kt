@@ -8,6 +8,16 @@ import com.diegoferreiracaetano.dlearn.infrastructure.mappers.WatchProviderUrlMa
 import com.diegoferreiracaetano.dlearn.infrastructure.mappers.TmdbMapper
 import com.diegoferreiracaetano.dlearn.infrastructure.services.*
 import com.diegoferreiracaetano.dlearn.orchestrator.*
+import com.diegoferreiracaetano.dlearn.orchestrator.app.AppOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.app.AppOrchestratorImpl
+import com.diegoferreiracaetano.dlearn.orchestrator.app.FaqOrchestratorImpl
+import com.diegoferreiracaetano.dlearn.orchestrator.app.FavoriteOrchestratorImpl
+import com.diegoferreiracaetano.dlearn.orchestrator.app.HomeOrchestratorImpl
+import com.diegoferreiracaetano.dlearn.orchestrator.app.MainOrchestratorImpl
+import com.diegoferreiracaetano.dlearn.orchestrator.app.MovieDetailOrchestratorImpl
+import com.diegoferreiracaetano.dlearn.orchestrator.app.ProfileOrchestratorImpl
+import com.diegoferreiracaetano.dlearn.orchestrator.app.SearchOrchestratorImpl
+import com.diegoferreiracaetano.dlearn.orchestrator.app.WatchlistOrchestratorImpl
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import com.diegoferreiracaetano.dlearn.ui.mappers.HomeMapper
 import com.diegoferreiracaetano.dlearn.ui.mappers.MovieDetailMapper
@@ -49,7 +59,19 @@ val serverModule = module {
     single<FavoriteOrchestrator> { FavoriteOrchestratorImpl(get(), get(), get(), get()) }
     single<MainOrchestrator> { MainOrchestratorImpl(get()) }
     single<FaqOrchestrator> { FaqOrchestratorImpl(get(), get()) }
-    single<AppOrchestrator> { AppOrchestratorImpl(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    single<AppOrchestrator> {
+        AppOrchestratorImpl(
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
 
     // Profile
     single { ProfileDataService() }

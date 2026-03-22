@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn.orchestrator
+package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetMovieDetailUseCase
@@ -10,17 +10,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.time.Duration.Companion.minutes
 
-interface MovieDetailOrchestrator {
-    fun handleRequest(request: AppRequest, appVersion: Int, lang: String): Flow<Screen>
-}
 
 class MovieDetailOrchestratorImpl(
     private val getMovieDetailUseCase: GetMovieDetailUseCase,
     private val screenBuilder: MovieDetailScreenBuilder
-) : MovieDetailOrchestrator {
+) : AppOrchestrator {
     private val detailCache = InMemoryCache<String, Screen>(5.minutes)
 
-    override fun handleRequest(request: AppRequest, appVersion: Int, lang: String): Flow<Screen> = flow {
+    override fun execute(
+        request: AppRequest,
+        userId: String,
+        lang: String,
+        appVersion: Int
+    ): Flow<Screen> = flow {
         val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
             ?: throw IllegalArgumentException("MovieId missing")
 

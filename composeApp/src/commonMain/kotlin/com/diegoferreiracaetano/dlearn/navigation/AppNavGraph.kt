@@ -123,7 +123,7 @@ fun AppNavGraph(
         }
         
         dialog(
-            route = NavigationRoutes.VERIFY_ACCOUNT,
+            route = VerifyAccount.route,
             dialogProperties = DialogProperties(
                 usePlatformDefaultWidth = false,
                 dismissOnBackPress = true,

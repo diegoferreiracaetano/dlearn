@@ -44,7 +44,6 @@ fun CreateNewPasswordScreen(
     var confirmPassword by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     
-    // Como esta é a raiz da tela manual, criamos o estado aqui para evitar o crash
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 

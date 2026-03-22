@@ -1,46 +1,63 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
-import com.diegoferreiracaetano.dlearn.ui.sdui.*
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppErrorComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppExpandableSectionComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppFeedbackComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppHtmlTextComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppListComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppLoadingComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppMainContentComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppMovieDetailHeaderComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppProfileHeaderComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppSearchBarComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppSearchContentComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppSectionTitleComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppSelectionRowComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppSnackbarComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppSwitchRowComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTextFieldComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarListComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.BannerCarouselComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.CarouselComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.Component
+import com.diegoferreiracaetano.dlearn.ui.sdui.FooterComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.FullScreenBannerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.MovieCarouselComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.MovieItemComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.PremiumBannerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.ProfileRowComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.SectionComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.UserRowComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import org.koin.compose.koinInject
 
-/**
- * CompositionLocal to provide the [RenderComponentFactory] throughout the UI hierarchy.
- */
-val LocalRenderComponentFactory = staticCompositionLocalOf<RenderComponentFactory> {
-    error("No RenderComponentFactory provided")
-}
-
-/**
- * Top-level Composable function to render a SDUI component using the provided factory.
- */
 @Composable
 fun RenderComponent(
     component: Component,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
-    LocalRenderComponentFactory.current.Render(component, actions, modifier)
+    val factory: RenderComponentFactory = koinInject()
+    factory.Render(component, actions, modifier)
 }
 
-/**
- * Top-level Composable function to render a list of SDUI components.
- */
 @Composable
 fun RenderComponents(
     components: List<Component>,
     actions: ComponentActions,
     modifier: Modifier = Modifier
 ) {
-    LocalRenderComponentFactory.current.Render(components, actions, modifier)
+    val factory: RenderComponentFactory = koinInject()
+    factory.Render(components, actions, modifier)
 }
 
-/**
- * Factory responsible for rendering UI components based on their type.
- * Uses Dependency Injection to provide specific renderers for each component.
- */
 class RenderComponentFactory(
     private val appLoadingRenderer: AppLoadingRenderer,
     private val appErrorRenderer: AppErrorRenderer,

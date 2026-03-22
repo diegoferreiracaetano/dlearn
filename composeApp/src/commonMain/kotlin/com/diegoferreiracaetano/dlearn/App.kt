@@ -11,8 +11,6 @@ import androidx.compose.runtime.setValue
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.AppNavGraph
-import com.diegoferreiracaetano.dlearn.ui.factory.LocalRenderComponentFactory
-import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponentFactory
 import com.diegoferreiracaetano.dlearn.ui.screens.splash.SplashScreen
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -20,12 +18,10 @@ import org.koin.compose.koinInject
 
 @Composable
 fun App() {
-    val renderFactory: RenderComponentFactory = koinInject()
     val snackbarHostState = remember { SnackbarHostState() }
 
     DLearnTheme {
         CompositionLocalProvider(
-            LocalRenderComponentFactory provides renderFactory,
             LocalSnackbarHostState provides snackbarHostState
         ) {
             val sessionManager: SessionManager = koinInject()

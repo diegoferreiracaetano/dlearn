@@ -1,6 +1,6 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
-import com.diegoferreiracaetano.dlearn.orchestrator.app.AppOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.app.Orchestrator
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import io.ktor.server.request.acceptLanguage
 import io.ktor.server.request.receive
@@ -11,7 +11,7 @@ import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 
 fun Route.appController() {
-    val appOrchestrator by inject<AppOrchestrator>()
+    val orchestrator by inject<Orchestrator>()
 
     route("/v1/app") {
         post {
@@ -20,7 +20,7 @@ fun Route.appController() {
             val lang = call.request.acceptLanguage() ?: "en"
             val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
 
-            appOrchestrator.execute(
+            orchestrator.execute(
                 request = request,
                 userId = userId,
                 lang = lang,

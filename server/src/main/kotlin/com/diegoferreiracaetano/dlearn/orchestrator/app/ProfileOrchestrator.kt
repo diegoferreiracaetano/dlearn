@@ -15,12 +15,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.time.Duration.Companion.minutes
 
-class ProfileOrchestratorImpl(
+class ProfileOrchestrator(
     private val getProfileDataUseCase: GetProfileDataUseCase,
     private val updateProfileDataUseCase: UpdateProfileDataUseCase,
     private val screenBuilder: ProfileScreenBuilder,
     private val editScreenBuilder: EditProfileScreenBuilder
-) : AppOrchestrator {
+) : Orchestrator {
     private val profileCache = InMemoryCache<String, Screen>(5.minutes)
 
     override fun execute(

@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.time.Duration.Companion.minutes
 
-class HomeOrchestratorImpl(
+class HomeOrchestrator(
     private val getHomeDataUseCase: GetHomeDataUseCase,
     private val screenBuilder: HomeScreenBuilder
-) : AppOrchestrator {
+) : Orchestrator {
     private val homeCache = InMemoryCache<String, Screen>(5.minutes)
 
     override fun execute(

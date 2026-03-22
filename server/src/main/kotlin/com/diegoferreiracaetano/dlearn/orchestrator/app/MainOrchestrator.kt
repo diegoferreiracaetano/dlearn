@@ -6,9 +6,9 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class MainOrchestratorImpl(
+class MainOrchestrator(
     private val mainScreenBuilder: MainScreenBuilder
-) : AppOrchestrator {
+) : Orchestrator {
     override fun execute(
         request: AppRequest,
         userId: String,

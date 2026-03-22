@@ -8,10 +8,10 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class FaqOrchestratorImpl(
+class FaqOrchestrator(
     private val faqDataService: FaqDataService,
     private val faqScreenBuilder: FaqScreenBuilder
-) : AppOrchestrator {
+) : Orchestrator {
 
     override fun execute(
         request: AppRequest,

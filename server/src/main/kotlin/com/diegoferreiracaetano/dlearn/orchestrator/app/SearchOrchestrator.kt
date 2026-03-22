@@ -9,12 +9,12 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class SearchOrchestratorImpl(
+class SearchOrchestrator(
     private val getSearchDataUseCase: GetSearchDataUseCase,
     private val getHomeDataUseCase: GetHomeDataUseCase,
     private val videoMapper: VideoMapper,
     private val searchScreenBuilder: SearchScreenBuilder
-) : AppOrchestrator {
+) : Orchestrator {
 
     override fun execute(
         request: AppRequest,

@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.flow
 import kotlin.time.Duration.Companion.minutes
 
 
-class MovieDetailOrchestratorImpl(
+class MovieDetailOrchestrator(
     private val getMovieDetailUseCase: GetMovieDetailUseCase,
     private val screenBuilder: MovieDetailScreenBuilder
-) : AppOrchestrator {
+) : Orchestrator {
     private val detailCache = InMemoryCache<String, Screen>(5.minutes)
 
     override fun execute(

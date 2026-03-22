@@ -18,21 +18,32 @@ object NavigationRoutes {
     const val VERIFY_ACCOUNT = "verify_account"
     const val CREATE_NEW_PASSWORD = "create_new_password"
     const val ONBOARDING = "onboarding"
+    const val FAQ = "faq"
 
     const val PATH_ARG = "path"
     const val PARAMS_ARG = "params"
     const val MOVIE_ID_ARG = "movieId"
+    const val FAQ_REF_ARG = "ref"
 
-    const val APP_ROUTE = "$APP_PREFIX?$PATH_ARG={$PATH_ARG}&$PARAMS_ARG={$PARAMS_ARG}"
+    const val APP_ROUTE = "$APP_PREFIX?$PATH_ARG={$PATH_ARG}&$PARAMS_ARG={$PARAMS_ARG}&$FAQ_REF_ARG={$FAQ_REF_ARG}"
     
     const val MOVIE_DETAIL_ROUTE = "$MOVIE_DETAIL/{$MOVIE_ID_ARG}"
 
     fun buildRoute(path: String, params: Map<String, String>? = null): String {
-        val cleanPath = path.removePrefix(APP_PREFIX)
+        val cleanPath = path.removePrefix(APP_PREFIX).removePrefix("/")
         val builder = StringBuilder("$APP_PREFIX?$PATH_ARG=$cleanPath")
         
-        if (!params.isNullOrEmpty()) {
-            val query = params.entries.joinToString(",") { "${it.key}:${it.value}" }
+        val otherParams = mutableMapOf<String, String>()
+        params?.forEach { (key, value) ->
+            if (key == FAQ_REF_ARG) {
+                builder.append("&$key=$value")
+            } else {
+                otherParams[key] = value
+            }
+        }
+
+        if (otherParams.isNotEmpty()) {
+            val query = otherParams.entries.joinToString(",") { "${it.key}:${it.value}" }
             builder.append("&$PARAMS_ARG=$query")
         }
         return builder.toString()
@@ -40,6 +51,6 @@ object NavigationRoutes {
 
     fun extractPath(route: String?): String {
         if (route == null) return HOME
-        return route.substringBefore("?").removePrefix(APP_PREFIX)
+        return route.substringBefore("?").removePrefix(APP_PREFIX).removePrefix("/")
     }
 }

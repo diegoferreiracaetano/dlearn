@@ -128,19 +128,28 @@ class ProfileMapper(private val i18n: I18nProvider) {
                     id = "legal",
                     label = i18n.getString(AppStringType.ITEM_LEGAL, lang),
                     icon = AppIconType.POLICY,
-                    actionUrl = "/legal"
+                    actionUrl = NavigationRoutes.buildRoute(
+                        NavigationRoutes.FAQ,
+                        mapOf(NavigationRoutes.FAQ_REF_ARG to "privacy-policy")
+                    )
                 ),
                 SectionItem(
                     id = "help",
                     label = i18n.getString(AppStringType.ITEM_HELP, lang),
                     icon = AppIconType.HELP,
-                    actionUrl = "/help"
+                    actionUrl = NavigationRoutes.buildRoute(
+                        NavigationRoutes.FAQ,
+                        mapOf(NavigationRoutes.FAQ_REF_ARG to "help-feedback")
+                    )
                 ),
                 SectionItem(
                     id = "about",
                     label = i18n.getString(AppStringType.ITEM_ABOUT, lang),
                     icon = AppIconType.INFO,
-                    actionUrl = "/about"
+                    actionUrl = NavigationRoutes.buildRoute(
+                        NavigationRoutes.FAQ,
+                        mapOf(NavigationRoutes.FAQ_REF_ARG to "about-us")
+                    )
                 )
             )
         )

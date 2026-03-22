@@ -1,0 +1,18 @@
+{
+  "privacy-policy": {
+    "title": "Privacy Policy",
+    "content": "<h1>Privacy Policy</h1><p>This is the privacy policy content.</p><h2>Terms</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget ornare quam vel facilisis feugiat amet sagittis arcu, tortor. Sapien, consequat ultrices morbi orci semper sit nulla. Leo auctor ut etiam est, amet aliquet ut vivamus. Odio vulputate est id tincidunt fames.</p><h2>Changes to the Service and/or Terms</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+  },
+  "terms-of-service": {
+    "title": "Terms of Service",
+    "content": "<h1>Terms of Service</h1><p>This is the terms of service content.</p>"
+  },
+  "about-us": {
+    "title": "About Us",
+    "content": "<h1>About Us</h1><p>We are DLearn, an educational platform.</p>"
+  },
+  "help-feedback": {
+    "title": "Help & Feedback",
+    "content": "<h1>Help & Feedback</h1><p>How can we help you today?</p>"
+  }
+}

@@ -64,8 +64,15 @@ val NavBackStackEntry.sduiPath: String
 val NavBackStackEntry.sduiParams: Map<String, String>?
     get() {
         val paramsString = readOrDefault(NavigationRoutes.PARAMS_ARG, "")
-        return paramsString.takeIf { it.isNotEmpty() }?.split(",")?.associate {
+        val paramsMap = paramsString.takeIf { it.isNotEmpty() }?.split(",")?.associate {
             val parts = it.split(":")
             parts[0] to parts.getOrElse(1) { "" }
+        }?.toMutableMap() ?: mutableMapOf()
+
+        val ref = readOrDefault(NavigationRoutes.FAQ_REF_ARG, "")
+        if (ref.isNotEmpty()) {
+            paramsMap[NavigationRoutes.FAQ_REF_ARG] = ref
         }
+
+        return paramsMap.takeIf { it.isNotEmpty() }
     }

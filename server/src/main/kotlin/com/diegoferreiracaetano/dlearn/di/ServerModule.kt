@@ -30,6 +30,7 @@ val serverModule = module {
     // Repositories / Services
     single<FavoriteRepository> { FavoriteDataService() }
     single<WatchlistRepository> { WatchlistDataService() }
+    single { FaqDataService() }
     
     // Home
     single { HomeDataService(get()) }
@@ -43,10 +44,12 @@ val serverModule = module {
     single { FavoriteScreenBuilder(get()) }
     single { MainScreenBuilder(get()) }
     single { VerifyAccountScreenBuilder() }
+    single { FaqScreenBuilder() }
     single { WatchlistOrchestrator(get(), get(), get(), get()) }
     single { FavoriteOrchestrator(get(), get(), get(), get()) }
     single { MainOrchestrator(get()) }
-    single { AppOrchestrator(get(), get(), get(), get(), get()) }
+    single { FaqOrchestrator(get(), get()) }
+    single { AppOrchestrator(get(), get(), get(), get(), get(), get()) }
 
     // Profile
     single { ProfileDataService() }

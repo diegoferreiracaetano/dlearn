@@ -12,6 +12,7 @@ class AppOrchestrator(
     private val favoriteOrchestrator: FavoriteOrchestrator,
     private val watchlistOrchestrator: WatchlistOrchestrator,
     private val profileOrchestrator: ProfileOrchestrator,
+    private val faqOrchestrator: FaqOrchestrator,
     private val verifyAccountScreenBuilder: VerifyAccountScreenBuilder
 ) {
     fun execute(
@@ -29,8 +30,15 @@ class AppOrchestrator(
             NavigationRoutes.EDIT_PROFILE -> profileOrchestrator.getEditProfileData(userId, lang)
             NavigationRoutes.UPDATE_PROFILE -> profileOrchestrator.updateProfile(userId, request.params ?: emptyMap(), lang)
             NavigationRoutes.VERIFY_ACCOUNT -> flow { emit(verifyAccountScreenBuilder.build()) }
+            NavigationRoutes.FAQ -> handleFaqRequest(request)
             else -> throw IllegalArgumentException("Invalid path: ${request.path} (extracted: $path)")
         }
+    }
+
+    private fun handleFaqRequest(request: AppRequest): Flow<Screen> {
+        val reference = request.params?.get(NavigationRoutes.FAQ_REF_ARG)
+            ?: throw IllegalArgumentException("FAQ reference missing")
+        return faqOrchestrator.getFaqData(reference)
     }
 
     private fun handleFavoriteRequest(request: AppRequest, userId: String, lang: String): Flow<Screen> {

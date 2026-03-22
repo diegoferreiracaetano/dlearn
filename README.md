@@ -29,7 +29,7 @@ scope.receivePipeline.intercept(HttpReceivePipeline.After) { response ->
     if (response.status.value == 428) { // Precondition Required
         val session = json.decodeFromString<ChallengeSession>(response.bodyAsText())
         
-        // Dispara o motor de desafio que abre a UI e aguarda resolução
+        // Dispara o motor de desafio que abre a UI e aguarda resolution
         val result = engine.resolve(session) 
 
         if (result is ChallengeResult.Success) {
@@ -99,21 +99,31 @@ O App utiliza o `AppRepository` para enviar requisições ao gateway.
   ```
 - **Funcionamento**: O BFF recebe o `path` e o `AppOrchestrator` resolve qual `Screen` ou `Action` retornar.
 
-### 2. Navegação via AppAction
+### 2. Formato de Rotas e Deeplinks
+As rotas seguem o padrão `app?path={path}&ref={ref}&params={csv_params}`.
+- **Exemplo**: `app?path=faq&ref=privacy-policy`
+- **Parâmetros**: O parâmetro `ref` é tratado como query parameter de primeiro nível para facilitar o rastreio e cache, enquanto parâmetros de formulário ou filtros complexos são enviados no campo `params`.
+
+### 3. Navegação via AppAction
 O Backend controla o fluxo enviando objetos `AppAction.Navigation`:
 ```json
 {
   "type": "navigation",
-  "route": "app/favorite",
-  "params": { "category": "movies" }
+  "route": "app?path=favorite&params=category:movies"
 }
 ```
+
+### 4. FAQ e Conteúdo Dinâmico (HTML)
+Implementamos uma engine de conteúdo estático via SDUI para telas de suporte e legal (Privacidade, Sobre, Ajuda).
+- **Rota**: `app?path=faq&ref=[slug]` (ex: `ref=privacy-policy`)
+- **Componente**: `AppHtmlTextComponent` - Permite renderizar HTML básico (h1, b, i, a) utilizando o componente nativo do Design System.
+- **Armazenamento**: Os conteúdos ficam em um JSON centralizado no servidor (`faq_content.json`), simulando um CMS/Bucket.
 
 ---
 
 ## 🏗️ Estrutura do Projeto
 
-- **`:shared`**: Contratos, `GlobalEventDispatcher`, `ChallengeEngine` e `ChallengeInterceptor`.
+- **`:shared`**: Contratos, `GlobalEventDispatcher`, `ChallengeEngine`, `ChallengeInterceptor` e `NavigationRoutes`.
 - **`:server`**: Ktor BFF, Orchestrators de SDUI e Gestão de Desafios via DSL.
 - **`:composeApp`**: UI Multiplatform, `GlobalEventHandler` (Consumidor de eventos) e Engine SDUI.
 

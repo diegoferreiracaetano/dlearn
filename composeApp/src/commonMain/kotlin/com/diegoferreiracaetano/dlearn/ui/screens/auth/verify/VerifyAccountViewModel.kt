@@ -23,10 +23,6 @@ class VerifyAccountViewModel(
     private val _uiState = MutableStateFlow<VerifyAccountUiState>(VerifyAccountUiState.Idle)
     val uiState = _uiState.asStateFlow()
 
-    /**
-     * Envia o código OTP para validação no backend.
-     * O answer aqui é apenas a String do código digitado.
-     */
     fun verifyOtp(otpCode: String) {
         viewModelScope.launch {
             challengeRepository.resolveChallenge(
@@ -54,10 +50,7 @@ class VerifyAccountViewModel(
         }
     }
 
-    /**
-     * Solicita o reenvio do desafio ao backend.
-     */
-    fun resendOtp(userId: String) {
+    fun resendOtp() {
         viewModelScope.launch {
             challengeRepository.resendChallenge()
             .onStart {

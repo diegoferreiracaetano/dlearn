@@ -20,7 +20,6 @@ import org.koin.compose.koinInject
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VerifyAccountScreen(
-    userId: String,
     onBackClick: () -> Unit,
     onContinueClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -79,7 +78,7 @@ fun VerifyAccountScreen(
                     otpCode = text
                     otpError = null 
                 },
-                onResendClick = { viewModel.resendOtp(userId) },
+                onResendClick = { viewModel.resendOtp() },
                 modifier = Modifier.fillMaxWidth(),
                 isError = otpError != null,
                 errorText = otpError
@@ -107,7 +106,7 @@ fun VerifyAccountScreen(
                     style = MaterialTheme.typography.bodyMedium
                 )
                 TextButton(
-                    onClick = { viewModel.resendOtp(userId) },
+                    onClick = { viewModel.resendOtp() },
                     enabled = uiState !is VerifyAccountUiState.Loading
                 ) {
                     Text(

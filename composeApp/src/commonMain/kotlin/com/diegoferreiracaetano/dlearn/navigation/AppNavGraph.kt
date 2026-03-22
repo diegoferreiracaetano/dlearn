@@ -1,8 +1,9 @@
 package com.diegoferreiracaetano.dlearn.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
@@ -15,12 +16,10 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.*
 import com.diegoferreiracaetano.dlearn.ui.screens.app.AppScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.auth.password.CreateNewPasswordScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.auth.password.CreateNewPasswordViewModel
 import com.diegoferreiracaetano.dlearn.ui.screens.auth.verify.VerifyAccountScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.LoginScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.ResetPasswordScreen
@@ -30,7 +29,7 @@ import com.diegoferreiracaetano.dlearn.ui.screens.main.MainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.onboarding.OnboardingScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchMainScreen
-import com.diegoferreiracaetano.dlearn.util.event.GlobalEvent
+import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 import com.diegoferreiracaetano.dlearn.util.event.GlobalEventDispatcher
 import kotlinx.coroutines.CoroutineScope
 import org.koin.compose.koinInject
@@ -42,31 +41,21 @@ fun AppNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    snackbarHostState: SnackbarHostState = LocalSnackbarHostState.current
 ) {
+    // Handler especializado para eventos globais (MFA, Mensagens, Navegação)
+    val eventHandler = remember(navController, snackbarHostState, coroutineScope) {
+        GlobalEventHandler(navController, snackbarHostState, coroutineScope)
+    }
+
     // Observador Central de Eventos Globais
     LaunchedEffect(eventDispatcher) {
         eventDispatcher.events.collect { event ->
-            when (event) {
-                is GlobalEvent.Challenge -> {
-                    // Verificamos se há algum desafio pendente na sessão que requer ação do usuário
-                    val hasOtpChallenge = event.session.challenge.let {
-                        it.challengeType == ChallengeType.OTP_SMS || it.challengeType == ChallengeType.OTP_EMAIL
-                    }
-                    
-                    if (hasOtpChallenge) {
-                        // Abre o desafio como um DIALOG por cima da tela atual
-                        navController.navigate(NavigationRoutes.VERIFY_ACCOUNT)
-                    }
-                }
-                is GlobalEvent.Navigation -> {
-                    navController.navigate(event.route)
-                }
-                is GlobalEvent.Message -> { }
-            }
+            eventHandler.handle(event)
         }
     }
 
-    val startDestination = ChangePassword.route
+    val startDestination = CreateNewPassword.route
     val uriHandler = LocalUriHandler.current
 
     NavHost(
@@ -115,23 +104,15 @@ fun AppNavGraph(
         }
 
         composable(CreateNewPassword.route) {
-            val viewModel: CreateNewPasswordViewModel = koinInject()
             CreateNewPasswordScreen(
-                viewModel = viewModel,
                 onBackClick = { navController.popBackStack() },
-                onSuccess = { 
-                    navController.navigate(Login.route) {
-                        popUpTo(CreateNewPassword.route) { inclusive = true }
-                    }
-                },
+                onSuccess = { navController.popBackStack() },
                 modifier = modifier
             )
         }
 
         composable(ChangePassword.route) {
-            val viewModel: CreateNewPasswordViewModel = koinInject()
             CreateNewPasswordScreen(
-                viewModel = viewModel,
                 onBackClick = { navController.popBackStack() },
                 onSuccess = { 
                     navController.popBackStack() 
@@ -139,8 +120,7 @@ fun AppNavGraph(
                 modifier = modifier
             )
         }
-
-        // Rota de Desafio como DIALOG (Abre por cima e mantém a tela de baixo)
+        
         dialog(
             route = NavigationRoutes.VERIFY_ACCOUNT,
             dialogProperties = DialogProperties(
@@ -149,16 +129,9 @@ fun AppNavGraph(
                 dismissOnClickOutside = false
             )
         ) {
-            // No Compose, o koinInject dentro de um NavHost recupera a mesma instância do ViewModel 
-            // se o escopo for o mesmo (ou se for Single). Como queremos resetar a tela de origem:
-            val passwordViewModel: CreateNewPasswordViewModel = koinInject()
 
             VerifyAccountScreen(
-                userId = "", // TODO: Pegar do cache/sessão se necessário
-                onBackClick = { 
-                    passwordViewModel.resetState()
-                    navController.popBackStack() 
-                },
+                onBackClick = { navController.popBackStack() },
                 onContinueClick = { navController.popBackStack() },
                 modifier = Modifier
             )

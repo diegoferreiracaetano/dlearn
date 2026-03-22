@@ -34,13 +34,16 @@ kotlin {
         commonMain.dependencies {
             api(libs.koin.core)
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.multiplatform.settings.no.arg)
             implementation(libs.kotlinx.serialization.json)
             
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
+
+            api(libs.multiplatform.settings)
+            api(libs.multiplatform.settings.coroutines)
+            implementation(libs.multiplatform.settings.no.arg)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

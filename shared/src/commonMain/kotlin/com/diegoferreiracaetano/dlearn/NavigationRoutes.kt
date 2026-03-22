@@ -20,6 +20,11 @@ object NavigationRoutes {
     const val ONBOARDING = "onboarding"
     const val FAQ = "faq"
 
+    // Settings Routes
+    const val SETTINGS_NOTIFICATIONS = "settings/notifications"
+    const val SETTINGS_LANGUAGE = "settings/language"
+    const val SETTINGS_COUNTRY = "settings/country"
+
     const val PATH_ARG = "path"
     const val PARAMS_ARG = "params"
     const val MOVIE_ID_ARG = "movieId"

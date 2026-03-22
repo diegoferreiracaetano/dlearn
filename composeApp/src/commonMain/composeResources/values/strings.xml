@@ -75,4 +75,10 @@
     <string name="save_changes">Save Changes</string>
     <string name="update_profile_success">Profile updated successfully!</string>
     <string name="update_profile_error">Failed to update profile.</string>
+
+    <!-- Settings & Dialogs -->
+    <string name="clear_cache_dialog_title">Are you sure ?</string>
+    <string name="clear_cache_dialog_description">Ullamcorper imperdiet urna id non sed est sem. Rhoncus amet, enim purus gravida donec aliquet.</string>
+    <string name="clear_cache_confirm">Log Out</string>
+    <string name="clear_cache_cancel">Cancel</string>
 </resources>

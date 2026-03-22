@@ -29,6 +29,7 @@ import com.diegoferreiracaetano.dlearn.ui.screens.main.MainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.onboarding.OnboardingScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchMainScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.settings.SettingsScreen
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 import com.diegoferreiracaetano.dlearn.util.event.GlobalEventDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -179,6 +180,36 @@ fun AppNavGraph(
                 onTabSelected = { route -> navController.navigateToRoute(route) },
                 modifier = modifier,
                 currentRoute = Profile.route
+            )
+        }
+
+        composable(SettingsNotifications.route) {
+            SettingsScreen(
+                path = NavigationRoutes.SETTINGS_NOTIFICATIONS,
+                onBackClick = { navController.popBackStack() },
+                onNavigate = { route -> navController.navigate(route) },
+                onDeeplink = { url -> uriHandler.openUri(url) },
+                modifier = modifier
+            )
+        }
+
+        composable(SettingsLanguage.route) {
+            SettingsScreen(
+                path = NavigationRoutes.SETTINGS_LANGUAGE,
+                onBackClick = { navController.popBackStack() },
+                onNavigate = { route -> navController.navigate(route) },
+                onDeeplink = { url -> uriHandler.openUri(url) },
+                modifier = modifier
+            )
+        }
+
+        composable(SettingsCountry.route) {
+            SettingsScreen(
+                path = NavigationRoutes.SETTINGS_COUNTRY,
+                onBackClick = { navController.popBackStack() },
+                onNavigate = { route -> navController.navigate(route) },
+                onDeeplink = { url -> uriHandler.openUri(url) },
+                modifier = modifier
             )
         }
 

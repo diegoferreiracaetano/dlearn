@@ -118,13 +118,18 @@ Implementamos uma engine de conteúdo estático via SDUI para telas de suporte e
 - **Componente**: `AppHtmlTextComponent` - Renderiza HTML básico (h1, b, a, etc) através do Design System.
 - **Armazenamento**: Conteúdos centralizados no servidor (`faq_content.json`).
 
+### 5. Configurações e Persistência Híbrida (SDUI + Local)
+Implementamos telas de configurações (Idioma, País, Notificações) que utilizam o poder do SDUI para interface, mas mantêm a persistência local via `AppPreferences` (KMP Settings).
+- **Sincronização**: O `SettingsViewModel` observa mudanças nas preferências locais e dispara um `retry()` automático na requisição SDUI, garantindo que o servidor sempre retorne os textos e estados (`isSelected`) traduzidos e atualizados.
+- **Clear Cache**: Ação `"clear_cache"` dispara um diálogo de confirmação local antes de executar o logout e limpeza de dados.
+
 ---
 
 ## 🏗️ Estrutura do Projeto
 
-- **`:shared`**: Contratos, `GlobalEventDispatcher`, `ChallengeEngine`, `ChallengeInterceptor` e `NavigationRoutes`.
-- **`:server`**: Ktor BFF, Orchestrators de SDUI e Gestão de Desafios via DSL.
-- **`:composeApp`**: UI Multiplatform, `GlobalEventHandler` (Consumidor de eventos) e Engine SDUI.
+- **`:shared`**: Contratos, `GlobalEventDispatcher`, `ChallengeEngine`, `ChallengeInterceptor`, `AppPreferences` (KMP Settings) e `NavigationRoutes`.
+- **`:server`**: Ktor BFF, Orchestrators de SDUI (incluindo `SettingsOrchestrator`), Mappers e Builders de telas dinâmicas.
+- **`:composeApp`**: UI Multiplatform, `GlobalEventHandler` (Consumidor de eventos), `SettingsScreen` especializada e Engine SDUI genérica.
 
 ---
 

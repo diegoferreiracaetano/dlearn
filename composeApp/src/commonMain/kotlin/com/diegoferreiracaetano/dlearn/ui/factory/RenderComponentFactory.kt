@@ -72,6 +72,8 @@ class RenderComponentFactory(
     private val appTextFieldRenderer: AppTextFieldRenderer,
     private val appSnackbarRenderer: AppSnackbarRenderer,
     private val appHtmlTextRenderer: AppHtmlTextRenderer,
+    private val appSwitchRowRenderer: AppSwitchRowRenderer,
+    private val appSelectionRowRenderer: AppSelectionRowRenderer,
 ) {
 
     @Composable
@@ -122,6 +124,8 @@ class RenderComponentFactory(
             is AppTextFieldComponent -> appTextFieldRenderer.Render(component, actions, modifier)
             is AppSnackbarComponent -> appSnackbarRenderer.Render(component, actions, modifier)
             is AppHtmlTextComponent -> appHtmlTextRenderer.Render(component, actions, modifier)
+            is AppSwitchRowComponent -> appSwitchRowRenderer.Render(component, actions, modifier)
+            is AppSelectionRowComponent -> appSelectionRowRenderer.Render(component, actions, modifier)
         }
     }
 }

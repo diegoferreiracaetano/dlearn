@@ -21,6 +21,10 @@ sealed class ScreenRouter(
     object ChangePassword : ScreenRouter(NavigationRoutes.CHANGE_PASSWORD)
     object Onboarding : ScreenRouter(NavigationRoutes.ONBOARDING)
 
+    object SettingsNotifications : ScreenRouter(NavigationRoutes.SETTINGS_NOTIFICATIONS)
+    object SettingsLanguage : ScreenRouter(NavigationRoutes.SETTINGS_LANGUAGE)
+    object SettingsCountry : ScreenRouter(NavigationRoutes.SETTINGS_COUNTRY)
+
     object MovieDetail : ScreenRouter(NavigationRoutes.MOVIE_DETAIL_ROUTE) {
         fun createRoute(movieId: String) = "${NavigationRoutes.MOVIE_DETAIL}/${movieId.encodeURLParameter()}"
     }

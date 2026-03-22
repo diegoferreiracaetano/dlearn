@@ -8,7 +8,9 @@ import com.diegoferreiracaetano.dlearn.data.movie.remote.MovieDetailRepositoryRe
 import com.diegoferreiracaetano.dlearn.data.password.remote.PasswordRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.profile.remote.ProfileRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.search.remote.SearchRepositoryRemote
+import com.diegoferreiracaetano.dlearn.data.session.AppPreferences
 import com.diegoferreiracaetano.dlearn.data.session.SessionStorage
+import com.diegoferreiracaetano.dlearn.data.session.SettingsAppPreferences
 import com.diegoferreiracaetano.dlearn.data.session.SettingsSessionStorage
 import com.diegoferreiracaetano.dlearn.data.user.UserRepository
 import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserNetworkDataSource
@@ -35,6 +37,8 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 import com.diegoferreiracaetano.dlearn.getPlatform
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.runBlocking
 
 /**
  * Módulo principal compartilhado que integra os sub-módulos específicos.
@@ -57,6 +61,8 @@ val sharedModule = module {
     // Configuração do Cliente HTTP com Interceptor de Auth
     single {
         val platform = getPlatform()
+        val prefs = get<AppPreferences>()
+        
         HttpClient {
             install(ContentNegotiation) {
                 json(get<Json>())
@@ -72,7 +78,10 @@ val sharedModule = module {
                     port = 8081
                 }
                 
-                header(HttpHeaders.AcceptLanguage, platform.language)
+                // Busca o idioma do cache ou usa o do device
+                val language = runBlocking { prefs.language.firstOrNull() } ?: platform.language
+                
+                header(HttpHeaders.AcceptLanguage, language)
                 header("X-User-Agent", platform.userAgent())
             }
             
@@ -88,6 +97,7 @@ val sharedModule = module {
     single { UserNetworkDataSource() }
     single<UserRepository> { UserRepositoryRemote(get()) }
     single { Settings() }
+    single<AppPreferences> { SettingsAppPreferences(get()) }
     single<SessionStorage> { SettingsSessionStorage(get()) }
     single { SessionManager(get()) }
 

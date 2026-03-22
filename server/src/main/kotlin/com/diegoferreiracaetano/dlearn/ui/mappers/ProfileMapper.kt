@@ -94,27 +94,27 @@ class ProfileMapper(private val i18n: I18nProvider) {
                     id = "notification",
                     label = i18n.getString(AppStringType.ITEM_NOTIFICATION, lang),
                     icon = AppIconType.NOTIFICATIONS,
-                    actionUrl = "/notifications"
+                    actionUrl = NavigationRoutes.SETTINGS_NOTIFICATIONS
                 ),
                 SectionItem(
                     id = "language",
                     label = i18n.getString(AppStringType.ITEM_LANGUAGE, lang),
                     value = data.language,
                     icon = AppIconType.LANGUAGE,
-                    actionUrl = "/language"
+                    actionUrl = NavigationRoutes.SETTINGS_LANGUAGE
                 ),
                 SectionItem(
                     id = "country",
                     label = i18n.getString(AppStringType.ITEM_COUNTRY, lang),
                     value = data.country,
                     icon = AppIconType.PUBLIC,
-                    actionUrl = "/country"
+                    actionUrl = NavigationRoutes.SETTINGS_COUNTRY
                 ),
                 SectionItem(
                     id = "clear_cache",
                     label = i18n.getString(AppStringType.ITEM_CLEAR_CACHE, lang),
                     icon = AppIconType.DELETE,
-                    actionUrl = "/clear-cache"
+                    actionUrl = "clear_cache"
                 )
             )
         )

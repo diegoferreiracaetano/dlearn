@@ -7,6 +7,9 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes.HOME
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.MOVIE_DETAIL
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.PROFILE
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.SEARCH
+import com.diegoferreiracaetano.dlearn.NavigationRoutes.SETTINGS_COUNTRY
+import com.diegoferreiracaetano.dlearn.NavigationRoutes.SETTINGS_LANGUAGE
+import com.diegoferreiracaetano.dlearn.NavigationRoutes.SETTINGS_NOTIFICATIONS
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.UPDATE_PROFILE
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.VERIFY_ACCOUNT
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.WATCHLIST
@@ -25,7 +28,8 @@ class AppOrchestrator(
     private val searchOrchestrator: SearchOrchestrator,
     private val movieDetailOrchestrator: MovieDetailOrchestrator,
     private val mainOrchestrator: MainOrchestrator,
-    private val verifyAccountOrchestrator: VerifyAccountOrchestrator
+    private val verifyAccountOrchestrator: VerifyAccountOrchestrator,
+    private val settingsOrchestrator: SettingsOrchestrator
 ) : Orchestrator {
     override fun execute(
         request: AppRequest,
@@ -44,6 +48,7 @@ class AppOrchestrator(
             MOVIE_DETAIL -> movieDetailOrchestrator.execute(request, userId, lang, appVersion)
             WELCOME -> mainOrchestrator.execute(request, userId, lang, appVersion)
             VERIFY_ACCOUNT -> verifyAccountOrchestrator.execute(request, userId, lang, appVersion)
+            SETTINGS_NOTIFICATIONS, SETTINGS_LANGUAGE, SETTINGS_COUNTRY -> settingsOrchestrator.execute(request, userId, lang, appVersion)
             else -> throw IllegalArgumentException("Invalid path: ${request.path} (extracted: $path)")
         }
     }

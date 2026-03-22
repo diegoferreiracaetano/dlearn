@@ -807,7 +807,7 @@
 };
             defs["AppIconType"] = {
   "type" : "string",
-  "enum" : [ "IC_SEARCH", "IC_BACK", "IC_CLOSE", "IC_SETTINGS", "IC_CHEVRON_RIGHT", "IC_USER", "IC_LOCK", "IC_INFO", "IC_HELP" ]
+  "enum" : [ "IC_SEARCH", "IC_BACK", "IC_CLOSE", "IC_SETTINGS", "IC_CHEVRON_RIGHT", "IC_USER", "IC_LOCK", "IC_INFO", "IC_HELP", "NOTIFICATIONS", "PUBLIC", "LANGUAGE", "DELETE", "PERSON", "POLICY" ]
 };
             defs["AppImageType"] = {
   "type" : "object",
@@ -910,8 +910,8 @@
   "properties" : {
     "path" : {
       "type" : "string",
-      "description" : "Route path (e.g. 'home', 'profile', 'faq')",
-      "example" : "faq"
+      "description" : "Route path (e.g. 'home', 'profile', 'settings/language')",
+      "example" : "settings/language"
     },
     "params" : {
       "type" : "object",
@@ -948,6 +948,27 @@
         "items" : {
           "$ref" : "#/components/schemas/Component"
         }
+      }
+    }
+  } ]
+};
+            defs["AppSelectionRowComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "value" : {
+        "type" : "string"
+      },
+      "preferenceKey" : {
+        "type" : "string"
+      },
+      "isSelected" : {
+        "type" : "boolean"
       }
     }
   } ]
@@ -991,6 +1012,30 @@
       }
     }
   }
+};
+            defs["AppSwitchRowComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "subtitle" : {
+        "type" : "string"
+      },
+      "icon" : {
+        "$ref" : "#/components/schemas/AppIconType"
+      },
+      "preferenceKey" : {
+        "type" : "string"
+      },
+      "isChecked" : {
+        "type" : "boolean"
+      }
+    }
+  } ]
 };
             defs["AppTextFieldComponent"] = {
   "allOf" : [ {
@@ -1507,7 +1552,7 @@
         <div id="header">
           <div id="api-_">
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
-              <div class="app-desc">Version: 1.1.0</div>
+              <div class="app-desc">Version: 1.2.0</div>
             <hr>
             <div>API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows.
 Security and Multi-Factor Authentication (MFA) are handled by a Generic Challenge Engine.</div>
@@ -4496,9 +4541,16 @@ except ApiException as e:
                         <p></p>
                         <p class="marked">Central gateway for dynamic screens and actions.
 The client sends a &#x60;path&#x60; (slug) and optional &#x60;params&#x60;.
-Examples:
+
+**New Settings Routes:**
+- &#x60;settings/notifications&#x60;: Notification preferences.
+- &#x60;settings/language&#x60;: Language selection.
+- &#x60;settings/country&#x60;: Country/Region selection.
+
+**Existing Routes:**
 - &#x60;home&#x60;: Main dashboard
 - &#x60;profile&#x60;: User profile
+- &#x60;profile/edit&#x60;: Edit profile form
 - &#x60;faq?ref&#x3D;privacy-policy&#x60;: FAQ content
 </p>
                         <p></p>

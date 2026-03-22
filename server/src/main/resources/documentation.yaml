@@ -4,7 +4,7 @@ info:
   description: |
     API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows.
     Security and Multi-Factor Authentication (MFA) are handled by a Generic Challenge Engine.
-  version: 1.1.0
+  version: 1.2.0
 servers:
   - url: http://localhost:8081
     description: Local Server
@@ -17,9 +17,16 @@ paths:
       description: |
         Central gateway for dynamic screens and actions.
         The client sends a `path` (slug) and optional `params`.
-        Examples:
+        
+        **New Settings Routes:**
+        - `settings/notifications`: Notification preferences.
+        - `settings/language`: Language selection.
+        - `settings/country`: Country/Region selection.
+        
+        **Existing Routes:**
         - `home`: Main dashboard
         - `profile`: User profile
+        - `profile/edit`: Edit profile form
         - `faq?ref=privacy-policy`: FAQ content
       parameters:
         - $ref: '#/components/parameters/userId'
@@ -365,8 +372,8 @@ components:
       properties:
         path:
           type: string
-          description: Route path (e.g. 'home', 'profile', 'faq')
-          example: "faq"
+          description: Route path (e.g. 'home', 'profile', 'settings/language')
+          example: "settings/language"
         params:
           type: object
           description: Query parameters or route arguments
@@ -477,6 +484,34 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Component'
+    AppSwitchRowComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+            subtitle:
+              type: string
+            icon:
+              $ref: '#/components/schemas/AppIconType'
+            preferenceKey:
+              type: string
+            isChecked:
+              type: boolean
+    AppSelectionRowComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+            value:
+              type: string
+            preferenceKey:
+              type: string
+            isSelected:
+              type: boolean
     movie_item:
       allOf:
         - $ref: '#/components/schemas/Component'
@@ -751,7 +786,7 @@ components:
       enum: [SUCCESS, ERROR, WARNING]
     AppIconType:
       type: string
-      enum: [IC_SEARCH, IC_BACK, IC_CLOSE, IC_SETTINGS, IC_CHEVRON_RIGHT, IC_USER, IC_LOCK, IC_INFO, IC_HELP]
+      enum: [IC_SEARCH, IC_BACK, IC_CLOSE, IC_SETTINGS, IC_CHEVRON_RIGHT, IC_USER, IC_LOCK, IC_INFO, IC_HELP, NOTIFICATIONS, PUBLIC, LANGUAGE, DELETE, PERSON, POLICY]
     AppImageType:
       type: object
       properties:

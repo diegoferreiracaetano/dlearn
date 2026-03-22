@@ -10,10 +10,7 @@ import com.diegoferreiracaetano.dlearn.infrastructure.services.*
 import com.diegoferreiracaetano.dlearn.orchestrator.*
 import com.diegoferreiracaetano.dlearn.orchestrator.app.*
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
-import com.diegoferreiracaetano.dlearn.ui.mappers.HomeMapper
-import com.diegoferreiracaetano.dlearn.ui.mappers.MovieDetailMapper
-import com.diegoferreiracaetano.dlearn.ui.mappers.ProfileMapper
-import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
+import com.diegoferreiracaetano.dlearn.ui.mappers.*
 import com.diegoferreiracaetano.dlearn.ui.screens.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import org.koin.dsl.module
@@ -61,6 +58,7 @@ val serverModule = module {
             get(),
             get(),
             get(),
+            get(),
             get()
         )
     }
@@ -73,6 +71,11 @@ val serverModule = module {
     single { ProfileScreenBuilder(get(), get()) }
     single { EditProfileScreenBuilder(get(), get()) }
     single { ProfileOrchestrator(get(), get(), get(), get()) }
+
+    // Settings
+    single { SettingsMapper(get()) }
+    single { SettingsScreenBuilder(get(), get()) }
+    single { SettingsOrchestrator(get(), get()) }
 
     // Movie Detail
     single { MovieDetailDataService(get(), get()) }

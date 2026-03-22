@@ -8,6 +8,11 @@ enum class PlatformType {
 
 interface Platform {
     val name: String
+    val language: String
+    val appVersion: String
+    val deviceModel: String
+    
+    fun userAgent(): String = "DLearn/$appVersion ($name; $deviceModel; $language)"
 }
 
 expect fun getPlatform(): Platform

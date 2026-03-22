@@ -28,10 +28,13 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.header
+import io.ktor.http.HttpHeaders
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
+import com.diegoferreiracaetano.dlearn.getPlatform
 
 /**
  * Módulo principal compartilhado que integra os sub-módulos específicos.
@@ -53,6 +56,7 @@ val sharedModule = module {
 
     // Configuração do Cliente HTTP com Interceptor de Auth
     single {
+        val platform = getPlatform()
         HttpClient {
             install(ContentNegotiation) {
                 json(get<Json>())
@@ -67,6 +71,9 @@ val sharedModule = module {
                     host = "192.168.15.3"
                     port = 8081
                 }
+                
+                header(HttpHeaders.AcceptLanguage, platform.language)
+                header("X-User-Agent", platform.userAgent())
             }
             
             // O interceptor agora usa o engine provido pelo authModule

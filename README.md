@@ -2,59 +2,87 @@
 
 Este projeto é um ecossistema completo desenvolvido em **Kotlin Multiplatform (KMP)** que implementa uma arquitetura de **Server-Driven UI (SDUI)** robusta, onde o Backend for Frontend (BFF) orquestra a experiência do usuário.
 
+## 🔗 Links Úteis
+
+- **Documentação Técnica (GitHub Pages):** [https://diegoferreiracaetano.github.io/dlearn](https://diegoferreiracaetano.github.io/dlearn)
+- **Swagger UI (BFF):** [http://localhost:8081/swagger](http://localhost:8081/swagger) - Documentação interativa das rotas SDUI.
+- **API App Gateway:** `POST http://localhost:8081/v1/app` - Endpoint genérico para resoluções de tela e ações.
+- **Componentes SDUI:** [Docs de Componentes](docs/sdui/components.md) - Guia de referência de componentes.
+
 ---
 
-## 🔐 Multi-Factor Authentication (MFA) & Challenge Engine
+## 🔐 Segurança e Multi-Factor Authentication (MFA)
 
-O DLearn possui um motor de desafios (**Challenge Engine**) genérico controlado pelo servidor. Ele permite interceptar operações protegidas e exigir verificações adicionais (OTP, Biometria, etc.) de forma desacoplada da UI.
+O projeto implementa um motor de desafios (**Challenge Engine**) centralizado para operações críticas, suportando múltiplos fatores de autenticação de forma transparente para as camadas de UI.
 
-### 🔄 Fluxo Fim-a-Fim (Exemplo: Troca de Senha)
-1. **Solicitação**: O usuário tenta alterar a senha. O App envia `POST /v1/auth/password/change`.
-2. **Desafio (428)**: O servidor identifica que a operação exige MFA e retorna `HTTP 428 Precondition Required` com um `transactionId` no header.
-3. **Interceptação Global**: O `ChallengeInterceptor` (no módulo `:shared`) captura o erro e dispara um `GlobalEvent.Challenge`.
-4. **Resolução de UI**: O `GlobalEventHandler` (no `:composeApp`) intercepta o evento e navega o usuário para a rota de desafio (ex: Diálogo de OTP).
-5. **Finalização**: Após o usuário inserir o código, o `ChallengeRepository` resolve o desafio no servidor. O interceptor então **repete automaticamente** a requisição original de troca de senha, que agora é aprovada.
+### 🧩 Challenge Engine & Fatores Suportados
+Localizado no módulo `:shared`, o `ChallengeEngine` intercepta erros de rede (ex: `428 Precondition Required`) e orquestra a resolução do desafio antes de repetir a requisição original.
+- **OTP (One-Time Password)**: Suporte para SMS e E-mail via rota dinâmica `verify_account` (SDUI).
+- **Biometria**: Integração com Face ID e Touch ID (Biometric Prompt) para validação local e remota.
 
-### 📡 Global Events (Barramento de Eventos)
-Para manter o total desacoplamento entre as camadas de lógica (Domain/Data) e a UI, utilizamos o `GlobalEventDispatcher`.
-
-#### Como usar (Qualquer lugar do projeto):
-Se você estiver em um `ViewModel`, `UseCase` ou `Repository` e precisar disparar uma navegação, mensagem ou desafio:
+### 🛡️ O Filtro de Interceptação (`ChallengeInterceptor`)
+A mágica acontece no módulo `:shared` através de um plugin customizado do **Ktor HttpClient**. Este interceptor monitora todas as respostas da rede e automatiza a repetição:
 
 ```kotlin
-// Injetar o dispatcher
-val eventDispatcher: GlobalEventDispatcher by inject()
+// ChallengeInterceptor.kt (Simplificado)
+scope.receivePipeline.intercept(HttpReceivePipeline.After) { response ->
+    if (response.status.value == 428) { // Precondition Required
+        val session = json.decodeFromString<ChallengeSession>(response.bodyAsText())
+        
+        // Dispara o motor de desafio que abre a UI e aguarda resolução
+        val result = engine.resolve(session) 
 
-// Disparar uma mensagem (Snackbar automático)
-eventDispatcher.tryEmit(GlobalEvent.Message("Operação realizada!", GlobalEvent.MessageType.SUCCESS))
+        if (result is ChallengeResult.Success) {
+            // Repete a requisição ORIGINAL injetando os tokens de validação
+            val retryCall = scope.request {
+                takeFrom(originalRequest)
+                header("X-Challenge-Token", result.data["validatedToken"])
+                header("X-Transaction-ID", session.transactionId)
+            }
+            proceedWith(retryCall)
+        }
+    }
+}
+```
 
-// Disparar uma navegação forçada
-eventDispatcher.tryEmit(GlobalEvent.Navigation(NavigationRoutes.HOME))
+### 🔄 Fluxo Fim-a-Fim de Desafio (Ex: Troca de Senha)
+1. **Tentativa**: O usuário tenta alterar a senha. O App envia `POST /v1/auth/password/change`.
+2. **Intercepção (428)**: O servidor identifica a necessidade de MFA e retorna `HTTP 428` com o `transactionId`. O `ChallengeInterceptor` captura o erro.
+3. **Resolução de UI**: O `GlobalEventHandler` (no `:composeApp`) intercepta o evento `GlobalEvent.Challenge` disparado pelo engine e abre o diálogo de verificação (OTP).
+4. **Conclusão**: Após a validação do código pelo usuário, o `challengeToken` é validado no servidor e o interceptor **repete automaticamente** a requisição original, que agora é aprovada.
+
+### 🛠️ Implementação no Backend (DSL `challengePreference`)
+Para proteger rotas no `:server`, utilizamos uma DSL que abstrai a complexidade do desafio:
+
+```kotlin
+challengePreference(ChallengeType.OTP_EMAIL) {
+    post("/change-password") {
+        val request = call.receive<ChangePasswordRequest>()
+        // O token validado fica disponível via extensão da call
+        orchestrator.changePassword(request, call.challengeToken).collect { 
+            call.respond(HttpStatusCode.OK, it) 
+        }
+    }
+}
 ```
 
 ---
 
-## 🛠️ Implementação no Backend (BFF)
+## 📡 Global Events (Barramento de Eventos)
 
-Para proteger uma rota com MFA, siga este padrão no módulo `:server`:
+Utilizamos o `GlobalEventDispatcher` para manter o desacoplamento total entre Domain/Data e UI.
 
-### 1. No Controller/Routing
-Utilize o `ChallengeService` para validar se a transação atual já foi resolvida:
+### Como usar:
+Injete o `GlobalEventDispatcher` e dispare eventos de qualquer lugar (ViewModel, Repository, UseCase):
 
 ```kotlin
-post("/change") {
-    val transactionId = call.request.header("X-Transaction-ID")
-    val challengeStatus = challengeService.checkStatus(transactionId)
+val eventDispatcher: GlobalEventDispatcher by inject()
 
-    if (challengeStatus != ChallengeStatus.RESOLVED) {
-        // Lança o desafio 428 se não resolvido
-        val session = challengeService.createSession(ChallengeType.OTP_EMAIL)
-        call.respond(HttpStatusCode.PreconditionRequired, session)
-        return@post
-    }
-    
-    // Se chegou aqui, o desafio foi vencido! Prossegue com a lógica...
-}
+// Exibir um Snackbar automático
+eventDispatcher.tryEmit(GlobalEvent.Message("Sucesso!", GlobalEvent.MessageType.SUCCESS))
+
+// Forçar uma navegação
+eventDispatcher.tryEmit(GlobalEvent.Navigation(NavigationRoutes.HOME))
 ```
 
 ---
@@ -63,17 +91,30 @@ post("/change") {
 
 O DLearn utiliza um sistema de **Roteamento Genérico** que permite a criação de novas telas e fluxos sem a necessidade de novos deploys.
 
-### Gateway Genérico (`/v1/app`)
-O App utiliza o `AppRepository` para enviar requisições ao gateway:
-- **Request**: `{ "path": "profile/edit", "params": { "userId": "1" } }`
-- **Funcionamento**: O BFF recebe o `path` e o `AppOrchestrator` resolve qual `ScreenBuilder` deve montar a resposta SDUI.
+### 1. Gateway Genérico (`/v1/app`)
+O App utiliza o `AppRepository` para enviar requisições ao gateway.
+- **Request (JSON)**:
+  ```json
+  { "path": "watchlist", "params": { "movieId": "123" } }
+  ```
+- **Funcionamento**: O BFF recebe o `path` e o `AppOrchestrator` resolve qual `Screen` ou `Action` retornar.
+
+### 2. Navegação via AppAction
+O Backend controla o fluxo enviando objetos `AppAction.Navigation`:
+```json
+{
+  "type": "navigation",
+  "route": "app/favorite",
+  "params": { "category": "movies" }
+}
+```
 
 ---
 
 ## 🏗️ Estrutura do Projeto
 
-- **`:shared`**: Contratos, `GlobalEventDispatcher`, `ChallengeEngine` e lógica de rede Ktor.
-- **`:server`**: Ktor BFF, Orchestrators de SDUI e Gestão de Desafios.
+- **`:shared`**: Contratos, `GlobalEventDispatcher`, `ChallengeEngine` e `ChallengeInterceptor`.
+- **`:server`**: Ktor BFF, Orchestrators de SDUI e Gestão de Desafios via DSL.
 - **`:composeApp`**: UI Multiplatform, `GlobalEventHandler` (Consumidor de eventos) e Engine SDUI.
 
 ---

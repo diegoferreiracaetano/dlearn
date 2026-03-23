@@ -5,38 +5,40 @@ import java.util.Locale
 import java.util.ResourceBundle
 
 open class I18nProvider {
-    open fun getString(key: AppStringType, language: String): String {
-        // Normaliza o idioma: se vier en-US ou en_US, tenta usar o Locale correto
-        val cleanLang = language.replace("-", "_")
-        val locale = try {
-            if (cleanLang.contains("_")) {
-                val parts = cleanLang.split("_")
-                Locale(parts[0], parts[1])
-            } else {
-                Locale(cleanLang)
-            }
-        } catch (e: Exception) {
-            Locale.ENGLISH
-        }
-        
-        return try {
-            val bundle = ResourceBundle.getBundle("strings", locale)
-            bundle.getString(key.name.lowercase())
-        } catch (e: Exception) {
-            // Fallback: Tenta apenas o idioma (ex: se en_US falhar, tenta en)
-            try {
-                val languageOnlyLocale = Locale(locale.language)
-                val bundle = ResourceBundle.getBundle("strings", languageOnlyLocale)
-                bundle.getString(key.name.lowercase())
-            } catch (e2: Exception) {
-                // Fallback final: Inglês
-                try {
-                    val bundle = ResourceBundle.getBundle("strings", Locale.ENGLISH)
-                    bundle.getString(key.name.lowercase())
-                } catch (e3: Exception) {
-                    key.name
-                }
-            }
-        }
+
+    open fun getString(
+        key: AppStringType,
+        language: String
+    ): String {
+        val locale = language.toLocale()
+
+        return resolveString(key, locale)
+            ?: resolveString(key, Locale(locale.language))
+            ?: resolveString(key, Locale.ROOT) // Força o uso do strings.properties (base)
+            ?: key.name
+    }
+
+    private fun resolveString(
+        key: AppStringType,
+        locale: Locale
+    ): String? {
+        return runCatching {
+            // Usamos ResourceBundle.Control para evitar que o Java pegue o Locale padrão da máquina (System Locale)
+            val control = ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES)
+            ResourceBundle
+                .getBundle("strings", locale, control)
+                .getString(key.name.lowercase())
+        }.getOrNull()
+    }
+}
+
+private fun String.toLocale(): Locale {
+    val clean = replace("-", "_")
+    val parts = clean.split("_")
+
+    return when (parts.size) {
+        2 -> Locale(parts[0], parts[1])
+        1 -> Locale(parts[0])
+        else -> Locale.ENGLISH
     }
 }

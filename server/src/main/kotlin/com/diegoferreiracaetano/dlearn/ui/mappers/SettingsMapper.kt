@@ -24,15 +24,11 @@ class SettingsMapper(private val i18n: I18nProvider) {
         )
 
         return languages.map { (code, name) ->
-            // Comparação ignorando case e espaços para evitar desvios no Header
-            val isSelected = currentLang.trim().equals(code.trim(), ignoreCase = true)
-            println("DEBUG: SettingsMapper - Comparison [${code.trim()}] == [${currentLang.trim()}] -> $isSelected")
-            
             AppSelectionRowComponent(
                 title = name,
                 preferenceKey = "pref_language",
                 value = code,
-                isSelected = isSelected
+                isSelected = currentLang.trim().equals(code.trim(), ignoreCase = true)
             )
         }
     }
@@ -45,14 +41,11 @@ class SettingsMapper(private val i18n: I18nProvider) {
         )
 
         return countries.map { (code, name) ->
-            val isSelected = currentCountry?.trim().equals(code.trim(), ignoreCase = true)
-            println("DEBUG: SettingsMapper - Comparison [${code.trim()}] == [${currentCountry?.trim()}] -> $isSelected")
-
             AppSelectionRowComponent(
                 title = name,
                 preferenceKey = "pref_country",
                 value = code,
-                isSelected = isSelected
+                isSelected = currentCountry?.trim().equals(code.trim(), ignoreCase = true)
             )
         }
     }

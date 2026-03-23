@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DLearn</string>
+    <string name="app_subtitle">Plataforma de aprendizaje</string>
+
+    <string name="title_email">Correo electrónico</string>
+    <string name="title_password">Contraseña</string>
+    <string name="title_name">Nombre</string>
+    <string name="title_change_name">Cambiar nombre</string>
+    <string name="title_change_password">Cambiar contraseña</string>
+
+    <string name="otp_error_default">Código inválido. Inténtalo de nuevo.</string>
+    <string name="otp_resend_prompt">¿No recibiste el código? </string>
+    <string name="otp_resend_now">Reenviar ahora</string>
+    <string name="otp_resend_in">Reenviar en %1$s</string>
+
+    <string name="email_message_validation">Ingresa un correo electrónico válido.</string>
+    <string name="password_message_validation">Usa una contraseña válida.</string>
+
+    <string name="login_screen_title">¡Bienvenido de nuevo!</string>
+    <string name="login_screen_subtitle">Por favor, introduce tus datos.</string>
+    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_action">Iniciar sesión</string>
+
+    <string name="signup_screen_title">Empecemos</string>
+    <string name="signup_screen_subtitle">Las últimas películas y series están aquí</string>
+    <string name="signup_agree_terms">Acepto los Términos de Servicio y la Política de Privacidad</string>
+    <string name="signup_action">Registrarse</string>
+
+    <string name="onboarding_title_1">El mayor streaming de películas locales e internacionales</string>
+    <string name="onboarding_description_1">Semper in cursus magna et eu varius nunc adipiscing. Elementum justo, laoreet id sem varius parturient.</string>
+    <string name="onboarding_title_2">Ofrece visualización de alta calidad sin anuncios</string>
+    <string name="onboarding_description_2">Semper in cursus magna et eu varius nunc adipiscing. Elementum justo, laoreet id sem varius parturient.</string>
+    <string name="onboarding_title_3">Nuestro servicio reúne tus series favoritas</string>
+    <string name="onboarding_description_3">Semper in cursus magna et eu varius nunc adipiscing. Elementum justo, laoreet id sem varius parturient.</string>
+
+    <string name="onboarding_already_have_account">¿Ya tienes una cuenta? </string>
+    <string name="onboarding_or_signup_with">O regístrate con</string>
+
+    <string name="reset_password_title">Restablecer contraseña</string>
+    <string name="reset_password_subtitle">Recupera la contraseña de tu cuenta</string>
+    <string name="reset_password_action">Siguiente</string>
+
+    <string name="verify_account_title">Verificando tu cuenta</string>
+    <string name="verify_account_subtitle">Acabamos de enviar un código de 4 dígitos a tu correo</string>
+    <string name="verify_account_action">Continuar</string>
+
+    <string name="create_password_title">Crear nueva contraseña</string>
+    <string name="create_password_subtitle">Introduce tu nueva contraseña</string>
+    <string name="create_password_action">Restablecer</string>
+    <string name="create_password_confirm">Confirmar contraseña</string>
+
+    <string name="action_back">Volver</string>
+    <string name="action_favorite">Favorito</string>
+    <string name="action_watch">Ver</string>
+    <string name="action_add_to_list">Mi lista</string>
+    <string name="error_provider_link">No se pudo abrir el enlace del proveedor en este momento.</string>
+
+    <string name="watchlist_empty_title">Tu lista está vacía</string>
+    <string name="watchlist_empty_description">Guarda películas y series para verlas más tarde y aparecerán aquí.</string>
+
+    <!-- Profile & Edit Profile -->
+    <string name="profile_title">Perfil</string>
+    <string name="home_title">Inicio</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_watchlist">Mi lista</string>
+    <string name="nav_search">Buscar</string>
+    <string name="nav_favorites">Favoritos</string>
+    <string name="nav_profile">Perfil</string>
+    <string name="edit_profile_title">Editar perfil</string>
+    <string name="field_full_name">Nombre completo</string>
+    <string name="field_email">Correo electrónico</string>
+    <string name="field_password">Contraseña</string>
+    <string name="field_phone_number">Número de teléfono</string>
+    <string name="save_changes">Guardar cambios</string>
+    <string name="update_profile_success">¡Perfil actualizado con éxito!</string>
+    <string name="update_profile_error">Error al actualizar el perfil.</string>
+
+    <!-- Settings & Dialogs -->
+    <string name="clear_cache_dialog_title">¿Estás seguro?</string>
+    <string name="clear_cache_dialog_description">Ullamcorper imperdiet urna id non sed est sem. Rhoncus amet, enim purus gravida donec aliquet.</string>
+    <string name="clear_cache_confirm">Cerrar sesión</string>
+    <string name="clear_cache_cancel">Cancelar</string>
+</resources>

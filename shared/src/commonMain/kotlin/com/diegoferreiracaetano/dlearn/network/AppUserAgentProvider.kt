@@ -16,7 +16,6 @@ class AppUserAgentProvider(
             language = preferencesRepository.language,
             country = preferencesRepository.country
         )
-        println("DEBUG: AppUserAgentProvider.get() -> Language: ${agent.language}, Country: ${agent.country}")
         return agent
     }
 }

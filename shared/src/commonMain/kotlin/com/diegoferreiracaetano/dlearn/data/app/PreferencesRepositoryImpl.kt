@@ -1,71 +1,62 @@
 package com.diegoferreiracaetano.dlearn.data.app
 
-import com.diegoferreiracaetano.dlearn.data.source.local.KeyValueStorage
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import com.russhwolf.settings.Settings
+import com.russhwolf.settings.set
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
-class PreferencesRepositoryImpl(
-    private val storage: KeyValueStorage
-) : PreferencesRepository {
+class PreferencesRepositoryImpl(private val settings: Settings) : PreferencesRepository {
 
-    companion object {
-        private const val PREF_LANGUAGE = "pref_language"
-        private const val PREF_COUNTRY = "pref_country"
-        private const val PREF_NOTIFICATIONS = "pref_notifications"
-        
-        private const val DEFAULT_LANGUAGE = "pt-BR"
-        private const val DEFAULT_COUNTRY = "BR"
-        private const val DEFAULT_NOTIFICATIONS = true
-    }
+    private val _onConfigurationChanged = MutableSharedFlow<Unit>(replay = 0)
+    override val onConfigurationChanged: SharedFlow<Unit> = _onConfigurationChanged.asSharedFlow()
 
     override var language: String
-        get() = storage.get(PREF_LANGUAGE, DEFAULT_LANGUAGE)
+        get() = settings.getString(KEY_LANGUAGE, DEFAULT_LANGUAGE)
         set(value) {
-            println("DEBUG: Saving Language: $value")
-            storage.put(PREF_LANGUAGE, value)
+            settings[KEY_LANGUAGE] = value
+            notifyChange()
         }
 
     override var country: String
-        get() = storage.get(PREF_COUNTRY, DEFAULT_COUNTRY)
+        get() = settings.getString(KEY_COUNTRY, DEFAULT_COUNTRY)
         set(value) {
-            println("DEBUG: Saving Country: $value")
-            storage.put(PREF_COUNTRY, value)
+            settings[KEY_COUNTRY] = value
+            notifyChange()
         }
 
     override var notificationsEnabled: Boolean
-        get() = storage.get(PREF_NOTIFICATIONS, DEFAULT_NOTIFICATIONS)
+        get() = settings.getBoolean(KEY_NOTIFICATIONS, DEFAULT_NOTIFICATIONS)
         set(value) {
-            println("DEBUG: Saving Notifications: $value")
-            storage.put(PREF_NOTIFICATIONS, value)
+            settings[KEY_NOTIFICATIONS] = value
+            notifyChange()
         }
 
     override fun updatePreference(key: String, value: String) {
-        println("DEBUG: updatePreference(key=$key, value=$value)")
         when (key) {
-            PREF_LANGUAGE -> language = value
-            PREF_COUNTRY -> country = value
-            PREF_NOTIFICATIONS -> {
-               notificationsEnabled = value.toBoolean()
-            }
+            KEY_LANGUAGE -> language = value
+            KEY_COUNTRY -> country = value
+            KEY_NOTIFICATIONS -> notificationsEnabled = value.toBooleanStrictOrNull() ?: DEFAULT_NOTIFICATIONS
         }
     }
 
-    override val onConfigurationChanged: Flow<Unit> = combine(
-        storage.getFlow(PREF_LANGUAGE, DEFAULT_LANGUAGE),
-        storage.getFlow(PREF_COUNTRY, DEFAULT_COUNTRY),
-        storage.getFlow(PREF_NOTIFICATIONS, DEFAULT_NOTIFICATIONS)
-    ) { l, c, n -> 
-        println("DEBUG: Configuration Flow emitted: L=$l, C=$c, N=$n")
-        listOf(l, c, n) 
-    }
-        .distinctUntilChanged()
-        .map { }
-
     override fun clear() {
-        storage.clear()
+        settings.clear()
+        notifyChange()
+    }
+
+    private fun notifyChange() {
+        _onConfigurationChanged.tryEmit(Unit)
+    }
+
+    companion object {
+        const val KEY_LANGUAGE = "pref_language"
+        const val KEY_COUNTRY = "pref_country"
+        const val KEY_NOTIFICATIONS = "pref_notifications"
+
+        const val DEFAULT_LANGUAGE = "pt-BR"
+        const val DEFAULT_COUNTRY = "BR"
+        const val DEFAULT_NOTIFICATIONS = true
     }
 }

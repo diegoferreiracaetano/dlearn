@@ -105,5 +105,10 @@ val sharedModule = module {
     single<MovieDetailRepository> { MovieDetailRepositoryRemote(get()) }
     single<MainRepository> { MainRepositoryRemote(get()) }
     single<SearchRepository> { SearchRepositoryRemote(get()) }
-    single<AppRepository> { AppRepositoryRemote(get()) }
+    single<AppRepository> { 
+        AppRepositoryRemote(
+            httpClient = get(), 
+            baseUrl = "http://192.168.15.3:8081"
+        ) 
+    }
 }

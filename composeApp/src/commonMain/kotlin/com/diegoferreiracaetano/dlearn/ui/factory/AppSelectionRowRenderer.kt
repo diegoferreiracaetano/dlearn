@@ -20,7 +20,6 @@ class AppSelectionRowRenderer : ComponentRenderer {
             label = selectionRow.title,
             isSelected = selectionRow.isSelected,
             onClick = {
-                println("DEBUG: AppSelectionRowRenderer - onClick ${selectionRow.toString()} ")
                 actions.onSelectChanged(selectionRow.preferenceKey, selectionRow.value)
             },
             modifier = modifier

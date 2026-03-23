@@ -18,8 +18,8 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes.extractPath
 import com.diegoferreiracaetano.dlearn.network.AppUserAgent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
-import io.ktor.client.plugins.UserAgentConfig
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class AppOrchestrator(
     private val homeOrchestrator: HomeOrchestrator,
@@ -49,7 +49,9 @@ class AppOrchestrator(
             MOVIE_DETAIL -> movieDetailOrchestrator.execute(request, userId, userAgent)
             WELCOME -> mainOrchestrator.execute(request, userId, userAgent)
             VERIFY_ACCOUNT -> verifyAccountOrchestrator.execute(request, userId, userAgent)
-            SETTINGS_NOTIFICATIONS, SETTINGS_LANGUAGE, SETTINGS_COUNTRY -> settingsOrchestrator.execute(request, userId, userAgent)
+            SETTINGS_NOTIFICATIONS, SETTINGS_LANGUAGE, SETTINGS_COUNTRY -> flow {
+                emit(settingsOrchestrator.execute(request.path, userAgent))
+            }
             else -> throw IllegalArgumentException("Invalid path: ${request.path} (extracted: $path)")
         }
     }

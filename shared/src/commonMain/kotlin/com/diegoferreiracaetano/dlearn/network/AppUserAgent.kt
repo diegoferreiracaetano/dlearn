@@ -24,17 +24,14 @@ data class AppUserAgent(
                 val (appName, appVersion) = if (appPart.contains("/")) appPart.split("/") else listOf(appPart, "1.0.0")
                 val parts = infoPart.split(";").map { it.trim() }
 
-                val agent = AppUserAgent(
+                AppUserAgent(
                     appName = appName,
                     appVersion = appVersion,
                     deviceName = parts.getOrNull(0) ?: "",
                     language = parts.getOrNull(1) ?: "pt-BR",
                     country = parts.getOrNull(2) ?: "BR"
                 )
-                println("DEBUG: AppUserAgent.fromHeader -> Extracted Lang: ${agent.language}, Country: ${agent.country}")
-                agent
             } catch (e: Exception) {
-                println("DEBUG: AppUserAgent.fromHeader -> ERROR: ${e.message}")
                 AppUserAgent("DLearn", "1.0.0", "Unknown", "pt-BR", "BR")
             }
         }

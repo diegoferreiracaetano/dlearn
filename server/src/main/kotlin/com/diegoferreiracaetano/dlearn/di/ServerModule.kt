@@ -75,7 +75,7 @@ val serverModule = module {
     // Settings
     single { SettingsMapper(get()) }
     single { SettingsScreenBuilder(get(), get()) }
-    single { SettingsOrchestrator(get(), get()) }
+    single { SettingsOrchestrator(get()) }
 
     // Movie Detail
     single { MovieDetailDataService(get(), get()) }

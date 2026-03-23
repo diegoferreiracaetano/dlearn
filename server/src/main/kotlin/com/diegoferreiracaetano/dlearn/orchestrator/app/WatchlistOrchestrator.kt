@@ -43,7 +43,7 @@ class WatchlistOrchestrator(
             val videos = watchlistIds.map { id ->
                 async {
                     runCatching {
-                        tmdbClient.getMovieDetail(id).toVideo(MediaType.MOVIE)
+                        tmdbClient.getMovieDetail(id, lang).toVideo(MediaType.MOVIE)
                     }.getOrNull()
                 }
             }.awaitAll().filterNotNull()

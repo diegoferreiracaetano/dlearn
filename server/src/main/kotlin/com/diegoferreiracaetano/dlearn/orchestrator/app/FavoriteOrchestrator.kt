@@ -44,7 +44,7 @@ class FavoriteOrchestrator(
             val videos = favoriteIds.map { id ->
                 async {
                     runCatching {
-                        tmdbClient.getMovieDetail(id).toVideo(MediaType.MOVIE)
+                        tmdbClient.getMovieDetail(id, lang).toVideo(MediaType.MOVIE)
                     }.getOrNull()
                 }
             }.awaitAll().filterNotNull()

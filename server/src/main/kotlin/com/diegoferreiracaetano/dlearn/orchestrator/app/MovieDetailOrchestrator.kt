@@ -26,9 +26,10 @@ class MovieDetailOrchestrator(
         val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
             ?: throw IllegalArgumentException("MovieId missing")
 
-        val screen = detailCache.getOrPut("$movieId-${userAgent.appVersion}-${userAgent.language}") {
-            val domainData = getMovieDetailUseCase.execute(movieId)
-            screenBuilder.build(domainData, userAgent.language)
+        val language = userAgent.language
+        val screen = detailCache.getOrPut("$movieId-${userAgent.appVersion}-$language") {
+            val domainData = getMovieDetailUseCase.execute(movieId, language)
+            screenBuilder.build(domainData, language)
         }
         emit(screen)
     }

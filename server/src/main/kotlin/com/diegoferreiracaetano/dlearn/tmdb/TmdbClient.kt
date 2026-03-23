@@ -1,9 +1,8 @@
 package com.diegoferreiracaetano.dlearn.tmdb
 
-import com.diegoferreiracaetano.dlearn.TmdbConstants
 import com.diegoferreiracaetano.dlearn.model.TmdbGenresResponse
-import com.diegoferreiracaetano.dlearn.model.TmdbListResponse
 import com.diegoferreiracaetano.dlearn.model.TmdbItemRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbListResponse
 import com.diegoferreiracaetano.dlearn.model.TmdbMovieDetailRemote
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_API_KEY
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_BASE_URL
@@ -29,57 +28,61 @@ class TmdbClient {
         }
     }
 
-    private suspend inline fun <reified T> get(path: String, params: Map<String, Any> = emptyMap()): T {
+    private suspend inline fun <reified T> get(
+        path: String,
+        language: String,
+        params: Map<String, Any> = emptyMap()
+    ): T {
         return client.get("$baseUrl$path") {
             parameter("api_key", apiKey)
-            parameter("language", TmdbConstants.LANGUAGE_PT_BR)
+            parameter("language", language)
             params.forEach { (key, value) ->
                 parameter(key, value)
             }
         }.body()
     }
 
-    suspend fun getPopularMovies(): TmdbListResponse<TmdbItemRemote> {
-        return get("/movie/popular")
+    suspend fun getPopularMovies(language: String): TmdbListResponse<TmdbItemRemote> {
+        return get("/movie/popular", language)
     }
 
-    suspend fun getPopularSeries(): TmdbListResponse<TmdbItemRemote> {
-        return get("/tv/popular")
+    suspend fun getPopularSeries(language: String): TmdbListResponse<TmdbItemRemote> {
+        return get("/tv/popular", language)
     }
 
-    suspend fun getTopRatedMovies(): TmdbListResponse<TmdbItemRemote> {
-        return get("/movie/top_rated")
+    suspend fun getTopRatedMovies(language: String): TmdbListResponse<TmdbItemRemote> {
+        return get("/movie/top_rated", language)
     }
 
-    suspend fun getTopRatedSeries(): TmdbListResponse<TmdbItemRemote> {
-        return get("/tv/top_rated")
+    suspend fun getTopRatedSeries(language: String): TmdbListResponse<TmdbItemRemote> {
+        return get("/tv/top_rated", language)
     }
 
-    suspend fun getMovieGenres(): TmdbGenresResponse {
-        return get("/genre/movie/list")
+    suspend fun getMovieGenres(language: String): TmdbGenresResponse {
+        return get("/genre/movie/list", language)
     }
 
-    suspend fun getTvGenres(): TmdbGenresResponse {
-        return get("/genre/tv/list")
+    suspend fun getTvGenres(language: String): TmdbGenresResponse {
+        return get("/genre/tv/list", language)
     }
 
-    suspend fun getMoviesByGenre(genreId: Int): TmdbListResponse<TmdbItemRemote> {
-        return get("/discover/movie", mapOf("with_genres" to genreId))
+    suspend fun getMoviesByGenre(genreId: Int, language: String): TmdbListResponse<TmdbItemRemote> {
+        return get("/discover/movie", language, mapOf("with_genres" to genreId))
     }
 
-    suspend fun getTvByGenre(genreId: Int): TmdbListResponse<TmdbItemRemote> {
-        return get("/discover/tv", mapOf("with_genres" to genreId))
+    suspend fun getTvByGenre(genreId: Int, language: String): TmdbListResponse<TmdbItemRemote> {
+        return get("/discover/tv", language, mapOf("with_genres" to genreId))
     }
 
-    suspend fun getMovieDetail(movieId: String): TmdbMovieDetailRemote {
-        return get("/movie/$movieId", mapOf("append_to_response" to "credits,videos,watch/providers,external_ids"))
+    suspend fun getMovieDetail(movieId: String, language: String): TmdbMovieDetailRemote {
+        return get("/movie/$movieId", language, mapOf("append_to_response" to "credits,videos,watch/providers,external_ids"))
     }
 
-    suspend fun getTvShowDetail(tvId: String): TmdbMovieDetailRemote {
-        return get("/tv/$tvId", mapOf("append_to_response" to "credits,videos,watch/providers,external_ids"))
+    suspend fun getTvShowDetail(tvId: String, language: String): TmdbMovieDetailRemote {
+        return get("/tv/$tvId", language, mapOf("append_to_response" to "credits,videos,watch/providers,external_ids"))
     }
 
-    suspend fun searchMulti(query: String): TmdbListResponse<TmdbItemRemote> {
-        return get("/search/multi", mapOf("query" to query))
+    suspend fun searchMulti(query: String, language: String): TmdbListResponse<TmdbItemRemote> {
+        return get("/search/multi", language, mapOf("query" to query))
     }
 }

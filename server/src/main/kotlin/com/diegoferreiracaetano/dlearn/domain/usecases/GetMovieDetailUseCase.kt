@@ -4,7 +4,7 @@ import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
 import com.diegoferreiracaetano.dlearn.infrastructure.services.MovieDetailDataService
 
 class GetMovieDetailUseCase(private val movieDetailDataService: MovieDetailDataService) {
-    suspend fun execute(movieId: String): MovieDetailDomainData {
-        return movieDetailDataService.fetchMovieDetail(movieId)
+    suspend fun execute(movieId: String, language: String): MovieDetailDomainData {
+        return movieDetailDataService.fetchMovieDetail(movieId, language)
     }
 }

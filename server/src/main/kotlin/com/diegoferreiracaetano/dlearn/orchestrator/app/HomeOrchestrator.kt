@@ -22,15 +22,17 @@ class HomeOrchestrator(
         userId: String,
         userAgent: AppUserAgent
     ): Flow<Screen> = flow {
-        
+
         val type = request.params?.get("type")?.let {
             runCatching { HomeFilterType.valueOf(it) }.getOrNull()
         } ?: HomeFilterType.ALL
 
-        val cacheKey = "$userId-${userAgent.appVersion}-${userAgent.language}-$type"
+        val language = userAgent.language
+        val cacheKey = "$userId-${userAgent.appVersion}-$language-$type"
+        
         val screen = homeCache.getOrPut(cacheKey) {
-            val domainData = getHomeDataUseCase.execute(userId, type)
-            screenBuilder.build(domainData, userAgent.language)
+            val domainData = getHomeDataUseCase.execute(userId, language, type)
+            screenBuilder.build(domainData, language)
         }
         emit(screen)
     }

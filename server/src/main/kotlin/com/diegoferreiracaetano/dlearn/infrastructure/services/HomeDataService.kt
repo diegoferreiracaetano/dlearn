@@ -12,32 +12,33 @@ import kotlinx.coroutines.coroutineScope
 class HomeDataService(private val tmdbClient: TmdbClient) {
     suspend fun fetchHomeData(
         userId: String,
+        language: String,
         type: HomeFilterType = HomeFilterType.ALL
     ): HomeDomainData = coroutineScope {
-        val movieGenres = async { tmdbClient.getMovieGenres().genres }
-        val tvGenres = async { tmdbClient.getTvGenres().genres }
-        
+        val movieGenres = async { tmdbClient.getMovieGenres(language).genres }
+        val tvGenres = async { tmdbClient.getTvGenres(language).genres }
+
         val genres = if (type == HomeFilterType.SERIES) tvGenres.await()
         else movieGenres.await()
 
         val popularMoviesDeferred = async {
             if (type == HomeFilterType.SERIES) emptyList<Video>()
-            else tmdbClient.getPopularMovies().results.map { it.toVideo(MediaType.MOVIE, movieGenres.await()) }
+            else tmdbClient.getPopularMovies(language).results.map { it.toVideo(MediaType.MOVIE, movieGenres.await()) }
         }
 
         val popularSeriesDeferred = async {
             if (type == HomeFilterType.MOVIE) emptyList<Video>()
-            else tmdbClient.getPopularSeries().results.map { it.toVideo(MediaType.SERIES, tvGenres.await()) }
+            else tmdbClient.getPopularSeries(language).results.map { it.toVideo(MediaType.SERIES, tvGenres.await()) }
         }
 
         val topRatedMoviesDeferred = async {
             if (type == HomeFilterType.SERIES) emptyList<Video>()
-            else tmdbClient.getTopRatedMovies().results.map { it.toVideo(MediaType.MOVIE, movieGenres.await()) }
+            else tmdbClient.getTopRatedMovies(language).results.map { it.toVideo(MediaType.MOVIE, movieGenres.await()) }
         }
 
         val topRatedSeriesDeferred = async {
             if (type == HomeFilterType.MOVIE) emptyList<Video>()
-            else tmdbClient.getTopRatedSeries().results.map { it.toVideo(MediaType.SERIES, tvGenres.await()) }
+            else tmdbClient.getTopRatedSeries(language).results.map { it.toVideo(MediaType.SERIES, tvGenres.await()) }
         }
 
         val popularMovies = popularMoviesDeferred.await()
@@ -48,9 +49,9 @@ class HomeDataService(private val tmdbClient: TmdbClient) {
         val categoryVideosMap = genres.take(4).associate { category ->
             category.name to async {
                 if (type == HomeFilterType.SERIES) {
-                    tmdbClient.getTvByGenre(category.id).results.map { it.toVideo(MediaType.SERIES, tvGenres.await()) }
+                    tmdbClient.getTvByGenre(category.id, language).results.map { it.toVideo(MediaType.SERIES, tvGenres.await()) }
                 } else {
-                    tmdbClient.getMoviesByGenre(category.id).results.map { it.toVideo(MediaType.MOVIE, movieGenres.await()) }
+                    tmdbClient.getMoviesByGenre(category.id, language).results.map { it.toVideo(MediaType.MOVIE, movieGenres.await()) }
                 }
             }
         }.mapValues { it.value.await() }

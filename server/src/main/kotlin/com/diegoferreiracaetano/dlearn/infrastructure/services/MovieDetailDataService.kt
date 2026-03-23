@@ -12,12 +12,12 @@ class MovieDetailDataService(
     private val tmdbClient: TmdbClient,
     private val tmdbMapper: TmdbMapper
 ) {
-    suspend fun fetchMovieDetail(movieId: String): MovieDetailDomainData {
+    suspend fun fetchMovieDetail(movieId: String, language: String): MovieDetailDomainData {
         val response = try {
-            tmdbClient.getMovieDetail(movieId)
+            tmdbClient.getMovieDetail(movieId, language)
         } catch (_: Exception) {
             // Fallback to TV show if movie is not found, or vice-versa
-            tmdbClient.getTvShowDetail(movieId)
+            tmdbClient.getTvShowDetail(movieId, language)
         }
 
         return tmdbMapper.toMovieDetail(response)

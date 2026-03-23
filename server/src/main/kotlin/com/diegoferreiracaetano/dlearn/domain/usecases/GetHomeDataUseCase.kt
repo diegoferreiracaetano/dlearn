@@ -7,8 +7,9 @@ import com.diegoferreiracaetano.dlearn.infrastructure.services.HomeDataService
 class GetHomeDataUseCase(private val homeDataService: HomeDataService) {
     suspend fun execute(
         userId: String,
+        language: String,
         type: HomeFilterType = HomeFilterType.ALL
     ): HomeDomainData {
-        return homeDataService.fetchHomeData(userId, type)
+        return homeDataService.fetchHomeData(userId, language, type)
     }
 }

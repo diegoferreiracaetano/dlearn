@@ -6,6 +6,7 @@ import com.diegoferreiracaetano.dlearn.infrastructure.cache.InMemoryCache
 import com.diegoferreiracaetano.dlearn.ui.screens.HomeScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.util.AppRequestContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.time.Duration.Companion.minutes
@@ -19,17 +20,18 @@ class HomeOrchestrator(
     override fun execute(
         request: AppRequest,
         userId: String,
-        lang: String,
-        appVersion: Int
+        userAgent: String
     ): Flow<Screen> = flow {
+        val context = AppRequestContext.fromUserAgent(userAgent)
+        
         val type = request.params?.get("type")?.let {
             runCatching { HomeFilterType.valueOf(it) }.getOrNull()
         } ?: HomeFilterType.ALL
 
-        val cacheKey = "$userId-$appVersion-$lang-$type"
+        val cacheKey = "$userId-${context.appVersion}-${context.lang}-$type"
         val screen = homeCache.getOrPut(cacheKey) {
             val domainData = getHomeDataUseCase.execute(userId, type)
-            screenBuilder.build(domainData, appVersion, lang, type)
+            screenBuilder.build(domainData, context.appVersion, context.lang, type)
         }
         emit(screen)
     }

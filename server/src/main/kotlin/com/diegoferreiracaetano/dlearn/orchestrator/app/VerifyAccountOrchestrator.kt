@@ -12,8 +12,7 @@ class VerifyAccountOrchestrator(
     override fun execute(
         request: AppRequest,
         userId: String,
-        lang: String,
-        appVersion: Int
+        userAgent: String
     ): Flow<Screen> = flow {
         emit(verifyAccountScreenBuilder.build())
     }

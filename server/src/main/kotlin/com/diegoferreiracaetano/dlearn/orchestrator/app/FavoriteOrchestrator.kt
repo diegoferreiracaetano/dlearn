@@ -9,6 +9,7 @@ import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.FavoriteScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.util.AppRequestContext
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -25,14 +26,14 @@ class FavoriteOrchestrator(
     override fun execute(
         request: AppRequest,
         userId: String,
-        lang: String,
-        appVersion: Int
+        userAgent: String
     ): Flow<Screen> {
+        val context = AppRequestContext.fromUserAgent(userAgent)
         val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
         return if (movieId != null) {
-            toggleFavorite(userId, movieId, lang)
+            toggleFavorite(userId, movieId, context.lang)
         } else {
-            getFavorite(userId, lang)
+            getFavorite(userId, context.lang)
         }
     }
 

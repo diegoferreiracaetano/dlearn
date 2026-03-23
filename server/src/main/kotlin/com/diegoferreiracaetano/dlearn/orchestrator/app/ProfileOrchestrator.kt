@@ -10,6 +10,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppSnackbarType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.util.AppRequestContext
 import com.diegoferreiracaetano.dlearn.util.getLogger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -26,14 +27,14 @@ class ProfileOrchestrator(
     override fun execute(
         request: AppRequest,
         userId: String,
-        lang: String,
-        appVersion: Int
+        userAgent: String
     ): Flow<Screen> {
+        val context = AppRequestContext.fromUserAgent(userAgent)
         val path = NavigationRoutes.extractPath(request.path)
         return when (path) {
-            NavigationRoutes.PROFILE -> getProfileData(userId, appVersion, lang)
-            NavigationRoutes.EDIT_PROFILE -> getEditProfileData(userId, lang)
-            NavigationRoutes.UPDATE_PROFILE -> updateProfile(userId, request.params ?: emptyMap(), lang)
+            NavigationRoutes.PROFILE -> getProfileData(userId, context.appVersion, context.lang)
+            NavigationRoutes.EDIT_PROFILE -> getEditProfileData(userId, context.lang)
+            NavigationRoutes.UPDATE_PROFILE -> updateProfile(userId, request.params ?: emptyMap(), context.lang)
             else -> throw IllegalArgumentException("Invalid profile path: $path")
         }
     }

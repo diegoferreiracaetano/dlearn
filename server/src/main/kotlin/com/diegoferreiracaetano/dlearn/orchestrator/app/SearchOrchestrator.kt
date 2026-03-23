@@ -6,6 +6,7 @@ import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.SearchScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.util.AppRequestContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -19,14 +20,14 @@ class SearchOrchestrator(
     override fun execute(
         request: AppRequest,
         userId: String,
-        lang: String,
-        appVersion: Int
+        userAgent: String
     ): Flow<Screen> {
+        val context = AppRequestContext.fromUserAgent(userAgent)
         val query = request.params?.get("q")
         return if (query != null) {
-            searchContent(userId, lang, query)
+            searchContent(userId, context.lang, query)
         } else {
-            searchMain(userId, lang)
+            searchMain(userId, context.lang)
         }
     }
 

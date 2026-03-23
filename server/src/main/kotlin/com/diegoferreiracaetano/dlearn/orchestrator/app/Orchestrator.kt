@@ -8,7 +8,6 @@ interface Orchestrator {
     fun execute(
         request: AppRequest,
         userId: String,
-        lang: String,
-        appVersion: Int
+        userAgent: String
     ): Flow<Screen>
 }

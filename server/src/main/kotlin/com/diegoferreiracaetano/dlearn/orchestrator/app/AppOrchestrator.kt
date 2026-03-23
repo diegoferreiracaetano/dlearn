@@ -34,21 +34,20 @@ class AppOrchestrator(
     override fun execute(
         request: AppRequest,
         userId: String,
-        lang: String,
-        appVersion: Int
+        userAgent: String
     ): Flow<Screen> {
         val path = extractPath(request.path)
         return when (path) {
-            HOME -> homeOrchestrator.execute(request, userId, lang, appVersion)
-            FAVORITE -> favoriteOrchestrator.execute(request, userId, lang, appVersion)
-            WATCHLIST -> watchlistOrchestrator.execute(request, userId, lang, appVersion)
-            PROFILE, EDIT_PROFILE, UPDATE_PROFILE -> profileOrchestrator.execute(request, userId, lang, appVersion)
-            FAQ -> faqOrchestrator.execute(request, userId, lang, appVersion)
-            SEARCH -> searchOrchestrator.execute(request, userId, lang, appVersion)
-            MOVIE_DETAIL -> movieDetailOrchestrator.execute(request, userId, lang, appVersion)
-            WELCOME -> mainOrchestrator.execute(request, userId, lang, appVersion)
-            VERIFY_ACCOUNT -> verifyAccountOrchestrator.execute(request, userId, lang, appVersion)
-            SETTINGS_NOTIFICATIONS, SETTINGS_LANGUAGE, SETTINGS_COUNTRY -> settingsOrchestrator.execute(request, userId, lang, appVersion)
+            HOME -> homeOrchestrator.execute(request, userId, userAgent)
+            FAVORITE -> favoriteOrchestrator.execute(request, userId, userAgent)
+            WATCHLIST -> watchlistOrchestrator.execute(request, userId, userAgent)
+            PROFILE, EDIT_PROFILE, UPDATE_PROFILE -> profileOrchestrator.execute(request, userId, userAgent)
+            FAQ -> faqOrchestrator.execute(request, userId, userAgent)
+            SEARCH -> searchOrchestrator.execute(request, userId, userAgent)
+            MOVIE_DETAIL -> movieDetailOrchestrator.execute(request, userId, userAgent)
+            WELCOME -> mainOrchestrator.execute(request, userId, userAgent)
+            VERIFY_ACCOUNT -> verifyAccountOrchestrator.execute(request, userId, userAgent)
+            SETTINGS_NOTIFICATIONS, SETTINGS_LANGUAGE, SETTINGS_COUNTRY -> settingsOrchestrator.execute(request, userId, userAgent)
             else -> throw IllegalArgumentException("Invalid path: ${request.path} (extracted: $path)")
         }
     }

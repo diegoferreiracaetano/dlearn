@@ -1,6 +1,6 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
-import com.diegoferreiracaetano.dlearn.network.AppUserAgent
+import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.orchestrator.app.MainOrchestrator
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import io.ktor.http.HttpHeaders.UserAgent
@@ -19,14 +19,21 @@ fun Route.mainController() {
         get {
             val userId = call.request.queryParameters["userId"] ?: "guest"
             val userAgentHeader = call.request.header(UserAgent) ?: ""
-            val userAgent = AppUserAgent.fromHeader(userAgentHeader)
+            val languageHeader = call.request.header("Accept-Language") ?: "en"
+            val countryHeader = call.request.header("X-Country")
+
+            val header = AppHeader(
+                paramUserAgent = userAgentHeader,
+                paramLanguage = languageHeader,
+                paramCountry = countryHeader,
+                userId = userId
+            )
 
             val request = AppRequest(path = "/main")
 
             orchestrator.execute(
                 request = request,
-                userId = userId,
-                userAgent = userAgent
+                header = header
             ).collect { screen ->
                 call.respond(screen)
             }

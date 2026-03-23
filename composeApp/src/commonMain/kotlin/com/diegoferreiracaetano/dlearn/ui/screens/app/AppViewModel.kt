@@ -3,7 +3,6 @@ package com.diegoferreiracaetano.dlearn.ui.screens.app
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.collectIn
@@ -17,14 +16,17 @@ class AppViewModel(
     val uiState = _uiState.asStateFlow()
 
     private var formData: Map<String, String> = emptyMap()
-    private var lastRequest: AppRequest? = null
+    private var lastPath: String? = null
+    private var lastParams: Map<String, String>? = null
 
     fun loadContent(path: String, params: Map<String, String>? = null) {
-        execute(AppRequest(path, params))
+        execute(path, params)
     }
 
     fun retry() {
-        lastRequest?.let(::execute)
+        lastPath?.let { path ->
+            execute(path, lastParams)
+        }
     }
 
     fun handleQuery(query: String) {
@@ -36,13 +38,14 @@ class AppViewModel(
 
     fun handleAction(path: String) {
         val params = formData
-        execute(AppRequest(path, params))
+        execute(path, params)
         formData = emptyMap()
     }
 
-    private fun execute(request: AppRequest) {
-        lastRequest = request
-        repository.execute(request.path, request.params, request.metadata)
+    private fun execute(path: String, params: Map<String, String>? = null) {
+        lastPath = path
+        lastParams = params
+        repository.execute(path = path, params = params)
             .collectIn(viewModelScope, _uiState)
     }
 }

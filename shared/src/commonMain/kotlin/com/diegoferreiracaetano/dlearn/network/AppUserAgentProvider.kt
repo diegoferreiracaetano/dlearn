@@ -9,13 +9,14 @@ class AppUserAgentProvider(
 ) {
 
     fun get(): AppUserAgent {
-        val agent = AppUserAgent(
+        return AppUserAgent(
             appName = "DLearn",
             appVersion = platform.appVersion,
-            deviceName = platform.name,
-            language = preferencesRepository.language,
-            country = preferencesRepository.country
+            deviceName = platform.name
         )
-        return agent
     }
+
+    // Métodos auxiliares para pegar os dados de localização que agora vão no Body/Header do Request
+    fun getLanguage(): String = preferencesRepository.language
+    fun getCountry(): String = preferencesRepository.country
 }

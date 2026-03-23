@@ -1,39 +1,44 @@
 package com.diegoferreiracaetano.dlearn.network
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+
+@Serializable
 data class AppUserAgent(
     val appName: String,
     val appVersion: String,
-    val deviceName: String,
-    val language: String,
-    val country: String
+    val deviceName: String
 ) {
-
-    fun toHeader(): String {
-        return "$appName/$appVersion ($deviceName; $language; $country)"
-    }
+    fun toHeader(): String = "$appName/$appVersion ($deviceName)"
 
     companion object {
-
-        fun fromHeader(header: String): AppUserAgent {
+        fun fromHeader(header: String?): AppUserAgent {
+            if (header.isNullOrBlank()) return AppUserAgent("DLearn", "1.0.0", "Unknown")
             return try {
-                if (header.isBlank()) return AppUserAgent("DLearn", "1.0.0", "Unknown", "pt-BR", "BR")
-
                 val appPart = header.substringBefore(" ")
-                val infoPart = header.substringAfter("(").substringBeforeLast(")")
-
+                val deviceName = header.substringAfter("(", "").substringBeforeLast(")", "Unknown").substringBefore(";")
                 val (appName, appVersion) = if (appPart.contains("/")) appPart.split("/") else listOf(appPart, "1.0.0")
-                val parts = infoPart.split(";").map { it.trim() }
-
-                AppUserAgent(
-                    appName = appName,
-                    appVersion = appVersion,
-                    deviceName = parts.getOrNull(0) ?: "",
-                    language = parts.getOrNull(1) ?: "pt-BR",
-                    country = parts.getOrNull(2) ?: "BR"
-                )
+                AppUserAgent(appName, appVersion, deviceName.trim())
             } catch (e: Exception) {
-                AppUserAgent("DLearn", "1.0.0", "Unknown", "pt-BR", "BR")
+                AppUserAgent("DLearn", "1.0.0", "Unknown")
             }
         }
     }
+}
+
+@Serializable
+data class AppHeader(
+    val paramUserAgent: String? = null,
+    val paramLanguage: String? = null,
+    val paramCountry: String? = null,
+    val userId: String? = "guest"
+) {
+    @Transient
+    val userAgent: AppUserAgent = AppUserAgent.fromHeader(paramUserAgent)
+
+    @Transient
+    val language: String = paramLanguage?.split(",")?.firstOrNull()?.split("-")?.firstOrNull() ?: "en"
+
+    @Transient
+    val country: String? = paramCountry ?: paramLanguage?.split(",")?.firstOrNull()?.split("-")?.getOrNull(1)
 }

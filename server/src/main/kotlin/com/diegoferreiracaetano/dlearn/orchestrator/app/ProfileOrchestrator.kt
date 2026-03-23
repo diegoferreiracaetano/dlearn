@@ -4,7 +4,7 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetProfileDataUseCase
 import com.diegoferreiracaetano.dlearn.domain.usecases.UpdateProfileDataUseCase
 import com.diegoferreiracaetano.dlearn.infrastructure.cache.InMemoryCache
-import com.diegoferreiracaetano.dlearn.network.AppUserAgent
+import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.screens.EditProfileScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.screens.ProfileScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
@@ -26,14 +26,16 @@ class ProfileOrchestrator(
 
     override fun execute(
         request: AppRequest,
-        userId: String,
-        userAgent: AppUserAgent
+        header: AppHeader
     ): Flow<Screen> {
         val path = NavigationRoutes.extractPath(request.path)
+        val userId = header.userId ?: "guest"
+        val language = header.language
+        
         return when (path) {
-            NavigationRoutes.PROFILE -> getProfileData(userId, userAgent.appVersion, userAgent.language, userAgent.country)
-            NavigationRoutes.EDIT_PROFILE -> getEditProfileData(userId, userAgent.language)
-            NavigationRoutes.UPDATE_PROFILE -> updateProfile(userId, request.params ?: emptyMap(), userAgent.language)
+            NavigationRoutes.PROFILE -> getProfileData(userId, header.userAgent.appVersion, language, header.country)
+            NavigationRoutes.EDIT_PROFILE -> getEditProfileData(userId, language)
+            NavigationRoutes.UPDATE_PROFILE -> updateProfile(userId, request.params ?: emptyMap(), language)
             else -> throw IllegalArgumentException("Invalid profile path: $path")
         }
     }

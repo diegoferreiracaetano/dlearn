@@ -4,7 +4,7 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.model.toVideo
-import com.diegoferreiracaetano.dlearn.network.AppUserAgent
+import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.WatchlistScreenBuilder
@@ -25,14 +25,16 @@ class WatchlistOrchestrator(
 
     override fun execute(
         request: AppRequest,
-        userId: String,
-        userAgent: AppUserAgent
+        header: AppHeader
     ): Flow<Screen> {
+        val userId = header.userId ?: "guest"
+        val language = header.language
         val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
+        
         return if (movieId != null) {
-            toggleWatchlist(userId, movieId, userAgent.language)
+            toggleWatchlist(userId, movieId, language)
         } else {
-            getWatchlist(userId, userAgent.language)
+            getWatchlist(userId, language)
         }
     }
 

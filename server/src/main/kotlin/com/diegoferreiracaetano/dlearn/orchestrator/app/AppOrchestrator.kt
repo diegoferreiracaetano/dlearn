@@ -15,11 +15,10 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes.VERIFY_ACCOUNT
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.WATCHLIST
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.WELCOME
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.extractPath
-import com.diegoferreiracaetano.dlearn.network.AppUserAgent
+import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class AppOrchestrator(
     private val homeOrchestrator: HomeOrchestrator,
@@ -35,21 +34,20 @@ class AppOrchestrator(
 ) : Orchestrator {
     override fun execute(
         request: AppRequest,
-        userId: String,
-        userAgent: AppUserAgent,
+        header: AppHeader
     ): Flow<Screen> {
         val path = extractPath(request.path)
         return when (path) {
-            HOME -> homeOrchestrator.execute(request, userId, userAgent)
-            FAVORITE -> favoriteOrchestrator.execute(request, userId, userAgent)
-            WATCHLIST -> watchlistOrchestrator.execute(request, userId, userAgent)
-            PROFILE, EDIT_PROFILE, UPDATE_PROFILE -> profileOrchestrator.execute(request, userId, userAgent)
-            FAQ -> faqOrchestrator.execute(request, userId, userAgent)
-            SEARCH -> searchOrchestrator.execute(request, userId, userAgent)
-            MOVIE_DETAIL -> movieDetailOrchestrator.execute(request, userId, userAgent)
-            WELCOME -> mainOrchestrator.execute(request, userId, userAgent)
-            VERIFY_ACCOUNT -> verifyAccountOrchestrator.execute(request, userId, userAgent)
-            SETTINGS_NOTIFICATIONS, SETTINGS_LANGUAGE, SETTINGS_COUNTRY -> settingsOrchestrator.execute(request, userId, userAgent)
+            HOME -> homeOrchestrator.execute(request, header)
+            FAVORITE -> favoriteOrchestrator.execute(request, header)
+            WATCHLIST -> watchlistOrchestrator.execute(request, header)
+            PROFILE, EDIT_PROFILE, UPDATE_PROFILE -> profileOrchestrator.execute(request, header)
+            FAQ -> faqOrchestrator.execute(request, header)
+            SEARCH -> searchOrchestrator.execute(request, header)
+            MOVIE_DETAIL -> movieDetailOrchestrator.execute(request, header)
+            WELCOME -> mainOrchestrator.execute(request, header)
+            VERIFY_ACCOUNT -> verifyAccountOrchestrator.execute(request, header)
+            SETTINGS_NOTIFICATIONS, SETTINGS_LANGUAGE, SETTINGS_COUNTRY -> settingsOrchestrator.execute(request, header)
             else -> throw IllegalArgumentException("Invalid path: ${request.path} (extracted: $path)")
         }
     }

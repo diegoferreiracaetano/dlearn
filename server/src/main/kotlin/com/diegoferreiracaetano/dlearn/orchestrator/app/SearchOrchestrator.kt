@@ -2,7 +2,7 @@ package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetHomeDataUseCase
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetSearchDataUseCase
-import com.diegoferreiracaetano.dlearn.network.AppUserAgent
+import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.SearchScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
@@ -19,14 +19,16 @@ class SearchOrchestrator(
 
     override fun execute(
         request: AppRequest,
-        userId: String,
-        userAgent: AppUserAgent
+        header: AppHeader
     ): Flow<Screen> {
+        val userId = header.userId ?: "guest"
+        val language = header.language
         val query = request.params?.get("q")
+        
         return if (query != null) {
-            searchContent(userId, userAgent.language, query)
+            searchContent(userId, language, query)
         } else {
-            searchMain(userId, userAgent.language)
+            searchMain(userId, language)
         }
     }
 

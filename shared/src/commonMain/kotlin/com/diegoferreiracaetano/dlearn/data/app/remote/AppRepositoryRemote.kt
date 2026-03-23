@@ -1,6 +1,8 @@
 package com.diegoferreiracaetano.dlearn.data.app.remote
 
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
+import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
+import com.diegoferreiracaetano.dlearn.network.AppUserAgentProvider
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import io.ktor.client.HttpClient
@@ -14,7 +16,9 @@ import kotlinx.coroutines.flow.flow
 
 class AppRepositoryRemote(
     private val httpClient: HttpClient,
-    private val baseUrl: String
+    private val baseUrl: String,
+    private val userAgentProvider: AppUserAgentProvider,
+    private val preferencesRepository: PreferencesRepository
 ) : AppRepository {
 
     override fun execute(
@@ -22,7 +26,14 @@ class AppRepositoryRemote(
         params: Map<String, String>?,
         metadata: Map<String, String>?
     ): Flow<Screen> = flow {
-        val request = AppRequest(path = path, params = params, metadata = metadata)
+        val request = AppRequest(
+            path = path,
+            params = params,
+            metadata = metadata,
+            language = preferencesRepository.language,
+            country = preferencesRepository.country
+        )
+
         val response = httpClient.post("$baseUrl/v1/app") {
             contentType(ContentType.Application.Json)
             setBody(request)

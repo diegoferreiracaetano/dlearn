@@ -3,7 +3,7 @@ package com.diegoferreiracaetano.dlearn.orchestrator.app
 import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetHomeDataUseCase
 import com.diegoferreiracaetano.dlearn.infrastructure.cache.InMemoryCache
-import com.diegoferreiracaetano.dlearn.network.AppUserAgent
+import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.screens.HomeScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -19,16 +19,16 @@ class HomeOrchestrator(
 
     override fun execute(
         request: AppRequest,
-        userId: String,
-        userAgent: AppUserAgent
+        header: AppHeader
     ): Flow<Screen> = flow {
 
         val type = request.params?.get("type")?.let {
             runCatching { HomeFilterType.valueOf(it) }.getOrNull()
         } ?: HomeFilterType.ALL
 
-        val language = userAgent.language
-        val cacheKey = "$userId-${userAgent.appVersion}-$language-$type"
+        val language = header.language
+        val userId = header.userId ?: "guest"
+        val cacheKey = "$userId-${header.userAgent.appVersion}-$language-$type"
         
         val screen = homeCache.getOrPut(cacheKey) {
             val domainData = getHomeDataUseCase.execute(userId, language, type)

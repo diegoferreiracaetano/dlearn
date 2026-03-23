@@ -1,30 +1,26 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.app
 
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.infrastructure.services.FaqDataService
-import com.diegoferreiracaetano.dlearn.network.AppUserAgent
+import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.screens.FaqScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flow
 
 class FaqOrchestrator(
     private val faqDataService: FaqDataService,
-    private val faqScreenBuilder: FaqScreenBuilder
+    private val screenBuilder: FaqScreenBuilder
 ) : Orchestrator {
-
     override fun execute(
         request: AppRequest,
-        userId: String,
-        userAgent: AppUserAgent
-    ): Flow<Screen> {
-
-        val reference = request.params?.get(NavigationRoutes.FAQ_REF_ARG)
-            ?: throw IllegalArgumentException("FAQ reference missing")
-
-        val faqItem = faqDataService.fetchFaqContent(reference, userAgent.language)
+        header: AppHeader
+    ): Flow<Screen> = flow {
+        val language = header.language
+        val reference = request.params?.get("reference") ?: "default"
+        val domainData = faqDataService.fetchFaqContent(reference, language)
             ?: throw IllegalArgumentException("FAQ not found for reference: $reference")
-        return flowOf(faqScreenBuilder.build(faqItem))
+        
+        emit(screenBuilder.build(domainData))
     }
 }

@@ -4,7 +4,7 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.model.toVideo
-import com.diegoferreiracaetano.dlearn.network.AppUserAgent
+import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.FavoriteScreenBuilder
@@ -25,15 +25,16 @@ class FavoriteOrchestrator(
 
     override fun execute(
         request: AppRequest,
-        userId: String,
-        userAgent: AppUserAgent
+        header: AppHeader
     ): Flow<Screen> {
-
+        val userId = header.userId ?: "guest"
+        val language = header.language
         val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
+        
         return if (movieId != null) {
-            toggleFavorite(userId, movieId, userAgent.language)
+            toggleFavorite(userId, movieId, language)
         } else {
-            getFavorite(userId, userAgent.language)
+            getFavorite(userId, language)
         }
     }
 

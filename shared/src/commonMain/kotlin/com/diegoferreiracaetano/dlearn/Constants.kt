@@ -19,6 +19,7 @@ object AppConstants {
     const val DEFAULT_APP_VERSION = 1
     const val DEFAULT_LANG = "en"
     const val AVATAR_PLACEHOLDER = "https://avatars.githubusercontent.com/u/1023?v=4"
+    const val X_COUNTRY = "X-Country"
 }
 
 object HomeFilterIds {

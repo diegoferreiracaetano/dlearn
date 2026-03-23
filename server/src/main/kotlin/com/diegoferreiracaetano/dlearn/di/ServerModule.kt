@@ -48,6 +48,8 @@ val serverModule = module {
     single { MainOrchestrator(get()) }
     single { FaqOrchestrator(get(), get()) }
     single { VerifyAccountOrchestrator(get()) }
+    
+    // AppOrchestrator (Named for clarity if needed, but single<Orchestrator> works for inject<Orchestrator>)
     single<Orchestrator> {
         AppOrchestrator(
             get(),

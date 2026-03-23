@@ -1,6 +1,6 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.app
 
-import com.diegoferreiracaetano.dlearn.network.AppUserAgent
+import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.screens.VerifyAccountScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -12,8 +12,7 @@ class VerifyAccountOrchestrator(
 ) : Orchestrator {
     override fun execute(
         request: AppRequest,
-        userId: String,
-        userAgent: AppUserAgent
+        header: AppHeader
     ): Flow<Screen> = flow {
         emit(verifyAccountScreenBuilder.build())
     }

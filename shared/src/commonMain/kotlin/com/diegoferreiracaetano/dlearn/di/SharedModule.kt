@@ -55,6 +55,7 @@ val sharedModule = module {
             ignoreUnknownKeys = true
             prettyPrint = true
             isLenient = true
+            encodeDefaults = true
         }
     }
 
@@ -84,7 +85,8 @@ val sharedModule = module {
         }.apply {
             plugin(HttpSend).intercept { request ->
                 val agent = userAgentProvider.get()
-                request.header(HttpHeaders.AcceptLanguage, agent.language)
+                // Mantemos o User-Agent simplificado apenas como boa prática,
+                // mas a verdade agora vai no corpo do AppRequest (POST)
                 request.header(HttpHeaders.UserAgent, agent.toHeader())
                 execute(request)
             }
@@ -108,7 +110,9 @@ val sharedModule = module {
     single<AppRepository> { 
         AppRepositoryRemote(
             httpClient = get(), 
-            baseUrl = "http://192.168.15.3:8081"
+            baseUrl = "http://192.168.15.3:8081",
+            userAgentProvider = get(),
+            preferencesRepository = get()
         ) 
     }
 }

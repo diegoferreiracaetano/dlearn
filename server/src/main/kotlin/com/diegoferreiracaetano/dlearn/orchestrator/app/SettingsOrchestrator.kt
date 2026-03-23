@@ -1,35 +1,35 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import com.diegoferreiracaetano.dlearn.network.AppUserAgent
+import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.screens.SettingsScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class SettingsOrchestrator(
     private val builder: SettingsScreenBuilder
-): Orchestrator {
+) : Orchestrator {
 
     override fun execute(
         request: AppRequest,
-        userId: String,
-        userAgent: AppUserAgent
-    ) = flow {
-         val screen: Screen = when {
-             request.path == NavigationRoutes.SETTINGS_NOTIFICATIONS -> {
-                builder.buildNotificationScreen(userAgent.language)
+        header: AppHeader
+    ): Flow<Screen> = flow {
+        val screen: Screen = when {
+            request.path == NavigationRoutes.SETTINGS_NOTIFICATIONS -> {
+                builder.buildNotificationScreen(header.language)
             }
 
-             request.path == NavigationRoutes.SETTINGS_LANGUAGE -> {
-                builder.buildLanguageScreen(userAgent.language)
+            request.path == NavigationRoutes.SETTINGS_LANGUAGE -> {
+                builder.buildLanguageScreen(header.language)
             }
 
             request.path == NavigationRoutes.SETTINGS_COUNTRY -> {
-                builder.buildCountryScreen(userAgent.country, userAgent.language)
+                builder.buildCountryScreen(header.country, header.language)
             }
 
-            else -> builder.buildLanguageScreen(userAgent.language)
+            else -> builder.buildLanguageScreen(header.language)
         }
 
         emit(screen)

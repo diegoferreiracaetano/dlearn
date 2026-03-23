@@ -3,14 +3,13 @@ package com.diegoferreiracaetano.dlearn.orchestrator.app
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetMovieDetailUseCase
 import com.diegoferreiracaetano.dlearn.infrastructure.cache.InMemoryCache
-import com.diegoferreiracaetano.dlearn.network.AppUserAgent
+import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.screens.MovieDetailScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.time.Duration.Companion.minutes
-
 
 class MovieDetailOrchestrator(
     private val getMovieDetailUseCase: GetMovieDetailUseCase,
@@ -20,14 +19,13 @@ class MovieDetailOrchestrator(
 
     override fun execute(
         request: AppRequest,
-        userId: String,
-        userAgent: AppUserAgent
+        header: AppHeader
     ): Flow<Screen> = flow {
         val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
             ?: throw IllegalArgumentException("MovieId missing")
 
-        val language = userAgent.language
-        val screen = detailCache.getOrPut("$movieId-${userAgent.appVersion}-$language") {
+        val language = header.language
+        val screen = detailCache.getOrPut("$movieId-${header.userAgent.appVersion}-$language") {
             val domainData = getMovieDetailUseCase.execute(movieId, language)
             screenBuilder.build(domainData, language)
         }

@@ -77,8 +77,10 @@
     <string name="update_profile_error">Failed to update profile.</string>
 
     <!-- Settings & Dialogs -->
-    <string name="clear_cache_dialog_title">Are you sure ?</string>
-    <string name="clear_cache_dialog_description">Ullamcorper imperdiet urna id non sed est sem. Rhoncus amet, enim purus gravida donec aliquet.</string>
-    <string name="clear_cache_confirm">Log Out</string>
+    <string name="clear_cache_title">Are you sure?</string>
+    <string name="clear_cache_description">This will remove all downloaded and temporary data from the app.</string>
+    <string name="clear_cache_confirm">Clear</string>
     <string name="clear_cache_cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 </resources>

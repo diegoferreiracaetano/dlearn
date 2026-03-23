@@ -73,4 +73,12 @@
     <string name="field_password">Senha</string>
     <string name="field_phone_number">Telefone</string>
     <string name="save_changes">Salvar Alterações</string>
+
+    <!-- Settings & Dialogs -->
+    <string name="clear_cache_title">Tem certeza?</string>
+    <string name="clear_cache_description">Isso removerá todos os dados baixados e temporários do aplicativo.</string>
+    <string name="clear_cache_confirm">Limpar</string>
+    <string name="clear_cache_cancel">Cancelar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="cancel">Cancelar</string>
 </resources>

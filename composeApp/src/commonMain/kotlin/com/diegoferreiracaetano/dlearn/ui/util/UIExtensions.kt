@@ -20,19 +20,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.MovieItemComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.edit_profile_title
-import dlearn.composeapp.generated.resources.field_email
-import dlearn.composeapp.generated.resources.field_full_name
-import dlearn.composeapp.generated.resources.field_password
-import dlearn.composeapp.generated.resources.field_phone_number
-import dlearn.composeapp.generated.resources.home_title
-import dlearn.composeapp.generated.resources.nav_favorites
-import dlearn.composeapp.generated.resources.nav_home
-import dlearn.composeapp.generated.resources.nav_profile
-import dlearn.composeapp.generated.resources.nav_search
-import dlearn.composeapp.generated.resources.nav_watchlist
-import dlearn.composeapp.generated.resources.profile_title
-import dlearn.composeapp.generated.resources.save_changes
+import dlearn.composeapp.generated.resources.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -47,6 +35,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 @Immutable
 data class UiState<out T>(
@@ -179,8 +168,19 @@ fun AppStringType?.toResource(): StringResource? {
         AppStringType.FIELD_PASSWORD -> Res.string.field_password
         AppStringType.FIELD_PHONE_NUMBER -> Res.string.field_phone_number
         AppStringType.SAVE_CHANGES -> Res.string.save_changes
+        AppStringType.CLEAR_CACHE_TITLE -> Res.string.clear_cache_title
+        AppStringType.CLEAR_CACHE_DESCRIPTION -> Res.string.clear_cache_description
+        AppStringType.CLEAR_CACHE_CONFIRM -> Res.string.clear_cache_confirm
+        AppStringType.CLEAR_CACHE_CANCEL -> Res.string.clear_cache_cancel
+        AppStringType.CONFIRM -> Res.string.confirm
+        AppStringType.CANCEL -> Res.string.cancel
         else -> null
     }
+}
+
+@Composable
+fun AppStringType?.toStringResource(): String {
+    return this.toResource()?.let { stringResource(it) } ?: ""
 }
 
 fun AppTextFieldType.toTextFieldType(): TextFieldType {

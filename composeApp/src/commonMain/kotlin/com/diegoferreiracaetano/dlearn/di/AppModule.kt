@@ -20,7 +20,7 @@ fun initKoin() {
 val appModule = module {
 
     factory { MainViewModel(get()) }
-    factory { AppViewModel(get()) }
+    factory { AppViewModel(get(), get()) }
     factory { SettingsViewModel(get(), get()) }
     factory { SearchMainViewModel(get()) }
     factory { SearchContentViewModel(get()) }

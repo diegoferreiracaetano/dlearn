@@ -3,13 +3,16 @@ package com.diegoferreiracaetano.dlearn.ui.screens.app
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
+import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.collectIn
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class AppViewModel(
-    private val repository: AppRepository
+    private val repository: AppRepository,
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
@@ -18,6 +21,18 @@ class AppViewModel(
     private var formData: Map<String, String> = emptyMap()
     private var lastPath: String? = null
     private var lastParams: Map<String, String>? = null
+
+    init {
+        observeConfigurationChanges()
+    }
+
+    private fun observeConfigurationChanges() {
+        viewModelScope.launch {
+            preferencesRepository.onConfigurationChanged.collect {
+                retry()
+            }
+        }
+    }
 
     fun loadContent(path: String, params: Map<String, String>? = null) {
         execute(path, params)

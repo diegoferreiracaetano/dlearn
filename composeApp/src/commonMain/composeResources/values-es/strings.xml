@@ -77,8 +77,10 @@
     <string name="update_profile_error">Error al actualizar el perfil.</string>
 
     <!-- Settings & Dialogs -->
-    <string name="clear_cache_dialog_title">¿Estás seguro?</string>
-    <string name="clear_cache_dialog_description">Ullamcorper imperdiet urna id non sed est sem. Rhoncus amet, enim purus gravida donec aliquet.</string>
-    <string name="clear_cache_confirm">Cerrar sesión</string>
+    <string name="clear_cache_title">¿Estás seguro?</string>
+    <string name="clear_cache_description">Esto eliminará todos los datos descargados y temporales de la aplicación.</string>
+    <string name="clear_cache_confirm">Limpiar</string>
     <string name="clear_cache_cancel">Cancelar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="cancel">Cancelar</string>
 </resources>

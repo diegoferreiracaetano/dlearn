@@ -58,4 +58,12 @@
 
     <string name="watchlist_empty_title">Your watchlist is empty</string>
     <string name="watchlist_empty_description">Save movies and shows to watch later and they will appear here.</string>
+
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="clear_cache_title">Are you sure?</string>
+    <string name="clear_cache_description">This will remove all downloaded and temporary data from the app.</string>
+    <string name="clear_cache_confirm">Clear</string>
+    <string name="clear_cache_cancel">Cancel</string>
 </resources>

@@ -207,6 +207,14 @@ fun AppNavGraph(
             )
         }
 
+        dialog(SettingsClearCache.route) {
+            SettingsScreen(
+                path = NavigationRoutes.SETTINGS_CLEAR_CACHE,
+                onBackClick = { navController.popBackStack() },
+                modifier = modifier
+            )
+        }
+
         composable(
             route = NavigationRoutes.APP_ROUTE,
             arguments = listOf(

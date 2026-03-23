@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.ui.screens.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -45,10 +46,8 @@ class SettingsViewModel(
         }
     }
 
-    fun handleAction(action: String) {
-        if (action == "clear_cache") {
-            // No-op for now
-        }
+    fun confirmClearCache() {
+        preferencesRepository.clear()
     }
 
     fun updatePreference(key: String, value: String) {

@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.di
 
+import com.diegoferreiracaetano.dlearn.Platform
 import com.diegoferreiracaetano.dlearn.auth.network.ChallengeInterceptor
 import com.diegoferreiracaetano.dlearn.data.app.remote.AppRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.home.remote.HomeRepositoryRemote
@@ -23,6 +24,8 @@ import com.diegoferreiracaetano.dlearn.domain.password.PasswordRepository
 import com.diegoferreiracaetano.dlearn.domain.profile.ProfileRepository
 import com.diegoferreiracaetano.dlearn.domain.search.SearchRepository
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
+import com.diegoferreiracaetano.dlearn.getPlatform
+import com.diegoferreiracaetano.dlearn.network.AppUserAgentProvider
 import com.diegoferreiracaetano.dlearn.util.event.GlobalEventDispatcher
 import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
@@ -36,12 +39,13 @@ import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
-import com.diegoferreiracaetano.dlearn.getPlatform
 
 val sharedModule = module {
     includes(authModule)
 
     single { GlobalEventDispatcher() }
+
+    single { AppUserAgentProvider(getPlatform(),  get()) }
     
     single { 
         Json {
@@ -52,8 +56,7 @@ val sharedModule = module {
     }
 
     single {
-        val platform = getPlatform()
-        val prefs = get<AppPreferences>()
+        val userAgent = get<AppUserAgentProvider>()
 
         HttpClient {
             install(ContentNegotiation) {
@@ -71,8 +74,8 @@ val sharedModule = module {
                 }
                 
 
-                header(HttpHeaders.AcceptLanguage, platform.activeLanguage(prefs))
-                header(HttpHeaders.UserAgent, platform.userAgent(prefs))
+                header(HttpHeaders.AcceptLanguage, userAgent.get().language)
+                header(HttpHeaders.UserAgent, userAgent.get().toHeader())
             }
             
             install(ChallengeInterceptor) {

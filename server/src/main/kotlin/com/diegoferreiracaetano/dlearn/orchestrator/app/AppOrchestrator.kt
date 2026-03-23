@@ -15,8 +15,10 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes.VERIFY_ACCOUNT
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.WATCHLIST
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.WELCOME
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.extractPath
+import com.diegoferreiracaetano.dlearn.network.AppUserAgent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import io.ktor.client.plugins.UserAgentConfig
 import kotlinx.coroutines.flow.Flow
 
 class AppOrchestrator(
@@ -34,7 +36,7 @@ class AppOrchestrator(
     override fun execute(
         request: AppRequest,
         userId: String,
-        userAgent: String
+        userAgent: AppUserAgent,
     ): Flow<Screen> {
         val path = extractPath(request.path)
         return when (path) {

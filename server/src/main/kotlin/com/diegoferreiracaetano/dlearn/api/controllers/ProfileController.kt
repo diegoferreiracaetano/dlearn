@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
+import com.diegoferreiracaetano.dlearn.network.AppUserAgent
 import com.diegoferreiracaetano.dlearn.orchestrator.app.ProfileOrchestrator
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import io.ktor.http.HttpHeaders.UserAgent
@@ -19,7 +20,9 @@ fun Route.profileController() {
     route("/v1/profile") {
         get {
             val userId = call.request.queryParameters["userId"] ?: "guest"
-            val userAgent = call.request.header(UserAgent) ?: ""
+            val userAgentHeader = call.request.header(UserAgent) ?: ""
+            val userAgent = AppUserAgent.fromHeader(userAgentHeader)
+
 
             val request = AppRequest(path = "/profile")
 
@@ -34,7 +37,9 @@ fun Route.profileController() {
 
         get("/edit") {
             val userId = call.request.queryParameters["userId"] ?: "guest"
-            val userAgent = call.request.header(UserAgent) ?: ""
+            val userAgentHeader = call.request.header(UserAgent) ?: ""
+            val userAgent = AppUserAgent.fromHeader(userAgentHeader)
+
 
             val request = AppRequest(path = "/profile/edit")
 
@@ -49,7 +54,9 @@ fun Route.profileController() {
 
         post("/update") {
             val userId = call.request.queryParameters["userId"] ?: "guest"
-            val userAgent = call.request.header(UserAgent) ?: ""
+            val userAgentHeader = call.request.header(UserAgent) ?: ""
+            val userAgent = AppUserAgent.fromHeader(userAgentHeader)
+
             val data = call.receive<Map<String, String>>()
 
             val request = AppRequest(

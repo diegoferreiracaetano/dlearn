@@ -4,13 +4,13 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetProfileDataUseCase
 import com.diegoferreiracaetano.dlearn.domain.usecases.UpdateProfileDataUseCase
 import com.diegoferreiracaetano.dlearn.infrastructure.cache.InMemoryCache
+import com.diegoferreiracaetano.dlearn.network.AppUserAgent
 import com.diegoferreiracaetano.dlearn.ui.screens.EditProfileScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.screens.ProfileScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppSnackbarType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
-import com.diegoferreiracaetano.dlearn.util.AppRequestContext
 import com.diegoferreiracaetano.dlearn.util.getLogger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -27,22 +27,21 @@ class ProfileOrchestrator(
     override fun execute(
         request: AppRequest,
         userId: String,
-        userAgent: String
+        userAgent: AppUserAgent
     ): Flow<Screen> {
-        val context = AppRequestContext.fromUserAgent(userAgent)
         val path = NavigationRoutes.extractPath(request.path)
         return when (path) {
-            NavigationRoutes.PROFILE -> getProfileData(userId, context.appVersion, context.lang)
-            NavigationRoutes.EDIT_PROFILE -> getEditProfileData(userId, context.lang)
-            NavigationRoutes.UPDATE_PROFILE -> updateProfile(userId, request.params ?: emptyMap(), context.lang)
+            NavigationRoutes.PROFILE -> getProfileData(userId, userAgent.appVersion,userAgent.language)
+            NavigationRoutes.EDIT_PROFILE -> getEditProfileData(userId, userAgent.language)
+            NavigationRoutes.UPDATE_PROFILE -> updateProfile(userId, request.params ?: emptyMap(), userAgent.language)
             else -> throw IllegalArgumentException("Invalid profile path: $path")
         }
     }
 
-    private fun getProfileData(userId: String, appVersion: Int, lang: String): Flow<Screen> = flow {
+    private fun getProfileData(userId: String, appVersion: String, lang: String): Flow<Screen> = flow {
         val screen = profileCache.getOrPut("$userId-$appVersion-$lang") {
             val domainData = getProfileDataUseCase.execute(userId)
-            screenBuilder.build(domainData, appVersion, lang)
+            screenBuilder.build(domainData, lang)
         }
         emit(screen)
     }

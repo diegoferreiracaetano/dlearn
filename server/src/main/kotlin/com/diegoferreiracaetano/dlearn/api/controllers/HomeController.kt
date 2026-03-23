@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
+import com.diegoferreiracaetano.dlearn.network.AppUserAgent
 import com.diegoferreiracaetano.dlearn.orchestrator.app.HomeOrchestrator
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import io.ktor.http.HttpHeaders.UserAgent
@@ -14,7 +15,9 @@ fun Route.homeController(orchestrator: HomeOrchestrator) {
     route("/v1/home") {
         get {
             val userId = call.request.queryParameters["userId"] ?: "guest"
-            val userAgent = call.request.header(UserAgent) ?: ""
+            val userAgentHeader = call.request.header(UserAgent) ?: ""
+            val userAgent = AppUserAgent.fromHeader(userAgentHeader)
+
             val type = call.request.queryParameters["type"] ?: "ALL"
 
             val request = AppRequest(

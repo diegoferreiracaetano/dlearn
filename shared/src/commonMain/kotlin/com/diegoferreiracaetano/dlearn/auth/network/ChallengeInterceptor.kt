@@ -41,11 +41,6 @@ class ChallengeInterceptor(
 
         override fun install(plugin: ChallengeInterceptor, scope: HttpClient) {
             scope.receivePipeline.intercept(HttpReceivePipeline.After) { response ->
-                if (response !is HttpResponse) {
-                    proceedWith(response)
-                    return@intercept
-                }
-                
                 if (response.status.value == 428) {
                     val originalCall = response.call
                     val originalRequest = originalCall.request

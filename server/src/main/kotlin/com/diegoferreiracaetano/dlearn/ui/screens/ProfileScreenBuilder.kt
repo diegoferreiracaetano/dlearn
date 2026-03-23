@@ -10,7 +10,7 @@ class ProfileScreenBuilder(
     private val mapper: ProfileMapper,
     private val i18n: I18nProvider
 ) {
-    fun build(data: ProfileDomainData, appVersion: Int, lang: String): Screen {
+    fun build(data: ProfileDomainData, lang: String): Screen {
         val components = mutableListOf<Component>()
 
         components.addAll(buildContent(data, lang))

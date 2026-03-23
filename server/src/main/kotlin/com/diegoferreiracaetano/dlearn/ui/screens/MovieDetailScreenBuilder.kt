@@ -14,7 +14,7 @@ class MovieDetailScreenBuilder(
     private val i18n: I18nProvider
 ) {
 
-    fun build(data: MovieDetailDomainData, appVersion: Int, lang: String): Screen {
+    fun build(data: MovieDetailDomainData, lang: String): Screen {
 
         val components = mutableListOf<Component>()
 

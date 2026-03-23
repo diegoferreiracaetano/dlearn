@@ -2,11 +2,11 @@ package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetHomeDataUseCase
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetSearchDataUseCase
+import com.diegoferreiracaetano.dlearn.network.AppUserAgent
 import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.SearchScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
-import com.diegoferreiracaetano.dlearn.util.AppRequestContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -20,14 +20,13 @@ class SearchOrchestrator(
     override fun execute(
         request: AppRequest,
         userId: String,
-        userAgent: String
+        userAgent: AppUserAgent
     ): Flow<Screen> {
-        val context = AppRequestContext.fromUserAgent(userAgent)
         val query = request.params?.get("q")
         return if (query != null) {
-            searchContent(userId, context.lang, query)
+            searchContent(userId, userAgent.language, query)
         } else {
-            searchMain(userId, context.lang)
+            searchMain(userId, userAgent.language)
         }
     }
 

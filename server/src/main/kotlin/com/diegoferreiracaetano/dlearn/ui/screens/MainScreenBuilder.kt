@@ -18,8 +18,6 @@ class MainScreenBuilder(
     private val i18n: I18nProvider
 ) {
     fun build(
-        userId: String,
-        appVersion: Int,
         lang: String
     ): Screen {
 

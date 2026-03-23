@@ -2,8 +2,9 @@ package com.diegoferreiracaetano.dlearn.api.controllers
 
 import com.diegoferreiracaetano.dlearn.orchestrator.app.ProfileOrchestrator
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
+import io.ktor.http.HttpHeaders.UserAgent
 import io.ktor.server.application.call
-import io.ktor.server.request.acceptLanguage
+import io.ktor.server.request.header
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
@@ -18,16 +19,14 @@ fun Route.profileController() {
     route("/v1/profile") {
         get {
             val userId = call.request.queryParameters["userId"] ?: "guest"
-            val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
-            val lang = call.request.acceptLanguage() ?: "en"
+            val userAgent = call.request.header(UserAgent) ?: ""
 
             val request = AppRequest(path = "/profile")
 
             orchestrator.execute(
                 request = request,
                 userId = userId,
-                lang = lang,
-                appVersion = appVersion
+                userAgent = userAgent
             ).collect { screen ->
                 call.respond(screen)
             }
@@ -35,16 +34,14 @@ fun Route.profileController() {
 
         get("/edit") {
             val userId = call.request.queryParameters["userId"] ?: "guest"
-            val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
-            val lang = call.request.acceptLanguage() ?: "en"
+            val userAgent = call.request.header(UserAgent) ?: ""
 
             val request = AppRequest(path = "/profile/edit")
 
             orchestrator.execute(
                 request = request,
                 userId = userId,
-                lang = lang,
-                appVersion = appVersion
+                userAgent = userAgent
             ).collect { screen ->
                 call.respond(screen)
             }
@@ -52,8 +49,7 @@ fun Route.profileController() {
 
         post("/update") {
             val userId = call.request.queryParameters["userId"] ?: "guest"
-            val appVersion = call.request.headers["X-App-Version"]?.toIntOrNull() ?: 1
-            val lang = call.request.acceptLanguage() ?: "en"
+            val userAgent = call.request.header(UserAgent) ?: ""
             val data = call.receive<Map<String, String>>()
 
             val request = AppRequest(
@@ -64,8 +60,7 @@ fun Route.profileController() {
             orchestrator.execute(
                 request = request,
                 userId = userId,
-                lang = lang,
-                appVersion = appVersion
+                userAgent = userAgent
             ).collect { screen ->
                 call.respond(screen)
             }

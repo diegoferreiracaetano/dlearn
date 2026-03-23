@@ -4,6 +4,8 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.network.AppUserAgent
 import com.diegoferreiracaetano.dlearn.ui.screens.SettingsScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 class SettingsOrchestrator(
     private val builder: SettingsScreenBuilder
@@ -24,8 +26,8 @@ class SettingsOrchestrator(
         return builder.buildCountryScreen(agent.country, agent.language)
     }
 
-    fun execute(path: String, userAgent: AppUserAgent): Screen {
-        return when {
+    fun execute(path: String, userAgent: AppUserAgent) = flow<Screen> {
+         val screen: Screen = when {
             path == NavigationRoutes.SETTINGS_NOTIFICATIONS -> {
                 builder.buildNotificationScreen(userAgent.language)
             }
@@ -40,5 +42,7 @@ class SettingsOrchestrator(
 
             else -> builder.buildLanguageScreen(userAgent.language)
         }
+
+        emit(screen)
     }
 }

@@ -27,7 +27,7 @@ data class AppUserAgent(
                     appName = appName,
                     appVersion = appVersion,
                     deviceName = parts.getOrNull(0) ?: "",
-                    language = parts.getOrNull(1) ?: "pt",
+                    language = parts.getOrNull(1) ?: "pt-BR",
                     country = parts.getOrNull(2) ?: "BR"
                 )
             } catch (e: Exception) {

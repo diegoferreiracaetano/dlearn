@@ -9,6 +9,6 @@ interface PreferencesRepository {
     
     fun updatePreference(key: String, value: String)
 
-    val onConfigurationChanged: Flow<Long>
+    val onConfigurationChanged: Flow<Any>
     fun clear()
 }

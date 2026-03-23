@@ -1,11 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
 import com.diegoferreiracaetano.dlearn.ui.mappers.SettingsMapper
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.Component
-import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import com.diegoferreiracaetano.dlearn.util.toAppContainerComponent
 

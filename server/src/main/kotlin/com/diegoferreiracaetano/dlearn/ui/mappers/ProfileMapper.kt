@@ -128,7 +128,7 @@ class ProfileMapper(private val i18n: I18nProvider) {
                     id = "clear_cache",
                     label = i18n.getString(AppStringType.ITEM_CLEAR_CACHE, currentLang),
                     icon = AppIconType.DELETE,
-                    actionUrl = "clear_cache"
+                    actionUrl = NavigationRoutes.SETTINGS_CLEAR_CACHE
                 )
             )
         )

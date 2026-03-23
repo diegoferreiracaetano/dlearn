@@ -8,5 +8,6 @@ enum class AppImageType {
     WATCHLIST,
     FAVORITE,
     EMPTY_STATE,
+    DELETE,
     UNKNOWN;
 }

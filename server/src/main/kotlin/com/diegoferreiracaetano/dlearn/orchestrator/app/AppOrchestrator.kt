@@ -7,6 +7,7 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes.HOME
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.MOVIE_DETAIL
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.PROFILE
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.SEARCH
+import com.diegoferreiracaetano.dlearn.NavigationRoutes.SETTINGS_CLEAR_CACHE
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.SETTINGS_COUNTRY
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.SETTINGS_LANGUAGE
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.SETTINGS_NOTIFICATIONS

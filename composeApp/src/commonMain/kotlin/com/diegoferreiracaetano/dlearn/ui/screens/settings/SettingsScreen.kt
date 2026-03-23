@@ -30,13 +30,10 @@ import org.koin.compose.koinInject
 fun SettingsScreen(
     path: String,
     onBackClick: () -> Unit = {},
-    onNavigate: (String) -> Unit = {},
-    onDeeplink: (String) -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = koinInject(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val showClearCacheDialog by viewModel.showClearCacheDialog.collectAsStateWithLifecycle()
 
     LaunchedEffect(path) {
         viewModel.loadContent(path)
@@ -46,13 +43,11 @@ fun SettingsScreen(
         ComponentActions(
             onBackClick = onBackClick,
             onRetry = viewModel::retry,
-            onAction = { action ->
-                when {
-                    action.startsWith("http") || action.startsWith("https") -> onDeeplink(action)
-                    action.startsWith("app://") -> onNavigate(action)
-                    else -> viewModel.handleAction(action)
-                }
-            }
+            onSelectChanged = { key, value ->
+                if(key != null && value != null)
+                    viewModel.updatePreference(key, value)
+            },
+            onAction = viewModel::handleAction
         )
     }
 

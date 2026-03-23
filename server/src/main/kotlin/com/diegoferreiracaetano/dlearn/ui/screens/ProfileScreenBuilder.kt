@@ -10,17 +10,17 @@ class ProfileScreenBuilder(
     private val mapper: ProfileMapper,
     private val i18n: I18nProvider
 ) {
-    fun build(data: ProfileDomainData, lang: String): Screen {
+    fun build(data: ProfileDomainData, lang: String, country: String?): Screen {
         val components = mutableListOf<Component>()
 
-        components.addAll(buildContent(data, lang))
+        components.addAll(buildContent(data, lang, country))
 
         return Screen(
             components = components
         )
     }
 
-    fun buildContent(data: ProfileDomainData, lang: String): List<Component> {
+    fun buildContent(data: ProfileDomainData, lang: String, country: String?): List<Component> {
         val components = mutableListOf<Component>()
 
         components.add(mapper.toHeader(data))
@@ -30,7 +30,7 @@ class ProfileScreenBuilder(
         }
 
         components.add(mapper.toAccountSection(lang))
-        components.add(mapper.toGeneralSection(data, lang))
+        components.add(mapper.toGeneralSection(lang, country))
         components.add(mapper.toMoreSection(lang))
         components.add(mapper.toFooter(lang))
 

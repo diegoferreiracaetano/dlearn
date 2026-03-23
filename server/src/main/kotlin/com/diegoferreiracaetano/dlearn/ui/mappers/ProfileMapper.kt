@@ -86,33 +86,47 @@ class ProfileMapper(private val i18n: I18nProvider) {
         )
     }
 
-    fun toGeneralSection(data: ProfileDomainData, lang: String): SectionComponent {
+    fun toGeneralSection(currentLang: String, currentCountry: String?): SectionComponent {
+        val languageDisplayName = when (currentLang) {
+            "pt-BR" -> "Português (Brasil)"
+            "en-US" -> "English (United States)"
+            "es-ES" -> "Español (España)"
+            else -> currentLang
+        }
+
+        val countryDisplayName = when (currentCountry) {
+            "BR" -> "Brasil"
+            "US" -> "United States"
+            "ES" -> "España"
+            else -> currentCountry ?: ""
+        }
+
         return SectionComponent(
-            title = i18n.getString(AppStringType.SECTION_GENERAL, lang),
+            title = i18n.getString(AppStringType.SECTION_GENERAL, currentLang),
             items = listOf(
                 SectionItem(
                     id = "notification",
-                    label = i18n.getString(AppStringType.ITEM_NOTIFICATION, lang),
+                    label = i18n.getString(AppStringType.ITEM_NOTIFICATION, currentLang),
                     icon = AppIconType.NOTIFICATIONS,
                     actionUrl = NavigationRoutes.SETTINGS_NOTIFICATIONS
                 ),
                 SectionItem(
                     id = "language",
-                    label = i18n.getString(AppStringType.ITEM_LANGUAGE, lang),
-                    value = data.language,
+                    label = i18n.getString(AppStringType.ITEM_LANGUAGE, currentLang),
+                    value = languageDisplayName,
                     icon = AppIconType.LANGUAGE,
                     actionUrl = NavigationRoutes.SETTINGS_LANGUAGE
                 ),
                 SectionItem(
                     id = "country",
-                    label = i18n.getString(AppStringType.ITEM_COUNTRY, lang),
-                    value = data.country,
+                    label = i18n.getString(AppStringType.ITEM_COUNTRY, currentLang),
+                    value = countryDisplayName,
                     icon = AppIconType.PUBLIC,
                     actionUrl = NavigationRoutes.SETTINGS_COUNTRY
                 ),
                 SectionItem(
                     id = "clear_cache",
-                    label = i18n.getString(AppStringType.ITEM_CLEAR_CACHE, lang),
+                    label = i18n.getString(AppStringType.ITEM_CLEAR_CACHE, currentLang),
                     icon = AppIconType.DELETE,
                     actionUrl = "clear_cache"
                 )

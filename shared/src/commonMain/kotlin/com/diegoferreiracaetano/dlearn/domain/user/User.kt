@@ -10,7 +10,5 @@ data class User(
     val password: String? = null,
     val imageUrl: String? = null,
     val isPremium: Boolean = false,
-    val language: String? = null,
-    val country: String? = null,
     val phoneNumber: String? = null
 )

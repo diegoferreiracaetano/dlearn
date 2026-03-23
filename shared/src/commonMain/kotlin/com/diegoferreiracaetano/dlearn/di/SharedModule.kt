@@ -1,7 +1,7 @@
 package com.diegoferreiracaetano.dlearn.di
 
-import com.diegoferreiracaetano.dlearn.Platform
 import com.diegoferreiracaetano.dlearn.auth.network.ChallengeInterceptor
+import com.diegoferreiracaetano.dlearn.data.app.PreferencesRepositoryImpl
 import com.diegoferreiracaetano.dlearn.data.app.remote.AppRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.home.remote.HomeRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.main.remote.MainRepositoryRemote
@@ -9,14 +9,15 @@ import com.diegoferreiracaetano.dlearn.data.movie.remote.MovieDetailRepositoryRe
 import com.diegoferreiracaetano.dlearn.data.password.remote.PasswordRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.profile.remote.ProfileRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.search.remote.SearchRepositoryRemote
-import com.diegoferreiracaetano.dlearn.data.session.AppPreferences
 import com.diegoferreiracaetano.dlearn.data.session.SessionStorage
-import com.diegoferreiracaetano.dlearn.data.session.SettingsAppPreferences
 import com.diegoferreiracaetano.dlearn.data.session.SettingsSessionStorage
+import com.diegoferreiracaetano.dlearn.data.source.local.KeyValueStorage
+import com.diegoferreiracaetano.dlearn.data.source.local.SettingsKeyValueStorage
 import com.diegoferreiracaetano.dlearn.data.user.UserRepository
 import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserNetworkDataSource
 import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserRepositoryRemote
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
+import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
 import com.diegoferreiracaetano.dlearn.domain.home.HomeRepository
 import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
 import com.diegoferreiracaetano.dlearn.domain.movie.MovieDetailRepository
@@ -29,10 +30,12 @@ import com.diegoferreiracaetano.dlearn.network.AppUserAgentProvider
 import com.diegoferreiracaetano.dlearn.util.event.GlobalEventDispatcher
 import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.plugin
 import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
 import io.ktor.http.URLProtocol
@@ -45,7 +48,7 @@ val sharedModule = module {
 
     single { GlobalEventDispatcher() }
 
-    single { AppUserAgentProvider(getPlatform(),  get()) }
+    single { AppUserAgentProvider(getPlatform(), get()) }
     
     single { 
         Json {
@@ -56,7 +59,7 @@ val sharedModule = module {
     }
 
     single {
-        val userAgent = get<AppUserAgentProvider>()
+        val userAgentProvider = get<AppUserAgentProvider>()
 
         HttpClient {
             install(ContentNegotiation) {
@@ -72,15 +75,18 @@ val sharedModule = module {
                     host = "192.168.15.3"
                     port = 8081
                 }
-                
-
-                header(HttpHeaders.AcceptLanguage, userAgent.get().language)
-                header(HttpHeaders.UserAgent, userAgent.get().toHeader())
             }
             
             install(ChallengeInterceptor) {
                 engine = get()
                 json = get()
+            }
+        }.apply {
+            plugin(HttpSend).intercept { request ->
+                val agent = userAgentProvider.get()
+                request.header(HttpHeaders.AcceptLanguage, agent.language)
+                request.header(HttpHeaders.UserAgent, agent.toHeader())
+                execute(request)
             }
         }
     }
@@ -88,7 +94,8 @@ val sharedModule = module {
     single { UserNetworkDataSource() }
     single<UserRepository> { UserRepositoryRemote(get()) }
     single { Settings() }
-    single<AppPreferences> { SettingsAppPreferences(get()) }
+    single<KeyValueStorage> { SettingsKeyValueStorage(get()) }
+    single<PreferencesRepository> { PreferencesRepositoryImpl(get()) }
     single<SessionStorage> { SettingsSessionStorage(get()) }
     single { SessionManager(get()) }
 

@@ -23,7 +23,7 @@ class AppSwitchRowRenderer : ComponentRenderer {
             leadingIcon = switchRow.icon.toIcon(),
             isEnabled = switchRow.isChecked,
             onCheckedChange = { isChecked ->
-                actions.onAction("${switchRow.preferenceKey}:$isChecked")
+                actions.onSelectChanged(switchRow.preferenceKey, isChecked.toString())
             },
             modifier = modifier
         )

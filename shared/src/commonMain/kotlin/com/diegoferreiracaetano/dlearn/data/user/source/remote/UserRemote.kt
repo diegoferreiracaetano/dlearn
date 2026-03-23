@@ -9,8 +9,6 @@ class UserRemote(
     val password: String,
     val imageUrl: String? = null,
     val isPremium: Boolean = false,
-    val language: String? = null,
-    val country: String? = null,
     val phoneNumber: String? = null
 )
 
@@ -24,8 +22,6 @@ fun UserRemote.toDomain() =
         password = password,
         imageUrl = imageUrl,
         isPremium = isPremium,
-        language = language,
-        country = country,
         phoneNumber = phoneNumber
     )
 
@@ -39,7 +35,5 @@ fun User.toExternal() =
         password = password ?: "",
         imageUrl = imageUrl,
         isPremium = isPremium,
-        language = language,
-        country = country,
         phoneNumber = phoneNumber
     )

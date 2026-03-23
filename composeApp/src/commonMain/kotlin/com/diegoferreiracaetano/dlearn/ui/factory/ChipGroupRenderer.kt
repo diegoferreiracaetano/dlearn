@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.diegoferreiracaetano.dlearn.HomeFilterIds
 import com.diegoferreiracaetano.dlearn.designsystem.components.chip.AppChipGroup
 import com.diegoferreiracaetano.dlearn.designsystem.components.chip.AppChipItem
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
@@ -35,7 +34,7 @@ class ChipGroupRenderer : ComponentRenderer {
                     onOptionSelected = { optionLabel ->
                         val selectedOption = item.options?.find { it.label == optionLabel }
                         if (selectedOption != null) {
-                            actions.onCategoryChanged(selectedOption.id, optionLabel)
+                            actions.onSelectChanged(selectedOption.id, optionLabel)
                         }
                     }
                 )
@@ -43,7 +42,7 @@ class ChipGroupRenderer : ComponentRenderer {
             onFilterChanged = { label ->
                 if (label == null) {
                     actions.onFilterTypeChanged(null)
-                    actions.onCategoryChanged(null, null)
+                    actions.onSelectChanged(null, null)
                 }
             }
         )

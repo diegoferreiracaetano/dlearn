@@ -21,7 +21,7 @@ val appModule = module {
 
     factory { MainViewModel(get()) }
     factory { AppViewModel(get()) }
-    factory { SettingsViewModel(get(), get(), get()) }
+    factory { SettingsViewModel(get(), get()) }
     factory { SearchMainViewModel(get()) }
     factory { SearchContentViewModel(get()) }
     factory { (movieId: String) -> MovieDetailViewModel(movieId, get()) }

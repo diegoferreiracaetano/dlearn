@@ -187,8 +187,6 @@ fun AppNavGraph(
             SettingsScreen(
                 path = NavigationRoutes.SETTINGS_NOTIFICATIONS,
                 onBackClick = { navController.popBackStack() },
-                onNavigate = { route -> navController.navigate(route) },
-                onDeeplink = { url -> uriHandler.openUri(url) },
                 modifier = modifier
             )
         }
@@ -197,8 +195,6 @@ fun AppNavGraph(
             SettingsScreen(
                 path = NavigationRoutes.SETTINGS_LANGUAGE,
                 onBackClick = { navController.popBackStack() },
-                onNavigate = { route -> navController.navigate(route) },
-                onDeeplink = { url -> uriHandler.openUri(url) },
                 modifier = modifier
             )
         }
@@ -207,8 +203,6 @@ fun AppNavGraph(
             SettingsScreen(
                 path = NavigationRoutes.SETTINGS_COUNTRY,
                 onBackClick = { navController.popBackStack() },
-                onNavigate = { route -> navController.navigate(route) },
-                onDeeplink = { url -> uriHandler.openUri(url) },
                 modifier = modifier
             )
         }

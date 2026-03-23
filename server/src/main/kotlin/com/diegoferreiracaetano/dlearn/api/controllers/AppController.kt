@@ -20,6 +20,8 @@ fun Route.appController() {
             val request = call.receive<AppRequest>()
             val userId = call.request.queryParameters["userId"] ?: "guest"
             val userAgentHeader = call.request.header(UserAgent) ?: ""
+            println("DEBUG: AppController - Raw User-Agent: $userAgentHeader")
+
             val userAgent = AppUserAgent.fromHeader(userAgentHeader)
 
             orchestrator.execute(

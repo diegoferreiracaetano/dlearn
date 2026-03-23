@@ -18,13 +18,16 @@ class SettingsOrchestrator(
         userAgent: AppUserAgent
     ): Flow<Screen> = flow {
         val path = NavigationRoutes.extractPath(request.path)
+        println("DEBUG: SettingsOrchestrator - Path: $path, Lang: ${userAgent.language}, Country: ${userAgent.country}")
         
         when (path) {
             NavigationRoutes.SETTINGS_NOTIFICATIONS -> {
                 emit(screenBuilder.buildNotificationScreen(userAgent.language))
             }
             NavigationRoutes.SETTINGS_LANGUAGE -> {
-                emit(screenBuilder.buildLanguageScreen(userAgent.language))
+                val screen = screenBuilder.buildLanguageScreen(userAgent.language)
+                println("DEBUG: SettingsOrchestrator - Language Screen built with lang: ${userAgent.language}")
+                emit(screen)
             }
             NavigationRoutes.SETTINGS_COUNTRY -> {
                 emit(screenBuilder.buildCountryScreen(userAgent.country, userAgent.language))

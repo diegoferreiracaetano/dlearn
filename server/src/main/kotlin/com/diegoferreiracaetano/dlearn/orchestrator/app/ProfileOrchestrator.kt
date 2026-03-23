@@ -31,17 +31,17 @@ class ProfileOrchestrator(
     ): Flow<Screen> {
         val path = NavigationRoutes.extractPath(request.path)
         return when (path) {
-            NavigationRoutes.PROFILE -> getProfileData(userId, userAgent.appVersion,userAgent.language)
+            NavigationRoutes.PROFILE -> getProfileData(userId, userAgent.appVersion, userAgent.language, userAgent.country)
             NavigationRoutes.EDIT_PROFILE -> getEditProfileData(userId, userAgent.language)
             NavigationRoutes.UPDATE_PROFILE -> updateProfile(userId, request.params ?: emptyMap(), userAgent.language)
             else -> throw IllegalArgumentException("Invalid profile path: $path")
         }
     }
 
-    private fun getProfileData(userId: String, appVersion: String, lang: String): Flow<Screen> = flow {
-        val screen = profileCache.getOrPut("$userId-$appVersion-$lang") {
+    private fun getProfileData(userId: String, appVersion: String, lang: String, country: String?): Flow<Screen> = flow {
+        val screen = profileCache.getOrPut("$userId-$appVersion-$lang-$country") {
             val domainData = getProfileDataUseCase.execute(userId)
-            screenBuilder.build(domainData, lang)
+            screenBuilder.build(domainData, lang, country)
         }
         emit(screen)
     }

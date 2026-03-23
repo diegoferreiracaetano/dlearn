@@ -21,6 +21,7 @@ class AppRepositoryRemote(
         params: Map<String, String>?,
         metadata: Map<String, String>?
     ): Flow<Screen> = flow {
+        println("DEBUG: AppRepositoryRemote - Executing POST $path")
         val response = httpClient.post(GATEWAY_PATH) {
             contentType(ContentType.Application.Json)
             setBody(AppRequest(path = path, params = params, metadata = metadata))
@@ -28,6 +29,9 @@ class AppRepositoryRemote(
                 header(key, value)
             }
         }.body<Screen>()
+        
+        // Log para ver se o servidor enviou o item como selecionado
+        println("DEBUG: AppRepositoryRemote - Received Screen for $path")
         emit(response)
     }
 

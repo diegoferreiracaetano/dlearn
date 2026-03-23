@@ -16,22 +16,26 @@ data class AppUserAgent(
 
         fun fromHeader(header: String): AppUserAgent {
             return try {
+                if (header.isBlank()) return AppUserAgent("DLearn", "1.0.0", "Unknown", "pt-BR", "BR")
 
                 val appPart = header.substringBefore(" ")
-                val infoPart = header.substringAfter("(").substringBefore(")")
+                val infoPart = header.substringAfter("(").substringBeforeLast(")")
 
-                val (appName, appVersion) = appPart.split("/")
+                val (appName, appVersion) = if (appPart.contains("/")) appPart.split("/") else listOf(appPart, "1.0.0")
                 val parts = infoPart.split(";").map { it.trim() }
 
-                AppUserAgent(
+                val agent = AppUserAgent(
                     appName = appName,
                     appVersion = appVersion,
                     deviceName = parts.getOrNull(0) ?: "",
                     language = parts.getOrNull(1) ?: "pt-BR",
                     country = parts.getOrNull(2) ?: "BR"
                 )
+                println("DEBUG: AppUserAgent.fromHeader -> Extracted Lang: ${agent.language}, Country: ${agent.country}")
+                agent
             } catch (e: Exception) {
-                throw IllegalArgumentException("Invalid user agent header: $header", e)
+                println("DEBUG: AppUserAgent.fromHeader -> ERROR: ${e.message}")
+                AppUserAgent("DLearn", "1.0.0", "Unknown", "pt-BR", "BR")
             }
         }
     }

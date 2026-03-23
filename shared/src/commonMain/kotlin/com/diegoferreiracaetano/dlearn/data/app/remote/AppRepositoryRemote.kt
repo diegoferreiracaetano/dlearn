@@ -13,7 +13,9 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class AppRepositoryRemote(private val httpClient: HttpClient) : AppRepository {
+class AppRepositoryRemote(
+    private val httpClient: HttpClient
+) : AppRepository {
     override fun execute(
         path: String,
         params: Map<String, String>?,

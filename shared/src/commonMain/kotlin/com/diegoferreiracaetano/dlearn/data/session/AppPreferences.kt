@@ -1,3 +1,5 @@
+@file:OptIn(com.russhwolf.settings.ExperimentalSettingsApi::class)
+
 package com.diegoferreiracaetano.dlearn.data.session
 
 import com.russhwolf.settings.ObservableSettings
@@ -10,6 +12,9 @@ interface AppPreferences {
     val language: Flow<String?>
     val country: Flow<String?>
     val notificationsEnabled: Flow<Boolean>
+
+    fun getLanguageSync(): String?
+    fun getCountrySync(): String?
 
     suspend fun saveLanguage(language: String?)
     suspend fun saveCountry(country: String?)
@@ -33,6 +38,10 @@ class SettingsAppPreferences(
     override val country: Flow<String?> = flowSettings.getStringOrNullFlow(KEY_COUNTRY)
     
     override val notificationsEnabled: Flow<Boolean> = flowSettings.getBooleanFlow(KEY_NOTIFICATIONS, true)
+
+    override fun getLanguageSync(): String? = settings.getStringOrNull(KEY_LANGUAGE)
+    
+    override fun getCountrySync(): String? = settings.getStringOrNull(KEY_COUNTRY)
 
     override suspend fun saveLanguage(language: String?) {
         if (language == null) {

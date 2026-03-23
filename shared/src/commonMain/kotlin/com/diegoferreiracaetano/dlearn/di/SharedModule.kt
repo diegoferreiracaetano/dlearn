@@ -37,17 +37,10 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 import com.diegoferreiracaetano.dlearn.getPlatform
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.runBlocking
 
-/**
- * Módulo principal compartilhado que integra os sub-módulos específicos.
- */
 val sharedModule = module {
-    // Importa o módulo de Auth isolado
     includes(authModule)
 
-    // Componentes de Infraestrutura e Core
     single { GlobalEventDispatcher() }
     
     single { 
@@ -58,11 +51,10 @@ val sharedModule = module {
         }
     }
 
-    // Configuração do Cliente HTTP com Interceptor de Auth
     single {
         val platform = getPlatform()
         val prefs = get<AppPreferences>()
-        
+
         HttpClient {
             install(ContentNegotiation) {
                 json(get<Json>())
@@ -78,14 +70,11 @@ val sharedModule = module {
                     port = 8081
                 }
                 
-                // Busca o idioma do cache ou usa o do device
-                val language = runBlocking { prefs.language.firstOrNull() } ?: platform.language
-                
-                header(HttpHeaders.AcceptLanguage, language)
-                header("X-User-Agent", platform.userAgent())
+
+                header(HttpHeaders.AcceptLanguage, platform.activeLanguage(prefs))
+                header(HttpHeaders.UserAgent, platform.userAgent(prefs))
             }
             
-            // O interceptor agora usa o engine provido pelo authModule
             install(ChallengeInterceptor) {
                 engine = get()
                 json = get()
@@ -93,7 +82,6 @@ val sharedModule = module {
         }
     }
 
-    // Session e User
     single { UserNetworkDataSource() }
     single<UserRepository> { UserRepositoryRemote(get()) }
     single { Settings() }
@@ -101,7 +89,6 @@ val sharedModule = module {
     single<SessionStorage> { SettingsSessionStorage(get()) }
     single { SessionManager(get()) }
 
-    // Repositórios de Domínio
     single<PasswordRepository> { PasswordRepositoryRemote(get()) }
     single<HomeRepository> { HomeRepositoryRemote(get()) }
     single<ProfileRepository> { ProfileRepositoryRemote(get()) }

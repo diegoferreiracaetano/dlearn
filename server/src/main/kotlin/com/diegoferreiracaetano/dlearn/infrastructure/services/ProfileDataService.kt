@@ -22,7 +22,9 @@ open class ProfileDataService {
         currentUser = current.copy(
             name = updates["full_name"] ?: current.name,
             email = updates["email"] ?: current.email,
-            phoneNumber = updates["phone"] ?: current.phoneNumber
+            phoneNumber = updates["phone"] ?: current.phoneNumber,
+            country = updates["pref_country"] ?: current.country,
+            language = updates["pref_language"] ?: current.language
         )
 
         return currentUser ?: throw IllegalStateException("Profile update failed")

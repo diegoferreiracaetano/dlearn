@@ -1,7 +1,6 @@
 package com.diegoferreiracaetano.dlearn.network
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 
 @Serializable
 data class AppUserAgent(
@@ -24,21 +23,4 @@ data class AppUserAgent(
             }
         }
     }
-}
-
-@Serializable
-data class AppHeader(
-    val paramUserAgent: String? = null,
-    val paramLanguage: String? = null,
-    val paramCountry: String? = null,
-    val userId: String? = "guest"
-) {
-    @Transient
-    val userAgent: AppUserAgent = AppUserAgent.fromHeader(paramUserAgent)
-
-    @Transient
-    val language: String = paramLanguage?.split(",")?.firstOrNull()?.split("-")?.firstOrNull() ?: "en"
-
-    @Transient
-    val country: String? = paramCountry ?: paramLanguage?.split(",")?.firstOrNull()?.split("-")?.getOrNull(1)
 }

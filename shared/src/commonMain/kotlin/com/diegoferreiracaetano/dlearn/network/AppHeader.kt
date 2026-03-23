@@ -8,6 +8,7 @@ data class AppHeader(
     val paramUserAgent: String? = null,
     val paramLanguage: String? = null,
     val paramCountry: String? = null,
+    val notificationsEnabled: Boolean = true,
     val userId: String? = "guest"
 ) {
     @Transient

@@ -25,6 +25,7 @@ fun Route.appController() {
                 paramUserAgent = call.request.header(UserAgent),
                 paramLanguage = request.language ?: call.request.header(AcceptLanguage),
                 paramCountry = request.country ?: call.request.header(AppConstants.X_COUNTRY),
+                notificationsEnabled = request.notificationsEnabled ?: true,
                 userId = "guest"
             )
 

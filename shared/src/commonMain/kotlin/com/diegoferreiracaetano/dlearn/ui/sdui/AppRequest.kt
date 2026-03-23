@@ -8,5 +8,6 @@ data class AppRequest(
     val params: Map<String, String>? = null,
     val metadata: Map<String, String>? = null,
     val language: String? = null,
-    val country: String? = null
+    val country: String? = null,
+    val notificationsEnabled: Boolean? = null
 )

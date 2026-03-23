@@ -5,13 +5,14 @@ import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
 class SettingsMapper(private val i18n: I18nProvider) {
 
-    fun toNotificationRows(lang: String): List<Component> {
+    fun toNotificationRows(notificationsEnabled: Boolean, lang: String): List<Component> {
         return listOf(
             AppSwitchRowComponent(
                 title = i18n.getString(AppStringType.PUSH_NOTIFICATIONS, lang),
                 subtitle = i18n.getString(AppStringType.PUSH_NOTIFICATIONS_DESC, lang),
                 icon = AppIconType.NOTIFICATIONS,
-                preferenceKey = "pref_notifications"
+                preferenceKey = "pref_notifications",
+                isChecked = notificationsEnabled
             )
         )
     }

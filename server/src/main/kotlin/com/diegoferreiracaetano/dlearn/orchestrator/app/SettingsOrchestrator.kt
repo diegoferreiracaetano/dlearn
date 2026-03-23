@@ -18,7 +18,7 @@ class SettingsOrchestrator(
     ): Flow<Screen> = flow {
         val screen: Screen = when {
             request.path == NavigationRoutes.SETTINGS_NOTIFICATIONS -> {
-                builder.buildNotificationScreen(header.language)
+                builder.buildNotificationScreen(header.notificationsEnabled, header.language)
             }
 
             request.path == NavigationRoutes.SETTINGS_LANGUAGE -> {

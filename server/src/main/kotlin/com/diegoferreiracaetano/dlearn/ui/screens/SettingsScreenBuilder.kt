@@ -13,14 +13,14 @@ class SettingsScreenBuilder(
     private val mapper: SettingsMapper,
     private val i18n: I18nProvider
 ) {
-    fun buildNotificationScreen(lang: String): Screen {
+    fun buildNotificationScreen(notificationsEnabled: Boolean, lang: String): Screen {
         val components = mutableListOf<Component>()
 
         val topbar = AppTopBarComponent(
             title = i18n.getString(AppStringType.NOTIFICATION_TITLE, lang)
         )
 
-        components.addAll(mapper.toNotificationRows(lang))
+        components.addAll(mapper.toNotificationRows(notificationsEnabled, lang))
 
         return  components.toAppContainerComponent(topbar)
     }

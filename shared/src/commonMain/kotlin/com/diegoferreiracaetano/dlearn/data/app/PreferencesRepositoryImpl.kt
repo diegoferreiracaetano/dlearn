@@ -3,14 +3,15 @@ package com.diegoferreiracaetano.dlearn.data.app
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class PreferencesRepositoryImpl(private val settings: Settings) : PreferencesRepository {
 
-    private val _onConfigurationChanged = MutableSharedFlow<Unit>(replay = 0)
-    override val onConfigurationChanged: SharedFlow<Unit> = _onConfigurationChanged.asSharedFlow()
+    private val _onConfigurationChanged = MutableStateFlow(0L)
+    override val onConfigurationChanged: StateFlow<Long> = _onConfigurationChanged.asStateFlow()
 
     override var language: String
         get() = settings.getString(KEY_LANGUAGE, DEFAULT_LANGUAGE)
@@ -47,7 +48,7 @@ class PreferencesRepositoryImpl(private val settings: Settings) : PreferencesRep
     }
 
     private fun notifyChange() {
-        _onConfigurationChanged.tryEmit(Unit)
+        _onConfigurationChanged.update { it + 1 }
     }
 
     companion object {

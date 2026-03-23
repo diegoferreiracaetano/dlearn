@@ -49,7 +49,7 @@ class AppOrchestrator(
             MOVIE_DETAIL -> movieDetailOrchestrator.execute(request, userId, userAgent)
             WELCOME -> mainOrchestrator.execute(request, userId, userAgent)
             VERIFY_ACCOUNT -> verifyAccountOrchestrator.execute(request, userId, userAgent)
-            SETTINGS_NOTIFICATIONS, SETTINGS_LANGUAGE, SETTINGS_COUNTRY -> settingsOrchestrator.execute(request.path, userAgent)
+            SETTINGS_NOTIFICATIONS, SETTINGS_LANGUAGE, SETTINGS_COUNTRY -> settingsOrchestrator.execute(request, userId, userAgent)
             else -> throw IllegalArgumentException("Invalid path: ${request.path} (extracted: $path)")
         }
     }

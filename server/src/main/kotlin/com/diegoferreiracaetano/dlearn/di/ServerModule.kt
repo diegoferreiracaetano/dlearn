@@ -4,8 +4,8 @@ import com.diegoferreiracaetano.dlearn.api.exception.ChallengeMapper
 import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
 import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
 import com.diegoferreiracaetano.dlearn.domain.usecases.*
-import com.diegoferreiracaetano.dlearn.infrastructure.mappers.WatchProviderUrlMapper
 import com.diegoferreiracaetano.dlearn.infrastructure.mappers.TmdbMapper
+import com.diegoferreiracaetano.dlearn.infrastructure.mappers.WatchProviderUrlMapper
 import com.diegoferreiracaetano.dlearn.infrastructure.services.*
 import com.diegoferreiracaetano.dlearn.orchestrator.*
 import com.diegoferreiracaetano.dlearn.orchestrator.app.*
@@ -41,19 +41,45 @@ val serverModule = module {
     // Auth & Login (SDUI)
     single { LoginOrchestrator(get()) }
 
-    // Main / App SDUI
+    // Data Services & UseCases (Profile, Settings, Movie, Search)
+    single { ProfileDataService() }
+    single { GetProfileDataUseCase(get()) }
+    single { UpdateProfileDataUseCase(get()) }
+    single { ProfileMapper(get()) }
+    
+    single { SettingsMapper(get()) }
+    
+    single { MovieDetailDataService(get(), get()) }
+    single { GetMovieDetailUseCase(get()) }
+    single { MovieDetailMapper(get()) }
+    
+    single { SearchDataService(get()) }
+    single { GetSearchDataUseCase(get()) }
+
+    // Screen Builders
     single { WatchlistScreenBuilder(get()) }
     single { FavoriteScreenBuilder(get()) }
     single { MainScreenBuilder(get()) }
     single { VerifyAccountScreenBuilder() }
     single { FaqScreenBuilder() }
-    single { WatchlistOrchestrator(get(), get(), get(), get(),get()) }
-    single { FavoriteOrchestrator(get(), get(), get(), get(),get()) }
+    single { ProfileScreenBuilder(get()) }
+    single { EditProfileScreenBuilder(get(), get()) }
+    single { SettingsScreenBuilder(get(), get()) }
+    single { MovieDetailScreenBuilder(get(), get()) }
+    single { SearchScreenBuilder(get()) }
+
+    // Individual Orchestrators
+    single { WatchlistOrchestrator(get(), get(), get(), get()) }
+    single { FavoriteOrchestrator(get(), get(), get(), get()) }
     single { MainOrchestrator(get()) }
     single { FaqOrchestrator(get(), get()) }
     single { VerifyAccountOrchestrator(get()) }
+    single { ProfileOrchestrator(get(), get(), get(), get()) }
+    single { SettingsOrchestrator(get()) }
+    single { MovieDetailOrchestrator(get(), get()) }
+    single { SearchOrchestrator(get(), get(), get(), get()) }
     
-    // AppOrchestrator
+    // AppOrchestrator (Main Gateway)
     single<Orchestrator> {
         AppOrchestrator(
             get(),
@@ -68,33 +94,6 @@ val serverModule = module {
             get()
         )
     }
-
-    // Profile
-    single { ProfileDataService(get()) }
-    single { GetProfileDataUseCase(get()) }
-    single { UpdateProfileDataUseCase(get()) }
-    single { ProfileMapper(get()) }
-    single { ProfileScreenBuilder(get()) }
-    single { EditProfileScreenBuilder(get(), get()) }
-    single { ProfileOrchestrator(get(), get(), get(), get()) }
-
-    // Settings
-    single { SettingsMapper(get()) }
-    single { SettingsScreenBuilder(get(), get()) }
-    single { SettingsOrchestrator(get()) }
-
-    // Movie Detail
-    single { MovieDetailDataService(get(), get()) }
-    single { GetMovieDetailUseCase(get()) }
-    single { MovieDetailMapper(get()) }
-    single { MovieDetailScreenBuilder(get(), get()) }
-    single { MovieDetailOrchestrator(get(), get()) }
-
-    // Search
-    single { SearchDataService(get()) }
-    single { GetSearchDataUseCase(get()) }
-    single { SearchScreenBuilder(get()) }
-    single { SearchOrchestrator(get(), get(), get(), get()) }
 
     // Challenge Engine
     single { ChallengeDataService() }

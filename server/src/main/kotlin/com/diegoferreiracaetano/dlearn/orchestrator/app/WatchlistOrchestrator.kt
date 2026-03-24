@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
-import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.model.toVideo
 import com.diegoferreiracaetano.dlearn.network.AppHeader
@@ -21,8 +20,7 @@ class WatchlistOrchestrator(
     private val watchlistScreenBuilder: WatchlistScreenBuilder,
     private val watchlistRepository: WatchlistRepository,
     private val videoMapper: VideoMapper,
-    private val tmdbClient: TmdbClient,
-    private val sessionManager: SessionManager
+    private val tmdbClient: TmdbClient
 ) : Orchestrator {
 
     override fun execute(
@@ -30,19 +28,18 @@ class WatchlistOrchestrator(
         header: AppHeader
     ): Flow<Screen> {
         val language = header.language
+        val userId = header.userId
         val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
         
         return if (movieId != null) {
-            toggleWatchlist(movieId, language)
+            toggleWatchlist(userId, movieId, language)
         } else {
-            getWatchlist(language)
+            getWatchlist(userId, language)
         }
     }
 
-    private fun getWatchlist( lang: String): Flow<Screen> = flow {
+    private fun getWatchlist(userId: String, lang: String): Flow<Screen> = flow {
         coroutineScope {
-
-            val userId = sessionManager.user().id
             val watchlistIds = watchlistRepository.getWatchlist(userId)
 
             val videos = watchlistIds.map { id ->
@@ -58,10 +55,9 @@ class WatchlistOrchestrator(
         }
     }
 
-    private fun toggleWatchlist(movieId: String, lang: String): Flow<Screen> = flow {
-        val userId = sessionManager.user().id
+    private fun toggleWatchlist(userId: String, movieId: String, lang: String): Flow<Screen> = flow {
         watchlistRepository.toggleWatchlist(userId, movieId)
-        getWatchlist(lang).collect {
+        getWatchlist(userId, lang).collect {
             emit(it)
         }
     }

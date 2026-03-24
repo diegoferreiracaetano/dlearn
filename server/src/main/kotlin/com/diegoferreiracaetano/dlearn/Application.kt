@@ -70,7 +70,7 @@ fun Application.module() {
     }
 
     install(CachingHeaders) {
-        options { call, outgoingContent ->
+        options { _, outgoingContent ->
             // Não aplica cache para erros (status >= 400)
             if (outgoingContent.status != null && outgoingContent.status!!.value >= 400) return@options null
             

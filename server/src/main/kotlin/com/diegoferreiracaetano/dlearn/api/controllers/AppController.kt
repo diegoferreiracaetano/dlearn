@@ -1,7 +1,7 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
-import com.diegoferreiracaetano.dlearn.AppConstants
 import com.diegoferreiracaetano.dlearn.AppConstants.X_COUNTRY
+import com.diegoferreiracaetano.dlearn.api.util.userId
 import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.orchestrator.app.Orchestrator
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
@@ -26,7 +26,8 @@ fun Route.appController() {
                 paramUserAgent = call.request.header(UserAgent),
                 paramLanguage = request.language ?: call.request.header(AcceptLanguage),
                 paramCountry = request.country ?: call.request.header(X_COUNTRY),
-                notificationsEnabled = request.notificationsEnabled ?: true
+                notificationsEnabled = request.notificationsEnabled ?: true,
+                userId = call.userId
             )
 
             orchestrator.execute(

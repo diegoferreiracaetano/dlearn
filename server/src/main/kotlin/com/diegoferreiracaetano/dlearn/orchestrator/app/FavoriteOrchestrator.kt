@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
-import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.model.toVideo
 import com.diegoferreiracaetano.dlearn.network.AppHeader
@@ -21,8 +20,7 @@ class FavoriteOrchestrator(
     private val favoriteScreenBuilder: FavoriteScreenBuilder,
     private val favoriteRepository: FavoriteRepository,
     private val videoMapper: VideoMapper,
-    private val tmdbClient: TmdbClient,
-    private val sessionManager: SessionManager
+    private val tmdbClient: TmdbClient
 ) : Orchestrator {
 
     override fun execute(
@@ -30,19 +28,18 @@ class FavoriteOrchestrator(
         header: AppHeader
     ): Flow<Screen> {
         val language = header.language
+        val userId = header.userId
         val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
         
         return if (movieId != null) {
-            toggleFavorite(movieId, language)
+            toggleFavorite(userId, movieId, language)
         } else {
-            getFavorite(language)
+            getFavorite(userId, language)
         }
     }
 
-    private fun getFavorite(lang: String): Flow<Screen> = flow {
+    private fun getFavorite(userId: String, lang: String): Flow<Screen> = flow {
         coroutineScope {
-
-            val userId = sessionManager.user().id
             val favoriteIds = favoriteRepository.getFavorites(userId)
 
             val videos = favoriteIds.map { id ->
@@ -58,10 +55,9 @@ class FavoriteOrchestrator(
         }
     }
 
-    private fun toggleFavorite(movieId: String, lang: String): Flow<Screen> = flow {
-        val userId = sessionManager.user().id
+    private fun toggleFavorite(userId: String, movieId: String, lang: String): Flow<Screen> = flow {
         favoriteRepository.toggleFavorite(userId, movieId)
-        getFavorite(lang).collect {
+        getFavorite(userId, lang).collect {
             emit(it)
         }
     }

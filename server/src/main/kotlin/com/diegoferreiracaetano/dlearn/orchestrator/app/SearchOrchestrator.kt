@@ -21,25 +21,23 @@ class SearchOrchestrator(
         request: AppRequest,
         header: AppHeader
     ): Flow<Screen> {
-        val userId = header.userId ?: "guest"
         val language = header.language
         val query = request.params?.get("q")
         
         return if (query != null) {
-            searchContent(userId, language, query)
+            searchContent( language, query)
         } else {
-            searchMain(userId, language)
+            searchMain(language)
         }
     }
 
-    private fun searchMain(userId: String, lang: String): Flow<Screen> = flow {
-        val homeData = getHomeDataUseCase.execute(userId, lang)
+    private fun searchMain(lang: String): Flow<Screen> = flow {
+        val homeData = getHomeDataUseCase.execute(lang)
         val popularItems = videoMapper.toMovieItemComponents(homeData.popular)
         emit(searchScreenBuilder.buildMain(lang, popularItems))
     }
 
     private fun searchContent(
-        userId: String,
         lang: String,
         query: String
     ): Flow<Screen> = flow {

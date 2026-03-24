@@ -1,10 +1,11 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
+import com.diegoferreiracaetano.dlearn.AppConstants.X_COUNTRY
 import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.orchestrator.app.MainOrchestrator
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
+import io.ktor.http.HttpHeaders.AcceptLanguage
 import io.ktor.http.HttpHeaders.UserAgent
-import io.ktor.server.application.call
 import io.ktor.server.request.header
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
@@ -17,19 +18,14 @@ fun Route.mainController() {
 
     route("/v1/main") {
         get {
-            val userId = call.request.queryParameters["userId"] ?: "guest"
-            val userAgentHeader = call.request.header(UserAgent) ?: ""
-            val languageHeader = call.request.header("Accept-Language") ?: "en"
-            val countryHeader = call.request.header("X-Country")
+            val request = AppRequest(path = "/main")
 
             val header = AppHeader(
-                paramUserAgent = userAgentHeader,
-                paramLanguage = languageHeader,
-                paramCountry = countryHeader,
-                userId = userId
+                paramUserAgent = call.request.header(UserAgent),
+                paramLanguage = request.language ?: call.request.header(AcceptLanguage),
+                paramCountry = request.country ?: call.request.header(X_COUNTRY),
+                notificationsEnabled = request.notificationsEnabled ?: true
             )
-
-            val request = AppRequest(path = "/main")
 
             orchestrator.execute(
                 request = request,

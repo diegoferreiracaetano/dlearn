@@ -27,11 +27,10 @@ class HomeOrchestrator(
         } ?: HomeFilterType.ALL
 
         val language = header.language
-        val userId = header.userId ?: "guest"
-        val cacheKey = "$userId-${header.userAgent.appVersion}-$language-$type"
+        val cacheKey = "${header.userAgent.appVersion}-$language-$type"
         
         val screen = homeCache.getOrPut(cacheKey) {
-            val domainData = getHomeDataUseCase.execute(userId, language, type)
+            val domainData = getHomeDataUseCase.execute(language, type)
             screenBuilder.build(domainData, language)
         }
         emit(screen)

@@ -11,7 +11,6 @@ import kotlinx.coroutines.coroutineScope
 
 class HomeDataService(private val tmdbClient: TmdbClient) {
     suspend fun fetchHomeData(
-        userId: String,
         language: String,
         type: HomeFilterType = HomeFilterType.ALL
     ): HomeDomainData = coroutineScope {

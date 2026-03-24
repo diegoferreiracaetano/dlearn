@@ -13,7 +13,7 @@ import org.koin.ktor.ext.inject
 fun Route.authController() {
     val orchestrator by inject<LoginOrchestrator>()
 
-    route("/auth") {
+    route("/v1/auth") {
         post("/login") {
             val params = call.receive<Map<String, String>>()
             val email = params["email"] ?: return@post call.respond(HttpStatusCode.BadRequest)

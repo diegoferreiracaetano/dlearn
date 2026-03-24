@@ -1,16 +1,14 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
-import com.diegoferreiracaetano.dlearn.domain.models.ProfileDomainData
+import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.ui.mappers.ProfileMapper
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
-import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
 class ProfileScreenBuilder(
-    private val mapper: ProfileMapper,
-    private val i18n: I18nProvider
+    private val mapper: ProfileMapper
 ) {
-    fun build(data: ProfileDomainData, lang: String, country: String?): Screen {
+    fun build(data: User, lang: String, country: String?): Screen {
         val components = mutableListOf<Component>()
 
         components.addAll(buildContent(data, lang, country))
@@ -20,7 +18,7 @@ class ProfileScreenBuilder(
         )
     }
 
-    fun buildContent(data: ProfileDomainData, lang: String, country: String?): List<Component> {
+    fun buildContent(data: User, lang: String, country: String?): List<Component> {
         val components = mutableListOf<Component>()
 
         components.add(mapper.toHeader(data))

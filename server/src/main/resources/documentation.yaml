@@ -4,12 +4,17 @@ info:
   description: |
     API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows.
     Security and Multi-Factor Authentication (MFA) are handled by a Generic Challenge Engine.
-  version: 1.4.0
+
+    **Test Credentials:**
+    - Email: `admin@dlearn.com`
+    - Password: `123456`
+  version: 1.6.1
 servers:
   - url: http://localhost:8081
     description: Local Server
 paths:
-  /auth/login:
+  # --- Authentication ---
+  /v1/auth/login:
     post:
       summary: Login with credentials
       tags:
@@ -24,8 +29,10 @@ paths:
               properties:
                 email:
                   type: string
+                  example: "admin@dlearn.com"
                 password:
                   type: string
+                  example: "123456"
       responses:
         '200':
           description: OK
@@ -33,7 +40,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthResponse'
-  /auth/refresh:
+        '401':
+          description: Unauthorized
+  /v1/auth/refresh:
     post:
       summary: Refresh access token
       tags:
@@ -55,30 +64,96 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthResponse'
-  /auth/logout:
+  /v1/auth/logout:
     post:
       summary: Logout user
       tags:
         - Authentication
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: OK
+
+  # --- Challenge Engine ---
+  /v1/auth/challenge/resolve:
+    post:
+      summary: Resolve a security challenge (MFA)
+      tags:
+        - Authentication
+      parameters:
+        - name: X-Transaction-Id
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResolveChallengeRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResolveChallengeResponse'
+  /v1/auth/challenge/resend:
+    post:
+      summary: Resend challenge code
+      tags:
+        - Authentication
+      parameters:
+        - name: X-Transaction-Id
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+
+  # --- User Actions ---
+  /v1/password/change:
+    post:
+      summary: Change user password
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/challengeToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, newPassword]
+              properties:
+                userId:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        '200':
+          description: OK
+
+  # --- SDUI Gateway ---
   /v1/app:
     post:
       summary: SDUI Gateway / BFF Generic Endpoint
       tags:
         - SDUI Gateway
-      description: |
-        Central gateway for dynamic screens and actions.
-        The client sends a `path` (slug), `language`, `country` and optional `params`.
+      security:
+        - bearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/appVersion'
         - $ref: '#/components/parameters/userAgent'
         - $ref: '#/components/parameters/acceptLanguage'
         - $ref: '#/components/parameters/xCountry'
-        - $ref: '#/components/parameters/challengeToken'
-        - $ref: '#/components/parameters/challengePreference'
       requestBody:
         required: true
         content:
@@ -92,16 +167,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Screen'
+
   /v1/main:
     get:
-      summary: Get Main Shell (Legacy/Initial)
+      summary: Get Main Shell (SDUI)
       tags:
-        - Legacy
-      parameters:
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/userAgent'
-        - $ref: '#/components/parameters/acceptLanguage'
+        - SDUI
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: OK
@@ -109,23 +182,79 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Screen'
-  /v1/home:
+
+  /v1/profile:
     get:
-      summary: Get Home Screen (Legacy)
+      summary: Get Profile Screen (SDUI)
       tags:
-        - Legacy
-      parameters: 
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/userAgent'
-        - $ref: '#/components/parameters/acceptLanguage'
-        - name: type
+        - SDUI
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
+
+  /v1/profile/update:
+    post:
+      summary: Update Profile (SDUI Action)
+      tags:
+        - SDUI
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
+
+  /v1/movie/detail:
+    get:
+      summary: Get Movie Detail (SDUI)
+      tags:
+        - SDUI
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: movieId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screen'
+
+  /v1/search:
+    get:
+      summary: Get Search Screen (SDUI)
+      tags:
+        - SDUI
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: query
           in: query
           required: false
           schema:
             type: string
-            enum: [ALL, MOVIE, SERIES]
-          example: ALL
       responses:
         '200':
           description: OK
@@ -135,14 +264,12 @@ paths:
                 $ref: '#/components/schemas/Screen'
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   parameters:
-    userId:
-      name: userId
-      in: query
-      required: false
-      schema:
-        type: string
-      example: diego
     appVersion:
       name: X-App-Version
       in: header
@@ -154,7 +281,6 @@ components:
       name: User-Agent
       in: header
       required: false
-      description: "Client info: appName/appVersion (deviceName)"
       schema:
         type: string
       example: "DLearn/1.0.0 (Swagger)"
@@ -176,18 +302,16 @@ components:
       name: X-Challenge-Token
       in: header
       required: false
-      description: "Token obtained after resolving a challenge."
       schema:
         type: string
-    challengePreference:
-      name: X-Challenge-Preference
-      in: header
-      required: false
-      description: "Suggested challenge method (e.g. BIOMETRIC)."
-      schema:
-        $ref: '#/components/schemas/ChallengeType'
   schemas:
-    # --- Authentication Models ---
+    # --- Auth & User ---
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "User not found"
     User:
       type: object
       required: [id, name, email]
@@ -215,51 +339,19 @@ components:
           type: string
         challengeRequired:
           type: boolean
-        screen:
-          $ref: '#/components/schemas/Screen'
 
-    # --- Challenge Engine Models ---
+    # --- Challenge Models ---
     ChallengeType:
       type: string
       enum: [OTP_SMS, OTP_EMAIL, BIOMETRIC, PASSWORD, TOTP, PUSH_NOTIFICATION, KBA, DEVICE_BINDING, UNKNOWN]
-    ChallengeStatus:
-      type: string
-      enum: [SUCCESS, CHALLENGE_REQUIRED, ERROR]
-    ChallengeSession:
-      type: object
-      required: [transactionId, challenges]
-      properties:
-        transactionId:
-          type: string
-        challenges:
-          type: array
-          items:
-            $ref: '#/components/schemas/Challenge'
-        expiresAt:
-          type: integer
-          format: int64
-    Challenge:
-      type: object
-      required: [challengeType]
-      properties:
-        challengeType:
-          $ref: '#/components/schemas/ChallengeType'
-        data:
-          type: object
-          additionalProperties:
-            type: string
     ResolveChallengeRequest:
       type: object
-      required: [transactionId, type, answers]
+      required: [type, answers]
       properties:
-        transactionId:
-          type: string
         type:
           $ref: '#/components/schemas/ChallengeType'
         answers:
-          type: object
-          additionalProperties:
-            type: string
+          type: string
     ResolveChallengeResponse:
       type: object
       properties:
@@ -270,41 +362,15 @@ components:
         message:
           type: string
 
-    # --- Business Models ---
-    ChangePasswordRequest:
-      type: object
-      required: [userId, newPassword]
-      properties:
-        userId:
-          type: string
-        newPassword:
-          type: string
-
-    # --- SDUI Models ---
+    # --- SDUI Core ---
     AppRequest:
       type: object
       required: [path]
       properties:
         path:
           type: string
-          description: Route path (e.g. 'home', 'profile', 'settings/language')
-          example: "settings/language"
-        language:
-          type: string
-          description: Target language (e.g. 'en-US')
-          example: "en-US"
-        country:
-          type: string
-          description: Target country (e.g. 'US')
-          example: "US"
+          example: "home"
         params:
-          type: object
-          description: Query parameters or route arguments
-          additionalProperties:
-            type: string
-          example:
-            ref: "privacy-policy"
-        metadata:
           type: object
           additionalProperties:
             type: string
@@ -466,10 +532,6 @@ components:
               type: integer
             actionUrl:
               type: string
-    app_search_content:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
     AppMovieDetailHeaderComponent:
       allOf:
         - $ref: '#/components/schemas/Component'
@@ -709,7 +771,7 @@ components:
       enum: [SUCCESS, ERROR, WARNING]
     AppIconType:
       type: string
-      enum: [IC_SEARCH, IC_BACK, IC_CLOSE, IC_SETTINGS, IC_CHEVRON_RIGHT, IC_USER, IC_LOCK, IC_INFO, IC_HELP, NOTIFICATIONS, PUBLIC, LANGUAGE, DELETE, PERSON, POLICY]
+      enum: [HOME, SEARCH, FAVORITE, PERSON, WATCHLIST, LOCK, NOTIFICATIONS, LANGUAGE, PUBLIC, DELETE, POLICY, HELP, INFO, WORKSPACE_PREMIUM, PLAY_ARROW, DOWNLOAD, SHARE, CALENDAR_MONTH, SCHEDULE, STAR, UNKNOWN]
     AppImageType:
       type: object
       properties:
@@ -717,17 +779,6 @@ components:
           type: string
         placeholder:
           type: string
-    AppAction:
-      type: object
-      properties:
-        type:
-          type: string
-        url:
-          type: string
-        params:
-          type: object
-          additionalProperties:
-            type: string
     AppStringType:
       type: object
       properties:
@@ -741,4 +792,4 @@ components:
             type: string
     AppTextFieldType:
       type: string
-      enum: [TEXT, EMAIL, PASSWORD, PHONE, NUMBER]
+      enum: [TEXT, EMAIL, PASSWORD, PHONE, NUMBER, NONE]

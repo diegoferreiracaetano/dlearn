@@ -29,33 +29,32 @@ class ProfileOrchestrator(
         header: AppHeader
     ): Flow<Screen> {
         val path = NavigationRoutes.extractPath(request.path)
-        val userId = header.userId ?: "guest"
         val language = header.language
         
         return when (path) {
-            NavigationRoutes.PROFILE -> getProfileData(userId, header.userAgent.appVersion, language, header.country)
-            NavigationRoutes.EDIT_PROFILE -> getEditProfileData(userId, language)
-            NavigationRoutes.UPDATE_PROFILE -> updateProfile(userId, request.params ?: emptyMap(), language)
+            NavigationRoutes.PROFILE -> getProfileData(header.userAgent.appVersion, language, header.country)
+            NavigationRoutes.EDIT_PROFILE -> getEditProfileData( language)
+            NavigationRoutes.UPDATE_PROFILE -> updateProfile(request.params ?: emptyMap(), language)
             else -> throw IllegalArgumentException("Invalid profile path: $path")
         }
     }
 
-    private fun getProfileData(userId: String, appVersion: String, lang: String, country: String?): Flow<Screen> = flow {
-        val screen = profileCache.getOrPut("$userId-$appVersion-$lang-$country") {
-            val domainData = getProfileDataUseCase.execute(userId)
+    private fun getProfileData(appVersion: String, lang: String, country: String?): Flow<Screen> = flow {
+        val screen = profileCache.getOrPut("$appVersion-$lang-$country") {
+            val domainData = getProfileDataUseCase.execute()
             screenBuilder.build(domainData, lang, country)
         }
         emit(screen)
     }
 
-    private fun getEditProfileData(userId: String, lang: String): Flow<Screen> = flow {
-        val domainData = getProfileDataUseCase.execute(userId)
+    private fun getEditProfileData( lang: String): Flow<Screen> = flow {
+        val domainData = getProfileDataUseCase.execute()
         emit(editScreenBuilder.build(domainData, lang))
     }
 
-    private fun updateProfile(userId: String, data: Map<String, String>, lang: String): Flow<Screen> = flow {
+    private fun updateProfile(data: Map<String, String>, lang: String): Flow<Screen> = flow {
         try {
-            val domainData = updateProfileDataUseCase.execute(userId, data)
+            val domainData = updateProfileDataUseCase.execute(data)
             profileCache.clear()
             emit(
                 editScreenBuilder.build(
@@ -67,7 +66,7 @@ class ProfileOrchestrator(
             )
         } catch (e: Exception) {
             getLogger().d("Error Profile", e.message.toString())
-            val domainData = getProfileDataUseCase.execute(userId)
+            val domainData = getProfileDataUseCase.execute()
             emit(
                 editScreenBuilder.build(
                     data = domainData,

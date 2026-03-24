@@ -1,30 +1,23 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.services
 
-import com.diegoferreiracaetano.dlearn.domain.models.ProfileDomainData
-import com.diegoferreiracaetano.dlearn.util.fromJson
-import java.io.InputStream
+import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
+import com.diegoferreiracaetano.dlearn.domain.user.User
 
-open class ProfileDataService {
-    private var currentUser: ProfileDomainData? = null
-
-    open fun fetchProfileData(userId: String): ProfileDomainData {
-        if (currentUser == null) {
-            val inputStream: InputStream = this.javaClass.classLoader.getResourceAsStream("profile.json")
-                ?: throw IllegalStateException("profile.json not found")
-            val jsonString = inputStream.bufferedReader().use { it.readText() }
-            currentUser = jsonString.fromJson<ProfileDomainData>()
-        }
-        return currentUser!!
+open class ProfileDataService(
+    private val sessionManager: SessionManager
+) {
+    open suspend fun fetchProfileData(): User {
+        return sessionManager.user()
     }
 
-    open fun updateProfileData(userId: String, updates: Map<String, String>): ProfileDomainData {
-        val current = fetchProfileData(userId)
-        currentUser = current.copy(
+    open suspend fun updateProfileData(updates: Map<String, String>): User {
+        val current = sessionManager.user()
+        val updateUser = sessionManager.user().copy(
             name = updates["full_name"] ?: current.name,
             email = updates["email"] ?: current.email,
             phoneNumber = updates["phone"] ?: current.phoneNumber
         )
 
-        return currentUser ?: throw IllegalStateException("Profile update failed")
+        return updateUser
     }
 }

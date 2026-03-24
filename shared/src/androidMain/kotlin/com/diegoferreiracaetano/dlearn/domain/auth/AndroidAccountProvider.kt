@@ -1,51 +1,48 @@
 package com.diegoferreiracaetano.dlearn.domain.auth
 
-import android.accounts.Account
-import android.accounts.AccountManager
-import android.content.Context
+import com.diegoferreiracaetano.dlearn.data.source.local.KeyValueStorage
 import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.util.fromJson
 import com.diegoferreiracaetano.dlearn.util.toJson
 
+/**
+ * Implementação do AccountProvider para Android usando KeyValueStorage (SharedPreferences).
+ * Substituiu o AccountManager para evitar SecurityException e facilitar KMP.
+ */
 class AndroidAccountProvider(
-    private val context: Context
+    private val storage: KeyValueStorage
 ) : AccountProvider {
-    private val accountManager = AccountManager.get(context)
-    private val accountType = "com.diegoferreiracaetano.dlearn"
-    private val authTokenType = "full_access"
+
+    private val KEY_ACCESS_TOKEN = "access_token"
+    private val KEY_REFRESH_TOKEN = "refresh_token"
+    private val KEY_USER_DATA = "user_data"
 
     override suspend fun saveAccount(user: User, accessToken: String, refreshToken: String) {
-        val account = Account(user.email, accountType)
-        accountManager.addAccountExplicitly(account, null, null)
-        accountManager.setAuthToken(account, authTokenType, accessToken)
-        accountManager.setUserData(account, "refresh_token", refreshToken)
-        accountManager.setUserData(account, "user_data", user.toJson())
+        storage.put(KEY_ACCESS_TOKEN, accessToken)
+        storage.put(KEY_REFRESH_TOKEN, refreshToken)
+        storage.put(KEY_USER_DATA, user.toJson())
     }
 
-    override suspend fun getAccessToken(): String? {
-        val account = getAccount() ?: return null
-        return accountManager.peekAuthToken(account, authTokenType)
+    override suspend fun getAccessToken(): String {
+        return storage.get(KEY_ACCESS_TOKEN, "")
     }
 
-    override suspend fun getRefreshToken(): String? {
-        val account = getAccount() ?: return null
-        return accountManager.getUserData(account, "refresh_token")
+    override suspend fun getRefreshToken(): String {
+        return storage.get(KEY_REFRESH_TOKEN, "")
     }
 
-    override suspend fun getUser(): User? {
-        val account = getAccount() ?: return null
-        return accountManager.getUserData(account, "user_data")?.fromJson<User>()
+    override suspend fun getUser(): User {
+        return storage.get(KEY_USER_DATA, "").fromJson<User>()
     }
 
     override suspend fun clearAccount() {
-        getAccount()?.let {
-            accountManager.removeAccountExplicitly(it)
-        }
+        storage.remove(KEY_ACCESS_TOKEN)
+        storage.remove(KEY_REFRESH_TOKEN)
+        storage.remove(KEY_USER_DATA)
     }
 
-    override suspend fun hasAccount(): Boolean = getAccount() != null
+    override suspend fun hasAccount(): Boolean {
+        return storage.get(KEY_ACCESS_TOKEN, "").isNotEmpty()
 
-    private fun getAccount(): Account? {
-        return accountManager.getAccountsByType(accountType).firstOrNull()
     }
 }

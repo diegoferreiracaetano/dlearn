@@ -7,7 +7,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
+import com.diegoferreiracaetano.dlearn.designsystem.components.error.factory.AppErrorFactory
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
@@ -16,11 +18,11 @@ import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginUIState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
 import dlearn.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onBackClick: () -> Unit,
@@ -29,22 +31,52 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = koinViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.checkSession()
     }
 
-    LaunchedEffect(state) {
-        if (state is LoginUIState.Success) {
-            onNavigateToHome()
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is LoginUIState.Success -> onNavigateToHome()
+            is LoginUIState.Error -> {
+                val errorData = AppErrorFactory.invoke(throwable = state.throwable)
+                val message = getString(errorData.title)
+                snackbarHostState.showSnackbar(message = message)
+            }
+            else -> Unit
         }
     }
 
+    LoginContent(
+        onBackClick = onBackClick,
+        onLoginClick = viewModel::login,
+        onForgotPasswordClick = onForgotPasswordClick,
+        isLoading = uiState is LoginUIState.Loading,
+        snackbarHostState = snackbarHostState,
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LoginContent(
+    onBackClick: () -> Unit,
+    onLoginClick: (String, String) -> Unit,
+    onForgotPasswordClick: () -> Unit,
+    isLoading: Boolean,
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier
+) {
+    var email by remember { mutableStateOf("admin@dlearn.com") }
+    var password by remember { mutableStateOf("123456") }
+
     AppContainer(
         modifier = modifier,
+        snackBarHostState = snackbarHostState,
+        isLoading = isLoading,
         topBar = {
             AppTopBar(
                 title = stringResource(Res.string.login_action),
@@ -96,15 +128,6 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            if (state is LoginUIState.Error) {
-                Text(
-                    text = (state as LoginUIState.Error).throwable.message ?: "Erro ao realizar login",
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-            }
-
             TextButton(
                 onClick = onForgotPasswordClick,
                 modifier = Modifier.align(Alignment.End)
@@ -118,15 +141,12 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            if (state is LoginUIState.Loading) {
-                CircularProgressIndicator()
-            } else {
-                AppButton(
-                    text = stringResource(Res.string.login_action),
-                    onClick = { viewModel.login(email, password) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+            AppButton(
+                text = stringResource(Res.string.login_action),
+                onClick = { onLoginClick(email, password) },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isLoading
+            )
         }
     }
 }
@@ -135,6 +155,12 @@ fun LoginScreen(
 @Composable
 fun LoginScreenPreview() {
     DLearnTheme {
-        LoginScreen(onBackClick = {}, onNavigateToHome = {}, onForgotPasswordClick = {})
+        LoginContent(
+            onBackClick = {},
+            onLoginClick = { _, _ -> },
+            onForgotPasswordClick = {},
+            isLoading = false,
+            snackbarHostState = remember { SnackbarHostState() }
+        )
     }
 }

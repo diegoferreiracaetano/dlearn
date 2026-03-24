@@ -1,12 +1,12 @@
 package com.diegoferreiracaetano.dlearn.ui.mappers
 
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import com.diegoferreiracaetano.dlearn.domain.models.ProfileDomainData
+import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
 class ProfileMapper(private val i18n: I18nProvider) {
-    fun toHeader(data: ProfileDomainData): ProfileRowComponent {
+    fun toHeader(data: User): ProfileRowComponent {
         return ProfileRowComponent(
             name = data.name,
             email = data.email,
@@ -15,7 +15,7 @@ class ProfileMapper(private val i18n: I18nProvider) {
         )
     }
 
-    fun toEditHeader(data: ProfileDomainData): AppProfileHeaderComponent {
+    fun toEditHeader(data: User): AppProfileHeaderComponent {
         return AppProfileHeaderComponent(
             name = data.name,
             email = data.email,
@@ -24,7 +24,7 @@ class ProfileMapper(private val i18n: I18nProvider) {
         )
     }
 
-    fun toEditFields(data: ProfileDomainData, lang: String): List<Component> {
+    fun toEditFields(data: User): List<Component> {
         return listOf(
             AppTextFieldComponent(
                 key = "full_name",
@@ -57,7 +57,7 @@ class ProfileMapper(private val i18n: I18nProvider) {
         )
     }
 
-    fun toPremiumBanner(data: ProfileDomainData, lang: String): PremiumBannerComponent? {
+    fun toPremiumBanner(data: User, lang: String): PremiumBannerComponent? {
         if (!data.isPremium) return null
         return PremiumBannerComponent(
             title = i18n.getString(AppStringType.PREMIUM_MEMBER, lang),

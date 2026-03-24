@@ -30,7 +30,7 @@ class SessionManager(
         _isLoggedIn.value = false
     }
 
-    suspend fun user(): User? = accountProvider.getUser()
+    suspend fun user(): User = accountProvider.getUser() ?: throw IllegalStateException("User not logged in")
 
     suspend fun token(): String? = accountProvider.getAccessToken()
     

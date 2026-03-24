@@ -1,10 +1,10 @@
 package com.diegoferreiracaetano.dlearn.domain.usecases
 
-import com.diegoferreiracaetano.dlearn.domain.models.ProfileDomainData
+import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.infrastructure.services.ProfileDataService
 
 class GetProfileDataUseCase(private val profileDataService: ProfileDataService) {
-    fun execute(userId: String): ProfileDomainData {
-        return profileDataService.fetchProfileData(userId)
+    suspend fun execute(): User {
+        return profileDataService.fetchProfileData()
     }
 }

@@ -18,6 +18,9 @@ class AuthInterceptor(
     private val mutex = Mutex()
 
     suspend fun intercept(request: HttpRequestBuilder) {
+        val mode = request.attributes.getOrNull(AuthModeKey) ?: AuthMode.REQUIRED
+        if (mode == AuthMode.NONE) return
+
         val token = sessionManager.token()
         if (token != null) {
             request.header(HttpHeaders.Authorization, "Bearer $token")
@@ -25,6 +28,9 @@ class AuthInterceptor(
     }
 
     suspend fun handleUnauthorized(response: HttpResponse): Boolean {
+        val mode = response.request.attributes.getOrNull(AuthModeKey) ?: AuthMode.REQUIRED
+        if (mode == AuthMode.NONE) return false
+
         if (response.status == HttpStatusCode.Unauthorized) {
             return mutex.withLock {
                 // Check if the token was already refreshed by another thread
@@ -38,7 +44,8 @@ class AuthInterceptor(
                 val refreshToken = sessionManager.refreshToken() ?: return@withLock false
                 
                 return@withLock try {
-                    val refreshResponse = client.post("/auth/refresh") {
+                    val refreshResponse = client.post("/v1/auth/refresh") {
+                        auth(AuthMode.NONE)
                         contentType(ContentType.Application.Json)
                         setBody(mapOf("refresh_token" to refreshToken))
                     }

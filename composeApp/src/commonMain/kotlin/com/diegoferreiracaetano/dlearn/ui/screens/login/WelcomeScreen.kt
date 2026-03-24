@@ -82,8 +82,8 @@ fun WelcomeScreen(
             Spacer(modifier = Modifier.height(48.dp))
 
             AppButton(
-                text = stringResource(Res.string.signup_action),
-                onClick = onSignUpClick,
+                text = stringResource(Res.string.login_action),
+                onClick = onLoginClick,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -97,9 +97,9 @@ fun WelcomeScreen(
                     text = stringResource(Res.string.onboarding_already_have_account),
                     style = MaterialTheme.typography.bodyMedium
                 )
-                TextButton(onClick = onLoginClick) {
+                TextButton(onClick = onSignUpClick) {
                     Text(
-                        text = stringResource(Res.string.login_action),
+                        text = stringResource(Res.string.signup_action),
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )

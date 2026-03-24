@@ -37,6 +37,15 @@ fun Application.module() {
 
     val tokenService by inject<TokenService>()
 
+    install(ContentNegotiation) {
+        json(Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+            encodeDefaults = true
+        })
+    }
+
     install(Authentication) {
         jwt("auth-jwt") {
             realm = "dlearn"
@@ -60,19 +69,11 @@ fun Application.module() {
         }
     }
 
-    install(ContentNegotiation) {
-        json(Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-            encodeDefaults = true
-        })
-    }
-
-    configureStatusPages()
-
     install(CachingHeaders) {
-        options { _, outgoingContent ->
+        options { call, outgoingContent ->
+            // Não aplica cache para erros (status >= 400)
+            if (outgoingContent.status != null && outgoingContent.status!!.value >= 400) return@options null
+            
             when (outgoingContent.contentType?.withoutParameters()) {
                 ContentType.Application.Json -> CachingOptions(CacheControl.MaxAge(maxAgeSeconds = 300))
                 else -> null
@@ -80,18 +81,22 @@ fun Application.module() {
         }
     }
 
+    // StatusPages deve vir após a maioria dos plugins que alteram a resposta
+    configureStatusPages()
+
     routing {
         swaggerUI(path = "swagger", swaggerFile = "documentation.yaml")
         openAPI(path = "openapi", swaggerFile = "documentation.yaml")
 
-        authController() // Novo Controller
+        authController()
 
         authenticate("auth-jwt") {
             mainController()
-            profileController()
             appController()
             passwordController()
             challengeController()
+            searchController()
+            movieDetailController()
         }
     }
 }

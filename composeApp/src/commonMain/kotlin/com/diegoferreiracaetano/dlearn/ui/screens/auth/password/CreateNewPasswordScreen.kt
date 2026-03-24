@@ -49,7 +49,7 @@ fun CreateNewPasswordScreen(
 
     LaunchedEffect(uiState) {
         when (val state = uiState) {
-            is com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Success -> {
+            is CreateNewPasswordUiState.Success -> {
                 snackbarHostState.showAppSnackBar(
                     scope = scope,
                     message = state.message,
@@ -57,7 +57,7 @@ fun CreateNewPasswordScreen(
                 )
                 onSuccess()
             }
-            is com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Error -> {
+            is CreateNewPasswordUiState.Error -> {
                 snackbarHostState.showAppSnackBar(
                     scope = scope,
                     message = state.message,

@@ -47,8 +47,8 @@ val serverModule = module {
     single { MainScreenBuilder(get()) }
     single { VerifyAccountScreenBuilder() }
     single { FaqScreenBuilder() }
-    single { WatchlistOrchestrator(get(), get(), get(), get()) }
-    single { FavoriteOrchestrator(get(), get(), get(), get()) }
+    single { WatchlistOrchestrator(get(), get(), get(), get(),get()) }
+    single { FavoriteOrchestrator(get(), get(), get(), get(),get()) }
     single { MainOrchestrator(get()) }
     single { FaqOrchestrator(get(), get()) }
     single { VerifyAccountOrchestrator(get()) }
@@ -70,11 +70,11 @@ val serverModule = module {
     }
 
     // Profile
-    single { ProfileDataService() }
+    single { ProfileDataService(get()) }
     single { GetProfileDataUseCase(get()) }
     single { UpdateProfileDataUseCase(get()) }
     single { ProfileMapper(get()) }
-    single { ProfileScreenBuilder(get(), get()) }
+    single { ProfileScreenBuilder(get()) }
     single { EditProfileScreenBuilder(get(), get()) }
     single { ProfileOrchestrator(get(), get(), get(), get()) }
 

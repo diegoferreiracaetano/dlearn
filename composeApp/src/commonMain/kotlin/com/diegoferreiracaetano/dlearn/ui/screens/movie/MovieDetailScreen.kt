@@ -16,6 +16,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.sdui.UserRowComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.Render
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
@@ -26,7 +27,7 @@ fun MovieDetailScreen(
     onBackClick: () -> Unit,
     onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel = koinInject { parametersOf(movieId) },
+    viewModel: MovieDetailViewModel = koinInject { parametersOf(movieId) },
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

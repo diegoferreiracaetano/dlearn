@@ -4,6 +4,7 @@ import com.diegoferreiracaetano.dlearn.auth.network.AuthInterceptor
 import com.diegoferreiracaetano.dlearn.auth.network.ChallengeInterceptor
 import com.diegoferreiracaetano.dlearn.data.app.PreferencesRepositoryImpl
 import com.diegoferreiracaetano.dlearn.data.app.remote.AppRepositoryRemote
+import com.diegoferreiracaetano.dlearn.data.auth.remote.AuthRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.home.remote.HomeRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.main.remote.MainRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.movie.remote.MovieDetailRepositoryRemote
@@ -17,13 +18,13 @@ import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserNetworkDataSo
 import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserRepositoryRemote
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
+import com.diegoferreiracaetano.dlearn.domain.auth.AuthRepository
 import com.diegoferreiracaetano.dlearn.domain.home.HomeRepository
 import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
 import com.diegoferreiracaetano.dlearn.domain.movie.MovieDetailRepository
 import com.diegoferreiracaetano.dlearn.domain.password.PasswordRepository
 import com.diegoferreiracaetano.dlearn.domain.profile.ProfileRepository
 import com.diegoferreiracaetano.dlearn.domain.search.SearchRepository
-import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.getPlatform
 import com.diegoferreiracaetano.dlearn.network.AppUserAgentProvider
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.app.AppViewModel
@@ -71,6 +72,8 @@ val sharedModule = module {
         val userAgentProvider = get<AppUserAgentProvider>()
         
         HttpClient {
+            expectSuccess = true // Faz o HttpClient lançar exceções automaticamente em erros 4xx/5xx
+            
             install(ContentNegotiation) {
                 json(get<Json>())
             }
@@ -94,14 +97,13 @@ val sharedModule = module {
             val authInterceptor = AuthInterceptor(get(), this)
 
             plugin(HttpSend).intercept { request ->
-                authInterceptor.intercept(request) // Injeta Token JWT
+                authInterceptor.intercept(request)
                 
                 val agent = userAgentProvider.get()
                 request.header(HttpHeaders.UserAgent, agent.toHeader())
                 
                 val call = execute(request)
                 
-                // Se der 401, tenta o refresh e reexecuta se necessário
                 if (authInterceptor.handleUnauthorized(call.response)) {
                     authInterceptor.intercept(request)
                     execute(request)
@@ -124,60 +126,21 @@ val sharedModule = module {
     single<MovieDetailRepository> { MovieDetailRepositoryRemote(get()) }
     single<MainRepository> { MainRepositoryRemote(get()) }
     single<SearchRepository> { SearchRepositoryRemote(get()) }
-    single<AppRepository> { 
-        AppRepositoryRemote(
-            httpClient = get(), 
-            baseUrl = "http://192.168.15.3:8081",
-            userAgentProvider = get(),
-            preferencesRepository = get(),
-            sessionManager = get()
-        ) 
+    single<AppRepository> { AppRepositoryRemote(get(), get()) }
+    
+    single<AuthRepository> {
+        AuthRepositoryRemote(
+            httpClient = get(), sessionManager = get())
     }
 
-    // ViewModels (Shared)
-    factory { _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.main.MainViewModel(get()) }
-    factory {
-        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.app.AppViewModel(
-            get(),
-            get()
-        )
-    }
-    factory {
-        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.SettingsViewModel(
-            get(),
-            get()
-        )
-    }
-    factory {
-        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchMainViewModel(
-            get()
-        )
-    }
-    factory {
-        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchContentViewModel(
-            get()
-        )
-    }
-    factory { (movieId: String) ->
-        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel(
-            movieId,
-            get()
-        )
-    }
-    single {
-        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel(
-            get()
-        )
-    }
-    factory {
-        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountViewModel(
-            get()
-        )
-    }
-    factory {
-        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel(
-            get(),
-            get()
-        )
-    }
+    // ViewModels
+    factory { MainViewModel(get()) }
+    factory { AppViewModel(get(), get()) }
+    factory { SettingsViewModel(get(), get()) }
+    factory { SearchMainViewModel(get()) }
+    factory { SearchContentViewModel(get()) }
+    factory { (movieId: String) -> MovieDetailViewModel(movieId, get()) }
+    single { CreateNewPasswordViewModel(get()) }
+    factory { VerifyAccountViewModel(get()) }
+    factory { LoginViewModel(get(), get()) }
 }

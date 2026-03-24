@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
+import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.model.toVideo
 import com.diegoferreiracaetano.dlearn.network.AppHeader
@@ -20,26 +21,28 @@ class WatchlistOrchestrator(
     private val watchlistScreenBuilder: WatchlistScreenBuilder,
     private val watchlistRepository: WatchlistRepository,
     private val videoMapper: VideoMapper,
-    private val tmdbClient: TmdbClient
+    private val tmdbClient: TmdbClient,
+    private val sessionManager: SessionManager
 ) : Orchestrator {
 
     override fun execute(
         request: AppRequest,
         header: AppHeader
     ): Flow<Screen> {
-        val userId = header.userId ?: "guest"
         val language = header.language
         val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
         
         return if (movieId != null) {
-            toggleWatchlist(userId, movieId, language)
+            toggleWatchlist(movieId, language)
         } else {
-            getWatchlist(userId, language)
+            getWatchlist(language)
         }
     }
 
-    private fun getWatchlist(userId: String, lang: String): Flow<Screen> = flow {
+    private fun getWatchlist( lang: String): Flow<Screen> = flow {
         coroutineScope {
+
+            val userId = sessionManager.user().id
             val watchlistIds = watchlistRepository.getWatchlist(userId)
 
             val videos = watchlistIds.map { id ->
@@ -55,9 +58,10 @@ class WatchlistOrchestrator(
         }
     }
 
-    private fun toggleWatchlist(userId: String, movieId: String, lang: String): Flow<Screen> = flow {
+    private fun toggleWatchlist(movieId: String, lang: String): Flow<Screen> = flow {
+        val userId = sessionManager.user().id
         watchlistRepository.toggleWatchlist(userId, movieId)
-        getWatchlist(userId, lang).collect {
+        getWatchlist(lang).collect {
             emit(it)
         }
     }

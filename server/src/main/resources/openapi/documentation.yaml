@@ -17,14 +17,11 @@ paths:
       description: |
         Central gateway for dynamic screens and actions.
         The client sends a `path` (slug) and optional `params`.
-        Examples:
-        - `home`: Main dashboard
-        - `profile`: User profile
-        - `faq?ref=privacy-policy`: FAQ content
       parameters:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/appVersion'
         - $ref: '#/components/parameters/acceptLanguage'
+        - $ref: '#/components/parameters/country'
         - $ref: '#/components/parameters/challengeToken'
         - $ref: '#/components/parameters/challengePreference'
       requestBody:
@@ -40,6 +37,58 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Screen'
+  /v1/auth/login:
+    post:
+      summary: User Login
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+  /v1/auth/refresh:
+    post:
+      summary: Refresh Access Token
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+  /v1/auth/logout:
+    post:
+      summary: Logout User
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: OK
   /v1/main:
     get:
       summary: Get Main Shell (Legacy/Initial)
@@ -73,66 +122,6 @@ paths:
             type: string
             enum: [ALL, MOVIE, SERIES]
           example: ALL
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
-  /v1/search/main:
-    get:
-      summary: Get Search Main Content (Legacy)
-      tags:
-        - Legacy
-      parameters:
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
-  /v1/search/result:
-    get:
-      summary: Search Content Result (Legacy)
-      tags:
-        - Legacy
-      parameters:
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
-        - name: q
-          in: query
-          required: true
-          schema:
-            type: string
-          example: Spider-Man
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
-  /v1/movie/{movieId}:
-    get:
-      summary: Get Movie Detail Screen (Legacy)
-      tags:
-        - Legacy
-      parameters:
-        - name: movieId
-          in: path
-          required: true
-          schema:
-            type: string
-          example: spider-man
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
       responses:
         '200':
           description: OK
@@ -189,20 +178,13 @@ paths:
               type: object
               additionalProperties:
                 type: string
-            example:
-              full_name: "Tiffany Jearsey"
-              email: "tiffany@example.com"
-              phone: "+1 234 567 890"
       responses:
         '200':
           description: Success
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
+                $ref: '#/components/schemas/Screen'
   /v1/password/change:
     post:
       summary: Change User Password (MFA Protected)
@@ -244,12 +226,19 @@ paths:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/appVersion'
         - $ref: '#/components/parameters/acceptLanguage'
+        - $ref: '#/components/parameters/transactionId'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ResolveChallengeRequest'
+              type: object
+              required: [type, answers]
+              properties:
+                type:
+                  type: string
+                answers:
+                  type: string
       responses:
         '200':
           description: Challenge Resolved
@@ -257,6 +246,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResolveChallengeResponse'
+        '403':
+          description: Forbidden - Invalid code or type
+  /v1/auth/challenge/resend:
+    post:
+      summary: Resend Security Challenge
+      tags:
+        - Security
+      parameters:
+        - $ref: '#/components/parameters/transactionId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
 
 components:
   parameters:
@@ -281,6 +289,18 @@ components:
       schema:
         type: string
       example: pt-BR
+    country:
+      name: X-Country
+      in: header
+      required: false
+      schema:
+        type: string
+    transactionId:
+      name: X-Transaction-Id
+      in: header
+      required: true
+      schema:
+        type: string
     challengeToken:
       name: X-Challenge-Token
       in: header
@@ -296,6 +316,28 @@ components:
       schema:
         $ref: '#/components/schemas/ChallengeType'
   schemas:
+    # --- Auth Models ---
+    User:
+      type: object
+      required: [id, name, email]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        email: { type: string }
+        imageUrl: { type: string }
+        isPremium: { type: boolean }
+        phoneNumber: { type: string }
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        accessToken: { type: string }
+        refreshToken: { type: string }
+        challengeRequired: { type: boolean }
+        screen:
+          $ref: '#/components/schemas/Screen'
+
     # --- Challenge Engine Models ---
     ChallengeType:
       type: string
@@ -323,18 +365,6 @@ components:
         challengeType:
           $ref: '#/components/schemas/ChallengeType'
         data:
-          type: object
-          additionalProperties:
-            type: string
-    ResolveChallengeRequest:
-      type: object
-      required: [transactionId, type, answers]
-      properties:
-        transactionId:
-          type: string
-        type:
-          $ref: '#/components/schemas/ChallengeType'
-        answers:
           type: object
           additionalProperties:
             type: string
@@ -366,18 +396,20 @@ components:
         path:
           type: string
           description: Route path (e.g. 'home', 'profile', 'faq')
-          example: "faq"
         params:
           type: object
-          description: Query parameters or route arguments
           additionalProperties:
             type: string
-          example:
-            ref: "privacy-policy"
         metadata:
           type: object
           additionalProperties:
             type: string
+        language:
+          type: string
+        country:
+          type: string
+        notificationsEnabled:
+          type: boolean
     Screen:
       type: object
       properties:

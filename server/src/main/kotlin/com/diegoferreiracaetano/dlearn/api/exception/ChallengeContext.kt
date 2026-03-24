@@ -81,9 +81,7 @@ fun Route.challengePreference(
 }
 
 private val ApplicationCall.challengeTokenProvider: String? 
-    get() = attributes.allKeys
-        .find { it.name == CHALLENGE_TOKEN_KEY }
-        ?.let { attributes[it as AttributeKey<String>] }
+    get() = attributes.getOrNull(ChallengeTokenAttrKey)
 
 val ApplicationCall.challengeToken: String? 
     get() = challengeTokenProvider

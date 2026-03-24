@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.di
 
+import com.diegoferreiracaetano.dlearn.auth.network.AuthInterceptor
 import com.diegoferreiracaetano.dlearn.auth.network.ChallengeInterceptor
 import com.diegoferreiracaetano.dlearn.data.app.PreferencesRepositoryImpl
 import com.diegoferreiracaetano.dlearn.data.app.remote.AppRepositoryRemote
@@ -9,8 +10,6 @@ import com.diegoferreiracaetano.dlearn.data.movie.remote.MovieDetailRepositoryRe
 import com.diegoferreiracaetano.dlearn.data.password.remote.PasswordRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.profile.remote.ProfileRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.search.remote.SearchRepositoryRemote
-import com.diegoferreiracaetano.dlearn.data.session.SessionStorage
-import com.diegoferreiracaetano.dlearn.data.session.SettingsSessionStorage
 import com.diegoferreiracaetano.dlearn.data.source.local.KeyValueStorage
 import com.diegoferreiracaetano.dlearn.data.source.local.SettingsKeyValueStorage
 import com.diegoferreiracaetano.dlearn.data.user.UserRepository
@@ -27,6 +26,15 @@ import com.diegoferreiracaetano.dlearn.domain.search.SearchRepository
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.getPlatform
 import com.diegoferreiracaetano.dlearn.network.AppUserAgentProvider
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.app.AppViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.main.MainViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchContentViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchMainViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.SettingsViewModel
 import com.diegoferreiracaetano.dlearn.util.event.GlobalEventDispatcher
 import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
@@ -44,7 +52,7 @@ import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
 val sharedModule = module {
-    includes(authModule)
+    includes(authModule, platformAuthModule)
 
     single { GlobalEventDispatcher() }
 
@@ -61,7 +69,7 @@ val sharedModule = module {
 
     single {
         val userAgentProvider = get<AppUserAgentProvider>()
-
+        
         HttpClient {
             install(ContentNegotiation) {
                 json(get<Json>())
@@ -83,12 +91,23 @@ val sharedModule = module {
                 json = get()
             }
         }.apply {
+            val authInterceptor = AuthInterceptor(get(), this)
+
             plugin(HttpSend).intercept { request ->
+                authInterceptor.intercept(request) // Injeta Token JWT
+                
                 val agent = userAgentProvider.get()
-                // Mantemos o User-Agent simplificado apenas como boa prática,
-                // mas a verdade agora vai no corpo do AppRequest (POST)
                 request.header(HttpHeaders.UserAgent, agent.toHeader())
-                execute(request)
+                
+                val call = execute(request)
+                
+                // Se der 401, tenta o refresh e reexecuta se necessário
+                if (authInterceptor.handleUnauthorized(call.response)) {
+                    authInterceptor.intercept(request)
+                    execute(request)
+                } else {
+                    call
+                }
             }
         }
     }
@@ -98,8 +117,6 @@ val sharedModule = module {
     single { Settings() }
     single<KeyValueStorage> { SettingsKeyValueStorage(get()) }
     single<PreferencesRepository> { PreferencesRepositoryImpl(get()) }
-    single<SessionStorage> { SettingsSessionStorage(get()) }
-    single { SessionManager(get()) }
 
     single<PasswordRepository> { PasswordRepositoryRemote(get()) }
     single<HomeRepository> { HomeRepositoryRemote(get()) }
@@ -112,7 +129,55 @@ val sharedModule = module {
             httpClient = get(), 
             baseUrl = "http://192.168.15.3:8081",
             userAgentProvider = get(),
-            preferencesRepository = get()
+            preferencesRepository = get(),
+            sessionManager = get()
         ) 
+    }
+
+    // ViewModels (Shared)
+    factory { _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.main.MainViewModel(get()) }
+    factory {
+        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.app.AppViewModel(
+            get(),
+            get()
+        )
+    }
+    factory {
+        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.SettingsViewModel(
+            get(),
+            get()
+        )
+    }
+    factory {
+        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchMainViewModel(
+            get()
+        )
+    }
+    factory {
+        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchContentViewModel(
+            get()
+        )
+    }
+    factory { (movieId: String) ->
+        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel(
+            movieId,
+            get()
+        )
+    }
+    single {
+        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel(
+            get()
+        )
+    }
+    factory {
+        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountViewModel(
+            get()
+        )
+    }
+    factory {
+        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel(
+            get(),
+            get()
+        )
     }
 }

@@ -28,7 +28,7 @@ fun AppScreen(
     onNavigate: (String) -> Unit = {},
     onDeeplink: (String) -> Unit = {},
     modifier: Modifier = Modifier,
-    viewModel: AppViewModel = koinInject(),
+    viewModel: com.diegoferreiracaetano.dlearn.ui.viewmodel.app.AppViewModel = koinInject(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

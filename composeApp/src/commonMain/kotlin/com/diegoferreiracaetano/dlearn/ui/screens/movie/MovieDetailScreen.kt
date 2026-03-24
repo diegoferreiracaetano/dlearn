@@ -26,7 +26,7 @@ fun MovieDetailScreen(
     onBackClick: () -> Unit,
     onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: MovieDetailViewModel = koinInject { parametersOf(movieId) },
+    viewModel: com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel = koinInject { parametersOf(movieId) },
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

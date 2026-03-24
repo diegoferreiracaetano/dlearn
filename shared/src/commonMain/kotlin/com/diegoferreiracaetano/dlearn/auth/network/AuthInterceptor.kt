@@ -1,0 +1,67 @@
+package com.diegoferreiracaetano.dlearn.auth.network
+
+import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
+import com.diegoferreiracaetano.dlearn.domain.auth.AuthResponse
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+
+class AuthInterceptor(
+    private val sessionManager: SessionManager,
+    private val client: HttpClient
+) {
+    private val mutex = Mutex()
+
+    suspend fun intercept(request: HttpRequestBuilder) {
+        val token = sessionManager.token()
+        if (token != null) {
+            request.header(HttpHeaders.Authorization, "Bearer $token")
+        }
+    }
+
+    suspend fun handleUnauthorized(response: HttpResponse): Boolean {
+        if (response.status == HttpStatusCode.Unauthorized) {
+            return mutex.withLock {
+                // Check if the token was already refreshed by another thread
+                val currentToken = sessionManager.token()
+                val requestToken = response.request.headers[HttpHeaders.Authorization]?.removePrefix("Bearer ")
+                
+                if (currentToken != requestToken && currentToken != null) {
+                    return@withLock true
+                }
+
+                val refreshToken = sessionManager.refreshToken() ?: return@withLock false
+                
+                return@withLock try {
+                    val refreshResponse = client.post("/auth/refresh") {
+                        contentType(ContentType.Application.Json)
+                        setBody(mapOf("refresh_token" to refreshToken))
+                    }
+
+                    if (refreshResponse.status == HttpStatusCode.OK) {
+                        val auth = refreshResponse.body<AuthResponse>()
+                        if (auth.accessToken != null && auth.refreshToken != null && auth.user != null) {
+                            sessionManager.login(auth.user, auth.accessToken, auth.refreshToken)
+                            true
+                        } else {
+                            sessionManager.logout()
+                            false
+                        }
+                    } else {
+                        sessionManager.logout()
+                        false
+                    }
+                } catch (e: Exception) {
+                    sessionManager.logout()
+                    false
+                }
+            }
+        }
+        return false
+    }
+}

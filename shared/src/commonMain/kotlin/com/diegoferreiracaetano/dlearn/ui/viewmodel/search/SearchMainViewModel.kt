@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.search
+package com.diegoferreiracaetano.dlearn.ui.viewmodel.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

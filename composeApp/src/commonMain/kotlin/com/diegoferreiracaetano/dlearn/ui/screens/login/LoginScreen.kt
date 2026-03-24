@@ -1,21 +1,8 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.login
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -26,26 +13,35 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTop
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
-import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.login_action
-import dlearn.composeapp.generated.resources.login_forgot_password
-import dlearn.composeapp.generated.resources.login_screen_subtitle
-import dlearn.composeapp.generated.resources.login_screen_title
-import dlearn.composeapp.generated.resources.title_email
-import dlearn.composeapp.generated.resources.title_password
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginUIState
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
+import dlearn.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onBackClick: () -> Unit,
-    onLoginClick: () -> Unit,
+    onNavigateToHome: () -> Unit,
     onForgotPasswordClick: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = koinViewModel()
 ) {
+    val state by viewModel.state.collectAsState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        viewModel.checkSession()
+    }
+
+    LaunchedEffect(state) {
+        if (state is LoginUIState.Success) {
+            onNavigateToHome()
+        }
+    }
 
     AppContainer(
         modifier = modifier,
@@ -100,6 +96,15 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            if (state is LoginUIState.Error) {
+                Text(
+                    text = (state as LoginUIState.Error).throwable.message ?: "Erro ao realizar login",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+
             TextButton(
                 onClick = onForgotPasswordClick,
                 modifier = Modifier.align(Alignment.End)
@@ -113,11 +118,15 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            AppButton(
-                text = stringResource(Res.string.login_action),
-                onClick = onLoginClick,
-                modifier = Modifier.fillMaxWidth()
-            )
+            if (state is LoginUIState.Loading) {
+                CircularProgressIndicator()
+            } else {
+                AppButton(
+                    text = stringResource(Res.string.login_action),
+                    onClick = { viewModel.login(email, password) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }
@@ -126,6 +135,6 @@ fun LoginScreen(
 @Composable
 fun LoginScreenPreview() {
     DLearnTheme {
-        LoginScreen(onBackClick = {}, onLoginClick = {}, onForgotPasswordClick = {})
+        LoginScreen(onBackClick = {}, onNavigateToHome = {}, onForgotPasswordClick = {})
     }
 }

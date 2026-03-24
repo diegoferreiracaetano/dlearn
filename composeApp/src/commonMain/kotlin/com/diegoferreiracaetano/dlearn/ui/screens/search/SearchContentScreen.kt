@@ -16,7 +16,7 @@ fun SearchContent(
     onSearch: (String) -> Unit,
     searchQuery: String,
     modifier: Modifier = Modifier,
-    viewModel: SearchContentViewModel = koinInject()
+    viewModel: com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchContentViewModel = koinInject()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

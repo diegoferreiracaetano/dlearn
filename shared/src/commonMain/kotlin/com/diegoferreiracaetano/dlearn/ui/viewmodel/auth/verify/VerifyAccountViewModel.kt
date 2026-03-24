@@ -1,32 +1,28 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.auth.verify
+package com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeRepository
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeResult
-import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
-import com.diegoferreiracaetano.dlearn.ui.screens.auth.verify.state.VerifyAccountUiState
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.VerifyAccountUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel para a tela de verificação de conta.
- * Responsabilidade: Coletar o código do usuário e enviar ao backend via ChallengeRepository.
- */
 class VerifyAccountViewModel(
     private val challengeRepository: ChallengeRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<VerifyAccountUiState>(VerifyAccountUiState.Idle)
+    private val _uiState = MutableStateFlow<com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.VerifyAccountUiState>(
+        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.VerifyAccountUiState.Idle)
     val uiState = _uiState.asStateFlow()
 
     fun verifyOtp(otpCode: String) {
         viewModelScope.launch {
             challengeRepository.resolveChallenge(
-                answer = otpCode // Passando apenas a String
+                answer = otpCode
             )
             .onStart {
                 _uiState.value = VerifyAccountUiState.Loading

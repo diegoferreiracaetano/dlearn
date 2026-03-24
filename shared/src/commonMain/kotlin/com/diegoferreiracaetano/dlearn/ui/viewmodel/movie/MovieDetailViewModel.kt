@@ -1,14 +1,13 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.movie
-
+package com.diegoferreiracaetano.dlearn.ui.viewmodel.movie
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.movie.MovieDetailRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
-import com.diegoferreiracaetano.dlearn.ui.util.collectIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class MovieDetailViewModel(
@@ -29,7 +28,11 @@ class MovieDetailViewModel(
 
     private fun fetchMovieDetail() {
         viewModelScope.launch {
-            repository.getMovieDetail(movieId).collectIn(this, _uiState)
+            repository.getMovieDetail(movieId)
+                .catch { e -> _uiState.value = UIState.Error(e) }
+                .collect { screen ->
+                    _uiState.value = UIState.Success(screen)
+                }
         }
     }
 }

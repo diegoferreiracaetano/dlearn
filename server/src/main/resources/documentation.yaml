@@ -4,11 +4,65 @@ info:
   description: |
     API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows.
     Security and Multi-Factor Authentication (MFA) are handled by a Generic Challenge Engine.
-  version: 1.3.0
+  version: 1.4.0
 servers:
   - url: http://localhost:8081
     description: Local Server
 paths:
+  /auth/login:
+    post:
+      summary: Login with credentials
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+  /auth/logout:
+    post:
+      summary: Logout user
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: OK
   /v1/app:
     post:
       summary: SDUI Gateway / BFF Generic Endpoint
@@ -133,6 +187,37 @@ components:
       schema:
         $ref: '#/components/schemas/ChallengeType'
   schemas:
+    # --- Authentication Models ---
+    User:
+      type: object
+      required: [id, name, email]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        imageUrl:
+          type: string
+        isPremium:
+          type: boolean
+        phoneNumber:
+          type: string
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        challengeRequired:
+          type: boolean
+        screen:
+          $ref: '#/components/schemas/Screen'
+
     # --- Challenge Engine Models ---
     ChallengeType:
       type: string

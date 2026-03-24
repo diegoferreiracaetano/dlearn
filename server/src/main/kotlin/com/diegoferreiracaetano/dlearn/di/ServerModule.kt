@@ -22,8 +22,9 @@ val serverModule = module {
     single { TmdbMapper(get()) }
     single { VideoMapper() }
     
-    // API / Exception Handling
+    // API / Exception Handling / Auth
     single { ChallengeMapper() }
+    single { TokenService() }
     
     // Repositories / Services
     single<FavoriteRepository> { FavoriteDataService() }
@@ -37,6 +38,9 @@ val serverModule = module {
     single { HomeScreenBuilder(get(), get()) }
     single { HomeOrchestrator(get(), get()) }
 
+    // Auth & Login (SDUI)
+    single { LoginOrchestrator(get()) }
+
     // Main / App SDUI
     single { WatchlistScreenBuilder(get()) }
     single { FavoriteScreenBuilder(get()) }
@@ -49,7 +53,7 @@ val serverModule = module {
     single { FaqOrchestrator(get(), get()) }
     single { VerifyAccountOrchestrator(get()) }
     
-    // AppOrchestrator (Named for clarity if needed, but single<Orchestrator> works for inject<Orchestrator>)
+    // AppOrchestrator
     single<Orchestrator> {
         AppOrchestrator(
             get(),

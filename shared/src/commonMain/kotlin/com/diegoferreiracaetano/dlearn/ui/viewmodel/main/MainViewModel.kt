@@ -1,9 +1,8 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.main
+package com.diegoferreiracaetano.dlearn.ui.viewmodel.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
-import com.diegoferreiracaetano.dlearn.ui.screens.main.state.MainUiState
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import kotlinx.coroutines.flow.MutableStateFlow

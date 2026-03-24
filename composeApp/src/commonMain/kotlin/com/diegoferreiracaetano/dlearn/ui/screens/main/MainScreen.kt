@@ -27,7 +27,7 @@ fun MainScreen(
     onTabSelected: (String) -> Unit,
     onSearchClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = koinInject(),
+    viewModel: com.diegoferreiracaetano.dlearn.ui.viewmodel.main.MainViewModel = koinInject(),
     currentRoute: String = NavigationRoutes.HOME
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

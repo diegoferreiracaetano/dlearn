@@ -12,10 +12,11 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppOtpVerification
-import com.diegoferreiracaetano.dlearn.ui.screens.auth.verify.state.VerifyAccountUiState
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.VerifyAccountUiState
 import dlearn.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,7 +24,7 @@ fun VerifyAccountScreen(
     onBackClick: () -> Unit,
     onContinueClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: VerifyAccountViewModel = koinInject()
+    viewModel: VerifyAccountViewModel = koinViewModel()
 ) {
     var otpCode by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

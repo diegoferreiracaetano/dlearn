@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.app
+package com.diegoferreiracaetano.dlearn.ui.viewmodel.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,7 +6,6 @@ import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
-import com.diegoferreiracaetano.dlearn.ui.util.collectIn
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -60,7 +59,12 @@ class AppViewModel(
     private fun execute(path: String, params: Map<String, String>? = null) {
         lastPath = path
         lastParams = params
-        repository.execute(path = path, params = params)
-            .collectIn(viewModelScope, _uiState)
+        viewModelScope.launch {
+            repository.execute(path = path, params = params)
+                .catch { e -> _uiState.value = UIState.Error(e) }
+                .collect { screen ->
+                    _uiState.value = UIState.Success(screen)
+                }
+        }
     }
 }

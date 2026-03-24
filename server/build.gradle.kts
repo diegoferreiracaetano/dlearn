@@ -27,6 +27,10 @@ dependencies {
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
 
+    // Auth
+    implementation(libs.ktor.server.auth)
+    implementation(libs.ktor.server.auth.jwt)
+
     // Koin
     implementation(libs.koin.core)
     implementation("io.insert-koin:koin-ktor:4.1.0")

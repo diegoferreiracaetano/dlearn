@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn.ui.screens.main.state
+package com.diegoferreiracaetano.dlearn.ui.viewmodel.main.state
 
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 

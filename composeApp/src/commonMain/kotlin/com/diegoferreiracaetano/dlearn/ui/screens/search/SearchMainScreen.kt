@@ -21,7 +21,7 @@ fun SearchMainScreen(
     onItemClick: (String) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SearchMainViewModel = koinInject()
+    viewModel: com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchMainViewModel = koinInject()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var query by remember { mutableStateOf("") }

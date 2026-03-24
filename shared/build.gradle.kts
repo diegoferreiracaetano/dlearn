@@ -35,6 +35,9 @@ kotlin {
             api(libs.koin.core)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
+
+            api(libs.androidx.lifecycle.viewmodel)
+            api(libs.androidx.lifecycle.runtimeCompose)
             
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)

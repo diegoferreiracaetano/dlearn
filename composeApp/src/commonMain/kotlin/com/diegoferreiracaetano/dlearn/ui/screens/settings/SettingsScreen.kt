@@ -27,7 +27,7 @@ fun SettingsScreen(
     path: String,
     onBackClick: () -> Unit = {},
     modifier: Modifier = Modifier,
-    viewModel: SettingsViewModel = koinInject(),
+    viewModel: com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.SettingsViewModel = koinInject(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

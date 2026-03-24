@@ -26,7 +26,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppCon
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
-import com.diegoferreiracaetano.dlearn.ui.screens.auth.password.state.CreateNewPasswordUiState
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 import dlearn.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -38,7 +38,7 @@ fun CreateNewPasswordScreen(
     onBackClick: () -> Unit,
     onSuccess: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CreateNewPasswordViewModel = koinInject()
+    viewModel: com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel = koinInject()
 ) {
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -49,7 +49,7 @@ fun CreateNewPasswordScreen(
 
     LaunchedEffect(uiState) {
         when (val state = uiState) {
-            is CreateNewPasswordUiState.Success -> {
+            is com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Success -> {
                 snackbarHostState.showAppSnackBar(
                     scope = scope,
                     message = state.message,
@@ -57,7 +57,7 @@ fun CreateNewPasswordScreen(
                 )
                 onSuccess()
             }
-            is CreateNewPasswordUiState.Error -> {
+            is com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Error -> {
                 snackbarHostState.showAppSnackBar(
                     scope = scope,
                     message = state.message,
@@ -80,7 +80,7 @@ fun CreateNewPasswordScreen(
                 )
             }
         ) { innerModifier ->
-            if (uiState is CreateNewPasswordUiState.Loading) {
+            if (uiState is com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Loading) {
                 AppLoading(modifier = Modifier.fillMaxSize())
             }
 
@@ -132,7 +132,7 @@ fun CreateNewPasswordScreen(
 
                 AppButton(
                     text = stringResource(Res.string.create_password_action),
-                    enabled = uiState !is CreateNewPasswordUiState.Loading,
+                    enabled = uiState !is com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Loading,
                     onClick = {
                         viewModel.changePassword(AppConstants.GUEST_USER_ID, password)
                     },

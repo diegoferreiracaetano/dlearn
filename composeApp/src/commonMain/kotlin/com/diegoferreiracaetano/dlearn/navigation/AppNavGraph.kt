@@ -3,6 +3,8 @@ package com.diegoferreiracaetano.dlearn.navigation
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -44,6 +46,8 @@ fun AppNavGraph(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: SnackbarHostState = LocalSnackbarHostState.current
 ) {
+    val isLoggedIn by sessionManager.isLoggedIn.collectAsState()
+
     // Handler especializado para eventos globais (MFA, Mensagens, Navegação)
     val eventHandler = remember(navController, snackbarHostState, coroutineScope) {
         GlobalEventHandler(navController, snackbarHostState, coroutineScope)
@@ -56,7 +60,16 @@ fun AppNavGraph(
         }
     }
 
-    val startDestination = Profile.route
+    // Se o usuário deslogar, voltamos para o Welcome
+    LaunchedEffect(isLoggedIn) {
+        if (!isLoggedIn) {
+            navController.navigate(Welcome.route) {
+                popUpTo(0)
+            }
+        }
+    }
+
+    val startDestination = if (isLoggedIn) Home.route else Welcome.route
     val uriHandler = LocalUriHandler.current
 
     NavHost(
@@ -74,7 +87,7 @@ fun AppNavGraph(
         composable(Welcome.route) {
             WelcomeScreen(
                 onSignUpClick = { navController.navigate(SignUp.route) },
-                onLoginClick = { navController.navigateToRoute(Home.route) },
+                onLoginClick = { navController.navigate(Login.route) },
                 modifier = modifier
             )
         }
@@ -82,7 +95,7 @@ fun AppNavGraph(
         composable(Login.route) {
             LoginScreen(
                 onBackClick = { navController.popBackStack() },
-                onLoginClick = { navController.navigateToRoute(Home.route) },
+                onNavigateToHome = { navController.navigateToRoute(Home.route) },
                 onForgotPasswordClick = { navController.navigate(ResetPassword.route) },
                 modifier = modifier
             )

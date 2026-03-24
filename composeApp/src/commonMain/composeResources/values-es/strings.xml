@@ -29,7 +29,7 @@
 
     <string name="onboarding_title_1">El mayor streaming de películas locales e internacionales</string>
     <string name="onboarding_description_1">Semper in cursus magna et eu varius nunc adipiscing. Elementum justo, laoreet id sem varius parturient.</string>
-    <string name="onboarding_title_2">Ofrece visualización de alta calidad sin anuncios</string>
+    <string name="onboarding_title_2">Ofrece visualização de alta qualidade sem anúncios</string>
     <string name="onboarding_description_2">Semper in cursus magna et eu varius nunc adipiscing. Elementum justo, laoreet id sem varius parturient.</string>
     <string name="onboarding_title_3">Nuestro servicio reúne tus series favoritas</string>
     <string name="onboarding_description_3">Semper in cursus magna et eu varius nunc adipiscing. Elementum justo, laoreet id sem varius parturient.</string>
@@ -79,8 +79,13 @@
     <!-- Settings & Dialogs -->
     <string name="clear_cache_title">¿Estás seguro?</string>
     <string name="clear_cache_description">Esto eliminará todos los datos descargados y temporales de la aplicación.</string>
-    <string name="clear_cache_confirm">Limpiar</string>
+    <string name="clear_cache_confirm">Limpar</string>
     <string name="clear_cache_cancel">Cancelar</string>
     <string name="confirm">Confirmar</string>
     <string name="cancel">Cancelar</string>
+
+    <!-- Logout -->
+    <string name="logout_title">Cerrar Sesión</string>
+    <string name="logout_description">¿Estás seguro de que quieres cerrar sesión en tu cuenta?</string>
+    <string name="logout_confirm">Cerrar Sesión</string>
 </resources>

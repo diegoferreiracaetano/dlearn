@@ -23,10 +23,8 @@ class FooterRenderer : ComponentRenderer {
         AppButton(
             text = footer.label,
             onClick = {
-                val url = footer.actionUrl
-                if (url != null) {
-                    actions.onAction(url)
-                }
+                footer.closeUrl?.let { actions.onClose() }
+                    ?: footer.actionUrl?.let { actions.onAction(it) }
             },
             type = ButtonType.PRIMARY,
             modifier = modifier

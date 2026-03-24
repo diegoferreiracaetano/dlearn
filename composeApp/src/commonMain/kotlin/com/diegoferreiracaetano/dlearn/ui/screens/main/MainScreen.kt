@@ -18,6 +18,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.Render
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.main.MainViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
@@ -25,19 +26,21 @@ import org.koin.compose.koinInject
 fun MainScreen(
     onItemClick: (String) -> Unit,
     onTabSelected: (String) -> Unit,
+    onClose: () -> Unit = {},
     onSearchClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
-    viewModel: com.diegoferreiracaetano.dlearn.ui.viewmodel.main.MainViewModel = koinInject(),
+    viewModel: MainViewModel = koinInject(),
     currentRoute: String = NavigationRoutes.HOME
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val actions = remember(currentRoute, onTabSelected) {
+    val actions = remember(currentRoute, onTabSelected, onClose) {
         ComponentActions(
             currentRoute = currentRoute,
             onSearchClick = onSearchClick,
             onItemClick = onItemClick,
             onTabSelected = onTabSelected,
+            onClose = onClose,
             onRetry = viewModel::retry
         )
     }

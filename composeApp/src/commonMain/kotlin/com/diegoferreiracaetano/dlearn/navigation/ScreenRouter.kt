@@ -14,6 +14,8 @@ sealed class ScreenRouter(
     object Search : ScreenRouter(NavigationRoutes.SEARCH)
     object Welcome : ScreenRouter(NavigationRoutes.WELCOME)
     object Login : ScreenRouter(NavigationRoutes.LOGIN)
+
+    object Logout : ScreenRouter(NavigationRoutes.LOGOUT)
     object SignUp : ScreenRouter(NavigationRoutes.SIGNUP)
     object ResetPassword : ScreenRouter(NavigationRoutes.RESET_PASSWORD)
     object VerifyAccount : ScreenRouter(NavigationRoutes.VERIFY_ACCOUNT)

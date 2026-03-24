@@ -31,6 +31,7 @@ import com.diegoferreiracaetano.dlearn.ui.viewmodel.app.AppViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.logout.LogoutViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.main.MainViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchContentViewModel
@@ -72,7 +73,7 @@ val sharedModule = module {
         val userAgentProvider = get<AppUserAgentProvider>()
         
         HttpClient {
-            expectSuccess = true // Faz o HttpClient lançar exceções automaticamente em erros 4xx/5xx
+            expectSuccess = true 
             
             install(ContentNegotiation) {
                 json(get<Json>())
@@ -143,4 +144,5 @@ val sharedModule = module {
     single { CreateNewPasswordViewModel(get()) }
     factory { VerifyAccountViewModel(get()) }
     factory { LoginViewModel(get(), get()) }
+    factory { LogoutViewModel(get()) }
 }

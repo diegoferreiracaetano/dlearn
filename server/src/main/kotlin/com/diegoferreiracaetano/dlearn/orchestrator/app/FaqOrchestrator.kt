@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.app
 
+import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.infrastructure.services.FaqDataService
 import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.screens.FaqScreenBuilder
@@ -17,7 +18,7 @@ class FaqOrchestrator(
         header: AppHeader
     ): Flow<Screen> = flow {
         val language = header.language
-        val reference = request.params?.get("reference") ?: "default"
+        val reference = request.params?.get(NavigationRoutes.FAQ_REF_ARG) ?: "default"
         val domainData = faqDataService.fetchFaqContent(reference, language)
             ?: throw IllegalArgumentException("FAQ not found for reference: $reference")
         

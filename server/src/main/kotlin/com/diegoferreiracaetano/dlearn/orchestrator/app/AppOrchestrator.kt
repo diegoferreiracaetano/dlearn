@@ -4,6 +4,7 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes.EDIT_PROFILE
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.FAQ
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.FAVORITE
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.HOME
+import com.diegoferreiracaetano.dlearn.NavigationRoutes.LOGOUT
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.MOVIE_DETAIL
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.PROFILE
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.SEARCH

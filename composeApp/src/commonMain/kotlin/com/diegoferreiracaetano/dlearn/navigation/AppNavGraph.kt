@@ -27,6 +27,7 @@ import com.diegoferreiracaetano.dlearn.ui.screens.login.LoginScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.ResetPasswordScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.SignUpScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.login.WelcomeScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.logout.LogoutScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.main.MainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.onboarding.OnboardingScreen
@@ -191,6 +192,7 @@ fun AppNavGraph(
             MainScreen(
                 onItemClick = { route -> navController.navigateToPath(route) },
                 onTabSelected = { route -> navController.navigateToRoute(route) },
+                onClose = { navController.navigate(Logout.route) },
                 modifier = modifier,
                 currentRoute = Profile.route
             )
@@ -228,6 +230,13 @@ fun AppNavGraph(
             )
         }
 
+        dialog(Logout.route) {
+            LogoutScreen(
+                onBackClick = { navController.popBackStack() },
+                modifier = modifier
+            )
+        }
+
         composable(
             route = NavigationRoutes.APP_ROUTE,
             arguments = listOf(
@@ -247,11 +256,10 @@ fun AppNavGraph(
             AppScreen(
                 path = backStackEntry.sduiPath,
                 params = backStackEntry.sduiParams,
+                onClose = { navController.navigate(Logout.route) },
                 onBackClick = { navController.popBackStack() },
                 onTabSelected = { route -> navController.navigateToRoute(route) },
                 onItemClick = { route -> navController.navigate(route) },
-                onNavigate = { route -> navController.navigate(route) },
-                onDeeplink = { url -> uriHandler.openUri(url) },
                 modifier = modifier
             )
         }

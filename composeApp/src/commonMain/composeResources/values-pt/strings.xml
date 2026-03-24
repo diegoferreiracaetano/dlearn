@@ -81,4 +81,9 @@
     <string name="clear_cache_cancel">Cancelar</string>
     <string name="confirm">Confirmar</string>
     <string name="cancel">Cancelar</string>
+
+    <!-- Logout -->
+    <string name="logout_title">Sair da conta</string>
+    <string name="logout_description">Tem certeza que deseja sair da sua conta?</string>
+    <string name="logout_confirm">Sair</string>
 </resources>

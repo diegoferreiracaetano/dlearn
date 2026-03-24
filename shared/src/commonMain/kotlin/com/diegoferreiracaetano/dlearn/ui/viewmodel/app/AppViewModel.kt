@@ -6,7 +6,9 @@ import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class AppViewModel(

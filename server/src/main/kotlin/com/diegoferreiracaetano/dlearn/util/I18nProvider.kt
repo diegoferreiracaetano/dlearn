@@ -11,10 +11,9 @@ open class I18nProvider {
         language: String
     ): String {
         val locale = language.toLocale()
-
         return resolveString(key, locale)
             ?: resolveString(key, Locale(locale.language))
-            ?: resolveString(key, Locale.ROOT) // Força o uso do strings.properties (base)
+            ?: resolveString(key, Locale.ROOT)
             ?: key.name
     }
 
@@ -23,17 +22,16 @@ open class I18nProvider {
         locale: Locale
     ): String? {
         return runCatching {
-            // Usamos ResourceBundle.Control para evitar que o Java pegue o Locale padrão da máquina (System Locale)
-            val control = ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES)
             ResourceBundle
-                .getBundle("strings", locale, control)
+                .getBundle("strings", locale)
                 .getString(key.name.lowercase())
         }.getOrNull()
     }
 }
 
 private fun String.toLocale(): Locale {
-    val clean = replace("-", "_")
+    val firstLanguage = split(",").firstOrNull() ?: this
+    val clean = firstLanguage.split(";").first().trim().replace("-", "_")
     val parts = clean.split("_")
 
     return when (parts.size) {

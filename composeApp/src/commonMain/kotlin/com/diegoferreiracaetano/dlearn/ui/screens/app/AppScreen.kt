@@ -14,6 +14,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.Render
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.app.AppViewModel
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -23,12 +24,11 @@ fun AppScreen(
     path: String,
     params: Map<String, String>? = null,
     onBackClick: () -> Unit = {},
+    onClose: () -> Unit = {},
     onTabSelected: (String) -> Unit = {},
     onItemClick: (String) -> Unit = {},
-    onNavigate: (String) -> Unit = {},
-    onDeeplink: (String) -> Unit = {},
     modifier: Modifier = Modifier,
-    viewModel: com.diegoferreiracaetano.dlearn.ui.viewmodel.app.AppViewModel = koinInject(),
+    viewModel: AppViewModel = koinInject(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -43,15 +43,8 @@ fun AppScreen(
             onBackClick = onBackClick,
             onRetry = viewModel::retry,
             onQueryChange = viewModel::handleQuery,
-            onAction = { action ->
-                if (action.startsWith("http") || action.startsWith("https")) {
-                    onDeeplink(action)
-                } else if (action.startsWith("app://")) {
-                     onNavigate(action)
-                } else {
-                    viewModel.handleAction(action)
-                }
-            }
+            onClose = onClose,
+            onAction = viewModel::handleAction
         )
     }
 
@@ -69,10 +62,9 @@ fun AppScreen(
         path = path,
         params = params,
         onBackClick = actions.onBackClick,
+        onClose = actions.onClose,
         onTabSelected = actions.onTabSelected,
         onItemClick = actions.onItemClick,
-        onNavigate = { action -> actions.onAction(action) },
-        onDeeplink = { action -> actions.onAction(action) },
         modifier = modifier
     )
 }

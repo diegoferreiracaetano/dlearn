@@ -111,7 +111,7 @@ val appModule = module {
             appSnackbarRenderer = get(),
             appHtmlTextRenderer = get(),
             appSwitchRowRenderer = get(),
-            appSelectionRowRenderer = get()
+            appSelectionRowRenderer = get(),
         )
     }
 }

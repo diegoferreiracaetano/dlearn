@@ -21,6 +21,7 @@ object NavigationRoutes {
     const val CREATE_NEW_PASSWORD = "create_new_password"
     const val ONBOARDING = "onboarding"
     const val FAQ = "faq"
+    const val USER_LIST = "users"
 
     // Settings Routes
     const val SETTINGS_NOTIFICATIONS = "settings/notifications"

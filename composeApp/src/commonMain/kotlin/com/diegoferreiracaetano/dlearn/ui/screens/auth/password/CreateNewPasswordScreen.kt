@@ -28,6 +28,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppText
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel
 import dlearn.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -38,7 +39,7 @@ fun CreateNewPasswordScreen(
     onBackClick: () -> Unit,
     onSuccess: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel = koinInject()
+    viewModel: CreateNewPasswordViewModel = koinInject()
 ) {
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }

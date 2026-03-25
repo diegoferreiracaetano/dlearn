@@ -14,26 +14,22 @@ class CreateNewPasswordViewModel(
     private val passwordRepository: PasswordRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState>(
-        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Idle)
+    private val _uiState = MutableStateFlow<CreateNewPasswordUiState>(
+        CreateNewPasswordUiState.Idle)
     val uiState = _uiState.asStateFlow()
-
-    fun resetState() {
-        _uiState.value = _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Idle
-    }
 
     fun changePassword(userId: String, newPassword: String) {
         viewModelScope.launch {
-            _uiState.value = _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Loading
+            _uiState.value = CreateNewPasswordUiState.Loading
             passwordRepository.changePassword(userId, newPassword)
                 .onStart {
-                    _uiState.value = _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Loading
+                    _uiState.value = CreateNewPasswordUiState.Loading
                 }
                 .catch { error ->
-                    _uiState.value = _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Error(error.message.toString())
+                    _uiState.value = CreateNewPasswordUiState.Error(error.message.toString())
                 }
                 .collect { response ->
-                    _uiState.value = _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Success(response.message)
+                    _uiState.value = CreateNewPasswordUiState.Success(response.message)
                 }
         }
     }

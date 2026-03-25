@@ -8,7 +8,7 @@ info:
     **Test Credentials:**
     - Email: `admin@dlearn.com`
     - Password: `123456`
-  version: 1.6.1
+  version: 1.7.0
 servers:
   - url: http://localhost:8081
     description: Local Server
@@ -19,6 +19,8 @@ paths:
       summary: Login with credentials
       tags:
         - Authentication
+      parameters:
+        - $ref: '#/components/parameters/acceptLanguage'
       requestBody:
         required: true
         content:
@@ -42,11 +44,51 @@ paths:
                 $ref: '#/components/schemas/AuthResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/auth/register:
+    post:
+      summary: Register a new user (Native Flow)
+      tags:
+        - Authentication
+      parameters:
+        - $ref: '#/components/parameters/acceptLanguage'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Bad Request (Validation Error)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1/auth/refresh:
     post:
       summary: Refresh access token
       tags:
         - Authentication
+      parameters:
+        - $ref: '#/components/parameters/acceptLanguage'
       requestBody:
         required: true
         content:
@@ -64,6 +106,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1/auth/logout:
     post:
       summary: Logout user
@@ -116,6 +164,22 @@ paths:
           description: OK
 
   # --- User Actions ---
+  /v1/users:
+    get:
+      summary: List all users
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
   /v1/password/change:
     post:
       summary: Change user password
@@ -309,9 +373,12 @@ components:
     ErrorResponse:
       type: object
       properties:
-        error:
+        code:
           type: string
-          example: "User not found"
+          example: "IllegalArgumentException"
+        message:
+          type: string
+          example: "E-mail já cadastrado"
     User:
       type: object
       required: [id, name, email]

@@ -52,7 +52,7 @@ scope.receivePipeline.intercept(HttpReceivePipeline.After) { response ->
 4. **Conclusão**: Após a validação do código pelo usuário, o `challengeToken` é validado no servidor e o interceptor **repete automaticamente** a requisição original, que agora é aprovada.
 
 ### 🛠️ Implementação no Backend (DSL `challengePreference`)
-Para proteger rotas no `:server`, utilizamos uma DSL que abstrai a complexidade do desafio:
+Para proteger rotas no `:server`, utilizamos uma DSL que abraça a complexidade do desafio:
 
 ```kotlin
 challengePreference(ChallengeType.OTP_EMAIL) {
@@ -65,6 +65,21 @@ challengePreference(ChallengeType.OTP_EMAIL) {
     }
 }
 ```
+
+---
+
+## 👤 Autenticação e Cadastro (Fluxo Híbrido)
+
+Embora o projeto utilize SDUI extensivamente, os fluxos de **Login e Cadastro** são implementados de forma híbrida para garantir performance e uma experiência de entrada fluida.
+
+### 📝 Cadastro de Usuário (Manual UI)
+Diferente das demais telas, o `SignUpScreen` é implementado nativamente no app Android/iOS utilizando os componentes do Design System.
+- **ViewModel Compartilhada**: O `SignUpViewModel` reside no módulo `:shared` e gerencia o estado da UI (`SignUpUIState`).
+- **Persistência de Sessão**: Após o cadastro bem-sucedido, o `SessionManager` armazena os tokens JWT e navega automaticamente para a Home.
+- **Validação de Erros**: O backend retorna mensagens de erro localizadas (ex: "E-mail já cadastrado") que são exibidas diretamente nos campos do formulário.
+
+### 🔑 Autenticação (Login)
+O login segue um padrão similar, mas está preparado para disparar o **Challenge Engine** (MFA) caso o servidor detecte um login em novo dispositivo ou atividade suspeita.
 
 ---
 

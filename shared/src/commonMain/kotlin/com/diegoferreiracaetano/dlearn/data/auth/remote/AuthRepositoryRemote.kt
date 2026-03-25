@@ -17,12 +17,29 @@ class AuthRepositoryRemote(
 ) : AuthRepository {
 
     override fun login(email: String, password: String): Flow<AuthResponse> = flow {
-        // expectSuccess = true no SharedModule garante que isso lance exceção em caso de 401/500
         val response = httpClient.post("/v1/auth/login") {
             contentType(ContentType.Application.Json)
             setBody(mapOf("email" to email, "password" to password))
         }.body<AuthResponse>()
         
+        handleAuthResponse(response)
+        emit(response)
+    }
+
+    override fun register(name: String, email: String, password: String): Flow<AuthResponse> = flow {
+        // Força logout antes de registrar para não carregar tokens antigos
+        sessionManager.logout()
+
+        val response = httpClient.post("/v1/auth/register") {
+            contentType(ContentType.Application.Json)
+            setBody(mapOf("name" to name, "email" to email, "password" to password))
+        }.body<AuthResponse>()
+
+        handleAuthResponse(response)
+        emit(response)
+    }
+
+    private suspend fun handleAuthResponse(response: AuthResponse) {
         if (response.accessToken != null && response.refreshToken != null && response.user != null) {
             sessionManager.login(
                 user = response.user,
@@ -30,8 +47,6 @@ class AuthRepositoryRemote(
                 refreshToken = response.refreshToken
             )
         }
-
-        emit(response)
     }
 
     override suspend fun refreshToken(refreshToken: String): AuthResponse {

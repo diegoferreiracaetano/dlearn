@@ -1,8 +1,8 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.mappers
 
-import com.diegoferreiracaetano.dlearn.WatchProviderIds
-import com.diegoferreiracaetano.dlearn.WatchProviderPaths
-import com.diegoferreiracaetano.dlearn.WatchProviderSchemes
+import com.diegoferreiracaetano.dlearn.util.WatchProviderIds
+import com.diegoferreiracaetano.dlearn.util.WatchProviderPaths
+import com.diegoferreiracaetano.dlearn.util.WatchProviderSchemes
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 

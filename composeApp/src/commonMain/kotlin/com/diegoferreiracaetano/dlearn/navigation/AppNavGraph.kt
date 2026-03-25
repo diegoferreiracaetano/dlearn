@@ -106,7 +106,7 @@ fun AppNavGraph(
         composable(SignUp.route) {
             SignUpScreen(
                 onBackClick = { navController.popBackStack() },
-                onSignUpClick = { navController.navigate(NavigationRoutes.VERIFY_ACCOUNT) },
+                onNavigateToHome = { navController.navigateToRoute(Home.route) },
                 modifier = modifier
             )
         }

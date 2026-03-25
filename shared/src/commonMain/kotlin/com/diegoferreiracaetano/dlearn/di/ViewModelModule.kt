@@ -11,6 +11,7 @@ import com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchContentViewMode
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchMainViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.CleanCacheViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.SettingsViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpViewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
@@ -23,6 +24,7 @@ val viewModelModule = module {
     single { CreateNewPasswordViewModel(get()) }
     factory { VerifyAccountViewModel(get()) }
     factory { LoginViewModel(get(), get()) }
+    factory { SignUpViewModel(get(), get()) }
     factory { LogoutViewModel(get()) }
     factory { CleanCacheViewModel(get(), get()) }
 }

@@ -4,9 +4,8 @@ import com.diegoferreiracaetano.dlearn.api.exception.challengePreference
 import com.diegoferreiracaetano.dlearn.api.exception.challengeToken
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 import com.diegoferreiracaetano.dlearn.domain.models.*
-import com.diegoferreiracaetano.dlearn.orchestrator.PasswordOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.auth.PasswordOrchestrator
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route

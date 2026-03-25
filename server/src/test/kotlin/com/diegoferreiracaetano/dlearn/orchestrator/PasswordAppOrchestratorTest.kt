@@ -1,9 +1,9 @@
 package com.diegoferreiracaetano.dlearn.orchestrator
 
 import com.diegoferreiracaetano.dlearn.domain.models.ChangePasswordRequest
-import com.diegoferreiracaetano.dlearn.domain.models.ChangePasswordResponse
 import com.diegoferreiracaetano.dlearn.domain.usecases.ChangePasswordUseCase
 import com.diegoferreiracaetano.dlearn.infrastructure.services.PasswordDataService
+import com.diegoferreiracaetano.dlearn.orchestrator.auth.PasswordOrchestrator
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

@@ -1,48 +1,67 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.login
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
+import com.diegoferreiracaetano.dlearn.designsystem.components.error.factory.AppErrorFactory
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
-import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.signup_action
-import dlearn.composeapp.generated.resources.signup_agree_terms
-import dlearn.composeapp.generated.resources.signup_screen_subtitle
-import dlearn.composeapp.generated.resources.signup_screen_title
-import dlearn.composeapp.generated.resources.title_email
-import dlearn.composeapp.generated.resources.title_name
-import dlearn.composeapp.generated.resources.title_password
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpUIState
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpViewModel
+import dlearn.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
     onBackClick: () -> Unit,
-    onSignUpClick: () -> Unit,
+    onNavigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: SignUpViewModel = koinViewModel()
+) {
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is SignUpUIState.Success -> onNavigateToHome()
+            is SignUpUIState.Error -> {
+                val errorData = AppErrorFactory.invoke(throwable = state.error)
+                val message = getString(errorData.title)
+                snackbarHostState.showSnackbar(message = message)
+            }
+            else -> Unit
+        }
+    }
+
+    SignUpContent(
+        onBackClick = onBackClick,
+        onSignUpClick = viewModel::signUp,
+        isLoading = uiState is SignUpUIState.Loading,
+        snackbarHostState = snackbarHostState,
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SignUpContent(
+    onBackClick: () -> Unit,
+    onSignUpClick: (String, String, String) -> Unit,
+    isLoading: Boolean,
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier
 ) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -50,6 +69,8 @@ fun SignUpScreen(
 
     AppContainer(
         modifier = modifier,
+        snackBarHostState = snackbarHostState,
+        isLoading = isLoading,
         topBar = {
             AppTopBar(
                 title = stringResource(Res.string.signup_action),
@@ -127,9 +148,10 @@ fun SignUpScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             AppButton(
-                text = stringResource(Res.string.signup_action),
-                onClick = onSignUpClick,
-                modifier = Modifier.fillMaxWidth()
+                text = Res.string.signup_action,
+                onClick = { onSignUpClick(name, email, password) },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isLoading
             )
         }
     }
@@ -139,6 +161,11 @@ fun SignUpScreen(
 @Composable
 fun SignUpScreenPreview() {
     DLearnTheme {
-        SignUpScreen(onBackClick = {}, onSignUpClick = {})
+        SignUpContent(
+            onBackClick = {},
+            onSignUpClick = { _, _, _ -> },
+            isLoading = false,
+            snackbarHostState = remember { SnackbarHostState() }
+        )
     }
 }

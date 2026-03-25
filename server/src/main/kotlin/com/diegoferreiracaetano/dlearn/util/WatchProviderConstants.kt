@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn
+package com.diegoferreiracaetano.dlearn.util
 
 object WatchProviderIds {
     const val NETFLIX = 8

@@ -1,4 +1,4 @@
-package com.diegoferreiracaetano.dlearn.orchestrator
+package com.diegoferreiracaetano.dlearn.orchestrator.auth
 
 import com.diegoferreiracaetano.dlearn.domain.models.ChangePasswordRequest
 import com.diegoferreiracaetano.dlearn.domain.models.ChangePasswordResponse

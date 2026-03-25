@@ -1,8 +1,7 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import com.diegoferreiracaetano.dlearn.domain.usecases.GetProfileDataUseCase
-import com.diegoferreiracaetano.dlearn.domain.usecases.UpdateProfileDataUseCase
+import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
 import com.diegoferreiracaetano.dlearn.infrastructure.cache.InMemoryCache
 import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.screens.EditProfileScreenBuilder
@@ -14,8 +13,7 @@ import kotlinx.coroutines.flow.flow
 import kotlin.time.Duration.Companion.minutes
 
 class ProfileOrchestrator(
-    private val getProfileDataUseCase: GetProfileDataUseCase,
-    private val updateProfileDataUseCase: UpdateProfileDataUseCase,
+    private val userRepository: UserRepository,
     private val screenBuilder: ProfileScreenBuilder,
     private val editScreenBuilder: EditProfileScreenBuilder
 ) : Orchestrator {
@@ -32,31 +30,31 @@ class ProfileOrchestrator(
         return when (path) {
             NavigationRoutes.PROFILE -> getProfileData(userId, header.userAgent.appVersion, language, header.country)
             NavigationRoutes.EDIT_PROFILE -> getEditProfileData(userId, language)
-            NavigationRoutes.UPDATE_PROFILE -> updateProfile(userId, request.params ?: emptyMap(), language)
+            NavigationRoutes.UPDATE_PROFILE -> updateProfile(userId, language)
             else -> throw IllegalArgumentException("Invalid profile path: $path")
         }
     }
 
     private fun getProfileData(userId: String, appVersion: String, lang: String, country: String?): Flow<Screen> = flow {
         val screen = profileCache.getOrPut("$userId-$appVersion-$lang-$country") {
-            val domainData = getProfileDataUseCase.execute(userId)
-            screenBuilder.build(domainData, lang, country)
+            val user = userRepository.findById(userId) ?: throw Exception("User not found")
+            screenBuilder.build(user, lang, country)
         }
         emit(screen)
     }
 
     private fun getEditProfileData(userId: String, lang: String): Flow<Screen> = flow {
-        val domainData = getProfileDataUseCase.execute(userId)
-        emit(editScreenBuilder.build(domainData, lang))
+        val user = userRepository.findById(userId) ?: throw Exception("User not found")
+        emit(editScreenBuilder.build(user, lang))
     }
 
-    private fun updateProfile(userId: String, data: Map<String, String>, lang: String): Flow<Screen> = flow {
+    private fun updateProfile(userId: String, lang: String): Flow<Screen> = flow {
         try {
-            val domainData = updateProfileDataUseCase.execute(userId, data)
+            val user = userRepository.findById(userId) ?: throw Exception("User not found")
             profileCache.clear()
             emit(
                 editScreenBuilder.build(
-                    data = domainData,
+                    data = user,
                     lang = lang,
                     status = AppStringType.UPDATE_PROFILE_SUCCESS,
                     type = AppSnackbarType.SUCCESS
@@ -64,10 +62,10 @@ class ProfileOrchestrator(
             )
         } catch (e: Exception) {
             getLogger().d("Error Profile", e.message.toString())
-            val domainData = getProfileDataUseCase.execute(userId)
+            val user = userRepository.findById(userId) ?: throw Exception("User not found")
             emit(
                 editScreenBuilder.build(
-                    data = domainData,
+                    data = user,
                     lang = lang,
                     status = AppStringType.UPDATE_PROFILE_ERROR,
                     type = AppSnackbarType.ERROR

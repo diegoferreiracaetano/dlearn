@@ -1,0 +1,31 @@
+package com.diegoferreiracaetano.dlearn.infrastructure.db
+
+import kotlinx.coroutines.Dispatchers
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.insertIgnore
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.transaction
+
+object DatabaseFactory {
+    fun init() {
+        val driverClassName = "org.sqlite.JDBC"
+        val jdbcUrl = "jdbc:sqlite:./dlearn.db"
+        val database = Database.connect(jdbcUrl, driverClassName)
+        
+        transaction(database) {
+            SchemaUtils.create(UserTable)
+            
+            // Add default user if not exists
+            UserTable.insertIgnore {
+                it[id] = "1"
+                it[name] = "Diego Caetano"
+                it[email] = "admin@dlearn.com"
+                it[password] = "123456"
+            }
+        }
+    }
+
+    suspend fun <T> dbQuery(block: suspend () -> T): T =
+        newSuspendedTransaction(Dispatchers.IO) { block() }
+}

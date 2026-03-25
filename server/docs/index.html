@@ -1205,9 +1205,13 @@
             defs["ErrorResponse"] = {
   "type" : "object",
   "properties" : {
-    "error" : {
+    "code" : {
       "type" : "string",
-      "example" : "User not found"
+      "example" : "IllegalArgumentException"
+    },
+    "message" : {
+      "type" : "string",
+      "example" : "E-mail já cadastrado"
     }
   }
 };
@@ -1477,6 +1481,9 @@
                     <li data-group="Authentication" data-name="v1AuthRefreshPost" class="">
                       <a href="#api-Authentication-v1AuthRefreshPost">v1AuthRefreshPost</a>
                     </li>
+                    <li data-group="Authentication" data-name="v1AuthRegisterPost" class="">
+                      <a href="#api-Authentication-v1AuthRegisterPost">v1AuthRegisterPost</a>
+                    </li>
                   <li class="nav-header" data-group="SDUI"><a href="#api-SDUI">API Methods - SDUI</a></li>
                     <li data-group="SDUI" data-name="v1MainGet" class="">
                       <a href="#api-SDUI-v1MainGet">v1MainGet</a>
@@ -1501,6 +1508,9 @@
                     <li data-group="User" data-name="v1PasswordChangePost" class="">
                       <a href="#api-User-v1PasswordChangePost">v1PasswordChangePost</a>
                     </li>
+                    <li data-group="User" data-name="v1UsersGet" class="">
+                      <a href="#api-User-v1UsersGet">v1UsersGet</a>
+                    </li>
           </ul>
         </nav>
       </div>
@@ -1514,7 +1524,7 @@
         <div id="header">
           <div id="api-_">
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
-              <div class="app-desc">Version: 1.6.1</div>
+              <div class="app-desc">Version: 1.7.0</div>
             <hr>
             <div><p>API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows.
 Security and Multi-Factor Authentication (MFA) are handled by a Generic Challenge Engine.</p>
@@ -2170,8 +2180,9 @@ public class AuthenticationApiExample {
         
         AuthenticationApi apiInstance = new AuthenticationApi();
         Object body = ; // Object | 
+        String acceptLanguage = acceptLanguage_example; // String | 
         try {
-            AuthResponse result = apiInstance.v1AuthLoginPost(body);
+            AuthResponse result = apiInstance.v1AuthLoginPost(body, acceptLanguage);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AuthenticationApi#v1AuthLoginPost");
@@ -2189,8 +2200,9 @@ public class AuthenticationApiExample {
     public static void main(String[] args) {
         AuthenticationApi apiInstance = new AuthenticationApi();
         Object body = ; // Object | 
+        String acceptLanguage = acceptLanguage_example; // String | 
         try {
-            AuthResponse result = apiInstance.v1AuthLoginPost(body);
+            AuthResponse result = apiInstance.v1AuthLoginPost(body, acceptLanguage);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AuthenticationApi#v1AuthLoginPost");
@@ -2205,11 +2217,13 @@ public class AuthenticationApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Authentication-v1AuthLoginPost-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Object *body = ; // 
+String *acceptLanguage = acceptLanguage_example; //  (optional)
 
 AuthenticationApi *apiInstance = [[AuthenticationApi alloc] init];
 
 // Login with credentials
 [apiInstance v1AuthLoginPostWith:body
+    acceptLanguage:acceptLanguage
               completionHandler: ^(AuthResponse output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -2226,7 +2240,9 @@ AuthenticationApi *apiInstance = [[AuthenticationApi alloc] init];
 
 var api = new DLearnBffApi.AuthenticationApi()
 var body = ; // {{Object}} 
-
+var opts = { 
+  'acceptLanguage': acceptLanguage_example // {{String}} 
+};
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -2234,7 +2250,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.v1AuthLoginPost(body, callback);
+api.v1AuthLoginPost(body, opts, callback);
 </code></pre>
                             </div>
 
@@ -2257,11 +2273,12 @@ namespace Example
 
             var apiInstance = new AuthenticationApi();
             var body = new Object(); // Object | 
+            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
 
             try
             {
                 // Login with credentials
-                AuthResponse result = apiInstance.v1AuthLoginPost(body);
+                AuthResponse result = apiInstance.v1AuthLoginPost(body, acceptLanguage);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -2280,9 +2297,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiAuthenticationApi();
 $body = ; // Object | 
+$acceptLanguage = acceptLanguage_example; // String | 
 
 try {
-    $result = $api_instance->v1AuthLoginPost($body);
+    $result = $api_instance->v1AuthLoginPost($body, $acceptLanguage);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling AuthenticationApi->v1AuthLoginPost: ', $e->getMessage(), PHP_EOL;
@@ -2297,9 +2315,10 @@ use WWW::SwaggerClient::AuthenticationApi;
 
 my $api_instance = WWW::SwaggerClient::AuthenticationApi->new();
 my $body = WWW::SwaggerClient::Object::Object->new(); # Object | 
+my $acceptLanguage = acceptLanguage_example; # String | 
 
 eval { 
-    my $result = $api_instance->v1AuthLoginPost(body => $body);
+    my $result = $api_instance->v1AuthLoginPost(body => $body, acceptLanguage => $acceptLanguage);
     print Dumper($result);
 };
 if ($@) {
@@ -2317,10 +2336,11 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = swagger_client.AuthenticationApi()
 body =  # Object | 
+acceptLanguage = acceptLanguage_example # String |  (optional)
 
 try: 
     # Login with credentials
-    api_response = api_instance.v1_auth_login_post(body)
+    api_response = api_instance.v1_auth_login_post(body, acceptLanguage=acceptLanguage)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling AuthenticationApi->v1AuthLoginPost: %s\n" % e)</code></pre>
@@ -2330,6 +2350,29 @@ except ApiException as e:
                           <h2>Parameters</h2>
 
 
+                            <div class="methodsubtabletitle">Header parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                  <tr><td style="width:150px;">Accept-Language</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1AuthLoginPost_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
 
                             <div class="methodsubtabletitle">Body parameters</div>
                             <table id="methodsubtable">
@@ -2440,9 +2483,49 @@ except ApiException as e:
                             <h3> Status: 401 - Unauthorized </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1AuthLoginPost-401-schema">Schema</a>
+                                </li>
+
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1AuthLoginPost-401-schema">
+                                  <div id='responses-v1AuthLoginPost-401-schema-401' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Unauthorized",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1AuthLoginPost-401-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1AuthLoginPost-401-schema-401');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1AuthLoginPost-401-schema-data' type='hidden' value=''></input>
+                                </div>
                             </div>
 
                         </article>
@@ -2718,8 +2801,9 @@ public class AuthenticationApiExample {
         
         AuthenticationApi apiInstance = new AuthenticationApi();
         Object body = ; // Object | 
+        String acceptLanguage = acceptLanguage_example; // String | 
         try {
-            AuthResponse result = apiInstance.v1AuthRefreshPost(body);
+            AuthResponse result = apiInstance.v1AuthRefreshPost(body, acceptLanguage);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AuthenticationApi#v1AuthRefreshPost");
@@ -2737,8 +2821,9 @@ public class AuthenticationApiExample {
     public static void main(String[] args) {
         AuthenticationApi apiInstance = new AuthenticationApi();
         Object body = ; // Object | 
+        String acceptLanguage = acceptLanguage_example; // String | 
         try {
-            AuthResponse result = apiInstance.v1AuthRefreshPost(body);
+            AuthResponse result = apiInstance.v1AuthRefreshPost(body, acceptLanguage);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AuthenticationApi#v1AuthRefreshPost");
@@ -2753,11 +2838,13 @@ public class AuthenticationApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Authentication-v1AuthRefreshPost-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Object *body = ; // 
+String *acceptLanguage = acceptLanguage_example; //  (optional)
 
 AuthenticationApi *apiInstance = [[AuthenticationApi alloc] init];
 
 // Refresh access token
 [apiInstance v1AuthRefreshPostWith:body
+    acceptLanguage:acceptLanguage
               completionHandler: ^(AuthResponse output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -2774,7 +2861,9 @@ AuthenticationApi *apiInstance = [[AuthenticationApi alloc] init];
 
 var api = new DLearnBffApi.AuthenticationApi()
 var body = ; // {{Object}} 
-
+var opts = { 
+  'acceptLanguage': acceptLanguage_example // {{String}} 
+};
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -2782,7 +2871,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.v1AuthRefreshPost(body, callback);
+api.v1AuthRefreshPost(body, opts, callback);
 </code></pre>
                             </div>
 
@@ -2805,11 +2894,12 @@ namespace Example
 
             var apiInstance = new AuthenticationApi();
             var body = new Object(); // Object | 
+            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
 
             try
             {
                 // Refresh access token
-                AuthResponse result = apiInstance.v1AuthRefreshPost(body);
+                AuthResponse result = apiInstance.v1AuthRefreshPost(body, acceptLanguage);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -2828,9 +2918,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiAuthenticationApi();
 $body = ; // Object | 
+$acceptLanguage = acceptLanguage_example; // String | 
 
 try {
-    $result = $api_instance->v1AuthRefreshPost($body);
+    $result = $api_instance->v1AuthRefreshPost($body, $acceptLanguage);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling AuthenticationApi->v1AuthRefreshPost: ', $e->getMessage(), PHP_EOL;
@@ -2845,9 +2936,10 @@ use WWW::SwaggerClient::AuthenticationApi;
 
 my $api_instance = WWW::SwaggerClient::AuthenticationApi->new();
 my $body = WWW::SwaggerClient::Object::Object->new(); # Object | 
+my $acceptLanguage = acceptLanguage_example; # String | 
 
 eval { 
-    my $result = $api_instance->v1AuthRefreshPost(body => $body);
+    my $result = $api_instance->v1AuthRefreshPost(body => $body, acceptLanguage => $acceptLanguage);
     print Dumper($result);
 };
 if ($@) {
@@ -2865,10 +2957,11 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = swagger_client.AuthenticationApi()
 body =  # Object | 
+acceptLanguage = acceptLanguage_example # String |  (optional)
 
 try: 
     # Refresh access token
-    api_response = api_instance.v1_auth_refresh_post(body)
+    api_response = api_instance.v1_auth_refresh_post(body, acceptLanguage=acceptLanguage)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling AuthenticationApi->v1AuthRefreshPost: %s\n" % e)</code></pre>
@@ -2878,6 +2971,29 @@ except ApiException as e:
                           <h2>Parameters</h2>
 
 
+                            <div class="methodsubtabletitle">Header parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                  <tr><td style="width:150px;">Accept-Language</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1AuthRefreshPost_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
 
                             <div class="methodsubtabletitle">Body parameters</div>
                             <table id="methodsubtable">
@@ -2977,6 +3093,458 @@ except ApiException as e:
                                     </script>
                                   </div>
                                   <input id='responses-v1AuthRefreshPost-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 401 - Unauthorized </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1AuthRefreshPost-401-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1AuthRefreshPost-401-schema">
+                                  <div id='responses-v1AuthRefreshPost-401-schema-401' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Unauthorized",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1AuthRefreshPost-401-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1AuthRefreshPost-401-schema-401');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1AuthRefreshPost-401-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Authentication-v1AuthRegisterPost">
+                      <article id="api-Authentication-v1AuthRegisterPost-0" data-group="User" data-name="v1AuthRegisterPost" data-version="0">
+                        <div class="pull-left">
+                          <h1>v1AuthRegisterPost</h1>
+                          <p>Register a new user (Native Flow)</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/auth/register</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Authentication-v1AuthRegisterPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Authentication-v1AuthRegisterPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Authentication-v1AuthRegisterPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Authentication-v1AuthRegisterPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Authentication-v1AuthRegisterPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Authentication-v1AuthRegisterPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Authentication-v1AuthRegisterPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Authentication-v1AuthRegisterPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Authentication-v1AuthRegisterPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Authentication-v1AuthRegisterPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Authentication-v1AuthRegisterPost-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Authentication-v1AuthRegisterPost-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+-H "Accept: application/json"\
+-H "Content-Type: application/json"\
+"http://localhost:8081/v1/auth/register"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Authentication-v1AuthRegisterPost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.AuthenticationApi;
+
+import java.io.File;
+import java.util.*;
+
+public class AuthenticationApiExample {
+
+    public static void main(String[] args) {
+        
+        AuthenticationApi apiInstance = new AuthenticationApi();
+        Object body = ; // Object | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        try {
+            AuthResponse result = apiInstance.v1AuthRegisterPost(body, acceptLanguage);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthenticationApi#v1AuthRegisterPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Authentication-v1AuthRegisterPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.AuthenticationApi;
+
+public class AuthenticationApiExample {
+
+    public static void main(String[] args) {
+        AuthenticationApi apiInstance = new AuthenticationApi();
+        Object body = ; // Object | 
+        String acceptLanguage = acceptLanguage_example; // String | 
+        try {
+            AuthResponse result = apiInstance.v1AuthRegisterPost(body, acceptLanguage);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthenticationApi#v1AuthRegisterPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Authentication-v1AuthRegisterPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Authentication-v1AuthRegisterPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Object *body = ; // 
+String *acceptLanguage = acceptLanguage_example; //  (optional)
+
+AuthenticationApi *apiInstance = [[AuthenticationApi alloc] init];
+
+// Register a new user (Native Flow)
+[apiInstance v1AuthRegisterPostWith:body
+    acceptLanguage:acceptLanguage
+              completionHandler: ^(AuthResponse output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Authentication-v1AuthRegisterPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
+
+var api = new DLearnBffApi.AuthenticationApi()
+var body = ; // {{Object}} 
+var opts = { 
+  'acceptLanguage': acceptLanguage_example // {{String}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.v1AuthRegisterPost(body, opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Authentication-v1AuthRegisterPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Authentication-v1AuthRegisterPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class v1AuthRegisterPostExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new AuthenticationApi();
+            var body = new Object(); // Object | 
+            var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
+
+            try
+            {
+                // Register a new user (Native Flow)
+                AuthResponse result = apiInstance.v1AuthRegisterPost(body, acceptLanguage);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling AuthenticationApi.v1AuthRegisterPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Authentication-v1AuthRegisterPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiAuthenticationApi();
+$body = ; // Object | 
+$acceptLanguage = acceptLanguage_example; // String | 
+
+try {
+    $result = $api_instance->v1AuthRegisterPost($body, $acceptLanguage);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling AuthenticationApi->v1AuthRegisterPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Authentication-v1AuthRegisterPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::AuthenticationApi;
+
+my $api_instance = WWW::SwaggerClient::AuthenticationApi->new();
+my $body = WWW::SwaggerClient::Object::Object->new(); # Object | 
+my $acceptLanguage = acceptLanguage_example; # String | 
+
+eval { 
+    my $result = $api_instance->v1AuthRegisterPost(body => $body, acceptLanguage => $acceptLanguage);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling AuthenticationApi->v1AuthRegisterPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Authentication-v1AuthRegisterPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.AuthenticationApi()
+body =  # Object | 
+acceptLanguage = acceptLanguage_example # String |  (optional)
+
+try: 
+    # Register a new user (Native Flow)
+    api_response = api_instance.v1_auth_register_post(body, acceptLanguage=acceptLanguage)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling AuthenticationApi->v1AuthRegisterPost: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+                            <div class="methodsubtabletitle">Header parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                  <tr><td style="width:150px;">Accept-Language</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1AuthRegisterPost_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "required" : [ "email", "name", "password" ],
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  },
+  "required" : true
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_v1AuthRegisterPost_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_v1AuthRegisterPost_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 201 - Created </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1AuthRegisterPost-201-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1AuthRegisterPost-201-schema">
+                                  <div id='responses-v1AuthRegisterPost-201-schema-201' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Created",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/AuthResponse"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1AuthRegisterPost-201-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1AuthRegisterPost-201-schema-201');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1AuthRegisterPost-201-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 400 - Bad Request (Validation Error) </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1AuthRegisterPost-400-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1AuthRegisterPost-400-schema">
+                                  <div id='responses-v1AuthRegisterPost-400-schema-400' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Bad Request (Validation Error)",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1AuthRegisterPost-400-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1AuthRegisterPost-400-schema-400');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1AuthRegisterPost-400-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
@@ -5193,6 +5761,278 @@ except ApiException as e:
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-User-v1UsersGet">
+                      <article id="api-User-v1UsersGet-0" data-group="User" data-name="v1UsersGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>v1UsersGet</h1>
+                          <p>List all users</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/users</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-User-v1UsersGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-User-v1UsersGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-User-v1UsersGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-User-v1UsersGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-User-v1UsersGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-User-v1UsersGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-User-v1UsersGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-User-v1UsersGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-User-v1UsersGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-User-v1UsersGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-User-v1UsersGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-User-v1UsersGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+ -H "Authorization: Bearer [[accessToken]]"\
+-H "Accept: application/json"\
+"http://localhost:8081/v1/users"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-User-v1UsersGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.UserApi;
+
+import java.io.File;
+import java.util.*;
+
+public class UserApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
+        UserApi apiInstance = new UserApi();
+        try {
+            array[User] result = apiInstance.v1UsersGet();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserApi#v1UsersGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-User-v1UsersGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.UserApi;
+
+public class UserApiExample {
+
+    public static void main(String[] args) {
+        UserApi apiInstance = new UserApi();
+        try {
+            array[User] result = apiInstance.v1UsersGet();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserApi#v1UsersGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-User-v1UsersGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-User-v1UsersGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+UserApi *apiInstance = [[UserApi alloc] init];
+
+// List all users
+[apiInstance v1UsersGetWithCompletionHandler: 
+              ^(array[User] output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-User-v1UsersGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
+var defaultClient = DLearnBffApi.ApiClient.instance;
+
+
+var api = new DLearnBffApi.UserApi()
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.v1UsersGet(callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-User-v1UsersGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-User-v1UsersGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class v1UsersGetExample
+    {
+        public void main()
+        {
+
+
+            var apiInstance = new UserApi();
+
+            try
+            {
+                // List all users
+                array[User] result = apiInstance.v1UsersGet();
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling UserApi.v1UsersGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-User-v1UsersGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+$api_instance = new Swagger\Client\ApiUserApi();
+
+try {
+    $result = $api_instance->v1UsersGet();
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling UserApi->v1UsersGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-User-v1UsersGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::UserApi;
+
+
+my $api_instance = WWW::SwaggerClient::UserApi->new();
+
+eval { 
+    my $result = $api_instance->v1UsersGet();
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling UserApi->v1UsersGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-User-v1UsersGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = swagger_client.UserApi()
+
+try: 
+    # List all users
+    api_response = api_instance.v1_users_get()
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling UserApi->v1UsersGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-v1UsersGet-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-v1UsersGet-200-schema">
+                                  <div id='responses-v1UsersGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "type" : "array",
+        "x-content-type" : "application/json",
+        "items" : {
+          "$ref" : "#/components/schemas/User"
+        }
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-v1UsersGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-v1UsersGet-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-v1UsersGet-200-schema-data' type='hidden' value=''></input>
+                                </div>
                             </div>
 
                         </article>

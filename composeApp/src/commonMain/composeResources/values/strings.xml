@@ -22,7 +22,7 @@
     <string name="login_forgot_password">Forgot password?</string>
     <string name="login_action">Login</string>
 
-    <string name="signup_screen_title">Let\'s get started</string>
+    <string name="signup_screen_title">Let's get started</string>
     <string name="signup_screen_subtitle">The latest movies and series are here</string>
     <string name="signup_agree_terms">I agree to the Terms of Service and Privacy Policy</string>
     <string name="signup_action">Sign Up</string>

@@ -2,13 +2,16 @@ package com.diegoferreiracaetano.dlearn.di
 
 import com.diegoferreiracaetano.dlearn.api.exception.ChallengeMapper
 import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
+import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
 import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
 import com.diegoferreiracaetano.dlearn.domain.usecases.*
 import com.diegoferreiracaetano.dlearn.infrastructure.mappers.TmdbMapper
 import com.diegoferreiracaetano.dlearn.infrastructure.mappers.WatchProviderUrlMapper
 import com.diegoferreiracaetano.dlearn.infrastructure.services.*
-import com.diegoferreiracaetano.dlearn.orchestrator.*
 import com.diegoferreiracaetano.dlearn.orchestrator.app.*
+import com.diegoferreiracaetano.dlearn.orchestrator.auth.CreateUserOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.auth.LoginOrchestrator
+import com.diegoferreiracaetano.dlearn.orchestrator.auth.PasswordOrchestrator
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import com.diegoferreiracaetano.dlearn.ui.mappers.*
 import com.diegoferreiracaetano.dlearn.ui.screens.*
@@ -25,6 +28,7 @@ val serverModule = module {
     // API / Exception Handling / Auth
     single { ChallengeMapper() }
     single { TokenService() }
+    single<UserRepository> { UserDataService() }
     
     // Repositories / Services
     single<FavoriteRepository> { FavoriteDataService() }
@@ -38,13 +42,10 @@ val serverModule = module {
     single { HomeScreenBuilder(get(), get()) }
     single { HomeOrchestrator(get(), get()) }
 
-    // Auth & Login (SDUI)
-    single { LoginOrchestrator(get()) }
+    // Auth & Login
+    single { LoginOrchestrator(get(), get(), get()) }
+    single { CreateUserOrchestrator(get(), get(), get()) }
 
-    // Data Services & UseCases (Profile, Settings, Movie, Search)
-    single { ProfileDataService() }
-    single { GetProfileDataUseCase(get()) }
-    single { UpdateProfileDataUseCase(get()) }
     single { ProfileMapper(get()) }
     
     single { SettingsMapper(get()) }
@@ -67,6 +68,7 @@ val serverModule = module {
     single { SettingsScreenBuilder(get(), get()) }
     single { MovieDetailScreenBuilder(get(), get()) }
     single { SearchScreenBuilder(get()) }
+    single { UserListScreenBuilder() }
 
     // Individual Orchestrators
     single { WatchlistOrchestrator(get(), get(), get(), get()) }
@@ -74,14 +76,16 @@ val serverModule = module {
     single { MainOrchestrator(get()) }
     single { FaqOrchestrator(get(), get()) }
     single { VerifyAccountOrchestrator(get()) }
-    single { ProfileOrchestrator(get(), get(), get(), get()) }
+    single { ProfileOrchestrator(get(), get(), get()) }
     single { SettingsOrchestrator(get()) }
     single { MovieDetailOrchestrator(get(), get()) }
     single { SearchOrchestrator(get(), get(), get(), get()) }
+    single { UserListOrchestrator(get(), get()) }
     
     // AppOrchestrator (Main Gateway)
     single<Orchestrator> {
         AppOrchestrator(
+            get(),
             get(),
             get(),
             get(),

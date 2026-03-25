@@ -1,9 +1,6 @@
 package com.diegoferreiracaetano.dlearn.orchestrator
 
 import com.diegoferreiracaetano.dlearn.domain.models.ProfileDomainData
-import com.diegoferreiracaetano.dlearn.domain.usecases.GetProfileDataUseCase
-import com.diegoferreiracaetano.dlearn.domain.usecases.UpdateProfileDataUseCase
-import com.diegoferreiracaetano.dlearn.infrastructure.services.ProfileDataService
 import com.diegoferreiracaetano.dlearn.ui.mappers.ProfileMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.EditProfileScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.screens.ProfileScreenBuilder

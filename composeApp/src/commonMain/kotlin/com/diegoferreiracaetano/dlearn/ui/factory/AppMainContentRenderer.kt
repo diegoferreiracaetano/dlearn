@@ -12,22 +12,11 @@ class AppMainContentRenderer : ComponentRenderer {
     override fun Render(component: Component, actions: ComponentActions, modifier: Modifier) {
 
         when (actions.currentRoute) {
-            NavigationRoutes.HOME -> AppScreen(
-                actions = actions,
-                modifier = modifier
-            )
-
-            NavigationRoutes.PROFILE -> AppScreen(
-                actions = actions,
-                modifier = modifier
-            )
-
-            NavigationRoutes.WATCHLIST -> AppScreen(
-                actions = actions,
-                modifier = modifier
-            )
-
-            NavigationRoutes.FAVORITE -> AppScreen(
+            NavigationRoutes.HOME,
+            NavigationRoutes.PROFILE,
+            NavigationRoutes.WATCHLIST,
+            NavigationRoutes.FAVORITE,
+            NavigationRoutes.USER_LIST -> AppScreen(
                 actions = actions,
                 modifier = modifier
             )

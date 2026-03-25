@@ -25,7 +25,7 @@ class SearchOrchestrator(
         val query = request.params?.get("q")
         
         return if (query != null) {
-            searchContent( language, query)
+            searchContent(language, query)
         } else {
             searchMain(language)
         }

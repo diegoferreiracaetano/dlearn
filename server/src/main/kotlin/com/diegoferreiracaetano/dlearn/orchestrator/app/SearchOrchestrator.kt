@@ -15,34 +15,20 @@ class SearchOrchestrator(
     private val getHomeDataUseCase: GetHomeDataUseCase,
     private val videoMapper: VideoMapper,
     private val searchScreenBuilder: SearchScreenBuilder
-) : Orchestrator {
+) {
 
-    override fun execute(
-        request: AppRequest,
-        header: AppHeader
-    ): Flow<Screen> {
-        val language = header.language
-        val query = request.params?.get("q")
-        
-        return if (query != null) {
-            searchContent(language, query)
-        } else {
-            searchMain(language)
-        }
-    }
-
-    private fun searchMain(lang: String): Flow<Screen> = flow {
-        val homeData = getHomeDataUseCase.execute(lang)
+    fun searchMain(appHeader: AppHeader): Flow<Screen> = flow {
+        val homeData = getHomeDataUseCase.execute(appHeader.language)
         val popularItems = videoMapper.toMovieItemComponents(homeData.popular)
-        emit(searchScreenBuilder.buildMain(lang, popularItems))
+        emit(searchScreenBuilder.buildMain(appHeader.language, popularItems))
     }
 
-    private fun searchContent(
-        lang: String,
+    fun searchContent(
+        appHeader: AppHeader,
         query: String
     ): Flow<Screen> = flow {
-        val videos = getSearchDataUseCase.execute(query, lang)
+        val videos = getSearchDataUseCase.execute(query, appHeader.language)
         val results = videoMapper.toMovieItemComponents(videos)
-        emit(searchScreenBuilder.buildContent(query, results, lang))
+        emit(searchScreenBuilder.buildContent(query, results, appHeader.language))
     }
 }

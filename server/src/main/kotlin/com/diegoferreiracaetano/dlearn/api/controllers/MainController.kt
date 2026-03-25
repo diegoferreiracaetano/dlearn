@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.api.controllers
 
 import com.diegoferreiracaetano.dlearn.AppConstants.X_COUNTRY
 import com.diegoferreiracaetano.dlearn.AppConstants.X_NOTIFICATIONS_ENABLED
+import com.diegoferreiracaetano.dlearn.api.util.appHeader
 import com.diegoferreiracaetano.dlearn.api.util.userId
 import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.orchestrator.app.MainOrchestrator
@@ -22,13 +23,7 @@ fun Route.mainController() {
         get {
             val request = AppRequest(path = "/main")
 
-            val header = AppHeader(
-                paramUserAgent = call.request.header(UserAgent),
-                paramLanguage = call.request.header(AcceptLanguage),
-                paramCountry = call.request.header(X_COUNTRY),
-                notificationsEnabled = call.request.header(X_NOTIFICATIONS_ENABLED)?.toBoolean() ?: true,
-                userId = call.userId
-            )
+            val header = call.appHeader
 
             orchestrator.execute(
                 request = request,

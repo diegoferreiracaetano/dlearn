@@ -4,11 +4,8 @@ import com.diegoferreiracaetano.dlearn.NavigationRoutes.EDIT_PROFILE
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.FAQ
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.FAVORITE
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.HOME
-import com.diegoferreiracaetano.dlearn.NavigationRoutes.LOGOUT
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.MOVIE_DETAIL
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.PROFILE
-import com.diegoferreiracaetano.dlearn.NavigationRoutes.SEARCH
-import com.diegoferreiracaetano.dlearn.NavigationRoutes.SETTINGS_CLEAR_CACHE
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.SETTINGS_COUNTRY
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.SETTINGS_LANGUAGE
 import com.diegoferreiracaetano.dlearn.NavigationRoutes.SETTINGS_NOTIFICATIONS
@@ -47,7 +44,6 @@ class AppOrchestrator(
             WATCHLIST -> watchlistOrchestrator.execute(request, header)
             PROFILE, EDIT_PROFILE, UPDATE_PROFILE -> profileOrchestrator.execute(request, header)
             FAQ -> faqOrchestrator.execute(request, header)
-            SEARCH -> searchOrchestrator.execute(request, header)
             MOVIE_DETAIL -> movieDetailOrchestrator.execute(request, header)
             WELCOME -> mainOrchestrator.execute(request, header)
             VERIFY_ACCOUNT -> verifyAccountOrchestrator.execute(request, header)

@@ -39,7 +39,6 @@ private fun CleanCacheContent(
         confirmButtonText = stringResource(Res.string.clear_cache_confirm),
         onConfirmClick = {
             onConfirmClick()
-            // A navegação de volta agora é tratada globalmente pelo GlobalEventHandler
         },
         dismissButtonText = stringResource(Res.string.clear_cache_cancel),
         onDismissClick = { onBackClick() },

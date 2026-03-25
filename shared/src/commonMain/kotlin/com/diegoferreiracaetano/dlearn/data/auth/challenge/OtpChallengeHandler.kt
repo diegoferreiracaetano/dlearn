@@ -1,7 +1,6 @@
 package com.diegoferreiracaetano.dlearn.data.auth.challenge
 
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.Challenge
-import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeCoordinator
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeHandler
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeResult
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeSession
@@ -11,9 +10,7 @@ import kotlinx.coroutines.CompletableDeferred
 /**
  * Implementação do Handler de OTP que se comunica com o ChallengeCoordinator.
  */
-class OtpChallengeHandler(
-    private val coordinator: ChallengeCoordinator
-) : ChallengeHandler {
+class OtpChallengeHandler : ChallengeHandler {
 
     private var currentDeferred: CompletableDeferred<ChallengeResult>? = null
 
@@ -22,11 +19,9 @@ class OtpChallengeHandler(
     }
 
     override suspend fun handle(challenge: Challenge, session: ChallengeSession): ChallengeResult {
+        println("DEBUG OtpChallengeHandler: Handling OTP Challenge - Session: ${session.transactionId}")
         val deferred = CompletableDeferred<ChallengeResult>()
         currentDeferred = deferred
-
-        // O coordinator emite a sessão e o desafio específico para que a UI mostre o campo correto
-        coordinator.emit(session, challenge)
 
         return try {
             deferred.await()

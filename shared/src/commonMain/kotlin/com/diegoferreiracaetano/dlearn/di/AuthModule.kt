@@ -17,7 +17,7 @@ val authModule = module {
     single { ChallengeEngine(get(), getAll()) }
     
     // Handlers de Desafio
-    single { OtpChallengeHandler(get()) }
+    single { OtpChallengeHandler() }
     single<ChallengeHandler> { get<OtpChallengeHandler>() }
     // O BiometricChallengeHandler será injetado pelo platformAuthModule se disponível
 

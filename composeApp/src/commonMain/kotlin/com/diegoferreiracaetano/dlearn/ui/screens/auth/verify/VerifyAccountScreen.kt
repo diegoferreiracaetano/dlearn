@@ -32,10 +32,8 @@ fun VerifyAccountScreen(
 
     LaunchedEffect(uiState) {
         when (val state = uiState) {
-            is VerifyAccountUiState.Success -> {
-                onContinueClick()
-            }
-            is VerifyAccountUiState.Error -> otpError = state.message
+            is VerifyAccountUiState.Success -> onContinueClick()
+            is VerifyAccountUiState.Error -> otpError = state.throwable.message
             else -> otpError = null
         }
     }

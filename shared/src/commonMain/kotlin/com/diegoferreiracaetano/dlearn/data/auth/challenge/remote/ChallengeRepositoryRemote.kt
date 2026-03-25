@@ -6,11 +6,15 @@ import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeCoordinato
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeRepository
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeResult
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
+import io.ktor.client.utils.unwrapCancellationException
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.coroutines.flow.Flow
@@ -58,22 +62,38 @@ class ChallengeRepositoryRemote(
                     answers = answer
                 ))
             }
-            
+
             if (response.status.value in 200..299) {
                 val body = response.body<ChallengeBackendResponse>()
                 val validatedToken = body.validatedToken ?: ""
-                
+
                 if (challenge.challengeType == ChallengeType.OTP_EMAIL || challenge.challengeType == ChallengeType.OTP_SMS) {
                     otpHandler.onChallengeResolved(validatedToken)
                 }
-                
+
                 coordinator.clear() // Limpa contexto após sucesso
                 emit(ChallengeResult.Success(mapOf("validatedToken" to validatedToken)))
             } else {
                 emit(ChallengeResult.Failure(Exception("Erro ao validar desafio: ${response.status}")))
             }
-        } catch (e: Exception) {
-            emit(ChallengeResult.Failure(e))
+        } catch (e: ClientRequestException) {
+
+            val message = try {
+                val errorBody = e.response.body<ChallengeBackendResponse>()
+                errorBody.message
+            } catch (_: Exception) {
+                try {
+                    e.response.bodyAsText()
+                } catch (_: Exception) {
+                    "Erro desconhecido ao validar desafio"
+                }
+            }
+
+            emit(
+                ChallengeResult.Failure(
+                    Throwable(message)
+                )
+            )
         }
     }
 

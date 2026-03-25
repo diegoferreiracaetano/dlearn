@@ -3,8 +3,8 @@ package com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeRepository
-import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeResult
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.VerifyAccountUiState
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.toUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -28,20 +28,10 @@ class VerifyAccountViewModel(
                 _uiState.value = VerifyAccountUiState.Loading
             }
             .catch { error ->
-                _uiState.value = VerifyAccountUiState.Error(error.message.toString())
+                _uiState.value = VerifyAccountUiState.Error(error)
             }
             .collect { result ->
-                when (result) {
-                    is ChallengeResult.Success -> {
-                        _uiState.value = VerifyAccountUiState.Success
-                    }
-                    is ChallengeResult.Failure -> {
-                        _uiState.value = VerifyAccountUiState.Error(result.error.message ?: "Erro na verificação")
-                    }
-                    is ChallengeResult.Cancelled -> {
-                        _uiState.value = VerifyAccountUiState.Idle
-                    }
-                }
+                _uiState.value = result.toUiState()
             }
         }
     }
@@ -53,13 +43,13 @@ class VerifyAccountViewModel(
                 _uiState.value = VerifyAccountUiState.Loading
             }
             .catch { error ->
-                _uiState.value = VerifyAccountUiState.Error(error.message.toString())
+                _uiState.value = VerifyAccountUiState.Error(error)
             }
             .collect { success ->
                 if (success) {
                     _uiState.value = VerifyAccountUiState.Idle
                 } else {
-                    _uiState.value = VerifyAccountUiState.Error("Falha ao reenviar código")
+                    _uiState.value = VerifyAccountUiState.Error(Throwable("Failed to resend OTP"))
                 }
             }
         }

@@ -27,7 +27,7 @@ class ChallengeCoordinator(
      * @param challenge O desafio específico que está sendo processado no momento.
      */
     suspend fun emit(session: ChallengeSession, challenge: Challenge) {
-        println("ChallengeCoordinator: Storing Context - Session: ${session.transactionId}, Challenge: ${challenge.challengeType}")
+        println("DEBUG: ChallengeCoordinator Storing Context - Session: ${session.transactionId}, Challenge: ${challenge.challengeType}")
         _currentSession = session
         _activeChallenge = challenge
         

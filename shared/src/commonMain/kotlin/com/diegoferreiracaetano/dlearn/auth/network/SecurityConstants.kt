@@ -18,4 +18,5 @@ object SecurityConstants {
      * Permite que o App sugira ao servidor qual método de MFA ele prefere (ex: OTP_SMS, BIOMETRIC).
      */
     const val HEADER_CHALLENGE_PREFERENCE = "X-Challenge-Preference"
+
 }

@@ -18,6 +18,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.NavigationRoutes.VERIFY_ACCOUNT
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.*
 import com.diegoferreiracaetano.dlearn.ui.screens.app.AppScreen
@@ -56,8 +57,9 @@ fun AppNavGraph(
     }
 
     // Observador Central de Eventos Globais
-    LaunchedEffect(eventDispatcher) {
+    LaunchedEffect(eventDispatcher, eventHandler) {
         eventDispatcher.events.collect { event ->
+            println("DEBUG: Received event: $event")
             eventHandler.handle(event)
         }
     }
@@ -72,7 +74,6 @@ fun AppNavGraph(
     }
 
     val startDestination = if (isLoggedIn) Home.route else Welcome.route
-    val uriHandler = LocalUriHandler.current
 
     NavHost(
         navController = navController,
@@ -114,7 +115,7 @@ fun AppNavGraph(
         composable(ResetPassword.route) {
             ResetPasswordScreen(
                 onBackClick = { navController.popBackStack() },
-                onNextClick = { navController.navigate(NavigationRoutes.VERIFY_ACCOUNT) },
+                onNextClick = { navController.navigate(VERIFY_ACCOUNT) },
                 modifier = modifier
             )
         }
@@ -145,11 +146,10 @@ fun AppNavGraph(
                 dismissOnClickOutside = false
             )
         ) {
-
             VerifyAccountScreen(
                 onBackClick = { navController.popBackStack() },
                 onContinueClick = { navController.popBackStack() },
-                modifier = Modifier
+                modifier = modifier
             )
         }
 

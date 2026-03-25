@@ -19,4 +19,9 @@ interface ChallengeRepository {
      * Solicita o reenvio do desafio atual.
      */
     fun resendChallenge(): Flow<Boolean>
+
+    /**
+     * Cancela o desafio atual e limpa o contexto.
+     */
+    fun cancelChallenge()
 }

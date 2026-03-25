@@ -49,3 +49,8 @@ sealed interface ChallengeResult {
     /** Falha na validação ou erro técnico */
     data class Failure(val error: Throwable) : ChallengeResult
 }
+
+/**
+ * Exceção lançada quando um desafio é cancelado pelo usuário.
+ */
+class ChallengeCancelledException : Exception("O desafio de segurança foi cancelado.")

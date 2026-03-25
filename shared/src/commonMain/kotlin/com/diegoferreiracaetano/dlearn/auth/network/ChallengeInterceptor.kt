@@ -1,9 +1,11 @@
 package com.diegoferreiracaetano.dlearn.auth.network
 
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeCancelledException
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeEngine
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeResult
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeSession
 import io.ktor.client.HttpClient
+import io.ktor.client.call.save
 import io.ktor.client.plugins.HttpClientPlugin
 import io.ktor.client.request.header
 import io.ktor.client.request.request
@@ -42,34 +44,34 @@ class ChallengeInterceptor(
         override fun install(plugin: ChallengeInterceptor, scope: HttpClient) {
             scope.receivePipeline.intercept(HttpReceivePipeline.After) { response ->
                 if (response.status.value == 428) {
-                    val originalCall = response.call
-                    val originalRequest = originalCall.request
+                    // Importante: salvamos o corpo da resposta original para que ele possa ser lido múltiplas vezes
+                    val savedResponse = response.call.save().response
                     
                     val responseBody = try {
-                        response.bodyAsText()
+                        savedResponse.bodyAsText()
                     } catch (e: Exception) {
-                        proceedWith(response)
+                        proceedWith(savedResponse)
                         return@intercept
                     }
                     
                     val session = try {
                         plugin.json.decodeFromString<ChallengeSession>(responseBody)
                     } catch (e: Exception) {
-                        proceedWith(response)
+                        proceedWith(savedResponse)
                         return@intercept
                     }
+
+                    println("DEBUG ChallengeInterceptor: resolve")
 
                     val result = plugin.engine.resolve(session)
 
                     if (result is ChallengeResult.Success) {
                         val validatedToken = result.data["validatedToken"] ?: ""
                         
-                        // Criamos a nova chamada repetindo a original de forma segura
+                        val originalRequest = savedResponse.call.request
                         val retryCall = scope.request {
                             takeFrom(originalRequest)
                             
-                            // Trata o corpo da requisição: se já for conteúdo serializado, mantém como está.
-                            // Isso evita que o ContentNegotiation tente serializar um Map misto novamente.
                             val originalContent = originalRequest.content
                             if (originalContent !is OutgoingContent.NoContent) {
                                 setBody(originalContent)
@@ -82,7 +84,9 @@ class ChallengeInterceptor(
                         
                         proceedWith(retryCall)
                     } else {
-                        proceedWith(response)
+                        // Se o desafio foi cancelado ou falhou, lançamos uma exceção para interromper o fluxo original
+                        // Isso evita que o repositório tente parsear a resposta 428 como um sucesso
+                        throw ChallengeCancelledException()
                     }
                 } else {
                     proceedWith(response)

@@ -43,7 +43,10 @@ fun VerifyAccountScreen(
         topBar = {
             AppTopBar(
                 title = stringResource(Res.string.verify_account_title),
-                onBack = onBackClick
+                onBack = {
+                    viewModel.cancel()
+                    onBackClick()
+                }
             )
         }
     ) { innerModifier ->

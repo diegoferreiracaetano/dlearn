@@ -112,4 +112,9 @@ class ChallengeRepositoryRemote(
             emit(false)
         }
     }
+
+    override fun cancelChallenge() {
+        otpHandler.onChallengeCancelled()
+        coordinator.clear()
+    }
 }

@@ -54,4 +54,8 @@ class VerifyAccountViewModel(
             }
         }
     }
+
+    fun cancel() {
+        challengeRepository.cancelChallenge()
+    }
 }

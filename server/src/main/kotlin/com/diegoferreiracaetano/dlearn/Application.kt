@@ -94,12 +94,12 @@ fun Application.module() {
         openAPI(path = "openapi", swaggerFile = "documentation.yaml")
 
         authController()
+        challengeController()
 
         authenticate("auth-jwt") {
             mainController()
             appController()
             passwordController()
-            challengeController()
             searchController()
             movieDetailController()
             userController()

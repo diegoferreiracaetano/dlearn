@@ -734,6 +734,28 @@
     }
   } ]
 };
+            defs["AppError"] = {
+  "type" : "object",
+  "properties" : {
+    "code" : {
+      "$ref" : "#/components/schemas/AppErrorCode"
+    },
+    "message" : {
+      "type" : "string",
+      "example" : "E-mail já cadastrado"
+    },
+    "details" : {
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "string"
+      }
+    }
+  }
+};
+            defs["AppErrorCode"] = {
+  "type" : "string",
+  "enum" : [ "UNKNOWN_ERROR", "NETWORK_ERROR", "SERVER_ERROR", "BAD_REQUEST", "UNAUTHORIZED", "FORBIDDEN", "NOT_FOUND", "TIMEOUT", "INVALID_CREDENTIALS", "USER_NOT_FOUND", "USER_ALREADY_EXISTS", "INVALID_TOKEN", "EXPIRED_TOKEN", "EMAIL_ALREADY_IN_USE", "VALIDATION_FAILED", "FIELD_REQUIRED", "INVALID_FORMAT", "MOVIE_NOT_FOUND", "PAYMENT_FAILED", "INSUFFICIENT_FUNDS" ]
+};
             defs["AppExpandableSectionComponent"] = {
   "allOf" : [ {
     "$ref" : "#/components/schemas/Component"
@@ -1200,19 +1222,6 @@
   },
   "discriminator" : {
     "propertyName" : "type"
-  }
-};
-            defs["ErrorResponse"] = {
-  "type" : "object",
-  "properties" : {
-    "code" : {
-      "type" : "string",
-      "example" : "IllegalArgumentException"
-    },
-    "message" : {
-      "type" : "string",
-      "example" : "E-mail já cadastrado"
-    }
   }
 };
             defs["FullScreenBannerComponent"] = {
@@ -2499,7 +2508,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorResponse"
+        "$ref" : "#/components/schemas/AppError"
       }
     }
   }
@@ -3115,7 +3124,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorResponse"
+        "$ref" : "#/components/schemas/AppError"
       }
     }
   }
@@ -3519,7 +3528,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ErrorResponse"
+        "$ref" : "#/components/schemas/AppError"
       }
     }
   }

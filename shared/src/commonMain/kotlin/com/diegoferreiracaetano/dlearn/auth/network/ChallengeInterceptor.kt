@@ -44,7 +44,6 @@ class ChallengeInterceptor(
         override fun install(plugin: ChallengeInterceptor, scope: HttpClient) {
             scope.receivePipeline.intercept(HttpReceivePipeline.After) { response ->
                 if (response.status.value == 428) {
-                    // Importante: salvamos o corpo da resposta original para que ele possa ser lido múltiplas vezes
                     val savedResponse = response.call.save().response
                     
                     val responseBody = try {
@@ -84,8 +83,6 @@ class ChallengeInterceptor(
                         
                         proceedWith(retryCall)
                     } else {
-                        // Se o desafio foi cancelado ou falhou, lançamos uma exceção para interromper o fluxo original
-                        // Isso evita que o repositório tente parsear a resposta 428 como um sucesso
                         throw ChallengeCancelledException()
                     }
                 } else {

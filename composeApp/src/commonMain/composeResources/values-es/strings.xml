@@ -55,6 +55,17 @@
     <string name="action_watch">Ver</string>
     <string name="action_add_to_list">Mi lista</string>
     <string name="error_provider_link">No se pudo abrir el enlace del proveedor en este momento.</string>
+    <string name="error_unknown">Ocurrió un error inesperado. Inténtalo de nuevo.</string>
+    <string name="error_network">Sin conexión a internet. Comprueba tu red.</string>
+    <string name="error_server">Error del servidor. Estamos trabalhando para corregirlo.</string>
+    <string name="error_unauthorized">Tu sesión ha expirado. Por favor, inicia sesión de nuevo.</string>
+    <string name="error_forbidden">No tienes permiso para realizar esta acción.</string>
+    <string name="error_not_found">Recurso no encontrado.</string>
+    <string name="error_timeout">Tiempo de espera agotado. Inténtalo de nuevo.</string>
+    <string name="error_invalid_credentials">Correo electrónico o contraseña inválidos.</string>
+    <string name="error_user_already_exists">Ya existe una cuenta con este correo electrónico.</string>
+    <string name="error_validation">Comprueba los campos e inténtalo de nuevo.</string>
+    <string name="error_service_unavailable">Servicio no disponible.</string>
 
     <string name="watchlist_empty_title">Tu lista está vacía</string>
     <string name="watchlist_empty_description">Guarda películas y series para verlas más tarde y aparecerán aquí.</string>

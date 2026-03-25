@@ -47,7 +47,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/AppError'
   /v1/auth/register:
     post:
       summary: Register a new user (Native Flow)
@@ -81,7 +81,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/AppError'
   /v1/auth/refresh:
     post:
       summary: Refresh access token
@@ -111,7 +111,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/AppError'
   /v1/auth/logout:
     post:
       summary: Logout user
@@ -370,15 +370,21 @@ components:
         type: string
   schemas:
     # --- Auth & User ---
-    ErrorResponse:
+    AppError:
       type: object
       properties:
         code:
-          type: string
-          example: "IllegalArgumentException"
+          $ref: '#/components/schemas/AppErrorCode'
         message:
           type: string
           example: "E-mail já cadastrado"
+        details:
+          type: object
+          additionalProperties:
+            type: string
+    AppErrorCode:
+      type: string
+      enum: [UNKNOWN_ERROR, NETWORK_ERROR, SERVER_ERROR, BAD_REQUEST, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, TIMEOUT, INVALID_CREDENTIALS, USER_NOT_FOUND, USER_ALREADY_EXISTS, INVALID_TOKEN, EXPIRED_TOKEN, EMAIL_ALREADY_IN_USE, VALIDATION_FAILED, FIELD_REQUIRED, INVALID_FORMAT, MOVIE_NOT_FOUND, PAYMENT_FAILED, INSUFFICIENT_FUNDS]
     User:
       type: object
       required: [id, name, email]

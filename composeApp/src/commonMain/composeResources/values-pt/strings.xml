@@ -55,6 +55,21 @@
     <string name="action_watch">Assistir</string>
     <string name="action_add_to_list">Minha lista</string>
     <string name="error_provider_link">Não foi possível abrir o link do provedor no momento.</string>
+    <string name="error_unknown">Ocorreu um erro inesperado. Tente novamente.</string>
+    <string name="error_network">Sem conexão com a internet. Verifique sua rede.</string>
+    <string name="error_server">Erro no servidor. Estamos trabalhando para corrigir.</string>
+    <string name="error_unauthorized">Sua sessão expirou. Por favor, faça login novamente.</string>
+    <string name="error_forbidden">Você não tem permissão para realizar esta ação.</string>
+    <string name="error_not_found">Recurso não encontrado.</string>
+    <string name="error_timeout">Tempo limite esgotado. Tente novamente.</string>
+    <string name="error_invalid_credentials">E-mail ou senha inválidos.</string>
+    <string name="error_user_already_exists">Uma conta com este e-mail já existe.</string>
+    <string name="error_validation">Verifique os campos e tente novamente.</string>
+    <string name="error_challenge_required">Um desafio de segurança é necessário para continuar.</string>
+    <string name="error_invalid_challenge_code">Código de desafio inválido ou expirado.</string>
+    <string name="error_challenge_expired">O desafio expirou. Solicite um novo código.</string>
+    <string name="error_transaction_id_required">A identificação da transação é obrigatória.</string>
+    <string name="error_service_unavailable">Serviço indisponível.</string>
 
     <string name="watchlist_empty_title">Sua lista de interesses está vazia</string>
     <string name="watchlist_empty_description">Salve filmes e séries para assistir mais tarde e eles aparecerão aqui.</string>

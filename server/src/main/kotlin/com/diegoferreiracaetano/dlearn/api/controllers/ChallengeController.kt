@@ -3,6 +3,9 @@ package com.diegoferreiracaetano.dlearn.api.controllers
 import com.diegoferreiracaetano.dlearn.Constants
 import com.diegoferreiracaetano.dlearn.auth.network.SecurityConstants
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
+import com.diegoferreiracaetano.dlearn.domain.error.AppException
 import com.diegoferreiracaetano.dlearn.infrastructure.services.ChallengeDataService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
@@ -39,17 +42,20 @@ fun Route.challengeController() {
 
         post("/resolve") {
             val transactionId = call.request.header(SecurityConstants.HEADER_TRANSACTION_ID)
+                ?: throw AppException(AppError(AppErrorCode.TRANSACTION_ID_REQUIRED))
+            
             val body = call.receive<ResolveChallengeBody>()
 
-            if (transactionId == null) {
-                call.respond(HttpStatusCode.BadRequest, "Transaction ID is required")
-                return@post
+            val type = try {
+                ChallengeType.valueOf(body.type)
+            } catch (e: Exception) {
+                throw AppException(AppError(AppErrorCode.INVALID_CHALLENGE_CODE))
             }
 
             // O backend agora recebe 'answers' como String (ex: o código OTP direto)
             val validatedToken = service.resolveChallenge(
                 transactionId = transactionId,
-                type = ChallengeType.valueOf(body.type),
+                type = type,
                 answers = mapOf(Constants.OTP_KEY to body.answers)
             )
 
@@ -63,22 +69,13 @@ fun Route.challengeController() {
                     )
                 )
             } else {
-                call.respond(
-                    HttpStatusCode.Forbidden,
-                    ChallengeResponse(
-                        success = false,
-                        message = "Código ou tipo de desafio inválido"
-                    )
-                )
+                throw AppException(AppError(AppErrorCode.INVALID_CHALLENGE_CODE))
             }
         }
 
         post("/resend") {
             val transactionId = call.request.header(SecurityConstants.HEADER_TRANSACTION_ID)
-            if (transactionId == null) {
-                call.respond(HttpStatusCode.BadRequest, "Transaction ID is required")
-                return@post
-            }
+                ?: throw AppException(AppError(AppErrorCode.TRANSACTION_ID_REQUIRED))
 
             val success = service.resendChallenge(transactionId)
             call.respond(HttpStatusCode.OK, mapOf("success" to success))

@@ -12,6 +12,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppOtpVerification
+import com.diegoferreiracaetano.dlearn.ui.util.toAppMessage
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.VerifyAccountUiState
 import dlearn.composeapp.generated.resources.*
@@ -33,7 +34,7 @@ fun VerifyAccountScreen(
     LaunchedEffect(uiState) {
         when (val state = uiState) {
             is VerifyAccountUiState.Success -> onContinueClick()
-            is VerifyAccountUiState.Error -> otpError = state.throwable.message
+            is VerifyAccountUiState.Error -> otpError = state.throwable.toAppMessage()
             else -> otpError = null
         }
     }

@@ -29,9 +29,11 @@ import com.diegoferreiracaetano.dlearn.domain.profile.ProfileRepository
 import com.diegoferreiracaetano.dlearn.domain.search.SearchRepository
 import com.diegoferreiracaetano.dlearn.getPlatform
 import com.diegoferreiracaetano.dlearn.network.AppUserAgentProvider
+import com.diegoferreiracaetano.dlearn.network.error.toAppException
 import com.diegoferreiracaetano.dlearn.util.event.GlobalEventDispatcher
 import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -73,6 +75,12 @@ val sharedModule = module {
             }
             install(Logging) {
                 level = LogLevel.ALL
+            }
+
+            HttpResponseValidator {
+                handleResponseExceptionWithRequest { cause, _ ->
+                    throw cause.toAppException()
+                }
             }
 
             defaultRequest {

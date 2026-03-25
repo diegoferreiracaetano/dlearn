@@ -55,6 +55,18 @@
     <string name="action_watch">Watch</string>
     <string name="action_add_to_list">My list</string>
     <string name="error_provider_link">Could not open provider link at this time.</string>
+    <string name="error_unknown">An unexpected error occurred. Please try again.</string>
+    <string name="error_network">No internet connection. Please check your network.</string>
+    <string name="error_server">Server error. We are working to fix it.</string>
+    <string name="error_unauthorized">Your session has expired. Please login again.</string>
+    <string name="error_forbidden">You don\'t have permission to perform this action.</string>
+    <string name="error_not_found">Resource not found.</string>
+    <string name="error_timeout">Request timeout. Please try again.</string>
+    <string name="error_invalid_credentials">Invalid email or password.</string>
+    <string name="error_user_already_exists">An account with this email already exists.</string>
+    <string name="error_validation">Please check the fields and try again.</string>
+    <string name="error_service_unavailable">Service unavailable.</string>
+
 
     <string name="watchlist_empty_title">Your watchlist is empty</string>
     <string name="watchlist_empty_description">Save movies and series to watch later and they will appear here.</string>

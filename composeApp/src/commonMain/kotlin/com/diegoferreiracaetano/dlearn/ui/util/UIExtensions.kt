@@ -69,7 +69,7 @@ fun UIState<Screen>.Render(
         )
 
         is UIState.Error -> RenderComponent(
-            component = AppErrorComponent(throwable),
+            component = AppErrorComponent(throwable.toAppError()),
             actions = actions,
             modifier = modifier
         )

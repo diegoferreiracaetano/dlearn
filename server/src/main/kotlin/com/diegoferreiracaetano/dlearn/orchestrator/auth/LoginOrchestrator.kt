@@ -3,6 +3,9 @@ package com.diegoferreiracaetano.dlearn.orchestrator.auth
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthResponse
 import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
 import com.diegoferreiracaetano.dlearn.infrastructure.services.TokenService
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
+import com.diegoferreiracaetano.dlearn.domain.error.AppException
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
@@ -23,13 +26,28 @@ class LoginOrchestrator(
                 challengeRequired = false
             )
         } else {
-            throw SecurityException(i18nProvider.getString(AppStringType.ERROR_INVALID_CREDENTIALS, language))
+            throw AppException(
+                AppError(
+                    code = AppErrorCode.INVALID_CREDENTIALS,
+                    message = i18nProvider.getString(AppStringType.ERROR_INVALID_CREDENTIALS, language)
+                )
+            )
         }
     }
 
     suspend fun refreshToken(token: String, language: String): AuthResponse {
-        val userId = tokenService.verifyToken(token) ?: throw SecurityException(i18nProvider.getString(AppStringType.ERROR_INVALID_SESSION, language))
-        val user = userRepository.findById(userId) ?: throw SecurityException(i18nProvider.getString(AppStringType.ERROR_USER_NOT_FOUND, language))
+        val userId = tokenService.verifyToken(token) ?: throw AppException(
+            AppError(
+                code = AppErrorCode.INVALID_TOKEN,
+                message = i18nProvider.getString(AppStringType.ERROR_INVALID_SESSION, language)
+            )
+        )
+        val user = userRepository.findById(userId) ?: throw AppException(
+            AppError(
+                code = AppErrorCode.USER_NOT_FOUND,
+                message = i18nProvider.getString(AppStringType.ERROR_USER_NOT_FOUND, language)
+            )
+        )
 
         return AuthResponse(
             accessToken = tokenService.generateAccessToken(user),

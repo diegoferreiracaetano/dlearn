@@ -4,6 +4,9 @@ import com.diegoferreiracaetano.dlearn.domain.auth.AuthResponse
 import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
 import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.infrastructure.services.TokenService
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
+import com.diegoferreiracaetano.dlearn.domain.error.AppException
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import java.util.UUID
@@ -18,7 +21,12 @@ class CreateUserOrchestrator(
         val existingUser = userRepository.findByEmail(normalizedEmail)
         
         if (existingUser != null) {
-            throw IllegalArgumentException(i18nProvider.getString(AppStringType.ERROR_EMAIL_ALREADY_REGISTERED, language))
+            throw AppException(
+                AppError(
+                    code = AppErrorCode.EMAIL_ALREADY_IN_USE,
+                    message = i18nProvider.getString(AppStringType.ERROR_EMAIL_ALREADY_REGISTERED, language)
+                )
+            )
         }
 
         val newUser = User(

@@ -24,7 +24,7 @@ fun App() {
     val preferencesRepository: PreferencesRepository = koinInject()
 
     // Observa mudanças globais de configuração para forçar a atualização da UI
-    val configTick by preferencesRepository.onConfigurationChanged.collectAsState(initial = 0L)
+   // val configTick by preferencesRepository.onConfigurationChanged.collectAsState(initial = 0L)
 
     DLearnTheme {
         CompositionLocalProvider(

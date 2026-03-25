@@ -1,5 +1,7 @@
 package com.diegoferreiracaetano.dlearn.di
 
+import com.diegoferreiracaetano.dlearn.AppConstants.X_COUNTRY
+import com.diegoferreiracaetano.dlearn.AppConstants.X_NOTIFICATIONS_ENABLED
 import com.diegoferreiracaetano.dlearn.auth.network.AuthInterceptor
 import com.diegoferreiracaetano.dlearn.auth.network.ChallengeInterceptor
 import com.diegoferreiracaetano.dlearn.data.app.PreferencesRepositoryImpl
@@ -71,6 +73,7 @@ val sharedModule = module {
 
     single {
         val userAgentProvider = get<AppUserAgentProvider>()
+        val preferencesRepository = get<PreferencesRepository>()
         
         HttpClient {
             expectSuccess = true 
@@ -100,8 +103,12 @@ val sharedModule = module {
             plugin(HttpSend).intercept { request ->
                 authInterceptor.intercept(request)
                 
+                // Adicionando headers globais dinâmicos
                 val agent = userAgentProvider.get()
                 request.header(HttpHeaders.UserAgent, agent.toHeader())
+                request.header(HttpHeaders.AcceptLanguage, preferencesRepository.language)
+                request.header(X_COUNTRY, preferencesRepository.country)
+                request.header(X_NOTIFICATIONS_ENABLED, preferencesRepository.notificationsEnabled.toString())
                 
                 val call = execute(request)
                 
@@ -125,7 +132,10 @@ val sharedModule = module {
     single<HomeRepository> { HomeRepositoryRemote(get()) }
     single<ProfileRepository> { ProfileRepositoryRemote(get()) }
     single<MovieDetailRepository> { MovieDetailRepositoryRemote(get()) }
-    single<MainRepository> { MainRepositoryRemote(get()) }
+    
+    // Corrigido para passar explicitamente as dependências
+    single<MainRepository> { MainRepositoryRemote(httpClient = get(), preferencesRepository = get()) }
+    
     single<SearchRepository> { SearchRepositoryRemote(get()) }
     single<AppRepository> { AppRepositoryRemote(get(), get()) }
     

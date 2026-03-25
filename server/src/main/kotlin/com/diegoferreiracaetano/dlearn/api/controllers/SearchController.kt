@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
 import com.diegoferreiracaetano.dlearn.AppConstants.X_COUNTRY
+import com.diegoferreiracaetano.dlearn.AppConstants.X_NOTIFICATIONS_ENABLED
 import com.diegoferreiracaetano.dlearn.api.util.userId
 import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.orchestrator.app.SearchOrchestrator
@@ -15,24 +16,21 @@ import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 
 fun Route.searchController() {
-
     val orchestrator by inject<SearchOrchestrator>()
 
     route("/v1/search") {
         get {
-
-            val query = call.request.queryParameters["q"]
-
+            val query = call.request.queryParameters["q"] ?: ""
             val request = AppRequest(
                 path = "/search",
-                params = query?.let { mapOf("q" to it) }
+                params = mapOf("q" to query)
             )
 
             val header = AppHeader(
                 paramUserAgent = call.request.header(UserAgent),
-                paramLanguage = request.language ?: call.request.header(AcceptLanguage),
-                paramCountry = request.country ?: call.request.header(X_COUNTRY),
-                notificationsEnabled = request.notificationsEnabled ?: true,
+                paramLanguage = call.request.header(AcceptLanguage),
+                paramCountry = call.request.header(X_COUNTRY),
+                notificationsEnabled = call.request.header(X_NOTIFICATIONS_ENABLED)?.toBoolean() ?: true,
                 userId = call.userId
             )
 

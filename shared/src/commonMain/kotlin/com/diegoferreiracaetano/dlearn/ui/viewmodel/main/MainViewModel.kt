@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.ui.viewmodel.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
 import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState

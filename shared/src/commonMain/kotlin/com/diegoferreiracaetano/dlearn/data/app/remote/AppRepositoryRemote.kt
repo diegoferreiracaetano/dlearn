@@ -26,10 +26,7 @@ class AppRepositoryRemote(
         val request = AppRequest(
             path = path,
             params = params,
-            metadata = metadata,
-            language = preferencesRepository.language,
-            country = preferencesRepository.country,
-            notificationsEnabled = preferencesRepository.notificationsEnabled
+            metadata = metadata
         )
 
         val response = httpClient.post("/v1/app") {

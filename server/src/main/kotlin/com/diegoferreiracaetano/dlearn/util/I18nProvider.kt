@@ -10,26 +10,43 @@ open class I18nProvider {
         key: AppStringType,
         language: String
     ): String {
+        return getRawString(key.name.lowercase(), language) ?: key.name
+    }
+
+    open fun getRawString(
+        key: String,
+        language: String
+    ): String? {
         val locale = language.toLocale()
+        
+        // Tentamos resolver na ordem:
+        // 1. Locale exato (ex: pt_BR)
+        // 2. Idioma base (ex: pt)
+        // 3. Root (strings.properties - que é nosso inglês)
         return resolveString(key, locale)
             ?: resolveString(key, Locale(locale.language))
             ?: resolveString(key, Locale.ROOT)
-            ?: key.name
     }
 
     private fun resolveString(
-        key: AppStringType,
+        key: String,
         locale: Locale
     ): String? {
         return runCatching {
-            ResourceBundle
-                .getBundle("strings", locale)
-                .getString(key.name.lowercase())
+            // O segredo está no Control.NoFallbackControl para não pegar o locale da máquina
+            val bundle = ResourceBundle.getBundle(
+                "strings", 
+                locale, 
+                ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES)
+            )
+            if (bundle.containsKey(key)) bundle.getString(key) else null
         }.getOrNull()
     }
 }
 
 private fun String.toLocale(): Locale {
+    if (this.isBlank()) return Locale.ROOT
+    
     val firstLanguage = split(",").firstOrNull() ?: this
     val clean = firstLanguage.split(";").first().trim().replace("-", "_")
     val parts = clean.split("_")
@@ -37,6 +54,6 @@ private fun String.toLocale(): Locale {
     return when (parts.size) {
         2 -> Locale(parts[0], parts[1])
         1 -> Locale(parts[0])
-        else -> Locale.ENGLISH
+        else -> Locale.ROOT
     }
 }

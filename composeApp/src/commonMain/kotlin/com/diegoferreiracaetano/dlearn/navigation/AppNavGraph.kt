@@ -59,7 +59,6 @@ fun AppNavGraph(
     // Observador Central de Eventos Globais
     LaunchedEffect(eventDispatcher, eventHandler) {
         eventDispatcher.events.collect { event ->
-            println("DEBUG: Received event: $event")
             eventHandler.handle(event)
         }
     }

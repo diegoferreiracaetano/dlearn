@@ -15,8 +15,6 @@ class ChallengeEngine(
         
         // Encontra um handler capaz de lidar com o desafio enviado pelo servidor
         val handler = handlers.find {
-
-            println("DEBUG ChallengeEngine: Checking handler - Challenge: ${it.canHandle(challenge)}")
             it.canHandle(challenge)
         }
             ?: return ChallengeResult.Failure(Exception("Nenhum handler encontrado para o desafio: ${challenge.challengeType}"))

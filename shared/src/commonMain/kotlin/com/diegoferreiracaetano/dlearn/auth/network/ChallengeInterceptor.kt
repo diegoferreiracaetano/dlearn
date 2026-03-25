@@ -59,8 +59,6 @@ class ChallengeInterceptor(
                         return@intercept
                     }
 
-                    println("DEBUG ChallengeInterceptor: resolve")
-
                     val result = plugin.engine.resolve(session)
 
                     if (result is ChallengeResult.Success) {

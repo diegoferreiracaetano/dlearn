@@ -19,7 +19,6 @@ class OtpChallengeHandler : ChallengeHandler {
     }
 
     override suspend fun handle(challenge: Challenge, session: ChallengeSession): ChallengeResult {
-        println("DEBUG OtpChallengeHandler: Handling OTP Challenge - Session: ${session.transactionId}")
         val deferred = CompletableDeferred<ChallengeResult>()
         currentDeferred = deferred
 

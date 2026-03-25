@@ -19,7 +19,6 @@ class GlobalEventHandler(
     private val scope: CoroutineScope
 ) {
     fun handle(event: GlobalEvent) {
-        println("DEBUG: GlobalEventHandler received event: $event")
         when (event) {
             is GlobalEvent.Challenge -> handleChallenge(event)
             is GlobalEvent.Navigation -> handleNavigation(event)

@@ -1,5 +1,8 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
+import com.diegoferreiracaetano.dlearn.api.exception.challengePreference
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType.*
 import com.diegoferreiracaetano.dlearn.orchestrator.auth.CreateUserOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.auth.LoginOrchestrator
 import io.ktor.http.HttpHeaders.AcceptLanguage
@@ -27,22 +30,25 @@ fun Route.authController() {
             call.respond(response)
         }
 
-        post("/register") {
-            val params = call.receive<Map<String, String>>()
-            val name = params["name"] ?: return@post call.respond(HttpStatusCode.BadRequest)
-            val email = params["email"] ?: return@post call.respond(HttpStatusCode.BadRequest)
-            val password = params["password"] ?: return@post call.respond(HttpStatusCode.BadRequest)
-            val language = call.request.header(AcceptLanguage) ?: "en"
+        challengePreference(OTP_EMAIL) {
+            post("/register") {
+                val params = call.receive<Map<String, String>>()
+                val name = params["name"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+                val email = params["email"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+                val password =
+                    params["password"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+                val language = call.request.header(AcceptLanguage) ?: "en"
 
-            val response = createUserOrchestrator.createUser(name, email, password, language)
-            call.respond(HttpStatusCode.Created, response)
+                val response = createUserOrchestrator.createUser(name, email, password, language)
+                call.respond(HttpStatusCode.Created, response)
+            }
         }
 
         post("/refresh") {
             val params = call.receive<Map<String, String>>()
             val refreshToken = params["refresh_token"] ?: return@post call.respond(HttpStatusCode.BadRequest)
             val language = call.request.header(AcceptLanguage) ?: "en"
-            
+
             val response = loginOrchestrator.refreshToken(refreshToken, language)
             call.respond(response)
         }

@@ -45,10 +45,6 @@ class SettingsViewModel(
         }
     }
 
-    fun confirmClearCache() {
-        preferencesRepository.clear()
-    }
-
     fun updatePreference(key: String, value: String) {
         preferencesRepository.updatePreference(key, value)
     }

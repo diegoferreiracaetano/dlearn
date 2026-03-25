@@ -29,16 +29,6 @@ import com.diegoferreiracaetano.dlearn.domain.profile.ProfileRepository
 import com.diegoferreiracaetano.dlearn.domain.search.SearchRepository
 import com.diegoferreiracaetano.dlearn.getPlatform
 import com.diegoferreiracaetano.dlearn.network.AppUserAgentProvider
-import com.diegoferreiracaetano.dlearn.ui.viewmodel.app.AppViewModel
-import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel
-import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountViewModel
-import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
-import com.diegoferreiracaetano.dlearn.ui.viewmodel.logout.LogoutViewModel
-import com.diegoferreiracaetano.dlearn.ui.viewmodel.main.MainViewModel
-import com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel
-import com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchContentViewModel
-import com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchMainViewModel
-import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.SettingsViewModel
 import com.diegoferreiracaetano.dlearn.util.event.GlobalEventDispatcher
 import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
@@ -56,7 +46,7 @@ import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
 val sharedModule = module {
-    includes(authModule, platformAuthModule)
+    includes(authModule, platformAuthModule, viewModelModule)
 
     single { GlobalEventDispatcher() }
 
@@ -143,16 +133,4 @@ val sharedModule = module {
         AuthRepositoryRemote(
             httpClient = get(), sessionManager = get())
     }
-
-    // ViewModels
-    factory { MainViewModel(get()) }
-    factory { AppViewModel(get(), get()) }
-    factory { SettingsViewModel(get(), get()) }
-    factory { SearchMainViewModel(get()) }
-    factory { SearchContentViewModel(get()) }
-    factory { (movieId: String) -> MovieDetailViewModel(movieId, get()) }
-    single { CreateNewPasswordViewModel(get()) }
-    factory { VerifyAccountViewModel(get()) }
-    factory { LoginViewModel(get(), get()) }
-    factory { LogoutViewModel(get()) }
 }

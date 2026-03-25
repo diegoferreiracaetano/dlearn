@@ -32,6 +32,7 @@ import com.diegoferreiracaetano.dlearn.ui.screens.main.MainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.onboarding.OnboardingScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchMainScreen
+import com.diegoferreiracaetano.dlearn.ui.screens.settings.CleanCacheScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.settings.SettingsScreen
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 import com.diegoferreiracaetano.dlearn.util.event.GlobalEventDispatcher
@@ -223,8 +224,7 @@ fun AppNavGraph(
         }
 
         dialog(SettingsClearCache.route) {
-            SettingsScreen(
-                path = NavigationRoutes.SETTINGS_CLEAR_CACHE,
+            CleanCacheScreen(
                 onBackClick = { navController.popBackStack() },
                 modifier = modifier
             )

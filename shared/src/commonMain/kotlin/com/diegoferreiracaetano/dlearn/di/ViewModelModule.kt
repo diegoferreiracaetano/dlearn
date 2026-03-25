@@ -1,0 +1,28 @@
+package com.diegoferreiracaetano.dlearn.di
+
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.app.AppViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.logout.LogoutViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.main.MainViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchContentViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchMainViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.CleanCacheViewModel
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.SettingsViewModel
+import org.koin.dsl.module
+
+val viewModelModule = module {
+    factory { MainViewModel(get()) }
+    factory { AppViewModel(get()) }
+    factory { SettingsViewModel(get(), get()) }
+    factory { SearchMainViewModel(get()) }
+    factory { SearchContentViewModel(get()) }
+    factory { (movieId: String) -> MovieDetailViewModel(movieId, get()) }
+    single { CreateNewPasswordViewModel(get()) }
+    factory { VerifyAccountViewModel(get()) }
+    factory { LoginViewModel(get(), get()) }
+    factory { LogoutViewModel(get()) }
+    factory { CleanCacheViewModel(get(), get()) }
+}

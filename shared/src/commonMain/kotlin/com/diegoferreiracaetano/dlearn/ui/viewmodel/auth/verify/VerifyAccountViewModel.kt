@@ -15,8 +15,8 @@ class VerifyAccountViewModel(
     private val challengeRepository: ChallengeRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.VerifyAccountUiState>(
-        _root_ide_package_.com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.VerifyAccountUiState.Idle)
+    private val _uiState = MutableStateFlow<VerifyAccountUiState>(
+        VerifyAccountUiState.Idle)
     val uiState = _uiState.asStateFlow()
 
     fun verifyOtp(otpCode: String) {

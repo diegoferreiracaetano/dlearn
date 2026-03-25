@@ -100,8 +100,6 @@ fun Application.module() {
             mainController()
             appController()
             passwordController()
-            searchController()
-            movieDetailController()
             userController()
         }
     }

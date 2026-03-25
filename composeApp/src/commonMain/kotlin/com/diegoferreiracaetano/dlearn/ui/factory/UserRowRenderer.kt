@@ -1,7 +1,9 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
 import com.diegoferreiracaetano.dlearn.designsystem.components.profile.AppUserRow
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
@@ -22,7 +24,7 @@ class UserRowRenderer : ComponentRenderer {
             role = userRow.role,
             imageSource = userRow.imageUrl?.let { AppImageSource.Url(it) },
             onClick = userRow.actionUrl?.let { url -> { actions.onItemClick(url) } },
-            modifier = modifier
+            modifier = modifier.padding(horizontal = 4.dp, vertical = 8.dp)
         )
     }
 }

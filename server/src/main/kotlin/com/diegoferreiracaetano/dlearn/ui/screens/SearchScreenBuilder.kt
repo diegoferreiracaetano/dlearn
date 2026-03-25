@@ -17,7 +17,6 @@ class SearchScreenBuilder(private val i18n: I18nProvider) {
         val sectionTitle = i18n.getString(AppStringType.SECTION_POPULAR, lang)
         
         val searchBarComponents = mutableListOf<Component>()
-        searchBarComponents.add(AppSearchContentComponent)
         
         if (popularItems.isNotEmpty()) {
             searchBarComponents.add(AppSectionTitleComponent(title = sectionTitle) as Component)
@@ -40,29 +39,32 @@ class SearchScreenBuilder(private val i18n: I18nProvider) {
         results: List<Component>,
         lang: String
     ): Screen {
-        val components = if (query.isBlank()) {
-            emptyList()
-        } else {
-            if (results.isEmpty()) {
-                val emptyTitle = i18n.getString(AppStringType.SEARCH_EMPTY_TITLE, lang)
-                val emptyDescriptionBase =
-                    i18n.getString(AppStringType.SEARCH_EMPTY_DESCRIPTION, lang)
-                val fullDescription = "$emptyDescriptionBase \"$query\""
+        val placeholder = i18n.getString(AppStringType.SEARCH_PLACEHOLDER, lang)
+        
+        val contentComponents = if (results.isEmpty()) {
+            val emptyTitle = i18n.getString(AppStringType.SEARCH_EMPTY_TITLE, lang)
+            val emptyDescriptionBase = i18n.getString(AppStringType.SEARCH_EMPTY_DESCRIPTION, lang)
+            val fullDescription = "$emptyDescriptionBase \"$query\""
 
-                listOf(
-                    AppEmptyStateComponent(
-                        title = emptyTitle,
-                        description = fullDescription,
-                        image = AppImageType.SEARCH
-                    ) as Component
-                )
-            } else {
-                listOf(AppListComponent(components = results) as Component)
-            }
+            listOf(
+                AppEmptyStateComponent(
+                    title = emptyTitle,
+                    description = fullDescription,
+                    image = AppImageType.SEARCH
+                ) as Component
+            )
+        } else {
+            listOf(AppListComponent(components = results) as Component)
         }
 
         return Screen(
-            components = components
+            components = listOf(
+                AppSearchBarComponent(
+                    query = query,
+                    placeholder = placeholder,
+                    components = contentComponents
+                ) as Component
+            )
         )
     }
 }

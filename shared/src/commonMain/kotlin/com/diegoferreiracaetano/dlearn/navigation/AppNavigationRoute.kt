@@ -26,6 +26,11 @@ object AppNavigationRoute {
     const val FAQ = "faq"
     const val USERS = "users"
 
+    // FAQ References
+    const val FAQ_PRIVACY_POLICY = "privacy-policy"
+    const val FAQ_HELP_FEEDBACK = "help-feedback"
+    const val FAQ_ABOUT_US = "about-us"
+
     // Settings
     const val SETTINGS_NOTIFICATIONS = "settings/notifications"
     const val SETTINGS_LANGUAGE = "settings/language"

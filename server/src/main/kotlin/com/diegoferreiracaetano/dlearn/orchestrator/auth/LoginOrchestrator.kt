@@ -50,6 +50,7 @@ class LoginOrchestrator(
         )
 
         return AuthResponse(
+            user = user,
             accessToken = tokenService.generateAccessToken(user),
             refreshToken = tokenService.generateRefreshToken(user),
             challengeRequired = false

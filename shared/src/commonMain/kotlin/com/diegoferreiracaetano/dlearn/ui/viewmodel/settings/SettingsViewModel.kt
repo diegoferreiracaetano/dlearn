@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,7 +52,7 @@ class SettingsViewModel(
 
     private fun execute(path: String) {
         viewModelScope.launch {
-            appRepository.execute(path = path).onStart {
+            appRepository.execute(AppPath.parse(path)).onStart {
                 _uiState.update { UIState.Loading }
             }.catch { error ->
                 _uiState.update { UIState.Error(error) }

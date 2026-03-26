@@ -44,7 +44,7 @@ val serverModule = module {
     // Home
     single { HomeDataService(get()) }
     single { GetHomeDataUseCase(get()) }
-    single { HomeMapper(get()) }
+    single { HomeMapper() }
     single { HomeScreenBuilder(get(), get()) }
     single { HomeOrchestrator(get(), get()) }
 
@@ -72,7 +72,7 @@ val serverModule = module {
     single { ProfileScreenBuilder(get()) }
     single { EditProfileScreenBuilder(get(), get()) }
     single { SettingsScreenBuilder(get(), get()) }
-    single { MovieDetailScreenBuilder(get(), get()) }
+    single { MovieDetailScreenBuilder(get()) }
     single { SearchScreenBuilder(get()) }
     single { UserListScreenBuilder() }
 

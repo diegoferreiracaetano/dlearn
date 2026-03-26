@@ -3,12 +3,15 @@ package com.diegoferreiracaetano.dlearn.ui.viewmodel.app
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import kotlin.collections.plus
 
 class AppViewModel(
     private val repository: AppRepository
@@ -17,38 +20,33 @@ class AppViewModel(
     private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
     val uiState = _uiState.asStateFlow()
 
-    private var formData: Map<String, String> = emptyMap()
-    private var lastPath: String? = null
-    private var lastParams: Map<String, String>? = null
+    private var lastRequest: AppRequest? = null
 
-    fun loadContent(path: String, params: Map<String, String>? = null) {
-        execute(path, params)
+    fun fetch(path: String, params: Map<String, String>? = null) {
+        if (params != null)
+            fetch(AppRequest(path, params))
+        else
+            fetch(AppPath.parse(path))
     }
 
+
+
     fun retry() {
-        lastPath?.let { path ->
-            execute(path, lastParams)
+        lastRequest?.let { request ->
+            fetch(request)
         }
     }
 
     fun handleQuery(query: String) {
-        val parts = query.split(":", limit = 2)
-        if (parts.size == 2) {
-            formData = formData + (parts[0] to parts[1])
-        }
+        println("DEBUG request: $query")
     }
 
-    fun handleAction(path: String) {
-        val params = formData
-        execute(path, params)
-        formData = emptyMap()
-    }
+    fun fetch(request: AppRequest) {
 
-    private fun execute(path: String, params: Map<String, String>? = null) {
-        lastPath = path
-        lastParams = params
+        println("DEBUG request: $request")
+        lastRequest = request
         viewModelScope.launch {
-            repository.execute(path = path, params = params)
+            repository.execute(request)
                 .catch { e -> _uiState.value = UIState.Error(e) }
                 .collect { screen ->
                     _uiState.value = UIState.Success(screen)

@@ -29,7 +29,7 @@ class HomeOrchestrator(
 
         return flow {
             val domainData = getHomeDataUseCase.execute(language, type)
-            val screen = screenBuilder.build(domainData, language)
+            val screen = screenBuilder.build(domainData, language, type)
             emit(screen)
         }.toCache(
             key = cacheKey,

@@ -1,13 +1,11 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.app
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppImageType
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -33,7 +31,7 @@ fun AppScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(path, params) {
-        viewModel.loadContent(path, params)
+        viewModel.fetch(path, params)
     }
 
     val actions = remember {
@@ -44,7 +42,7 @@ fun AppScreen(
             onRetry = viewModel::retry,
             onQueryChange = viewModel::handleQuery,
             onClose = onClose,
-            onAction = viewModel::handleAction
+            onAction = viewModel::fetch
         )
     }
 

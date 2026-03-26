@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.domain.video
 
+import com.diegoferreiracaetano.dlearn.domain.home.HomeCategory
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,8 +17,7 @@ data class Video(
     val progress: Float = 0f,
     val type: VideoType = VideoType.DEFAULT,
     val mediaType: MediaType = MediaType.MOVIE,
-    val section: com.diegoferreiracaetano.dlearn.domain.home.HomeSectionType? = null,
-    val category: com.diegoferreiracaetano.dlearn.domain.home.HomeCategory? = null
+    val category: HomeCategory? = null
 )
 
 @Serializable

@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.ui.util
 
 data class ComponentActions(
     val onItemClick: (String) -> Unit = {},
-    val onFilterTypeChanged: (String?) -> Unit = {},
     val onSelectChanged: (String?, String?) -> Unit = { _, _ -> },
     val onSearchClick: (() -> Unit)? = null,
     val onTabSelected: (String) -> Unit = {},

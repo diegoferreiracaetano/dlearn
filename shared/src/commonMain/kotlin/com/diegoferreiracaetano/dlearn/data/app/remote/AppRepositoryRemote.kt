@@ -17,23 +17,13 @@ class AppRepositoryRemote(
     private val httpClient: HttpClient
 ) : AppRepository {
 
-    override fun execute(
-        path: String,
-        params: Map<String, String>?,
-        metadata: Map<String, String>?
-    ): Flow<Screen> {
+    override fun execute(request: AppRequest): Flow<Screen> {
         return flow {
             val response = httpClient.post("/v1/app") {
                 contentType(ContentType.Application.Json)
-                setBody(
-                    AppRequest(
-                        path = path,
-                        params = params,
-                        metadata = metadata
-                    )
-                )
+                setBody(request)
             }.body<Screen>()
             emit(response)
-        }.toCache(key = "sdui_cache_${path}_${params?.hashCode() ?: 0}")
+        }.toCache(key = "sdui_cache_${request.path}_${request.params?.hashCode() ?: 0}")
     }
 }

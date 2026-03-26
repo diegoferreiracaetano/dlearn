@@ -24,7 +24,7 @@ class ChipGroupRenderer : ComponentRenderer {
                     label = item.label,
                     onClick = {
                         if (!item.hasDropDown) {
-                            actions.onFilterTypeChanged(item.id)
+                            actions.onAction(item.actionUrl)
                         }
                     },
                     hasDropDown = item.hasDropDown,
@@ -33,16 +33,15 @@ class ChipGroupRenderer : ComponentRenderer {
                     dropDownOptions = item.options?.map { it.label } ?: emptyList(),
                     onOptionSelected = { optionLabel ->
                         val selectedOption = item.options?.find { it.label == optionLabel }
-                        if (selectedOption != null) {
-                            actions.onSelectChanged(selectedOption.id, optionLabel)
+                        selectedOption?.actionUrl?.let {
+                            actions.onAction(it)
                         }
                     }
                 )
             },
             onFilterChanged = { label ->
                 if (label == null) {
-                    actions.onFilterTypeChanged(null)
-                    actions.onSelectChanged(null, null)
+                    actions.onAction(chipGroup.cleanUrl)
                 }
             }
         )

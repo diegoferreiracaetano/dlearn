@@ -1,10 +1,12 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppImageType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppListComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppSearchBarComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppSearchContentComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppSectionTitleComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
@@ -26,6 +28,7 @@ class SearchScreenBuilder(private val i18n: I18nProvider) {
         return Screen(
             components = listOf(
                 AppSearchBarComponent(
+                    actionUrl = AppNavigationRoute.HOME,
                     query = "",
                     placeholder = placeholder,
                     components = searchBarComponents
@@ -60,6 +63,7 @@ class SearchScreenBuilder(private val i18n: I18nProvider) {
         return Screen(
             components = listOf(
                 AppSearchBarComponent(
+                    actionUrl = AppNavigationRoute.HOME,
                     query = query,
                     placeholder = placeholder,
                     components = contentComponents

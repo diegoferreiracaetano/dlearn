@@ -16,11 +16,16 @@ Deve-se seguir estas diretrizes rigorosamente. Se não for possível cumpri-las,
 ## 3. Backend e Front
 - Siga a mesma arquitetura já existe no projeto.
 - Use sempre a estrutura de Component aonde ele gera um ScreenBuilder para cada tela.
-- No Front consuma o monta as telas dimanicamente,
-- No Front nunca crie que não consta no backend se necessario  e sugerir a criação do componente antes de prosseguir.
+- No Front consuma o monta as telas dimanicamente.
+- No Front nunca crie componentes que não constam no backend; se necessário, sugira a criação do componente no backend antes de prosseguir.
 
+## 4. Fluxo de SDUI, AppScreen e AppViewModel (REGRA DE OURO)
+- **PROIBIÇÃO DE REIMPLEMENTAÇÃO:** `AppScreen` e `AppViewModel` são componentes genéricos de infraestrutura SDUI e são usados em múltiplos fluxos críticos. **NUNCA** crie novas implementações (ex: `HomeAppScreen`, `SearchAppViewModel`) ou altere suas assinaturas para injetar repositórios específicos.
+- **CONTRATO AppRequest:** Toda a comunicação entre o frontend e o backend SDUI deve ser feita exclusivamente via `AppRequest`, passando obrigatoriamente `path`, `params` e `metadata` quando necessário.
+- **GESTÃO DE PARÂMETROS:** Alterações de estado na tela (filtros, paginação, buscas) devem ser refletidas em atualizações nos `params` do `AppRequest`. O `AppViewModel` deve ser usado para disparar novas requisições com esses parâmetros atualizados.
+- **DESACOPLAMENTO:** A lógica de qual dado carregar reside no Backend (Orchestrators). O Frontend apenas renderiza o que o `AppRequest` retorna.
 
-## 4. Testes e Documentação
+## 5. Testes e Documentação
 - Gerar sempre testes unitários no `commonTest`.
 - Atualizar o `README.md` para novas funcionalidades.
 - Manter as especificações **OpenAPI / Swagger** sincronizadas com mudanças em modelos ou redes.

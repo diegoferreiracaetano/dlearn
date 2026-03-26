@@ -1,8 +1,10 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
-import com.diegoferreiracaetano.dlearn.HomeFilterIds
 import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
 import com.diegoferreiracaetano.dlearn.domain.models.HomeDomainData
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.ui.mappers.HomeMapper
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
@@ -24,16 +26,28 @@ class HomeScreenBuilder(
 
         components.add(
             ChipGroupComponent(
+                cleanUrl = AppPath(
+                    path = AppNavigationRoute.HOME,
+                    params = mapOf(AppQueryParam.TYPE to HomeFilterType.ALL.name)
+                ),
                 items = listOf(
                     ChipItem(
-                        id = HomeFilterIds.SERIES,
+                        id = HomeFilterType.SERIES.name,
                         label = i18n.getString(AppStringType.FILTER_SERIES, lang),
-                        isSelected = type == HomeFilterType.SERIES
+                        isSelected = type == HomeFilterType.SERIES,
+                        actionUrl = AppPath(
+                            path = AppNavigationRoute.HOME,
+                            params = mapOf(AppQueryParam.TYPE to HomeFilterType.SERIES.name)
+                        ),
                     ),
                     ChipItem(
-                        id = HomeFilterIds.MOVIES,
+                        id = HomeFilterType.MOVIES.name,
                         label = i18n.getString(AppStringType.FILTER_MOVIES, lang),
-                        isSelected = type == HomeFilterType.MOVIE
+                        isSelected = type == HomeFilterType.MOVIES,
+                        actionUrl = AppPath(
+                            path = AppNavigationRoute.HOME,
+                            params = mapOf(AppQueryParam.TYPE to HomeFilterType.MOVIES.name)
+                        )
                     )
                 )
             )

@@ -10,8 +10,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
 class MovieDetailScreenBuilder(
-    private val mapper: MovieDetailMapper,
-    private val i18n: I18nProvider
+    private val mapper: MovieDetailMapper
 ) {
 
     fun build(data: MovieDetailDomainData, lang: String): Screen {

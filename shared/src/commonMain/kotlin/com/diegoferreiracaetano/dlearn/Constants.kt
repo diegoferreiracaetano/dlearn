@@ -10,32 +10,17 @@ object Constants {
 }
 
 object AppConstants {
-    const val EMPTY = ""
-    const val SPACE = " "
-    const val DEFAULT_PAGE = 1
-    const val KEY_MOVIE_ID = "movieId"
-    const val KEY_USER_ID = "userId"
+
     const val GUEST_USER_ID = "guest"
-    const val DEFAULT_APP_VERSION = 1
-    const val DEFAULT_LANG = "en"
     const val AVATAR_PLACEHOLDER = "https://avatars.githubusercontent.com/u/1023?v=4"
     const val X_COUNTRY = "X-Country"
     const val X_NOTIFICATIONS_ENABLED = "X-Notifications-Enabled"
-}
-
-object HomeFilterIds {
-    const val ALL = "ALL"
-    const val MOVIE = "MOVIE"
-    const val SERIES = "series"
-    const val MOVIES = "movies"
 }
 
 object TmdbConstants {
     const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/"
     const val IMAGE_W500 = "w500"
     const val IMAGE_W185 = "w185"
-    const val IMAGE_ORIGINAL = "original"
-    const val LANGUAGE_PT_BR = "pt-BR"
     const val DEFAULT_REGION = "BR"
     const val SITE_YOUTUBE = "YouTube"
     const val TYPE_TRAILER = "Trailer"

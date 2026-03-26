@@ -22,12 +22,10 @@ class SearchOrchestrator(
         header: AppHeader
     ): Flow<Screen> {
         val query = request.params?.get("q")
-        
-        // Se houver query, retorna apenas o conteúdo dos resultados
+
         return if (!query.isNullOrBlank()) {
             searchContent(header, query)
         } else {
-            // Caso contrário, retorna a tela principal de busca
             searchMain(header)
         }
     }

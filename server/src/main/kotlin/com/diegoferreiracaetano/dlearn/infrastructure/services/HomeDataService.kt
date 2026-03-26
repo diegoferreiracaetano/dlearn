@@ -26,7 +26,7 @@ class HomeDataService(private val tmdbClient: TmdbClient) {
         }
 
         val popularSeriesDeferred = async {
-            if (type == HomeFilterType.MOVIE) emptyList<Video>()
+            if (type == HomeFilterType.MOVIES) emptyList<Video>()
             else tmdbClient.getPopularSeries(language).results.map { it.toVideo(MediaType.SERIES, tvGenres.await()) }
         }
 
@@ -36,7 +36,7 @@ class HomeDataService(private val tmdbClient: TmdbClient) {
         }
 
         val topRatedSeriesDeferred = async {
-            if (type == HomeFilterType.MOVIE) emptyList<Video>()
+            if (type == HomeFilterType.MOVIES) emptyList<Video>()
             else tmdbClient.getTopRatedSeries(language).results.map { it.toVideo(MediaType.SERIES, tvGenres.await()) }
         }
 

@@ -103,7 +103,7 @@ val serverModule = module {
     single { ChallengeDataService() }
 
     // Password
-    single { PasswordDataService(get()) }
+    single { PasswordDataService(get(),get()) }
     single { ChangePasswordUseCase(get()) }
     single { PasswordOrchestrator(get()) }
 }

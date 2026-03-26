@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.diegoferreiracaetano.dlearn.AppConstants
 import com.diegoferreiracaetano.dlearn.designsystem.components.alert.SnackbarType
 import com.diegoferreiracaetano.dlearn.designsystem.components.alert.showAppSnackBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
@@ -133,9 +132,9 @@ fun CreateNewPasswordScreen(
 
                 AppButton(
                     text = stringResource(Res.string.create_password_action),
-                    enabled = uiState !is com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Loading,
+                    enabled = uiState !is CreateNewPasswordUiState.Loading,
                     onClick = {
-                        viewModel.changePassword(AppConstants.GUEST_USER_ID, password)
+                        viewModel.changePassword(password)
                     },
                     modifier = Modifier.fillMaxWidth()
                 )

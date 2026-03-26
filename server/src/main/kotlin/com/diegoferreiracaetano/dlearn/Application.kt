@@ -95,11 +95,11 @@ fun Application.module() {
 
         authController()
         challengeController()
+        passwordController() // Movi para fora do authenticate para suportar fluxo deslogado
 
         authenticate("auth-jwt") {
             mainController()
             appController()
-            passwordController()
             userController()
         }
     }

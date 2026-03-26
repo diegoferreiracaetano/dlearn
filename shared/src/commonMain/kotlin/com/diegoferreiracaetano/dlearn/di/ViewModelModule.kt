@@ -21,7 +21,7 @@ val viewModelModule = module {
     factory { SearchMainViewModel(get()) }
     factory { SearchContentViewModel(get()) }
     factory { (movieId: String) -> MovieDetailViewModel(movieId, get()) }
-    single { CreateNewPasswordViewModel(get()) }
+    factory { CreateNewPasswordViewModel(get()) }
     factory { VerifyAccountViewModel(get()) }
     factory { LoginViewModel(get(), get()) }
     factory { SignUpViewModel(get(), get()) }

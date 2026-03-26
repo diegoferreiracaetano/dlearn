@@ -126,7 +126,7 @@ val sharedModule = module {
     single<KeyValueStorage> { SettingsKeyValueStorage(get()) }
     single<PreferencesRepository> { PreferencesRepositoryImpl(get()) }
 
-    single<PasswordRepository> { PasswordRepositoryRemote(get()) }
+    single<PasswordRepository> { PasswordRepositoryRemote(get(), get()) }
     single<HomeRepository> { HomeRepositoryRemote(get()) }
     single<ProfileRepository> { ProfileRepositoryRemote(get()) }
     single<MovieDetailRepository> { MovieDetailRepositoryRemote(get()) }

@@ -47,7 +47,7 @@ val ChallengePlugin = createRouteScopedPlugin("ChallengePlugin", ::ChallengeConf
         val lang = call.request.acceptLanguage() ?: "en"
 
         if (token == null || !challengeDataService.isTokenValidated(token)) {
-            val userId = call.request.queryParameters["userId"] ?: "system_user"
+            val userId = call.request.queryParameters["userId"] ?: "guest"
             val transactionId = challengeDataService.generateChallenge(userId) 
             
             throw ChallengeException(

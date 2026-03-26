@@ -6,6 +6,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppExpandableSectionComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppMovieDetailHeaderComponent
@@ -73,8 +76,8 @@ fun MovieDetailContentPreview() {
                     genre = "Sci-Fi",
                     rating = 8.6,
                     trailerId = "zSWdZVtXT7E",
-                    downloadActionUrl = "dlearn://download/157336",
-                    shareActionUrl = "dlearn://share/157336"
+                    downloadActionUrl = "download/157336", // Mantido como exemplo local para preview
+                    shareActionUrl = "share/157336"     // Mantido como exemplo local para preview
                 ),
                 AppExpandableSectionComponent(
                     title = "Storyline",

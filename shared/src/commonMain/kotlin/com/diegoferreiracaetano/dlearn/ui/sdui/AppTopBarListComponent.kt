@@ -5,12 +5,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AppTopBarListComponent(
     val items: List<AppTopBarItem>,
-    val selectedRoute: String
+    val selectedActionUrl: String
 ) : Component
 
 @Serializable
 data class AppTopBarItem(
     val topBar: AppTopBarComponent,
-    val route: String
+    val actionUrl: String
 )
-

@@ -1,6 +1,6 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.app
 
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.model.toVideo
@@ -29,7 +29,7 @@ class WatchlistOrchestrator(
     ): Flow<Screen> {
         val language = header.language
         val userId = header.userId
-        val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
+        val movieId = request.params?.get(AppQueryParam.ID)
         
         return if (movieId != null) {
             toggleWatchlist(userId, movieId, language)

@@ -1,8 +1,14 @@
 package com.diegoferreiracaetano.dlearn.ui.mappers
 
-import com.diegoferreiracaetano.dlearn.domain.video.Video
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
-import com.diegoferreiracaetano.dlearn.ui.sdui.*
+import com.diegoferreiracaetano.dlearn.domain.video.Video
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
+import com.diegoferreiracaetano.dlearn.ui.sdui.BannerCarouselComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.FullScreenBannerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.MovieCarouselComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.MovieItemComponent
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import java.util.Locale
 
@@ -48,7 +54,7 @@ class HomeMapper(private val i18n: I18nProvider) {
             movieType = if (mediaType == MediaType.MOVIE) "Filme" else "Série",
             isPremium = false,
             rank = rank,
-            actionUrl = "/video/$id"
+            actionUrl = AppPath(AppNavigationRoute.MOVIES, mapOf(AppQueryParam.ID to id))
         )
     }
 }

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
 import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppSectionTitle
 import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppTextRow
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component

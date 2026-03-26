@@ -1,34 +1,34 @@
 package com.diegoferreiracaetano.dlearn.navigation
 
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import io.ktor.http.encodeURLParameter
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
 
 sealed class ScreenRouter(
     val route: String,
 ) {
-    object Home : ScreenRouter(NavigationRoutes.HOME)
-    object Profile : ScreenRouter(NavigationRoutes.PROFILE)
-    object Watchlist : ScreenRouter(NavigationRoutes.WATCHLIST)
-    object Favorite : ScreenRouter(NavigationRoutes.FAVORITE)
+    object Home : ScreenRouter(AppNavigationRoute.HOME)
+    object Profile : ScreenRouter(AppNavigationRoute.PROFILE)
+    object Watchlist : ScreenRouter(AppNavigationRoute.WATCHLIST)
+    object Favorite : ScreenRouter(AppNavigationRoute.FAVORITE)
 
-    object Search : ScreenRouter(NavigationRoutes.SEARCH)
-    object Welcome : ScreenRouter(NavigationRoutes.WELCOME)
-    object Login : ScreenRouter(NavigationRoutes.LOGIN)
+    object Search : ScreenRouter(AppNavigationRoute.SEARCH)
+    object Welcome : ScreenRouter(AppNavigationRoute.WELCOME)
+    object Login : ScreenRouter(AppNavigationRoute.LOGIN)
 
-    object Logout : ScreenRouter(NavigationRoutes.LOGOUT)
-    object SignUp : ScreenRouter(NavigationRoutes.SIGNUP)
-    object ResetPassword : ScreenRouter(NavigationRoutes.RESET_PASSWORD)
-    object VerifyAccount : ScreenRouter(NavigationRoutes.VERIFY_ACCOUNT)
-    object CreateNewPassword : ScreenRouter(NavigationRoutes.CREATE_NEW_PASSWORD)
-    object ChangePassword : ScreenRouter(NavigationRoutes.CHANGE_PASSWORD)
-    object Onboarding : ScreenRouter(NavigationRoutes.ONBOARDING)
+    object Logout : ScreenRouter(AppNavigationRoute.LOGOUT)
+    object SignUp : ScreenRouter(AppNavigationRoute.SIGNUP)
+    object ResetPassword : ScreenRouter(AppNavigationRoute.RESET_PASSWORD)
+    object VerifyAccount : ScreenRouter(AppNavigationRoute.VERIFY_ACCOUNT)
+    object CreateNewPassword : ScreenRouter(AppNavigationRoute.CREATE_NEW_PASSWORD)
+    object ChangePassword : ScreenRouter(AppNavigationRoute.PROFILE_CHANGE_PASSWORD)
+    object Onboarding : ScreenRouter(AppNavigationRoute.ONBOARDING)
 
-    object SettingsNotifications : ScreenRouter(NavigationRoutes.SETTINGS_NOTIFICATIONS)
-    object SettingsLanguage : ScreenRouter(NavigationRoutes.SETTINGS_LANGUAGE)
-    object SettingsCountry : ScreenRouter(NavigationRoutes.SETTINGS_COUNTRY)
-    object SettingsClearCache : ScreenRouter(NavigationRoutes.SETTINGS_CLEAR_CACHE)
+    object SettingsNotifications : ScreenRouter(AppNavigationRoute.SETTINGS_NOTIFICATIONS)
+    object SettingsLanguage : ScreenRouter(AppNavigationRoute.SETTINGS_LANGUAGE)
+    object SettingsCountry : ScreenRouter(AppNavigationRoute.SETTINGS_COUNTRY)
+    object SettingsClearCache : ScreenRouter(AppNavigationRoute.SETTINGS_CLEAR_CACHE)
 
-    object MovieDetail : ScreenRouter(NavigationRoutes.MOVIE_DETAIL_ROUTE) {
-        fun createRoute(movieId: String) = "${NavigationRoutes.MOVIE_DETAIL}/${movieId.encodeURLParameter()}"
+    object MovieDetail : ScreenRouter(AppNavigationRoute.MOVIE_DETAIL_ROUTE) {
+        fun createRoute(movieId: String) = "${AppNavigationRoute.MOVIES}/$movieId"
     }
 }

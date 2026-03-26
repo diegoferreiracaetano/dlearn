@@ -4,7 +4,9 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.savedstate.read
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 
 inline fun <reified T : Enum<T>> NavBackStackEntry.readEnumOrDefault(
     key: String,
@@ -51,27 +53,41 @@ fun NavController.navigateToPath(path: String, params: Map<String, String>? = nu
     if (isNativeRoute) {
         navigate(path)
     } else {
-        val router = NavigationRoutes.buildRoute(path, params)
-        navigate(router)
+        // Usa o novo AppPath para construir a rota SDUI padrão
+        val url = AppPath(path, params)
+        val sduiRoute = "${AppNavigationRoute.APP_PREFIX}?${AppNavigationRoute.ARG_PATH}=$url"
+        navigate(sduiRoute)
     }
 }
 
 val NavBackStackEntry.sduiPath: String
     get() = arguments?.read { 
-        if (contains(NavigationRoutes.PATH_ARG)) getString(NavigationRoutes.PATH_ARG) else null 
+        if (contains(AppNavigationRoute.ARG_PATH)) getString(AppNavigationRoute.ARG_PATH) else null 
     }.orEmpty()
 
 val NavBackStackEntry.sduiParams: Map<String, String>?
     get() {
-        val paramsString = readOrDefault(NavigationRoutes.PARAMS_ARG, "")
-        val paramsMap = paramsString.takeIf { it.isNotEmpty() }?.split(",")?.associate {
-            val parts = it.split(":")
-            parts[0] to parts.getOrElse(1) { "" }
-        }?.toMutableMap() ?: mutableMapOf()
+        val paramsMap = mutableMapOf<String, String>()
 
-        val ref = readOrDefault(NavigationRoutes.FAQ_REF_ARG, "")
+        // 1. Tenta extrair params do argumento legacy (se houver)
+        val paramsString = readOrDefault(AppNavigationRoute.ARG_PARAMS, "")
+        if (paramsString.isNotEmpty()) {
+            paramsString.split(",").forEach {
+                val parts = it.split(":")
+                if (parts.size >= 2) {
+                    paramsMap[parts[0]] = parts[1]
+                }
+            }
+        }
+
+        // 2. Se o path tiver query params, o AppPath(path) vai extrair
+        val request = AppPath.parse(sduiPath)
+        request.params?.let { paramsMap.putAll(it) }
+
+        // 3. Tenta extrair FAQ_REF_ARG individualmente
+        val ref = readOrDefault(AppQueryParam.REF, "")
         if (ref.isNotEmpty()) {
-            paramsMap[NavigationRoutes.FAQ_REF_ARG] = ref
+            paramsMap[AppQueryParam.REF] = ref
         }
 
         return paramsMap.takeIf { it.isNotEmpty() }

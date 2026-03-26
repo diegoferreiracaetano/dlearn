@@ -25,7 +25,7 @@ class AppTopBarListRenderer : ComponentRenderer {
         else {
             val configs = topBarList.items.map { item ->
                 TopBarConfig(
-                    route = item.route,
+                    route = item.actionUrl,
                     title = item.topBar.title,
                     subtitle = item.topBar.subtitle,
                     profileImageSource = item.topBar.imageUrl?.let {
@@ -36,7 +36,7 @@ class AppTopBarListRenderer : ComponentRenderer {
                 )
             }
 
-            AppTopBar(configs,actions.currentRoute)
+            AppTopBar(configs, topBarList.selectedActionUrl)
         }
     }
 }

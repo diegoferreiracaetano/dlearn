@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.app
 
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
 import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.screens.SettingsScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
@@ -16,16 +17,17 @@ class SettingsOrchestrator(
         request: AppRequest,
         header: AppHeader
     ): Flow<Screen> = flow {
-        val screen: Screen = when {
-            request.path == NavigationRoutes.SETTINGS_NOTIFICATIONS -> {
+        val path = AppPath.parse(request.path).path
+        val screen: Screen = when (path) {
+            AppNavigationRoute.SETTINGS_NOTIFICATIONS -> {
                 builder.buildNotificationScreen(header.notificationsEnabled, header.language)
             }
 
-            request.path == NavigationRoutes.SETTINGS_LANGUAGE -> {
+            AppNavigationRoute.SETTINGS_LANGUAGE -> {
                 builder.buildLanguageScreen(header.language)
             }
 
-            request.path == NavigationRoutes.SETTINGS_COUNTRY -> {
+            AppNavigationRoute.SETTINGS_COUNTRY -> {
                 builder.buildCountryScreen(header.country, header.language)
             }
 

@@ -1,6 +1,8 @@
 package com.diegoferreiracaetano.dlearn.ui.mappers
 
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
@@ -11,7 +13,7 @@ class ProfileMapper(private val i18n: I18nProvider) {
             name = data.name,
             email = data.email,
             imageUrl = data.imageUrl,
-            editActionUrl = NavigationRoutes.EDIT_PROFILE
+            editActionUrl = AppNavigationRoute.PROFILE_EDIT
         )
     }
 
@@ -53,7 +55,7 @@ class ProfileMapper(private val i18n: I18nProvider) {
     fun toSaveButton(lang: String): FooterComponent {
         return FooterComponent(
             label = i18n.getString(AppStringType.SAVE_CHANGES, lang),
-            actionUrl = NavigationRoutes.UPDATE_PROFILE
+            actionUrl = AppNavigationRoute.PROFILE_UPDATE
         )
     }
 
@@ -74,13 +76,13 @@ class ProfileMapper(private val i18n: I18nProvider) {
                     id = "member",
                     label = i18n.getString(AppStringType.ITEM_MEMBER, lang),
                     icon = AppIconType.PERSON,
-                    actionUrl = "/member"
+                    actionUrl = AppNavigationRoute.MEMBER
                 ),
                 SectionItem(
                     id = "password",
                     label = i18n.getString(AppStringType.ITEM_PASSWORD, lang),
                     icon = AppIconType.LOCK,
-                    actionUrl = NavigationRoutes.CHANGE_PASSWORD
+                    actionUrl = AppNavigationRoute.PROFILE_CHANGE_PASSWORD
                 )
             )
         )
@@ -102,27 +104,27 @@ class ProfileMapper(private val i18n: I18nProvider) {
                     id = "notification",
                     label = i18n.getString(AppStringType.ITEM_NOTIFICATION, currentLang),
                     icon = AppIconType.NOTIFICATIONS,
-                    actionUrl = NavigationRoutes.SETTINGS_NOTIFICATIONS
+                    actionUrl = AppNavigationRoute.SETTINGS_NOTIFICATIONS
                 ),
                 SectionItem(
                     id = "language",
                     label = i18n.getString(AppStringType.ITEM_LANGUAGE, currentLang),
                     value = languageDisplayName,
                     icon = AppIconType.LANGUAGE,
-                    actionUrl = NavigationRoutes.SETTINGS_LANGUAGE
+                    actionUrl = AppNavigationRoute.SETTINGS_LANGUAGE
                 ),
                 SectionItem(
                     id = "country",
                     label = i18n.getString(AppStringType.ITEM_COUNTRY, currentLang),
                     value = countryDisplayName,
                     icon = AppIconType.PUBLIC,
-                    actionUrl = NavigationRoutes.SETTINGS_COUNTRY
+                    actionUrl = AppNavigationRoute.SETTINGS_COUNTRY
                 ),
                 SectionItem(
                     id = "clear_cache",
                     label = i18n.getString(AppStringType.ITEM_CLEAR_CACHE, currentLang),
                     icon = AppIconType.DELETE,
-                    actionUrl = NavigationRoutes.SETTINGS_CLEAR_CACHE
+                    actionUrl = AppNavigationRoute.SETTINGS_CLEAR_CACHE
                 )
             )
         )
@@ -136,28 +138,19 @@ class ProfileMapper(private val i18n: I18nProvider) {
                     id = "legal",
                     label = i18n.getString(AppStringType.ITEM_LEGAL, lang),
                     icon = AppIconType.POLICY,
-                    actionUrl = NavigationRoutes.buildRoute(
-                        NavigationRoutes.FAQ,
-                        mapOf(NavigationRoutes.FAQ_REF_ARG to "privacy-policy")
-                    )
+                    actionUrl = AppPath(AppNavigationRoute.FAQ, mapOf(AppQueryParam.REF to "privacy-policy"))
                 ),
                 SectionItem(
                     id = "help",
                     label = i18n.getString(AppStringType.ITEM_HELP, lang),
                     icon = AppIconType.HELP,
-                    actionUrl = NavigationRoutes.buildRoute(
-                        NavigationRoutes.FAQ,
-                        mapOf(NavigationRoutes.FAQ_REF_ARG to "help-feedback")
-                    )
+                    actionUrl = AppPath(AppNavigationRoute.FAQ, mapOf(AppQueryParam.REF to "help-feedback"))
                 ),
                 SectionItem(
                     id = "about",
                     label = i18n.getString(AppStringType.ITEM_ABOUT, lang),
                     icon = AppIconType.INFO,
-                    actionUrl = NavigationRoutes.buildRoute(
-                        NavigationRoutes.FAQ,
-                        mapOf(NavigationRoutes.FAQ_REF_ARG to "about-us")
-                    )
+                    actionUrl = AppPath(AppNavigationRoute.FAQ, mapOf(AppQueryParam.REF to "about-us"))
                 )
             )
         )
@@ -166,7 +159,7 @@ class ProfileMapper(private val i18n: I18nProvider) {
     fun toFooter(lang: String): FooterComponent {
         return FooterComponent(
             label = i18n.getString(AppStringType.LOGOUT, lang),
-            closeUrl = NavigationRoutes.LOGOUT
+            actionUrl = AppNavigationRoute.LOGOUT
         )
     }
 }

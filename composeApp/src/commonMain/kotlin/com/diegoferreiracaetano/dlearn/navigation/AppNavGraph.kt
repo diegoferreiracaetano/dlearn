@@ -8,8 +8,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -17,8 +15,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
-import com.diegoferreiracaetano.dlearn.NavigationRoutes.VERIFY_ACCOUNT
+import androidx.compose.ui.window.DialogProperties
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.*
 import com.diegoferreiracaetano.dlearn.ui.screens.app.AppScreen
@@ -51,19 +50,16 @@ fun AppNavGraph(
 ) {
     val isLoggedIn by sessionManager.isLoggedIn.collectAsState()
 
-    // Handler especializado para eventos globais (MFA, Mensagens, Navegação)
     val eventHandler = remember(navController, snackbarHostState, coroutineScope) {
         GlobalEventHandler(navController, snackbarHostState, coroutineScope)
     }
 
-    // Observador Central de Eventos Globais
     LaunchedEffect(eventDispatcher, eventHandler) {
         eventDispatcher.events.collect { event ->
             eventHandler.handle(event)
         }
     }
 
-    // Se o usuário deslogar, voltamos para o Welcome
     LaunchedEffect(isLoggedIn) {
         if (!isLoggedIn) {
             navController.navigate(Welcome.route) {
@@ -114,7 +110,7 @@ fun AppNavGraph(
         composable(ResetPassword.route) {
             ResetPasswordScreen(
                 onBackClick = { navController.popBackStack() },
-                onNextClick = { navController.navigate(VERIFY_ACCOUNT) },
+                onNextClick = { navController.navigate(AppNavigationRoute.VERIFY_ACCOUNT) },
                 modifier = modifier
             )
         }
@@ -130,9 +126,7 @@ fun AppNavGraph(
         composable(ChangePassword.route) {
             CreateNewPasswordScreen(
                 onBackClick = { navController.popBackStack() },
-                onSuccess = { 
-                    navController.popBackStack() 
-                },
+                onSuccess = { navController.popBackStack() },
                 modifier = modifier
             )
         }
@@ -200,7 +194,7 @@ fun AppNavGraph(
 
         composable(SettingsNotifications.route) {
             SettingsScreen(
-                path = NavigationRoutes.SETTINGS_NOTIFICATIONS,
+                path = AppNavigationRoute.SETTINGS_NOTIFICATIONS,
                 onBackClick = { navController.popBackStack() },
                 modifier = modifier
             )
@@ -208,7 +202,7 @@ fun AppNavGraph(
 
         composable(SettingsLanguage.route) {
             SettingsScreen(
-                path = NavigationRoutes.SETTINGS_LANGUAGE,
+                path = AppNavigationRoute.SETTINGS_LANGUAGE,
                 onBackClick = { navController.popBackStack() },
                 modifier = modifier
             )
@@ -216,7 +210,7 @@ fun AppNavGraph(
 
         composable(SettingsCountry.route) {
             SettingsScreen(
-                path = NavigationRoutes.SETTINGS_COUNTRY,
+                path = AppNavigationRoute.SETTINGS_COUNTRY,
                 onBackClick = { navController.popBackStack() },
                 modifier = modifier
             )
@@ -237,15 +231,15 @@ fun AppNavGraph(
         }
 
         composable(
-            route = NavigationRoutes.APP_ROUTE,
+            route = AppNavigationRoute.SDUI_APP_ROUTE,
             arguments = listOf(
-                navArgument(NavigationRoutes.PATH_ARG) { type = NavType.StringType },
-                navArgument(NavigationRoutes.PARAMS_ARG) {
+                navArgument(AppNavigationRoute.ARG_PATH) { type = NavType.StringType },
+                navArgument(AppNavigationRoute.ARG_PARAMS) {
                     type = NavType.StringType
                     nullable = true
                     defaultValue = null
                 },
-                navArgument(NavigationRoutes.FAQ_REF_ARG) {
+                navArgument(AppQueryParam.REF) {
                     type = NavType.StringType
                     nullable = true
                     defaultValue = null
@@ -265,9 +259,9 @@ fun AppNavGraph(
 
         composable(
             route = MovieDetail.route,
-            arguments = listOf(navArgument(NavigationRoutes.MOVIE_ID_ARG) { type = NavType.StringType })
+            arguments = listOf(navArgument(AppNavigationRoute.ARG_ID) { type = NavType.StringType })
         ) { backStackEntry ->
-            val movieId = backStackEntry.readOrDefault(NavigationRoutes.MOVIE_ID_ARG, "")
+            val movieId = backStackEntry.readOrDefault(AppNavigationRoute.ARG_ID, "")
             MovieDetailScreen(
                 movieId = movieId,
                 onBackClick = { navController.popBackStack() },

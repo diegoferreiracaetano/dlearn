@@ -1,6 +1,9 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
 import com.diegoferreiracaetano.dlearn.domain.user.User
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 
 class UserListScreenBuilder {
@@ -18,7 +21,7 @@ class UserListScreenBuilder {
                 name = user.name,
                 role = if (user.isPremium) "Premium Member" else "Free Member",
                 imageUrl = user.imageUrl,
-                actionUrl = "profile?userId=${user.id}"
+                actionUrl = AppPath(AppNavigationRoute.PROFILE, mapOf(AppQueryParam.USER_ID to user.id))
             )
         }
 

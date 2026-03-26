@@ -1,7 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
 import com.diegoferreiracaetano.dlearn.AppConstants
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppMainContentComponent
@@ -21,13 +21,13 @@ class MainScreenBuilder(
         lang: String
     ): Screen {
 
-        val selectedRoute = NavigationRoutes.HOME
+        val selectedActionUrl = AppNavigationRoute.HOME
 
         val topBar = AppTopBarListComponent(
-            selectedRoute = selectedRoute,
+            selectedActionUrl = selectedActionUrl,
             items = listOf(
                 AppTopBarItem(
-                    route = NavigationRoutes.HOME,
+                    actionUrl = AppNavigationRoute.HOME,
                     topBar = AppTopBarComponent(
                         title = i18n.getString(AppStringType.HOME_TITLE, lang),
                         subtitle = i18n.getString(AppStringType.HOME_SUBTITLE, lang),
@@ -36,20 +36,20 @@ class MainScreenBuilder(
                     )
                 ),
                 AppTopBarItem(
-                    route = NavigationRoutes.WATCHLIST,
+                    actionUrl = AppNavigationRoute.WATCHLIST,
                     topBar =  AppTopBarComponent(
                         title = i18n.getString(AppStringType.NAV_WATCHLIST, lang)
                     )
                 ),
                 AppTopBarItem(
-                    route = NavigationRoutes.FAVORITE,
+                    actionUrl = AppNavigationRoute.FAVORITE,
                     topBar =  AppTopBarComponent(
                         title = i18n.getString(AppStringType.NAV_FAVORITES, lang)
                     )
                 )
 ,
                 AppTopBarItem(
-                    route = NavigationRoutes.PROFILE,
+                    actionUrl = AppNavigationRoute.PROFILE,
                     topBar =  AppTopBarComponent(
                         title = i18n.getString(AppStringType.NAV_PROFILE, lang)
                     )
@@ -58,26 +58,26 @@ class MainScreenBuilder(
         )
 
         val bottomBar = BottomNavigationComponent(
-            selectedRoute = selectedRoute,
+            selectedActionUrl = selectedActionUrl,
             items = listOf(
                 BottomNavItem(
                     label = i18n.getString(AppStringType.NAV_HOME, lang),
-                    route = NavigationRoutes.HOME,
+                    actionUrl = AppNavigationRoute.HOME,
                     icon = AppIconType.HOME
                 ),
                 BottomNavItem(
                     label = i18n.getString(AppStringType.NAV_WATCHLIST, lang),
-                    route = NavigationRoutes.WATCHLIST,
+                    actionUrl = AppNavigationRoute.WATCHLIST,
                     icon = AppIconType.WATCHLIST
                 ),
                 BottomNavItem(
                     label = i18n.getString(AppStringType.NAV_FAVORITES, lang),
-                    route = NavigationRoutes.FAVORITE,
+                    actionUrl = AppNavigationRoute.FAVORITE,
                     icon = AppIconType.FAVORITE
                 ),
                 BottomNavItem(
                     label = i18n.getString(AppStringType.NAV_PROFILE, lang),
-                    route = NavigationRoutes.PROFILE,
+                    actionUrl = AppNavigationRoute.PROFILE,
                     icon = AppIconType.PERSON
                 )
             )

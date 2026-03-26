@@ -2,6 +2,9 @@ package com.diegoferreiracaetano.dlearn.ui.mappers
 
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.domain.video.Video
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.MovieItemComponent
 import java.util.Locale
@@ -19,7 +22,7 @@ class VideoMapper {
             contentRating = "L",
             genre = video.categories.firstOrNull()?.title,
             movieType = if (video.mediaType == MediaType.MOVIE) "Filme" else "Série",
-            actionUrl = "/video/${video.id}"
+            actionUrl = AppPath(AppNavigationRoute.MOVIES, mapOf(AppQueryParam.ID to video.id))
         )
     }
 

@@ -24,7 +24,7 @@ class BottomNavigationRenderer : ComponentRenderer {
         val mappedItems = bottomNav.items.map { item ->
             val icon = item.icon.toIcon() ?: Icons.Default.QuestionMark
             AppNavigationTab(
-                route = item.route,
+                route = item.actionUrl,
                 label = item.label,
                 selectedIcon = icon,
                 unselectedIcon = icon

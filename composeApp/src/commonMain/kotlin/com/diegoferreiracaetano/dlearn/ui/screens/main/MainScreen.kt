@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
@@ -30,7 +30,7 @@ fun MainScreen(
     onSearchClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = koinInject(),
-    currentRoute: String = NavigationRoutes.HOME
+    currentRoute: String = AppNavigationRoute.HOME
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -68,13 +68,13 @@ fun MainContent(
 @Composable
 fun MainScreenPreview() {
     val bottomNavItems = listOf(
-        BottomNavItem(NavigationRoutes.HOME, NavigationRoutes.HOME, AppIconType.HOME),
-        BottomNavItem(NavigationRoutes.WATCHLIST, NavigationRoutes.WATCHLIST, AppIconType.WATCHLIST),
-        BottomNavItem(NavigationRoutes.FAVORITE, NavigationRoutes.FAVORITE, AppIconType.FAVORITE),
-        BottomNavItem(NavigationRoutes.PROFILE, NavigationRoutes.PROFILE, AppIconType.PERSON)
+        BottomNavItem(AppNavigationRoute.HOME, AppNavigationRoute.HOME, AppIconType.HOME),
+        BottomNavItem(AppNavigationRoute.WATCHLIST, AppNavigationRoute.WATCHLIST, AppIconType.WATCHLIST),
+        BottomNavItem(AppNavigationRoute.FAVORITE, AppNavigationRoute.FAVORITE, AppIconType.FAVORITE),
+        BottomNavItem(AppNavigationRoute.PROFILE, AppNavigationRoute.PROFILE, AppIconType.PERSON)
     )
 
-    val selectedRoute = NavigationRoutes.HOME
+    val selectedRoute = AppNavigationRoute.HOME
 
     val components = listOf(
         AppContainerComponent(
@@ -84,11 +84,11 @@ fun MainScreenPreview() {
                         AppTopBarComponent(title = "DLearn", showSearch = true),
                         selectedRoute)
                 ),
-                selectedRoute =selectedRoute
+                selectedActionUrl =selectedRoute
             ),
             bottomBar = BottomNavigationComponent(
                 items = bottomNavItems,
-                selectedRoute = selectedRoute
+                selectedActionUrl = selectedRoute
             ),
             components = listOf()
         )

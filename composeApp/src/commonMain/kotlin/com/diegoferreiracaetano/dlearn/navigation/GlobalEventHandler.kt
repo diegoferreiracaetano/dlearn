@@ -2,7 +2,7 @@ package com.diegoferreiracaetano.dlearn.navigation
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavHostController
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.designsystem.components.alert.SnackbarType
 import com.diegoferreiracaetano.dlearn.designsystem.components.alert.showAppSnackBar
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
@@ -34,7 +34,7 @@ class GlobalEventHandler(
 
         if (hasOtpChallenge) {
             // Abre o desafio como um DIALOG por cima da tela atual
-            navController.navigate(NavigationRoutes.VERIFY_ACCOUNT)
+            navController.navigate(AppNavigationRoute.VERIFY_ACCOUNT)
         }
     }
 

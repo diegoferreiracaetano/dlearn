@@ -1,6 +1,6 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.app
 
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetMovieDetailUseCase
 import com.diegoferreiracaetano.dlearn.infrastructure.cache.InMemoryCache
 import com.diegoferreiracaetano.dlearn.network.AppHeader
@@ -21,7 +21,7 @@ class MovieDetailOrchestrator(
         request: AppRequest,
         header: AppHeader
     ): Flow<Screen> = flow {
-        val movieId = request.params?.get(NavigationRoutes.MOVIE_ID_ARG)
+        val movieId = request.params?.get(AppQueryParam.ID)
             ?: throw IllegalArgumentException("MovieId missing")
 
         val language = header.language

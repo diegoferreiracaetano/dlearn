@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.app
 
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
 import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
 import com.diegoferreiracaetano.dlearn.infrastructure.cache.InMemoryCache
 import com.diegoferreiracaetano.dlearn.network.AppHeader
@@ -23,14 +24,14 @@ class ProfileOrchestrator(
         request: AppRequest,
         header: AppHeader
     ): Flow<Screen> {
-        val path = NavigationRoutes.extractPath(request.path)
+        val path = AppPath.parse(request.path).path
         val language = header.language
         val userId = header.userId
         
         return when (path) {
-            NavigationRoutes.PROFILE -> getProfileData(userId, header.userAgent.appVersion, language, header.country)
-            NavigationRoutes.EDIT_PROFILE -> getEditProfileData(userId, language)
-            NavigationRoutes.UPDATE_PROFILE -> updateProfile(userId, language)
+            AppNavigationRoute.PROFILE -> getProfileData(userId, header.userAgent.appVersion, language, header.country)
+            AppNavigationRoute.PROFILE_EDIT -> getEditProfileData(userId, language)
+            AppNavigationRoute.PROFILE_UPDATE -> updateProfile(userId, language)
             else -> throw IllegalArgumentException("Invalid profile path: $path")
         }
     }

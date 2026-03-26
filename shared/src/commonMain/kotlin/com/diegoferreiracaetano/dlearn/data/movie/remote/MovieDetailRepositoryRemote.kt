@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.data.movie.remote
 
-import com.diegoferreiracaetano.dlearn.NavigationRoutes
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.domain.movie.MovieDetailRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -19,8 +20,8 @@ class MovieDetailRepositoryRemote(private val httpClient: HttpClient) : MovieDet
             contentType(ContentType.Application.Json)
             setBody(
                 AppRequest(
-                    path = "movie_detail",
-                    params = mapOf(NavigationRoutes.MOVIE_ID_ARG to movieId)
+                    path = AppNavigationRoute.MOVIES,
+                    params = mapOf(AppQueryParam.ID to movieId)
                 )
             )
         }.body<Screen>()

@@ -159,7 +159,7 @@ class ProfileMapper(private val i18n: I18nProvider) {
     fun toFooter(lang: String): FooterComponent {
         return FooterComponent(
             label = i18n.getString(AppStringType.LOGOUT, lang),
-            actionUrl = AppNavigationRoute.LOGOUT
+            closeUrl = AppNavigationRoute.LOGOUT
         )
     }
 }

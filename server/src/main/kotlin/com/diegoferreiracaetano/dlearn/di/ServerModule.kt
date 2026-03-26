@@ -1,10 +1,12 @@
 package com.diegoferreiracaetano.dlearn.di
 
 import com.diegoferreiracaetano.dlearn.api.exception.ChallengeMapper
+import com.diegoferreiracaetano.dlearn.data.cache.CacheManager
 import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
 import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
 import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
 import com.diegoferreiracaetano.dlearn.domain.usecases.*
+import com.diegoferreiracaetano.dlearn.infrastructure.cache.InMemoryCacheManager
 import com.diegoferreiracaetano.dlearn.infrastructure.mappers.TmdbMapper
 import com.diegoferreiracaetano.dlearn.infrastructure.mappers.WatchProviderUrlMapper
 import com.diegoferreiracaetano.dlearn.infrastructure.services.*
@@ -17,6 +19,7 @@ import com.diegoferreiracaetano.dlearn.ui.mappers.*
 import com.diegoferreiracaetano.dlearn.ui.screens.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import org.koin.dsl.module
+import kotlin.time.Duration.Companion.minutes
 
 val serverModule = module {
     single { TmdbClient() }
@@ -24,6 +27,9 @@ val serverModule = module {
     single { WatchProviderUrlMapper() }
     single { TmdbMapper(get()) }
     single { VideoMapper() }
+    
+    // Cache Manager para o Servidor (In Memory)
+    single<CacheManager> { InMemoryCacheManager(expiration = 10.minutes) }
     
     // API / Exception Handling / Auth
     single { ChallengeMapper() }

@@ -7,6 +7,8 @@ import com.diegoferreiracaetano.dlearn.auth.network.ChallengeInterceptor
 import com.diegoferreiracaetano.dlearn.data.app.PreferencesRepositoryImpl
 import com.diegoferreiracaetano.dlearn.data.app.remote.AppRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.auth.remote.AuthRepositoryRemote
+import com.diegoferreiracaetano.dlearn.data.cache.CacheManager
+import com.diegoferreiracaetano.dlearn.data.cache.PersistentCacheManager
 import com.diegoferreiracaetano.dlearn.data.home.remote.HomeRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.main.remote.MainRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.movie.remote.MovieDetailRepositoryRemote
@@ -126,16 +128,19 @@ val sharedModule = module {
     single<KeyValueStorage> { SettingsKeyValueStorage(get()) }
     single<PreferencesRepository> { PreferencesRepositoryImpl(get()) }
 
+    // Novo Gerenciador de Cache (Interface e Implementação persistente para o App)
+    single<CacheManager> { PersistentCacheManager(get(), get()) }
+
     single<PasswordRepository> { PasswordRepositoryRemote(get(), get()) }
     single<HomeRepository> { HomeRepositoryRemote(get()) }
     single<ProfileRepository> { ProfileRepositoryRemote(get()) }
     single<MovieDetailRepository> { MovieDetailRepositoryRemote(get()) }
     
-    // Corrigido para passar explicitamente as dependências
-    single<MainRepository> { MainRepositoryRemote(httpClient = get(), preferencesRepository = get()) }
+    single<MainRepository> { MainRepositoryRemote(get()) }
     
     single<SearchRepository> { SearchRepositoryRemote(get()) }
-    single<AppRepository> { AppRepositoryRemote(get(), get()) }
+    
+    single<AppRepository> { AppRepositoryRemote(get()) }
     
     single<AuthRepository> {
         AuthRepositoryRemote(

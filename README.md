@@ -68,6 +68,46 @@ challengePreference(ChallengeType.OTP_EMAIL) {
 
 ---
 
+## 📦 Resiliência e Cache (Offline & Performance)
+
+O DLearn implementa um sistema de cache inteligente que atua tanto na resiliência do App (Offline Mode) quanto na performance do Backend (BFF).
+
+### 🧩 Estrutura de Cache (:shared)
+O módulo `:shared` define a abstração `CacheManager`, permitindo implementações específicas para cada ambiente:
+- **`PersistentCacheManager` (App)**: Persiste objetos `Screen` e dados no disco usando `KeyValueStorage`. Garante que o usuário veja conteúdo mesmo em modo avião.
+- **`InMemoryCacheManager` (Server)**: Mantém telas pré-montadas na memória RAM do servidor para evitar reprocessamento de lógica pesada.
+
+### 🚀 A Extensão `.toCache()`
+Qualquer `Flow` de dados pode se tornar resiliente apenas adicionando a extensão `.toCache()`.
+
+```kotlin
+// Exemplo no AppRepository
+override fun execute(path: String, params: Map<String, String>?): Flow<Screen> {
+    return flow {
+        val response = httpClient.post("/v1/app") { 
+            setBody(AppRequest(path, params))
+        }.body<Screen>()
+        emit(response)
+    }.toCache(key = "sdui_${path}_${params?.hashCode()}")
+}
+```
+
+### ⚙️ Estratégias de Cache
+1. **`NETWORK_FIRST` (Padrão App)**: Prioriza a rede. Se houver falha (ex: `IOException`), recupera automaticamente do cache local e emite o dado, suprimindo o erro para a UI.
+2. **`CACHE_FIRST` (Padrão Server)**: Verifica o cache antes de qualquer processamento. Se o dado existir, retorna imediatamente, economizando CPU.
+
+---
+
+## 🎨 Design System (Regra Crítica)
+
+O projeto segue uma política rigorosa de **Zero Hardcode**. Toda a UI é montada a partir de componentes atômicos definidos no `:shared`.
+
+- **Componentes Atômicos**: Botões, inputs e cards são definidos como modelos no `:shared` e renderizados nativamente no App.
+- **Tokens de Tema**: Cores, espaçamentos e tipografia são consumidos de um `ThemeContext` centralizado.
+- **Extensibilidade**: Se um componente não existe no Design System, ele deve ser criado no `:shared` antes de ser usado no backend.
+
+---
+
 ## 👤 Autenticação e Cadastro (Fluxo Híbrido)
 
 Embora o projeto utilize SDUI extensivamente, os fluxos de **Login e Cadastro** são implementados de forma híbrida para garantir performance e uma experiência de entrada fluida.
@@ -134,17 +174,17 @@ Implementamos uma engine de conteúdo estático via SDUI para telas de suporte e
 - **Armazenamento**: Conteúdos centralizados no servidor (`faq_content.json`).
 
 ### 5. Configurações e Persistência Híbrida (SDUI + Local)
-Implementamos telas de configurações (Idioma, País, Notificações) que utilizam o poder do SDUI para interface, mas mantêm a persistência local via `AppPreferences` (KMP Settings).
-- **Sincronização**: O `SettingsViewModel` observa mudanças nas preferências locais e dispara um `retry()` automático na requisição SDUI, garantindo que o servidor sempre retorne os textos e estados (`isSelected`) traduzidos e atualizados.
+Implementamos telas de configurações que utilizam o poder do SDUI para interface, mas mantêm a persistência local via `AppPreferences` (KMP Settings).
+- **Sincronização**: O `SettingsViewModel` observa mudanças nas preferências locais e dispara um `retry()` automático na requisição SDUI, garantindo que o servidor sempre retorne os textos e estados traduzidos e atualizados.
 - **Clear Cache**: Ação `"clear_cache"` dispara um diálogo de confirmação local antes de executar o logout e limpeza de dados.
 
 ---
 
-## 🏗️ Estrutura do Projeto
+## 🏗️ Estrutura do Projeto (Clean Architecture)
 
-- **`:shared`**: Contratos, `GlobalEventDispatcher`, `ChallengeEngine`, `ChallengeInterceptor`, `AppPreferences` (KMP Settings) e `NavigationRoutes`.
-- **`:server`**: Ktor BFF, Orchestrators de SDUI (incluindo `SettingsOrchestrator`), Mappers e Builders de telas dinâmicas.
-- **`:composeApp`**: UI Multiplatform, `GlobalEventHandler` (Consumidor de eventos), `SettingsScreen` especializada e Engine SDUI genérica.
+- **`:shared`**: O "Cérebro". Contratos, `GlobalEventDispatcher`, `ChallengeEngine`, `ChallengeInterceptor`, `AppPreferences` (KMP Settings) e `NavigationRoutes`.
+- **`:server`**: O "Orchestrator". Ktor BFF, Orchestrators de SDUI, Mappers e Builders de telas dinâmicas (`ScreenBuilder`).
+- **`:composeApp`**: A "View". UI Multiplatform, `GlobalEventHandler` (Consumidor de eventos), implementação do Design System e Factory de renderização SDUI.
 
 ---
 

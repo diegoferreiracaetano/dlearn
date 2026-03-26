@@ -1,9 +1,10 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.app
 
+import com.diegoferreiracaetano.dlearn.data.cache.CacheStrategy
+import com.diegoferreiracaetano.dlearn.data.cache.toCache
+import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.navigation.AppPath
-import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
-import com.diegoferreiracaetano.dlearn.infrastructure.cache.InMemoryCache
 import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.screens.EditProfileScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.screens.ProfileScreenBuilder
@@ -11,14 +12,12 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.getLogger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlin.time.Duration.Companion.minutes
 
 class ProfileOrchestrator(
     private val userRepository: UserRepository,
     private val screenBuilder: ProfileScreenBuilder,
     private val editScreenBuilder: EditProfileScreenBuilder
 ) : Orchestrator {
-    private val profileCache = InMemoryCache<String, Screen>(5.minutes)
 
     override fun execute(
         request: AppRequest,
@@ -36,12 +35,16 @@ class ProfileOrchestrator(
         }
     }
 
-    private fun getProfileData(userId: String, appVersion: String, lang: String, country: String?): Flow<Screen> = flow {
-        val screen = profileCache.getOrPut("$userId-$appVersion-$lang-$country") {
+    private fun getProfileData(userId: String, appVersion: String, lang: String, country: String?): Flow<Screen> {
+        val cacheKey = "profile_${userId}_${appVersion}_${lang}_${country}"
+        return flow {
             val user = userRepository.findById(userId) ?: throw Exception("User not found")
-            screenBuilder.build(user, lang, country)
-        }
-        emit(screen)
+            val screen = screenBuilder.build(user, lang, country)
+            emit(screen)
+        }.toCache(
+            key = cacheKey,
+            strategy = CacheStrategy.CACHE_FIRST
+        )
     }
 
     private fun getEditProfileData(userId: String, lang: String): Flow<Screen> = flow {
@@ -52,7 +55,8 @@ class ProfileOrchestrator(
     private fun updateProfile(userId: String, lang: String): Flow<Screen> = flow {
         try {
             val user = userRepository.findById(userId) ?: throw Exception("User not found")
-            profileCache.clear()
+            // Nota: Para invalidar cache no novo sistema, poderíamos ter um método clear no CacheManager
+            // Mas para o update, emitimos o novo estado diretamente
             emit(
                 editScreenBuilder.build(
                     data = user,

@@ -28,14 +28,16 @@ import org.koin.core.parameter.parametersOf
 fun MovieDetailScreen(
     movieId: String,
     onBackClick: () -> Unit,
+    onMovieClick: (String) -> Unit,
     onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MovieDetailViewModel = koinInject { parametersOf(movieId) },
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val actions = remember(onBackClick, onItemClick, viewModel) {
+    val actions = remember(onBackClick, onMovieClick, onItemClick, viewModel) {
         ComponentActions(
+            onMovieClick = onMovieClick,
             onItemClick = onItemClick,
             onBackClick = onBackClick,
             onRetry = viewModel::retry

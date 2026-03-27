@@ -29,16 +29,10 @@ class AppViewModel(
             fetch(AppPath.parse(path))
     }
 
-
-
     fun retry() {
         lastRequest?.let { request ->
             fetch(request)
         }
-    }
-
-    fun handleQuery(query: String) {
-        println("DEBUG request: $query")
     }
 
     fun fetch(request: AppRequest) {

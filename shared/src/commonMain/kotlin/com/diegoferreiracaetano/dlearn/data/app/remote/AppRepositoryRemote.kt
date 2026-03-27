@@ -1,6 +1,5 @@
 package com.diegoferreiracaetano.dlearn.data.app.remote
 
-import com.diegoferreiracaetano.dlearn.data.cache.toCache
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -24,6 +23,6 @@ class AppRepositoryRemote(
                 setBody(request)
             }.body<Screen>()
             emit(response)
-        }.toCache(key = "sdui_cache_${request.path}_${request.params?.hashCode() ?: 0}")
+        }
     }
 }

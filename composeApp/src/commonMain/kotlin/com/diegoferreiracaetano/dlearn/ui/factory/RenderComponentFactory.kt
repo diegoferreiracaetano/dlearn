@@ -14,7 +14,6 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.AppMainContentComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppMovieDetailHeaderComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppProfileHeaderComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppSearchBarComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppSearchContentComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppSectionTitleComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppSelectionRowComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppSnackbarComponent
@@ -83,7 +82,6 @@ class RenderComponentFactory(
     private val expandableSectionRenderer: AppExpandableSectionRenderer,
     private val mainContentRenderer: AppMainContentRenderer,
     private val movieItemRenderer: MovieItemRenderer,
-    private val searchContentRenderer: AppSearchContentRenderer,
     private val appSectionTitleRenderer: AppSectionTitleRenderer,
     private val appProfileHeaderRenderer: AppProfileHeaderRenderer,
     private val appTextFieldRenderer: AppTextFieldRenderer,
@@ -135,7 +133,6 @@ class RenderComponentFactory(
             is AppExpandableSectionComponent -> expandableSectionRenderer.Render(component, actions, modifier)
             is AppMainContentComponent -> mainContentRenderer.Render(component, actions, modifier)
             is MovieItemComponent -> movieItemRenderer.Render(component, actions, modifier)
-            is AppSearchContentComponent -> searchContentRenderer.Render(component, actions, modifier)
             is AppSectionTitleComponent -> appSectionTitleRenderer.Render(component, actions, modifier)
             is AppProfileHeaderComponent -> appProfileHeaderRenderer.Render(component, actions, modifier)
             is AppTextFieldComponent -> appTextFieldRenderer.Render(component, actions, modifier)

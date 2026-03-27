@@ -17,7 +17,8 @@ class HomeMapper() {
             id = video.id,
             title = video.title,
             subtitle = video.subtitle,
-            imageUrl = video.imageUrl
+            imageUrl = video.imageUrl,
+            actionUrl = AppPath(AppNavigationRoute.MOVIES, mapOf(AppQueryParam.ID to video.id))
         )
     }
 
@@ -26,7 +27,7 @@ class HomeMapper() {
             title = title,
             items = videos.mapIndexed { index, video ->
                 video.toMovieItemComponent(rank = if (showRank) index + 1 else null)
-            }
+            },
         )
     }
 

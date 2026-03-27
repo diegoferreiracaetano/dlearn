@@ -12,7 +12,6 @@ import com.diegoferreiracaetano.dlearn.ui.factory.AppMainContentRenderer
 import com.diegoferreiracaetano.dlearn.ui.factory.AppMovieDetailHeaderRenderer
 import com.diegoferreiracaetano.dlearn.ui.factory.AppProfileHeaderRenderer
 import com.diegoferreiracaetano.dlearn.ui.factory.AppSearchBarRenderer
-import com.diegoferreiracaetano.dlearn.ui.factory.AppSearchContentRenderer
 import com.diegoferreiracaetano.dlearn.ui.factory.AppSectionTitleRenderer
 import com.diegoferreiracaetano.dlearn.ui.factory.AppSelectionRowRenderer
 import com.diegoferreiracaetano.dlearn.ui.factory.AppSnackbarRenderer
@@ -69,7 +68,6 @@ val appModule = module {
     single { AppExpandableSectionRenderer() }
     single { AppMainContentRenderer() }
     single { MovieItemRenderer() }
-    single { AppSearchContentRenderer() }
     single { AppSectionTitleRenderer() }
     single { AppProfileHeaderRenderer() }
     single { AppTextFieldRenderer() }
@@ -104,7 +102,6 @@ val appModule = module {
             expandableSectionRenderer = get(),
             mainContentRenderer = get(),
             movieItemRenderer = get(),
-            searchContentRenderer = get(),
             appSectionTitleRenderer = get(),
             appProfileHeaderRenderer = get(),
             appTextFieldRenderer = get(),

@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -15,9 +16,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.compose.ui.window.DialogProperties
-import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
-import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.*
 import com.diegoferreiracaetano.dlearn.ui.screens.app.AppScreen
@@ -31,7 +29,6 @@ import com.diegoferreiracaetano.dlearn.ui.screens.logout.LogoutScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.main.MainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.movie.MovieDetailScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.onboarding.OnboardingScreen
-import com.diegoferreiracaetano.dlearn.ui.screens.search.SearchMainScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.settings.CleanCacheScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.settings.SettingsScreen
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
@@ -146,19 +143,12 @@ fun AppNavGraph(
             )
         }
 
-        composable(Search.route) {
-            SearchMainScreen(
-                onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
-                onBackClick = { navController.popBackStack() },
-                modifier = modifier
-            )
-        }
-
         composable(Home.route) {
             MainScreen(
-                onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
+                onMovieClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
                 onTabSelected = { route -> navController.navigateToRoute(route) },
-                onSearchClick = { navController.navigate(Search.route) },
+                onItemClick = { route -> navController.navigateToPath(route) },
+                onSearchClick = { navController.navigateToPath(Search.route) },
                 modifier = modifier,
                 currentRoute = Home.route
             )
@@ -166,7 +156,8 @@ fun AppNavGraph(
 
         composable(Watchlist.route) {
             MainScreen(
-                onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
+                onMovieClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
+                onItemClick = { route -> navController.navigateToPath(route) },
                 onTabSelected = { route -> navController.navigateToRoute(route) },
                 modifier = modifier,
                 currentRoute = Watchlist.route
@@ -175,7 +166,8 @@ fun AppNavGraph(
 
         composable(Favorite.route) {
             MainScreen(
-                onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
+                onMovieClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
+                onItemClick = { route -> navController.navigateToPath(route) },
                 onTabSelected = { route -> navController.navigateToRoute(route) },
                 modifier = modifier,
                 currentRoute = Favorite.route
@@ -184,6 +176,7 @@ fun AppNavGraph(
 
         composable(Profile.route) {
             MainScreen(
+                onMovieClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
                 onItemClick = { route -> navController.navigateToPath(route) },
                 onTabSelected = { route -> navController.navigateToRoute(route) },
                 onClose = { navController.navigate(Logout.route) },
@@ -252,7 +245,8 @@ fun AppNavGraph(
                 onClose = { navController.navigate(Logout.route) },
                 onBackClick = { navController.popBackStack() },
                 onTabSelected = { route -> navController.navigateToRoute(route) },
-                onItemClick = { route -> navController.navigate(route) },
+                onMovieClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
+                onItemClick = { route -> navController.navigateToPath(route) },
                 modifier = modifier
             )
         }
@@ -266,6 +260,7 @@ fun AppNavGraph(
                 movieId = movieId,
                 onBackClick = { navController.popBackStack() },
                 onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
+                onMovieClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
                 modifier = modifier
             )
         }

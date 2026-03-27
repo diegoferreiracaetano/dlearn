@@ -14,7 +14,6 @@ import com.diegoferreiracaetano.dlearn.data.main.remote.MainRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.movie.remote.MovieDetailRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.password.remote.PasswordRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.profile.remote.ProfileRepositoryRemote
-import com.diegoferreiracaetano.dlearn.data.search.remote.SearchRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.source.local.KeyValueStorage
 import com.diegoferreiracaetano.dlearn.data.source.local.SettingsKeyValueStorage
 import com.diegoferreiracaetano.dlearn.data.user.UserRepository
@@ -28,7 +27,6 @@ import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
 import com.diegoferreiracaetano.dlearn.domain.movie.MovieDetailRepository
 import com.diegoferreiracaetano.dlearn.domain.password.PasswordRepository
 import com.diegoferreiracaetano.dlearn.domain.profile.ProfileRepository
-import com.diegoferreiracaetano.dlearn.domain.search.SearchRepository
 import com.diegoferreiracaetano.dlearn.getPlatform
 import com.diegoferreiracaetano.dlearn.network.AppUserAgentProvider
 import com.diegoferreiracaetano.dlearn.network.error.toAppException
@@ -135,10 +133,8 @@ val sharedModule = module {
     single<HomeRepository> { HomeRepositoryRemote(get()) }
     single<ProfileRepository> { ProfileRepositoryRemote(get()) }
     single<MovieDetailRepository> { MovieDetailRepositoryRemote(get()) }
-    
+
     single<MainRepository> { MainRepositoryRemote(get()) }
-    
-    single<SearchRepository> { SearchRepositoryRemote(get()) }
     
     single<AppRepository> { AppRepositoryRemote(get()) }
     

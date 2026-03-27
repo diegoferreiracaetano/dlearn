@@ -20,7 +20,7 @@ class MovieCarouselRenderer : ComponentRenderer {
         AppMovieCarousel(
             title = carousel.title,
             items = carousel.items.map { it.toMovieItem() },
-            onMovieClick = { movie -> actions.onItemClick(movie.id) },
+            onMovieClick = { movie -> actions.onMovieClick(movie.id) },
             modifier = modifier,
         )
     }

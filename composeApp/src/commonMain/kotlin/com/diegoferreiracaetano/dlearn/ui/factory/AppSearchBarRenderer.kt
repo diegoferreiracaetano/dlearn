@@ -28,9 +28,11 @@ class AppSearchBarRenderer : ComponentRenderer {
         }
 
         AppSearchBar(
-            query = actions.searchQuery,
-            onQueryChange = actions.onQueryChange,
-            onSearch = actions.onSearch,
+            onSearch = { query->
+                actions.onAction(AppPath(
+                    searchComponent.actionUrl, mapOf(AppQueryParam.Q to query)
+                ))
+            },
             onBackClick = actions.onBackClick,
             placeholder = searchComponent.placeholder,
             modifier = modifier.focusRequester(focusRequester),

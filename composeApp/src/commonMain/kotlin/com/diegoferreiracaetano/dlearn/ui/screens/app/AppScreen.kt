@@ -21,6 +21,7 @@ import org.koin.compose.koinInject
 fun AppScreen(
     path: String,
     params: Map<String, String>? = null,
+    onMovieClick: (String) -> Unit = {},
     onBackClick: () -> Unit = {},
     onClose: () -> Unit = {},
     onTabSelected: (String) -> Unit = {},
@@ -34,13 +35,20 @@ fun AppScreen(
         viewModel.fetch(path, params)
     }
 
-    val actions = remember {
+    val actions = remember(
+        onMovieClick,
+        onItemClick,
+        onTabSelected,
+        onBackClick,
+        onClose
+    ) {
         ComponentActions(
+            onMovieClick = onMovieClick,
             onItemClick = onItemClick,
             onTabSelected = onTabSelected,
             onBackClick = onBackClick,
             onRetry = viewModel::retry,
-            onQueryChange = viewModel::handleQuery,
+            onSearch = viewModel::fetch,
             onClose = onClose,
             onAction = viewModel::fetch
         )
@@ -62,6 +70,7 @@ fun AppScreen(
         onBackClick = actions.onBackClick,
         onClose = actions.onClose,
         onTabSelected = actions.onTabSelected,
+        onMovieClick = actions.onMovieClick,
         onItemClick = actions.onItemClick,
         modifier = modifier
     )
@@ -102,7 +111,6 @@ fun AppScreenWatchlistPreview() {
         AppContent(
             uiState = uiState,
             actions = ComponentActions(
-                onItemClick = {},
                 onAction = {},
                 onRetry = {}
             ),

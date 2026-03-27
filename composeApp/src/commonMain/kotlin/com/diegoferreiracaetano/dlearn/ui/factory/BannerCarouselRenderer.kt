@@ -28,7 +28,7 @@ class BannerCarouselRenderer : ComponentRenderer {
                     title = item.title,
                     subtitle = item.genre,
                     imageSource = item.imageSource,
-                    onClick = { actions.onItemClick(item.id) }
+                    onClick = { actions.onMovieClick(item.id) }
                 )
             }
         )

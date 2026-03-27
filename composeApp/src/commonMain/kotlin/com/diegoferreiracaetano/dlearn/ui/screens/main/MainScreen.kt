@@ -24,6 +24,7 @@ import org.koin.compose.koinInject
 
 @Composable
 fun MainScreen(
+    onMovieClick: (String) -> Unit,
     onItemClick: (String) -> Unit,
     onTabSelected: (String) -> Unit,
     onClose: () -> Unit = {},
@@ -37,8 +38,9 @@ fun MainScreen(
     val actions = remember(currentRoute, onTabSelected, onClose) {
         ComponentActions(
             currentRoute = currentRoute,
-            onSearchClick = onSearchClick,
             onItemClick = onItemClick,
+            onSearchClick = onSearchClick,
+            onMovieClick = onMovieClick,
             onTabSelected = onTabSelected,
             onClose = onClose,
             onRetry = viewModel::retry

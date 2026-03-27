@@ -7,8 +7,6 @@ import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.logout.LogoutViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.main.MainViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel
-import com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchContentViewModel
-import com.diegoferreiracaetano.dlearn.ui.viewmodel.search.SearchMainViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.CleanCacheViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.SettingsViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpViewModel
@@ -18,8 +16,6 @@ val viewModelModule = module {
     factory { MainViewModel(get()) }
     factory { AppViewModel(get()) }
     factory { SettingsViewModel(get(), get()) }
-    factory { SearchMainViewModel(get()) }
-    factory { SearchContentViewModel(get()) }
     factory { (movieId: String) -> MovieDetailViewModel(movieId, get()) }
     factory { CreateNewPasswordViewModel(get()) }
     factory { VerifyAccountViewModel(get()) }

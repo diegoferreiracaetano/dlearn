@@ -10,7 +10,7 @@
     <string name="title_change_password">Change password</string>
 
     <string name="otp_error_default">Invalid code. Try again.</string>
-    <string name="otp_resend_prompt">Didn\'t receive the code? </string>
+    <string name="otp_resend_prompt">Didn't receive the code? </string>
     <string name="otp_resend_now">Resend now</string>
     <string name="otp_resend_in">Resend in %1$s</string>
 

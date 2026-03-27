@@ -1,38 +1,58 @@
-# Módulo Server (Ktor BFF)
+# Backend for Frontend (BFF) com Ktor
 
-O servidor do DLearn atua como um **Backend for Frontend (BFF)**, fornecendo a estrutura de dados e UI que o aplicativo consome.
+O servidor do DLearn funciona como o cérebro do ecossistema SDUI. Ele é responsável por orquestrar a lógica de negócio, segurança e a composição da interface do usuário.
 
-## 🏗️ Camadas do Servidor
+---
 
-O servidor segue uma estrutura de **Clean Architecture**:
+## 🏗️ Clean Architecture no BFF
 
-- `api/controllers/`: Define os endpoints e recebe requisições (ex: `HomeController.kt`, `AppController.kt`).
-- `orchestrator/`: A camada principal de lógica de negócio do BFF. Coordena a busca de dados e a construção da tela (`Screen`).
-- `domain/`: Entidades de negócio e interfaces dos repositórios.
-- `infrastructure/`: Implementações de repositórios que acessam APIs de terceiros (TMDB) e gerenciam o cache de memória.
-- `ui/screens/`: Builders que transformam dados de domínio em componentes SDUI.
+Seguimos uma arquitetura limpa adaptada para SDUI:
 
-## 📡 Endpoints Principais
+1.  **Controllers**: Recebem `AppRequest` (POST `/v1/app`) e chamam o `AppOrchestrator`.
+2.  **AppOrchestrator**: Gateway central que roteia o `path` para o `ScreenBuilder` correto.
+3.  **ScreenBuilders**: Onde a "mágica" acontece. Eles decidem quais componentes compõem a tela baseados nos `params` do request.
+4.  **Mappers**: Convertem modelos de domínio (ex: `Movie`) em componentes de UI (`MovieItemComponent`).
+5.  **Challenge Engine**: DSL para gerenciar fluxos de MFA de forma declarativa.
 
-- `GET /v1/main`: Retorna a casca (shell) principal do app (BottomNav + Container).
-- `GET /v1/home`: Retorna a configuração completa da tela inicial.
-- `GET /v1/search/main`: Retorna a tela inicial de busca.
-- `GET /v1/search/result?q={query}`: Retorna os resultados da busca.
-- `GET /v1/movie/{movieId}`: Detalhes de um filme/série específicos.
-- `GET /v1/profile`: Dados e estrutura da tela de perfil.
-- `POST /v1/app`: **Gateway SDUI**. Resolve rotas dinâmicas como `favorite` e `watchlist`.
+---
 
-## ⚡ Performance & Cache
+## 🛡️ Challenge Engine (MFA Dinâmico)
 
-O projeto utiliza um sistema de **Cache** genérico para armazenar objetos de tela renderizados, reduzindo o número de chamadas para APIs externas.
+O sistema de segurança utiliza o código HTTP `428 Precondition Required` para interceptar ações críticas e exigir fatores extras de autenticação.
 
-Além disso, o servidor está preparado para lidar com múltiplos idiomas através do header `Accept-Language` e versões de app via `X-App-Version`.
+### Fluxo de Segurança
+1.  **Intercepção**: O servidor detecta que a ação (ex: `/v1/password/change`) exige MFA.
+2.  **Resposta 428**: O BFF retorna erro 428 com os detalhes do desafio (`ChallengeType`).
+3.  **Resolução Automática**: O `ChallengeInterceptor` no App captura o erro, resolve o desafio via OTP/Biometria e **repete a chamada original**.
+4.  **Sucesso**: A chamada repetida agora é autorizada com o token de validação.
 
-## 🏃 Como Rodar Localmente
+### Como Implementar no Backend
+Adicione a verificação no Orchestrator ou Service:
+```kotlin
+if (!hasValidatedMfa(userId)) {
+    throw ChallengeException(ChallengeType.OTP_EMAIL)
+}
+```
 
-1. No terminal, execute o comando:
-   ```bash
-   ./gradlew :server:run
-   ```
-2. O servidor iniciará por padrão na porta `8081`.
-3. Acesse a documentação Swagger em: `http://localhost:8081/swagger`.
+---
+
+## 📡 Documentação Interativa (Swagger)
+
+O projeto mantém uma especificação OpenAPI 3.0 completa para facilitar o desenvolvimento.
+
+-   **Endpoint**: [http://localhost:8081/swagger](http://localhost:8081/swagger)
+-   **Arquivo**: `server/src/main/resources/documentation.yaml`
+
+### Principais Endpoints
+-   **`POST /v1/app`**: Gateway genérico SDUI.
+-   **`POST /v1/auth/login`**: Autenticação nativa.
+-   **`POST /v1/auth/challenge/resolve`**: Resolução de MFA.
+
+---
+
+## 🚀 Como Rodar o Servidor
+Execute o comando abaixo na raiz do projeto:
+```bash
+./gradlew :server:run
+```
+O servidor estará disponível em `http://0.0.0.0:8081`.

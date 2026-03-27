@@ -8,7 +8,7 @@ info:
     **Test Credentials:**
     - Email: `admin@dlearn.com`
     - Password: `123456`
-  version: 1.7.0
+  version: 1.8.2
 servers:
   - url: http://localhost:8081
     description: Local Server
@@ -384,7 +384,7 @@ components:
             type: string
     AppErrorCode:
       type: string
-      enum: [UNKNOWN_ERROR, NETWORK_ERROR, SERVER_ERROR, BAD_REQUEST, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, TIMEOUT, INVALID_CREDENTIALS, USER_NOT_FOUND, USER_ALREADY_EXISTS, INVALID_TOKEN, EXPIRED_TOKEN, EMAIL_ALREADY_IN_USE, VALIDATION_FAILED, FIELD_REQUIRED, INVALID_FORMAT, MOVIE_NOT_FOUND, PAYMENT_FAILED, INSUFFICIENT_FUNDS]
+      enum: [UNKNOWN_ERROR, NETWORK_ERROR, SERVER_ERROR, BAD_REQUEST, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, TIMEOUT, INVALID_CREDENTIALS, USER_NOT_FOUND, USER_ALREADY_EXISTS, INVALID_TOKEN, EXPIRED_TOKEN, EMAIL_ALREADY_IN_USE, VALIDATION_FAILED, FIELD_REQUIRED, INVALID_FORMAT, MOVIE_NOT_FOUND, PAYMENT_FAILED, INSUFFICIENT_FUNDS, TRANSACTION_ID_REQUIRED, INVALID_CHALLENGE_CODE]
     User:
       type: object
       required: [id, name, email]
@@ -444,6 +444,10 @@ components:
           type: string
           example: "home"
         params:
+          type: object
+          additionalProperties:
+            type: string
+        metadata:
           type: object
           additionalProperties:
             type: string
@@ -837,6 +841,85 @@ components:
             durationMillis:
               type: integer
               format: int64
+
+    # --- Missing/New SDUI Components ---
+    AppMainContentComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+    BottomNavigationComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/BottomNavItem'
+            selectedActionUrl:
+              type: string
+    BottomNavItem:
+      type: object
+      properties:
+        label:
+          type: string
+        actionUrl:
+          type: string
+        icon:
+          $ref: '#/components/schemas/AppIconType'
+    AppSectionTitleComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+    SectionComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title:
+              type: string
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/SectionItem'
+    SectionItem:
+      type: object
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+        icon:
+          $ref: '#/components/schemas/AppIconType'
+        actionUrl:
+          type: string
+    FooterComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            label:
+              type: string
+            actionUrl:
+              type: string
+            closeUrl:
+              type: string
+    AppLoadingComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+    AppErrorComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            error:
+              $ref: '#/components/schemas/AppError'
 
     # --- Types & Enums ---
     AppSnackbarType:

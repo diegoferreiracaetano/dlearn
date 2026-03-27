@@ -15,7 +15,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val mainRepository: MainRepository
+    private val mainRepository: MainRepository,
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
@@ -23,6 +24,11 @@ class MainViewModel(
 
     init {
         loadMain()
+        viewModelScope.launch {
+            preferencesRepository.onConfigurationChanged.collect {
+                loadMain()
+            }
+        }
     }
 
     fun loadMain() {

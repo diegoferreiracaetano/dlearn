@@ -50,7 +50,6 @@ fun AppScreen(
             onRetry = viewModel::retry,
             onSearch = viewModel::fetch,
             onClose = onClose,
-            onAction = viewModel::fetch
         )
     }
 
@@ -111,7 +110,6 @@ fun AppScreenWatchlistPreview() {
         AppContent(
             uiState = uiState,
             actions = ComponentActions(
-                onAction = {},
                 onRetry = {}
             ),
             modifier = Modifier.fillMaxSize()

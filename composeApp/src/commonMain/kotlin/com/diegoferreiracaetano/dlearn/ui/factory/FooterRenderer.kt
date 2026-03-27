@@ -24,7 +24,7 @@ class FooterRenderer : ComponentRenderer {
             text = footer.label,
             onClick = {
                 footer.closeUrl?.let { actions.onClose() }
-                    ?: footer.actionUrl?.let { actions.onAction(it) }
+                    ?: footer.actionUrl?.let { actions.onItemClick(it) }
             },
             type = ButtonType.PRIMARY,
             modifier = modifier

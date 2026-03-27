@@ -22,7 +22,7 @@ class AppProfileHeaderRenderer : ComponentRenderer {
             email = header.email,
             imageSource = header.imageUrl.toImageSource(),
             onImagePicked = { bytes ->
-                header.onImagePickedAction?.let { actions.onAction(it) }
+                header.onImagePickedAction?.let { actions.onItemClick(it) }
             },
             modifier = modifier
         )

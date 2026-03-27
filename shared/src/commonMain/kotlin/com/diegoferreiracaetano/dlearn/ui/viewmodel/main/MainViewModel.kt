@@ -18,7 +18,7 @@ class MainViewModel(
     private val mainRepository: MainRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
+    private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Idle)
     val uiState: StateFlow<UIState<Screen>> = _uiState.asStateFlow()
 
     init {

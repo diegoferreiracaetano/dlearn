@@ -81,6 +81,7 @@ fun UIState<Screen>.Render(
                 modifier = modifier
             )
         }
+        else -> {}
     }
 }
 

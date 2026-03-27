@@ -10,14 +10,14 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import kotlin.collections.plus
 
 class AppViewModel(
     private val repository: AppRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
+    private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Idle)
     val uiState = _uiState.asStateFlow()
 
     private var lastRequest: AppRequest? = null
@@ -36,11 +36,12 @@ class AppViewModel(
     }
 
     fun fetch(request: AppRequest) {
-
-        println("DEBUG request: $request")
         lastRequest = request
         viewModelScope.launch {
             repository.execute(request)
+                .onStart {
+                    _uiState.value = UIState.Loading
+                }
                 .catch { e -> _uiState.value = UIState.Error(e) }
                 .collect { screen ->
                     _uiState.value = UIState.Success(screen)

@@ -43,6 +43,11 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) {
     }
 }
 
+@Suppress("unused")
+fun doInitKoin() {
+    initKoin()
+}
+
 val appModule = module {
     single { AppLoadingRenderer() }
     single { AppErrorRenderer() }

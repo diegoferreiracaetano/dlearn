@@ -17,7 +17,7 @@ class AppViewModel(
     private val repository: AppRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Idle)
+    private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
     val uiState = _uiState.asStateFlow()
 
     private var lastRequest: AppRequest? = null
@@ -39,9 +39,6 @@ class AppViewModel(
         lastRequest = request
         viewModelScope.launch {
             repository.execute(request)
-                .onStart {
-                    _uiState.value = UIState.Loading
-                }
                 .catch { e -> _uiState.value = UIState.Error(e) }
                 .collect { screen ->
                     _uiState.value = UIState.Success(screen)

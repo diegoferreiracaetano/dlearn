@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppList
@@ -13,8 +14,10 @@ class AppListRenderer : ComponentRenderer {
     @Composable
     override fun Render(component: Component, actions: ComponentActions, modifier: Modifier) {
         val listComponent = component as? AppListComponent ?: return
-        
-        AppList(modifier = modifier.fillMaxSize()) {
+
+        AppList(
+            modifier = modifier.fillMaxSize()
+        ) {
             items(listComponent.components) { child ->
                 RenderComponent(
                     component = child,

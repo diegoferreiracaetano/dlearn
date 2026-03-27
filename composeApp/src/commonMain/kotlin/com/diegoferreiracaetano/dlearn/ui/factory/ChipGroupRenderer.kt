@@ -24,24 +24,21 @@ class ChipGroupRenderer : ComponentRenderer {
                     label = item.label,
                     onClick = {
                         if (!item.hasDropDown) {
-                            actions.onItemClick(item.actionUrl)
+                            actions.onSearch(item.actionUrl)
                         }
                     },
                     hasDropDown = item.hasDropDown,
                     isFilter = item.isFilter,
                     isSelected = item.isSelected,
                     dropDownOptions = item.options?.map { it.label } ?: emptyList(),
-                    onOptionSelected = { optionLabel ->
-                        val selectedOption = item.options?.find { it.label == optionLabel }
-                        selectedOption?.actionUrl?.let {
-                            actions.onItemClick(it)
-                        }
+                    onOptionSelected = {
+                        actions.onSearch(item.actionUrl)
                     }
                 )
             },
             onFilterChanged = { label ->
                 if (label == null) {
-                    actions.onItemClick(chipGroup.cleanUrl)
+                    actions.onSearch(chipGroup.cleanUrl)
                 }
             }
         )

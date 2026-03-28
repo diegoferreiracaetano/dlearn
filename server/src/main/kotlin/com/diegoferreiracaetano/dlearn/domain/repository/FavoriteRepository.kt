@@ -1,12 +1,15 @@
 package com.diegoferreiracaetano.dlearn.domain.repository
 
+import com.diegoferreiracaetano.dlearn.domain.video.MediaType
+import kotlinx.coroutines.flow.Flow
+
 interface FavoriteRepository {
     suspend fun markAsFavorite(
-        accountId: String,
-        sessionId: String,
+        userId: String,
         mediaId: Int,
+        mediaType: MediaType,
         favorite: Boolean
-    ): Boolean
-    
-    suspend fun getFavorites(accountId: String, sessionId: String, language: String): List<Int>
+    )
+
+    fun getFavorites(userId: String, language: String): Flow<List<Pair<Int, MediaType>>>
 }

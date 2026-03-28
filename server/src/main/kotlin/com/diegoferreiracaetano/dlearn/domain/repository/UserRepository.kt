@@ -7,4 +7,5 @@ interface UserRepository {
     suspend fun findById(id: String): User?
     suspend fun findAll(): List<User>
     suspend fun save(user: User): User
+    suspend fun update(user: User): User
 }

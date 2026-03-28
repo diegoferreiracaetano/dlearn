@@ -75,7 +75,7 @@ class AppMovieDetailHeaderRenderer : ComponentRenderer {
                 }
             },
             isFavorite = header.isFavorite,
-            isInList = header.isInList,
+            isInList = header.isInWatchlist,
             onFavoriteClick = { 
                 header.favoriteActionUrl?.let { url ->
                     actions.execute(AppRequest.fromUrl(url))

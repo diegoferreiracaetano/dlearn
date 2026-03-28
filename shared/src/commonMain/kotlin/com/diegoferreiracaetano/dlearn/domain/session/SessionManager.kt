@@ -1,7 +1,6 @@
 package com.diegoferreiracaetano.dlearn.domain.session
 
 import com.diegoferreiracaetano.dlearn.domain.auth.AccountProvider
-import com.diegoferreiracaetano.dlearn.domain.user.MovieProvider
 import com.diegoferreiracaetano.dlearn.domain.user.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,11 +18,10 @@ class SessionManager(
 
     suspend fun login(
         user: User,
-        provider: MovieProvider?,
         accessToken: String,
         refreshToken: String
     ) {
-        accountProvider.saveAccount(user, provider, accessToken, refreshToken)
+        accountProvider.saveAccount(user, accessToken, refreshToken)
         _isLoggedIn.value = true
     }
 
@@ -33,7 +31,6 @@ class SessionManager(
     }
 
     suspend fun user(): User = accountProvider.getUser() ?: throw IllegalStateException("User not logged in")
-    suspend fun provider(): MovieProvider? = accountProvider.getProvider()
 
     suspend fun token(): String? = accountProvider.getAccessToken()
     suspend fun refreshToken(): String? = accountProvider.getRefreshToken()

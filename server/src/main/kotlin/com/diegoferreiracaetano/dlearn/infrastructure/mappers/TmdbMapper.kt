@@ -4,6 +4,7 @@ import com.diegoferreiracaetano.dlearn.TmdbConstants
 import com.diegoferreiracaetano.dlearn.domain.models.CastMemberDomainData
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
 import com.diegoferreiracaetano.dlearn.domain.models.WatchProviderDomainData
+import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.model.*
 import java.util.Locale
 
@@ -16,6 +17,9 @@ class TmdbMapper(private val urlMapper: WatchProviderUrlMapper) {
         val movieTitle = response.title ?: response.name ?: ""
         val countryProviders = response.watchProviders?.results?.get(TmdbConstants.DEFAULT_REGION)
         val imdbId = response.externalIds?.imdbId
+        
+        // Se response.title não é nulo, é um Filme. Se response.name não é nulo e title é nulo, é uma Série.
+        val mediaType = if (response.title != null) MediaType.MOVIE else MediaType.SERIES
 
         return MovieDetailDomainData(
             id = response.id.toString(),
@@ -32,10 +36,11 @@ class TmdbMapper(private val urlMapper: WatchProviderUrlMapper) {
                 ?.filter { it.site == TmdbConstants.SITE_YOUTUBE && (it.type == TmdbConstants.TYPE_TRAILER || it.type == TmdbConstants.TYPE_TEASER) }
                 ?.firstOrNull()?.key,
             isFavorite = accountStates?.favorite ?: false,
-            isInList = accountStates?.watchlist ?: false,
+            isInWatchlist = accountStates?.watchlist ?: false,
             providers = countryProviders?.flatrate?.map { provider ->
                 toWatchProvider(provider, movieTitle, imdbId, countryProviders.link)
-            } ?: emptyList()
+            } ?: emptyList(),
+            mediaType = mediaType
         )
     }
 

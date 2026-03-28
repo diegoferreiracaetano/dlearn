@@ -53,6 +53,7 @@ class HomeMapper() {
             genre = categories.firstOrNull()?.title,
             movieType = if (mediaType == MediaType.MOVIE) "Filme" else "Série",
             isPremium = false,
+            isFavorite = isFavorite,
             rank = rank,
             actionUrl = AppPath(AppNavigationRoute.MOVIES, mapOf(AppQueryParam.ID to id))
         )

@@ -10,6 +10,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.movie.AppMovieDet
 import com.diegoferreiracaetano.dlearn.designsystem.components.movie.MovieItem
 import com.diegoferreiracaetano.dlearn.designsystem.components.movie.WatchProvider
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppMovieDetailHeaderComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
@@ -75,8 +76,16 @@ class AppMovieDetailHeaderRenderer : ComponentRenderer {
             },
             isFavorite = header.isFavorite,
             isInList = header.isInList,
-            onFavoriteClick = { /* TODO: Implement action */ },
-            onAddToListClick = { /* TODO: Implement action */ },
+            onFavoriteClick = { 
+                header.favoriteActionUrl?.let { url ->
+                    actions.execute(AppRequest.fromUrl(url))
+                }
+            },
+            onAddToListClick = { 
+                header.watchlistActionUrl?.let { url ->
+                    actions.execute(AppRequest.fromUrl(url))
+                }
+            },
             modifier = modifier
         )
     }

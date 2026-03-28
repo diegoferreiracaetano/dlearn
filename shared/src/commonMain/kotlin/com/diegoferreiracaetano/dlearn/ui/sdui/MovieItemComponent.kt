@@ -17,6 +17,7 @@ data class MovieItemComponent(
     val genre: String? = null,
     val movieType: String? = null,
     val isPremium: Boolean = false,
+    val isFavorite: Boolean = false,
     val rank: Int? = null,
     val actionUrl: String? = null
 ) : Component

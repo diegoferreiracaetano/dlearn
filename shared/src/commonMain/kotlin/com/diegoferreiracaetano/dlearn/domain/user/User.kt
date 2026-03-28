@@ -12,3 +12,23 @@ data class User(
     val isPremium: Boolean = false,
     val phoneNumber: String? = null
 )
+
+interface Provider {
+    val tmdb: Tmdb?
+    val tmdbSessionId: String?
+    val tmdbAccountId: String?
+}
+
+@Serializable
+data class MovieProvider(
+    override val tmdb: Tmdb? = null
+) : Provider {
+    override val tmdbSessionId: String? get() = tmdb?.sessionId
+    override val tmdbAccountId: String? get() = tmdb?.accountId
+}
+
+@Serializable
+data class Tmdb(
+    val sessionId: String?,
+    val accountId: String?
+)

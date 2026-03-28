@@ -1,23 +1,37 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.services
 
 import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
-import java.util.concurrent.ConcurrentHashMap
+import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 
-class FavoriteDataService : FavoriteRepository {
-    private val favorites = ConcurrentHashMap<String, MutableSet<String>>()
+class FavoriteDataService(
+    private val tmdbClient: TmdbClient
+) : FavoriteRepository {
 
-    override fun toggleFavorite(userId: String, movieId: String): Boolean {
-        val userFavorites = favorites.getOrPut(userId) { mutableSetOf() }
-        return if (userFavorites.contains(movieId)) {
-            userFavorites.remove(movieId)
-            false
-        } else {
-            userFavorites.add(movieId)
+    override suspend fun markAsFavorite(
+        accountId: String,
+        sessionId: String,
+        mediaId: Int,
+        favorite: Boolean
+    ): Boolean {
+        return try {
+            tmdbClient.markAsFavorite(
+                accountId = accountId,
+                sessionId = sessionId,
+                mediaType = "movie",
+                mediaId = mediaId,
+                favorite = favorite
+            )
             true
+        } catch (e: Exception) {
+            false
         }
     }
 
-    override fun getFavorites(userId: String): Set<String> {
-        return favorites[userId] ?: emptySet()
+    override suspend fun getFavorites(accountId: String, sessionId: String, language: String): List<Int> {
+        return try {
+            tmdbClient.getFavoriteMovies(accountId, sessionId, language).results.map { it.id }
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 }

@@ -1,6 +1,12 @@
 package com.diegoferreiracaetano.dlearn.domain.repository
 
 interface WatchlistRepository {
-    fun toggleWatchlist(userId: String, movieId: String): Boolean
-    fun getWatchlist(userId: String): Set<String>
+    suspend fun addToWatchlist(
+        accountId: String,
+        sessionId: String,
+        mediaId: Int,
+        watchlist: Boolean
+    ): Boolean
+    
+    suspend fun getWatchlist(accountId: String, sessionId: String, language: String): List<Int>
 }

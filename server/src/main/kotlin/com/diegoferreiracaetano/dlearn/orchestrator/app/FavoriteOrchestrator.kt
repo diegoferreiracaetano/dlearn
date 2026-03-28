@@ -1,9 +1,10 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.app
 
-import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.model.toVideo
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
@@ -14,51 +15,79 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class FavoriteOrchestrator(
     private val favoriteScreenBuilder: FavoriteScreenBuilder,
     private val favoriteRepository: FavoriteRepository,
     private val videoMapper: VideoMapper,
     private val tmdbClient: TmdbClient
-) : Orchestrator {
+) : Orchestrator, KoinComponent {
 
-    override fun execute(
-        request: AppRequest,
-        header: AppHeader
-    ): Flow<Screen> {
-        val language = header.language
-        val userId = header.userId
+    private val movieDetailOrchestrator: MovieDetailOrchestrator by inject()
+    private val homeOrchestrator: HomeOrchestrator by inject()
+
+    override fun execute(request: AppRequest, header: AppHeader): Flow<Screen> {
         val movieId = request.params?.get(AppQueryParam.ID)
-        
-        return if (movieId != null) {
-            toggleFavorite(userId, movieId, language)
-        } else {
-            getFavorite(userId, language)
+        val active = request.params?.get("active")?.toBoolean() ?: false
+        val returnPath = request.params?.get("returnPath")
+
+        return flow {
+            if (movieId != null) {
+                // Perform the action via Repository (SOLID)
+                val success = favoriteRepository.markAsFavorite(
+                    accountId = header.tmdbAccountId ?: "",
+                    sessionId = header.tmdbSessionId ?: "",
+                    mediaId = movieId.toInt(),
+                    favorite = active
+                )
+                
+                if (success) {
+                    // Decide which screen to re-render based on returnPath
+                    when (returnPath) {
+                        AppNavigationRoute.MOVIES -> {
+                            movieDetailOrchestrator.execute(request, header).collect { emit(it) }
+                            return@flow
+                        }
+                        AppNavigationRoute.HOME -> {
+                            homeOrchestrator.execute(request, header).collect { emit(it) }
+                            return@flow
+                        }
+                    }
+                }
+            }
+            
+            // Default behavior: return the favorites list
+            getFavoriteList(header).collect { emit(it) }
         }
     }
 
-    private fun getFavorite(userId: String, lang: String): Flow<Screen> = flow {
+    private fun getFavoriteList(header: AppHeader): Flow<Screen> = flow {
         coroutineScope {
-            val favoriteIds = favoriteRepository.getFavorites(userId)
+            val language = header.language
+            val sessionId = header.tmdbSessionId
+            val accountId = header.tmdbAccountId
+
+            if (sessionId == null || accountId == null) {
+                emit(favoriteScreenBuilder.build(language, emptyList()))
+                return@coroutineScope
+            }
+
+            val favoriteIds = favoriteRepository.getFavorites(accountId, sessionId, language)
 
             val videos = favoriteIds.map { id ->
                 async {
                     runCatching {
-                        tmdbClient.getMovieDetail(id, lang).toVideo(MediaType.MOVIE)
+                        tmdbClient.getMovieDetail(id.toString(), language).toVideo(MediaType.MOVIE)
                     }.getOrNull()
                 }
             }.awaitAll().filterNotNull()
 
             val items = videoMapper.toMovieItemComponents(videos)
-            emit(favoriteScreenBuilder.build(lang, items))
-        }
-    }
-
-    private fun toggleFavorite(userId: String, movieId: String, lang: String): Flow<Screen> = flow {
-        favoriteRepository.toggleFavorite(userId, movieId)
-        getFavorite(userId, lang).collect {
-            emit(it)
+            emit(favoriteScreenBuilder.build(language, items))
         }
     }
 }

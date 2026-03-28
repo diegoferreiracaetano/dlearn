@@ -26,6 +26,10 @@ object AppNavigationRoute {
     const val FAQ = "faq"
     const val USERS = "users"
 
+    // Movie Actions
+    const val MOVIE_FAVORITE = "v1/movie/favorite"
+    const val MOVIE_WATCHLIST = "v1/movie/watchlist"
+
     // FAQ References
     const val FAQ_PRIVACY_POLICY = "privacy-policy"
     const val FAQ_HELP_FEEDBACK = "help-feedback"

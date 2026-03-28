@@ -25,10 +25,11 @@ class HomeOrchestrator(
         } ?: HomeFilterType.ALL
 
         val language = header.language
-        val cacheKey = "home_${header.userAgent.appVersion}_${language}_${type}"
+        val userId = header.userId
+        val cacheKey = "home_${header.userAgent.appVersion}_${language}_${type}_$userId"
 
         return flow {
-            val domainData = getHomeDataUseCase.execute(language, type)
+            val domainData = getHomeDataUseCase.execute(language, type, header)
             val screen = screenBuilder.build(domainData, language, type)
             emit(screen)
         }.toCache(

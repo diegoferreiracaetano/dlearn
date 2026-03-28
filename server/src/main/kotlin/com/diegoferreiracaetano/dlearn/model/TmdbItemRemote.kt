@@ -23,7 +23,8 @@ data class TmdbItemRemote(
 
 fun TmdbItemRemote.toVideo(
     fallbackMediaType: MediaType,
-    allGenres: List<TmdbGenre> = emptyList()
+    allGenres: List<TmdbGenre> = emptyList(),
+    isFavorite: Boolean = false
 ): Video {
     val categories = genreIds?.mapNotNull { id ->
         allGenres.find { it.id == id }?.let { 
@@ -46,6 +47,7 @@ fun TmdbItemRemote.toVideo(
         imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}$posterPath",
         rating = voteAverage,
         mediaType = type,
-        categories = categories
+        categories = categories,
+        isFavorite = isFavorite
     )
 }

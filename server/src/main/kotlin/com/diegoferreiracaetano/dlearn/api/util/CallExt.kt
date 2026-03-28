@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.api.util
 
 import com.diegoferreiracaetano.dlearn.AppConstants.X_COUNTRY
 import com.diegoferreiracaetano.dlearn.AppConstants.X_NOTIFICATIONS_ENABLED
+import com.diegoferreiracaetano.dlearn.TokenConstants
 import com.diegoferreiracaetano.dlearn.network.AppHeader
 import io.ktor.http.HttpHeaders.AcceptLanguage
 import io.ktor.http.HttpHeaders.UserAgent
@@ -10,8 +11,17 @@ import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
 import io.ktor.server.request.header
 
+val ApplicationCall.jwtPrincipal: JWTPrincipal?
+    get() = principal<JWTPrincipal>()
+
 val ApplicationCall.userId: String
-    get() = principal<JWTPrincipal>()?.payload?.getClaim("userId")?.asString() ?: "guest"
+    get() = jwtPrincipal?.payload?.getClaim(TokenConstants.CLAIM_USER_ID)?.asString() ?: "guest"
+
+val ApplicationCall.tmdbSessionId: String?
+    get() = jwtPrincipal?.payload?.getClaim(TokenConstants.CLAIM_TMDB_SESSION_ID)?.asString()
+
+val ApplicationCall.tmdbAccountId: String?
+    get() = jwtPrincipal?.payload?.getClaim(TokenConstants.CLAIM_TMDB_ACCOUNT_ID)?.asString()
 
 val ApplicationCall.appHeader: AppHeader
     get() = AppHeader(
@@ -19,5 +29,7 @@ val ApplicationCall.appHeader: AppHeader
         paramLanguage = request.header(AcceptLanguage),
         paramCountry = request.header(X_COUNTRY),
         notificationsEnabled = request.header(X_NOTIFICATIONS_ENABLED)?.toBoolean() ?: true,
-        userId = userId
+        userId = userId,
+        tmdbSessionId = tmdbSessionId,
+        tmdbAccountId = tmdbAccountId
     )

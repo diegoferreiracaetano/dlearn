@@ -10,11 +10,22 @@ object Constants {
 }
 
 object AppConstants {
-
     const val GUEST_USER_ID = "guest"
     const val AVATAR_PLACEHOLDER = "https://avatars.githubusercontent.com/u/1023?v=4"
     const val X_COUNTRY = "X-Country"
     const val X_NOTIFICATIONS_ENABLED = "X-Notifications-Enabled"
+    const val X_TMDB_SESSION_ID = "X-TMDB-Session-Id"
+    const val X_TMDB_ACCOUNT_ID = "X-TMDB-Account-Id"
+}
+
+object TokenConstants {
+    const val CLAIM_USER_ID = "userId"
+    const val CLAIM_EMAIL = "email"
+    const val CLAIM_TMDB_SESSION_ID = "tmdbSessionId"
+    const val CLAIM_TMDB_ACCOUNT_ID = "tmdbAccountId"
+    const val ISSUER = "com.diegoferreiracaetano.dlearn"
+    const val AUDIENCE = "dlearn-audience"
+    const val SECRET = "dlearn-secret-key-change-it-in-prod"
 }
 
 object TmdbConstants {

@@ -8,8 +8,10 @@ import com.diegoferreiracaetano.dlearn.navigation.AppPath
 import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.screens.EditProfileScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.screens.ProfileScreenBuilder
-import com.diegoferreiracaetano.dlearn.ui.sdui.*
-import com.diegoferreiracaetano.dlearn.util.getLogger
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppSnackbarType
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
+import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -55,8 +57,6 @@ class ProfileOrchestrator(
     private fun updateProfile(userId: String, lang: String): Flow<Screen> = flow {
         try {
             val user = userRepository.findById(userId) ?: throw Exception("User not found")
-            // Nota: Para invalidar cache no novo sistema, poderíamos ter um método clear no CacheManager
-            // Mas para o update, emitimos o novo estado diretamente
             emit(
                 editScreenBuilder.build(
                     data = user,
@@ -66,7 +66,6 @@ class ProfileOrchestrator(
                 )
             )
         } catch (e: Exception) {
-            getLogger().d("Error Profile", e.message.toString())
             val user = userRepository.findById(userId) ?: throw Exception("User not found")
             emit(
                 editScreenBuilder.build(

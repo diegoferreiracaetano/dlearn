@@ -23,6 +23,8 @@ data class AppMovieDetailHeaderComponent(
     val trailerId: String? = null,
     val downloadActionUrl: String? = null,
     val shareActionUrl: String? = null,
+    val favoriteActionUrl: String? = null,
+    val watchlistActionUrl: String? = null,
     val isFavorite: Boolean = false,
     val isInList: Boolean = false,
     val providers: List<WatchProviderComponent> = emptyList()

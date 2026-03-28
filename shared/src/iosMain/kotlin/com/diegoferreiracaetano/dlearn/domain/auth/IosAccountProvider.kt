@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.domain.auth
 
+import com.diegoferreiracaetano.dlearn.domain.user.MovieProvider
 import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.util.fromJson
 import com.diegoferreiracaetano.dlearn.util.toJson
@@ -8,10 +9,11 @@ import com.russhwolf.settings.Settings
 class IosAccountProvider : AccountProvider {
     private val settings = Settings()
 
-    override suspend fun saveAccount(user: User, accessToken: String, refreshToken: String) {
+    override suspend fun saveAccount(user: User, provider: MovieProvider?, accessToken: String, refreshToken: String) {
         settings.putString("access_token", accessToken)
         settings.putString("refresh_token", refreshToken)
         settings.putString("user_data", user.toJson())
+        provider?.let { settings.putString("provider_data", it.toJson()) }
     }
 
     override suspend fun getAccessToken(): String? = settings.getStringOrNull("access_token")
@@ -20,10 +22,13 @@ class IosAccountProvider : AccountProvider {
 
     override suspend fun getUser(): User? = settings.getStringOrNull("user_data")?.fromJson<User>()
 
+    override suspend fun getProvider(): MovieProvider? = settings.getStringOrNull("provider_data")?.fromJson<MovieProvider>()
+
     override suspend fun clearAccount() {
         settings.remove("access_token")
         settings.remove("refresh_token")
         settings.remove("user_data")
+        settings.remove("provider_data")
     }
 
     override suspend fun hasAccount(): Boolean = settings.hasKey("access_token")

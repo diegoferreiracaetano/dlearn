@@ -1,23 +1,37 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.services
 
 import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
-import java.util.concurrent.ConcurrentHashMap
+import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 
-class WatchlistDataService : WatchlistRepository {
-    private val watchlist = ConcurrentHashMap<String, MutableSet<String>>()
+class WatchlistDataService(
+    private val tmdbClient: TmdbClient
+) : WatchlistRepository {
 
-    override fun toggleWatchlist(userId: String, movieId: String): Boolean {
-        val userWatchlist = watchlist.getOrPut(userId) { mutableSetOf() }
-        return if (userWatchlist.contains(movieId)) {
-            userWatchlist.remove(movieId)
-            false
-        } else {
-            userWatchlist.add(movieId)
+    override suspend fun addToWatchlist(
+        accountId: String,
+        sessionId: String,
+        mediaId: Int,
+        watchlist: Boolean
+    ): Boolean {
+        return try {
+            tmdbClient.addToWatchlist(
+                accountId = accountId,
+                sessionId = sessionId,
+                mediaType = "movie",
+                mediaId = mediaId,
+                watchlist = watchlist
+            )
             true
+        } catch (e: Exception) {
+            false
         }
     }
 
-    override fun getWatchlist(userId: String): Set<String> {
-        return watchlist[userId] ?: emptySet()
+    override suspend fun getWatchlist(accountId: String, sessionId: String, language: String): List<Int> {
+        return try {
+            tmdbClient.getWatchlistMovies(accountId, sessionId, language).results.map { it.id }
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 }

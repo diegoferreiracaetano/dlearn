@@ -27,4 +27,12 @@ class MovieDetailRepositoryRemote(private val httpClient: HttpClient) : MovieDet
         }.body<Screen>()
         emit(response)
     }
+
+    override fun execute(request: AppRequest): Flow<Screen> = flow {
+        val response = httpClient.post(request.path) {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.body<Screen>()
+        emit(response)
+    }
 }

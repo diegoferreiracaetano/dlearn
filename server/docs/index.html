@@ -754,7 +754,19 @@
 };
             defs["AppErrorCode"] = {
   "type" : "string",
-  "enum" : [ "UNKNOWN_ERROR", "NETWORK_ERROR", "SERVER_ERROR", "BAD_REQUEST", "UNAUTHORIZED", "FORBIDDEN", "NOT_FOUND", "TIMEOUT", "INVALID_CREDENTIALS", "USER_NOT_FOUND", "USER_ALREADY_EXISTS", "INVALID_TOKEN", "EXPIRED_TOKEN", "EMAIL_ALREADY_IN_USE", "VALIDATION_FAILED", "FIELD_REQUIRED", "INVALID_FORMAT", "MOVIE_NOT_FOUND", "PAYMENT_FAILED", "INSUFFICIENT_FUNDS" ]
+  "enum" : [ "UNKNOWN_ERROR", "NETWORK_ERROR", "SERVER_ERROR", "BAD_REQUEST", "UNAUTHORIZED", "FORBIDDEN", "NOT_FOUND", "TIMEOUT", "INVALID_CREDENTIALS", "USER_NOT_FOUND", "USER_ALREADY_EXISTS", "INVALID_TOKEN", "EXPIRED_TOKEN", "EMAIL_ALREADY_IN_USE", "VALIDATION_FAILED", "FIELD_REQUIRED", "INVALID_FORMAT", "MOVIE_NOT_FOUND", "PAYMENT_FAILED", "INSUFFICIENT_FUNDS", "TRANSACTION_ID_REQUIRED", "INVALID_CHALLENGE_CODE" ]
+};
+            defs["AppErrorComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "error" : {
+        "$ref" : "#/components/schemas/AppError"
+      }
+    }
+  } ]
 };
             defs["AppExpandableSectionComponent"] = {
   "allOf" : [ {
@@ -840,6 +852,20 @@
     }
   } ]
 };
+            defs["AppLoadingComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object"
+  } ]
+};
+            defs["AppMainContentComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object"
+  } ]
+};
             defs["AppMovieDetailHeaderComponent"] = {
   "allOf" : [ {
     "$ref" : "#/components/schemas/Component"
@@ -879,6 +905,28 @@
       "isInList" : {
         "type" : "boolean"
       },
+      "favoriteActionUrl" : {
+        "type" : "object",
+        "properties" : {
+          "path" : {
+            "type" : "string"
+          },
+          "params" : {
+            "type" : "object"
+          }
+        }
+      },
+      "watchlistActionUrl" : {
+        "type" : "object",
+        "properties" : {
+          "path" : {
+            "type" : "string"
+          },
+          "params" : {
+            "type" : "object"
+          }
+        }
+      },
       "providers" : {
         "type" : "array",
         "items" : {
@@ -915,9 +963,16 @@
   "properties" : {
     "path" : {
       "type" : "string",
-      "example" : "home"
+      "example" : "home",
+      "enum" : [ "home", "movies", "search", "favorite", "watchlist", "profile", "v1/movie/favorite", "v1/movie/watchlist", "welcome", "verify_account", "faq", "users" ]
     },
     "params" : {
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "string"
+      }
+    },
+    "metadata" : {
       "type" : "object",
       "additionalProperties" : {
         "type" : "string"
@@ -942,6 +997,18 @@
         "items" : {
           "$ref" : "#/components/schemas/Component"
         }
+      }
+    }
+  } ]
+};
+            defs["AppSectionTitleComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
       }
     }
   } ]
@@ -1150,6 +1217,38 @@
     }
   } ]
 };
+            defs["BottomNavItem"] = {
+  "type" : "object",
+  "properties" : {
+    "label" : {
+      "type" : "string"
+    },
+    "actionUrl" : {
+      "type" : "string"
+    },
+    "icon" : {
+      "$ref" : "#/components/schemas/AppIconType"
+    }
+  }
+};
+            defs["BottomNavigationComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "items" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/BottomNavItem"
+        }
+      },
+      "selectedActionUrl" : {
+        "type" : "string"
+      }
+    }
+  } ]
+};
             defs["CarouselComponent"] = {
   "allOf" : [ {
     "$ref" : "#/components/schemas/Component"
@@ -1223,6 +1322,24 @@
   "discriminator" : {
     "propertyName" : "type"
   }
+};
+            defs["FooterComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "label" : {
+        "type" : "string"
+      },
+      "actionUrl" : {
+        "type" : "string"
+      },
+      "closeUrl" : {
+        "type" : "string"
+      }
+    }
+  } ]
 };
             defs["FullScreenBannerComponent"] = {
   "allOf" : [ {
@@ -1390,6 +1507,44 @@
     }
   }
 };
+            defs["SectionComponent"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/Component"
+  }, {
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string"
+      },
+      "items" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/SectionItem"
+        }
+      }
+    }
+  } ]
+};
+            defs["SectionItem"] = {
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string"
+    },
+    "label" : {
+      "type" : "string"
+    },
+    "value" : {
+      "type" : "string"
+    },
+    "icon" : {
+      "$ref" : "#/components/schemas/AppIconType"
+    },
+    "actionUrl" : {
+      "type" : "string"
+    }
+  }
+};
             defs["User"] = {
   "required" : [ "email", "id", "name" ],
   "type" : "object",
@@ -1497,18 +1652,6 @@
                     <li data-group="SDUI" data-name="v1MainGet" class="">
                       <a href="#api-SDUI-v1MainGet">v1MainGet</a>
                     </li>
-                    <li data-group="SDUI" data-name="v1MovieDetailGet" class="">
-                      <a href="#api-SDUI-v1MovieDetailGet">v1MovieDetailGet</a>
-                    </li>
-                    <li data-group="SDUI" data-name="v1ProfileGet" class="">
-                      <a href="#api-SDUI-v1ProfileGet">v1ProfileGet</a>
-                    </li>
-                    <li data-group="SDUI" data-name="v1ProfileUpdatePost" class="">
-                      <a href="#api-SDUI-v1ProfileUpdatePost">v1ProfileUpdatePost</a>
-                    </li>
-                    <li data-group="SDUI" data-name="v1SearchGet" class="">
-                      <a href="#api-SDUI-v1SearchGet">v1SearchGet</a>
-                    </li>
                   <li class="nav-header" data-group="SDUIGateway"><a href="#api-SDUIGateway">API Methods - SDUIGateway</a></li>
                     <li data-group="SDUIGateway" data-name="v1AppPost" class="">
                       <a href="#api-SDUIGateway-v1AppPost">v1AppPost</a>
@@ -1533,7 +1676,7 @@
         <div id="header">
           <div id="api-_">
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
-              <div class="app-desc">Version: 1.7.0</div>
+              <div class="app-desc">Version: 1.9.0</div>
             <hr>
             <div><p>API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows.
 Security and Multi-Factor Authentication (MFA) are handled by a Generic Challenge Engine.</p>
@@ -3831,1202 +3974,6 @@ except ApiException as e:
                         </article>
                       </div>
                       <hr>
-                    <div id="api-SDUI-v1MovieDetailGet">
-                      <article id="api-SDUI-v1MovieDetailGet-0" data-group="User" data-name="v1MovieDetailGet" data-version="0">
-                        <div class="pull-left">
-                          <h1>v1MovieDetailGet</h1>
-                          <p>Get Movie Detail (SDUI)</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked"></p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/movie/detail</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-SDUI-v1MovieDetailGet-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-SDUI-v1MovieDetailGet-0-java">Java</a></li>
-                          <li class=""><a href="#examples-SDUI-v1MovieDetailGet-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-SDUI-v1MovieDetailGet-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-SDUI-v1MovieDetailGet-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-SDUI-v1MovieDetailGet-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-SDUI-v1MovieDetailGet-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-SDUI-v1MovieDetailGet-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-SDUI-v1MovieDetailGet-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-SDUI-v1MovieDetailGet-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-SDUI-v1MovieDetailGet-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-SDUI-v1MovieDetailGet-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
- -H "Authorization: Bearer [[accessToken]]"\
--H "Accept: application/json"\
-"http://localhost:8081/v1/movie/detail?movieId="</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-SDUI-v1MovieDetailGet-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.SDUIApi;
-
-import java.io.File;
-import java.util.*;
-
-public class SDUIApiExample {
-
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-
-        SDUIApi apiInstance = new SDUIApi();
-        String movieId = movieId_example; // String | 
-        try {
-            Screen result = apiInstance.v1MovieDetailGet(movieId);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling SDUIApi#v1MovieDetailGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-SDUI-v1MovieDetailGet-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.SDUIApi;
-
-public class SDUIApiExample {
-
-    public static void main(String[] args) {
-        SDUIApi apiInstance = new SDUIApi();
-        String movieId = movieId_example; // String | 
-        try {
-            Screen result = apiInstance.v1MovieDetailGet(movieId);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling SDUIApi#v1MovieDetailGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-SDUI-v1MovieDetailGet-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-SDUI-v1MovieDetailGet-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
-String *movieId = movieId_example; // 
-
-SDUIApi *apiInstance = [[SDUIApi alloc] init];
-
-// Get Movie Detail (SDUI)
-[apiInstance v1MovieDetailGetWith:movieId
-              completionHandler: ^(Screen output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1MovieDetailGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
-var defaultClient = DLearnBffApi.ApiClient.instance;
-
-
-var api = new DLearnBffApi.SDUIApi()
-var movieId = movieId_example; // {{String}} 
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.v1MovieDetailGet(movieId, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-SDUI-v1MovieDetailGet-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-SDUI-v1MovieDetailGet-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class v1MovieDetailGetExample
-    {
-        public void main()
-        {
-
-
-            var apiInstance = new SDUIApi();
-            var movieId = movieId_example;  // String | 
-
-            try
-            {
-                // Get Movie Detail (SDUI)
-                Screen result = apiInstance.v1MovieDetailGet(movieId);
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling SDUIApi.v1MovieDetailGet: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1MovieDetailGet-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-
-$api_instance = new Swagger\Client\ApiSDUIApi();
-$movieId = movieId_example; // String | 
-
-try {
-    $result = $api_instance->v1MovieDetailGet($movieId);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling SDUIApi->v1MovieDetailGet: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1MovieDetailGet-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::SDUIApi;
-
-
-my $api_instance = WWW::SwaggerClient::SDUIApi->new();
-my $movieId = movieId_example; # String | 
-
-eval { 
-    my $result = $api_instance->v1MovieDetailGet(movieId => $movieId);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling SDUIApi->v1MovieDetailGet: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1MovieDetailGet-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-
-# create an instance of the API class
-api_instance = swagger_client.SDUIApi()
-movieId = movieId_example # String | 
-
-try: 
-    # Get Movie Detail (SDUI)
-    api_response = api_instance.v1_movie_detail_get(movieId)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling SDUIApi->v1MovieDetailGet: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-
-
-
-
-                            <div class="methodsubtabletitle">Query parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                <tr><td style="width:150px;">movieId*</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_v1MovieDetailGet_movieId">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    String
-                                                </span>
-                                
-                                            </div>
-                                                <div class="inner required">
-                                                    Required
-                                                </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                            </table>
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - OK </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-v1MovieDetailGet-200-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-v1MovieDetailGet-200-schema">
-                                  <div id='responses-v1MovieDetailGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "OK",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/Screen"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-v1MovieDetailGet-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-v1MovieDetailGet-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-v1MovieDetailGet-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
-                    <div id="api-SDUI-v1ProfileGet">
-                      <article id="api-SDUI-v1ProfileGet-0" data-group="User" data-name="v1ProfileGet" data-version="0">
-                        <div class="pull-left">
-                          <h1>v1ProfileGet</h1>
-                          <p>Get Profile Screen (SDUI)</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked"></p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/profile</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-SDUI-v1ProfileGet-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-SDUI-v1ProfileGet-0-java">Java</a></li>
-                          <li class=""><a href="#examples-SDUI-v1ProfileGet-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-SDUI-v1ProfileGet-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-SDUI-v1ProfileGet-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-SDUI-v1ProfileGet-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-SDUI-v1ProfileGet-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-SDUI-v1ProfileGet-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-SDUI-v1ProfileGet-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-SDUI-v1ProfileGet-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-SDUI-v1ProfileGet-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-SDUI-v1ProfileGet-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
- -H "Authorization: Bearer [[accessToken]]"\
--H "Accept: application/json"\
-"http://localhost:8081/v1/profile"</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-SDUI-v1ProfileGet-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.SDUIApi;
-
-import java.io.File;
-import java.util.*;
-
-public class SDUIApiExample {
-
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-
-        SDUIApi apiInstance = new SDUIApi();
-        try {
-            Screen result = apiInstance.v1ProfileGet();
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling SDUIApi#v1ProfileGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-SDUI-v1ProfileGet-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.SDUIApi;
-
-public class SDUIApiExample {
-
-    public static void main(String[] args) {
-        SDUIApi apiInstance = new SDUIApi();
-        try {
-            Screen result = apiInstance.v1ProfileGet();
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling SDUIApi#v1ProfileGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-SDUI-v1ProfileGet-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-SDUI-v1ProfileGet-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
-
-SDUIApi *apiInstance = [[SDUIApi alloc] init];
-
-// Get Profile Screen (SDUI)
-[apiInstance v1ProfileGetWithCompletionHandler: 
-              ^(Screen output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1ProfileGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
-var defaultClient = DLearnBffApi.ApiClient.instance;
-
-
-var api = new DLearnBffApi.SDUIApi()
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.v1ProfileGet(callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-SDUI-v1ProfileGet-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-SDUI-v1ProfileGet-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class v1ProfileGetExample
-    {
-        public void main()
-        {
-
-
-            var apiInstance = new SDUIApi();
-
-            try
-            {
-                // Get Profile Screen (SDUI)
-                Screen result = apiInstance.v1ProfileGet();
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling SDUIApi.v1ProfileGet: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1ProfileGet-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-
-$api_instance = new Swagger\Client\ApiSDUIApi();
-
-try {
-    $result = $api_instance->v1ProfileGet();
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling SDUIApi->v1ProfileGet: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1ProfileGet-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::SDUIApi;
-
-
-my $api_instance = WWW::SwaggerClient::SDUIApi->new();
-
-eval { 
-    my $result = $api_instance->v1ProfileGet();
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling SDUIApi->v1ProfileGet: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1ProfileGet-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-
-# create an instance of the API class
-api_instance = swagger_client.SDUIApi()
-
-try: 
-    # Get Profile Screen (SDUI)
-    api_response = api_instance.v1_profile_get()
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling SDUIApi->v1ProfileGet: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-
-
-
-
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - OK </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-v1ProfileGet-200-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-v1ProfileGet-200-schema">
-                                  <div id='responses-v1ProfileGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "OK",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/Screen"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-v1ProfileGet-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-v1ProfileGet-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-v1ProfileGet-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
-                    <div id="api-SDUI-v1ProfileUpdatePost">
-                      <article id="api-SDUI-v1ProfileUpdatePost-0" data-group="User" data-name="v1ProfileUpdatePost" data-version="0">
-                        <div class="pull-left">
-                          <h1>v1ProfileUpdatePost</h1>
-                          <p>Update Profile (SDUI Action)</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked"></p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/profile/update</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-SDUI-v1ProfileUpdatePost-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-SDUI-v1ProfileUpdatePost-0-java">Java</a></li>
-                          <li class=""><a href="#examples-SDUI-v1ProfileUpdatePost-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-SDUI-v1ProfileUpdatePost-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-SDUI-v1ProfileUpdatePost-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-SDUI-v1ProfileUpdatePost-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-SDUI-v1ProfileUpdatePost-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-SDUI-v1ProfileUpdatePost-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-SDUI-v1ProfileUpdatePost-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-SDUI-v1ProfileUpdatePost-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-SDUI-v1ProfileUpdatePost-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-SDUI-v1ProfileUpdatePost-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
- -H "Authorization: Bearer [[accessToken]]"\
--H "Accept: application/json"\
--H "Content-Type: application/json"\
-"http://localhost:8081/v1/profile/update"</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-SDUI-v1ProfileUpdatePost-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.SDUIApi;
-
-import java.io.File;
-import java.util.*;
-
-public class SDUIApiExample {
-
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-
-        SDUIApi apiInstance = new SDUIApi();
-        map[String, String] body = ; // map[String, String] | 
-        try {
-            Screen result = apiInstance.v1ProfileUpdatePost(body);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling SDUIApi#v1ProfileUpdatePost");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-SDUI-v1ProfileUpdatePost-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.SDUIApi;
-
-public class SDUIApiExample {
-
-    public static void main(String[] args) {
-        SDUIApi apiInstance = new SDUIApi();
-        map[String, String] body = ; // map[String, String] | 
-        try {
-            Screen result = apiInstance.v1ProfileUpdatePost(body);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling SDUIApi#v1ProfileUpdatePost");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-SDUI-v1ProfileUpdatePost-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-SDUI-v1ProfileUpdatePost-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
-map[String, String] *body = ; // 
-
-SDUIApi *apiInstance = [[SDUIApi alloc] init];
-
-// Update Profile (SDUI Action)
-[apiInstance v1ProfileUpdatePostWith:body
-              completionHandler: ^(Screen output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1ProfileUpdatePost-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
-var defaultClient = DLearnBffApi.ApiClient.instance;
-
-
-var api = new DLearnBffApi.SDUIApi()
-var body = ; // {{map[String, String]}} 
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.v1ProfileUpdatePost(body, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-SDUI-v1ProfileUpdatePost-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-SDUI-v1ProfileUpdatePost-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class v1ProfileUpdatePostExample
-    {
-        public void main()
-        {
-
-
-            var apiInstance = new SDUIApi();
-            var body = new map[String, String](); // map[String, String] | 
-
-            try
-            {
-                // Update Profile (SDUI Action)
-                Screen result = apiInstance.v1ProfileUpdatePost(body);
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling SDUIApi.v1ProfileUpdatePost: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1ProfileUpdatePost-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-
-$api_instance = new Swagger\Client\ApiSDUIApi();
-$body = ; // map[String, String] | 
-
-try {
-    $result = $api_instance->v1ProfileUpdatePost($body);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling SDUIApi->v1ProfileUpdatePost: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1ProfileUpdatePost-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::SDUIApi;
-
-
-my $api_instance = WWW::SwaggerClient::SDUIApi->new();
-my $body = WWW::SwaggerClient::Object::map[String, String]->new(); # map[String, String] | 
-
-eval { 
-    my $result = $api_instance->v1ProfileUpdatePost(body => $body);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling SDUIApi->v1ProfileUpdatePost: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1ProfileUpdatePost-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-
-# create an instance of the API class
-api_instance = swagger_client.SDUIApi()
-body =  # map[String, String] | 
-
-try: 
-    # Update Profile (SDUI Action)
-    api_response = api_instance.v1_profile_update_post(body)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling SDUIApi->v1ProfileUpdatePost: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-
-
-                            <div class="methodsubtabletitle">Body parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
-                                <td>
-                                
-                                
-                                <script>
-                                $(document).ready(function() {
-                                  var schemaWrapper = {
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "type" : "object",
-        "additionalProperties" : {
-          "type" : "string"
-        }
-      }
-    }
-  },
-  "required" : true
-};
-                                  var schema = schemaWrapper.content["application/json"].schema;
-                                  if (schema.$ref != null) {
-                                    schema = defsParser.$refs.get(schema.$ref);
-                                  } else {
-                                    schemaWrapper.components = {};
-                                    schemaWrapper.components.schemas = Object.assign({}, defs);
-                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                      console.log(err);
-                                    });
-                                  }
-                                
-                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-                                  var result = $('#d2e199_v1ProfileUpdatePost_body');
-                                  result.empty();
-                                  result.append(view.render());
-                                });
-                                </script>
-                                <div id="d2e199_v1ProfileUpdatePost_body"></div>
-                                </td>
-                                </tr>
-                            </table>
-
-
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - OK </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-v1ProfileUpdatePost-200-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-v1ProfileUpdatePost-200-schema">
-                                  <div id='responses-v1ProfileUpdatePost-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "OK",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/Screen"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-v1ProfileUpdatePost-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-v1ProfileUpdatePost-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-v1ProfileUpdatePost-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
-                    <div id="api-SDUI-v1SearchGet">
-                      <article id="api-SDUI-v1SearchGet-0" data-group="User" data-name="v1SearchGet" data-version="0">
-                        <div class="pull-left">
-                          <h1>v1SearchGet</h1>
-                          <p>Get Search Screen (SDUI)</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked"></p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/v1/search</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-SDUI-v1SearchGet-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-SDUI-v1SearchGet-0-java">Java</a></li>
-                          <li class=""><a href="#examples-SDUI-v1SearchGet-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-SDUI-v1SearchGet-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-SDUI-v1SearchGet-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-SDUI-v1SearchGet-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-SDUI-v1SearchGet-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-SDUI-v1SearchGet-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-SDUI-v1SearchGet-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-SDUI-v1SearchGet-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-SDUI-v1SearchGet-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-SDUI-v1SearchGet-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
- -H "Authorization: Bearer [[accessToken]]"\
--H "Accept: application/json"\
-"http://localhost:8081/v1/search?query="</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-SDUI-v1SearchGet-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.SDUIApi;
-
-import java.io.File;
-import java.util.*;
-
-public class SDUIApiExample {
-
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-
-        SDUIApi apiInstance = new SDUIApi();
-        String query = query_example; // String | 
-        try {
-            Screen result = apiInstance.v1SearchGet(query);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling SDUIApi#v1SearchGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-SDUI-v1SearchGet-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.SDUIApi;
-
-public class SDUIApiExample {
-
-    public static void main(String[] args) {
-        SDUIApi apiInstance = new SDUIApi();
-        String query = query_example; // String | 
-        try {
-            Screen result = apiInstance.v1SearchGet(query);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling SDUIApi#v1SearchGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-SDUI-v1SearchGet-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-SDUI-v1SearchGet-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
-String *query = query_example; //  (optional)
-
-SDUIApi *apiInstance = [[SDUIApi alloc] init];
-
-// Get Search Screen (SDUI)
-[apiInstance v1SearchGetWith:query
-              completionHandler: ^(Screen output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1SearchGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var DLearnBffApi = require('d_learn_bff_api');
-var defaultClient = DLearnBffApi.ApiClient.instance;
-
-
-var api = new DLearnBffApi.SDUIApi()
-var opts = { 
-  'query': query_example // {{String}} 
-};
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.v1SearchGet(opts, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-SDUI-v1SearchGet-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-SDUI-v1SearchGet-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class v1SearchGetExample
-    {
-        public void main()
-        {
-
-
-            var apiInstance = new SDUIApi();
-            var query = query_example;  // String |  (optional) 
-
-            try
-            {
-                // Get Search Screen (SDUI)
-                Screen result = apiInstance.v1SearchGet(query);
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling SDUIApi.v1SearchGet: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1SearchGet-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-
-$api_instance = new Swagger\Client\ApiSDUIApi();
-$query = query_example; // String | 
-
-try {
-    $result = $api_instance->v1SearchGet($query);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling SDUIApi->v1SearchGet: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1SearchGet-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::SDUIApi;
-
-
-my $api_instance = WWW::SwaggerClient::SDUIApi->new();
-my $query = query_example; # String | 
-
-eval { 
-    my $result = $api_instance->v1SearchGet(query => $query);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling SDUIApi->v1SearchGet: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-SDUI-v1SearchGet-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-
-# create an instance of the API class
-api_instance = swagger_client.SDUIApi()
-query = query_example # String |  (optional)
-
-try: 
-    # Get Search Screen (SDUI)
-    api_response = api_instance.v1_search_get(query=query)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling SDUIApi->v1SearchGet: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-
-
-
-
-                            <div class="methodsubtabletitle">Query parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                <tr><td style="width:150px;">query</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_v1SearchGet_query">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    String
-                                                </span>
-                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                            </table>
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - OK </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-v1SearchGet-200-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-v1SearchGet-200-schema">
-                                  <div id='responses-v1SearchGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "OK",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/Screen"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-v1SearchGet-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-v1SearchGet-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-v1SearchGet-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
                   </section>
                 <section id="api-SDUIGateway">
                   <h1>SDUIGateway</h1>
@@ -5039,7 +3986,9 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Ponto de entrada único para renderização de telas e execução de ações.
+Use os exemplos para carregar requests prontas.
+</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/v1/app</span></code></pre>
@@ -5084,7 +4033,12 @@ public class SDUIGatewayApiExample {
 
 
         SDUIGatewayApi apiInstance = new SDUIGatewayApi();
-        AppRequest body = ; // AppRequest | 
+        AppRequest body = {
+  "summary" : "Tela Inicial",
+  "value" : {
+    "path" : "home"
+  }
+}; // AppRequest | 
         Integer xAppVersion = 56; // Integer | 
         String userAgent = userAgent_example; // String | 
         String acceptLanguage = acceptLanguage_example; // String | 
@@ -5107,7 +4061,12 @@ public class SDUIGatewayApiExample {
 
     public static void main(String[] args) {
         SDUIGatewayApi apiInstance = new SDUIGatewayApi();
-        AppRequest body = ; // AppRequest | 
+        AppRequest body = {
+  "summary" : "Tela Inicial",
+  "value" : {
+    "path" : "home"
+  }
+}; // AppRequest | 
         Integer xAppVersion = 56; // Integer | 
         String userAgent = userAgent_example; // String | 
         String acceptLanguage = acceptLanguage_example; // String | 
@@ -5128,7 +4087,12 @@ public class SDUIGatewayApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-SDUIGateway-v1AppPost-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
-AppRequest *body = ; // 
+AppRequest *body = {
+  "summary" : "Tela Inicial",
+  "value" : {
+    "path" : "home"
+  }
+}; // 
 Integer *xAppVersion = 56; //  (optional)
 String *userAgent = userAgent_example; //  (optional)
 String *acceptLanguage = acceptLanguage_example; //  (optional)
@@ -5159,7 +4123,12 @@ var defaultClient = DLearnBffApi.ApiClient.instance;
 
 
 var api = new DLearnBffApi.SDUIGatewayApi()
-var body = ; // {{AppRequest}} 
+var body = {
+  "summary" : "Tela Inicial",
+  "value" : {
+    "path" : "home"
+  }
+}; // {{AppRequest}} 
 var opts = { 
   'xAppVersion': 56 // {{Integer}} 
   'userAgent': userAgent_example // {{String}} 
@@ -5224,7 +4193,12 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 
 $api_instance = new Swagger\Client\ApiSDUIGatewayApi();
-$body = ; // AppRequest | 
+$body = {
+  "summary" : "Tela Inicial",
+  "value" : {
+    "path" : "home"
+  }
+}; // AppRequest | 
 $xAppVersion = 56; // Integer | 
 $userAgent = userAgent_example; // String | 
 $acceptLanguage = acceptLanguage_example; // String | 
@@ -5271,7 +4245,12 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.SDUIGatewayApi()
-body =  # AppRequest | 
+body = {
+  "summary" : "Tela Inicial",
+  "value" : {
+    "path" : "home"
+  }
+} # AppRequest | 
 xAppVersion = 56 # Integer |  (optional)
 userAgent = userAgent_example # String |  (optional)
 acceptLanguage = acceptLanguage_example # String |  (optional)
@@ -5378,6 +4357,60 @@ except ApiException as e:
     "application/json" : {
       "schema" : {
         "$ref" : "#/components/schemas/AppRequest"
+      },
+      "examples" : {
+        "Home" : {
+          "summary" : "Tela Inicial",
+          "value" : {
+            "path" : "home"
+          }
+        },
+        "MovieDetail" : {
+          "summary" : "Detalhes do Filme",
+          "value" : {
+            "path" : "movies",
+            "params" : {
+              "id" : "550"
+            }
+          }
+        },
+        "FavoriteAction" : {
+          "summary" : "Marcar como favorito (Ação)",
+          "value" : {
+            "path" : "v1/movie/favorite",
+            "params" : {
+              "id" : "550",
+              "active" : "true",
+              "returnPath" : "movies"
+            }
+          }
+        },
+        "WatchlistAction" : {
+          "summary" : "Adicionar à Watchlist (Ação)",
+          "value" : {
+            "path" : "v1/movie/watchlist",
+            "params" : {
+              "id" : "550",
+              "active" : "true",
+              "returnPath" : "movies"
+            }
+          }
+        },
+        "Profile" : {
+          "summary" : "Tela de Perfil",
+          "value" : {
+            "path" : "profile"
+          }
+        },
+        "Search" : {
+          "summary" : "Tela de Busca",
+          "value" : {
+            "path" : "search",
+            "params" : {
+              "query" : "Fight Club"
+            }
+          }
+        }
       }
     }
   },

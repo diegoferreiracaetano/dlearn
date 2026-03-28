@@ -1,7 +1,5 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.app
 
-import com.diegoferreiracaetano.dlearn.data.cache.CacheStrategy
-import com.diegoferreiracaetano.dlearn.data.cache.toCache
 import com.diegoferreiracaetano.dlearn.domain.usecases.GetMovieDetailUseCase
 import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.network.AppHeader
@@ -23,16 +21,11 @@ class MovieDetailOrchestrator(
         val movieId = request.params?.get(AppQueryParam.ID)
             ?: throw IllegalArgumentException("MovieId missing")
 
-        val language = header.language
-        val cacheKey = "movie_detail_${movieId}_${header.userAgent.appVersion}_${language}"
-
         return flow {
-            val domainData = getMovieDetailUseCase.execute(movieId, language)
+            val language = header.language
+            val domainData = getMovieDetailUseCase.execute(movieId, language, header)
             val screen = screenBuilder.build(domainData, language)
             emit(screen)
-        }.toCache(
-            key = cacheKey,
-            strategy = CacheStrategy.CACHE_FIRST
-        )
+        }
     }
 }

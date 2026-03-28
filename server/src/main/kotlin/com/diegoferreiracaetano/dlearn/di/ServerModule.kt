@@ -37,8 +37,8 @@ val serverModule = module {
     single<UserRepository> { UserDataService() }
     
     // Repositories / Services
-    single<FavoriteRepository> { FavoriteDataService() }
-    single<WatchlistRepository> { WatchlistDataService() }
+    single<FavoriteRepository> { FavoriteDataService(get()) }
+    single<WatchlistRepository> { WatchlistDataService(get()) }
     single { FaqDataService() }
     
     // Home

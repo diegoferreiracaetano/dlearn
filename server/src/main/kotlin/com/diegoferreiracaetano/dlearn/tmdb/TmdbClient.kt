@@ -1,17 +1,15 @@
 package com.diegoferreiracaetano.dlearn.tmdb
 
-import com.diegoferreiracaetano.dlearn.model.TmdbGenresResponse
-import com.diegoferreiracaetano.dlearn.model.TmdbItemRemote
-import com.diegoferreiracaetano.dlearn.model.TmdbListResponse
-import com.diegoferreiracaetano.dlearn.model.TmdbMovieDetailRemote
+import com.diegoferreiracaetano.dlearn.model.*
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_API_KEY
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_BASE_URL
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
+import io.ktor.client.request.*
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -39,6 +37,21 @@ class TmdbClient {
             params.forEach { (key, value) ->
                 parameter(key, value)
             }
+        }.body()
+    }
+
+    private suspend inline fun <reified T> post(
+        path: String,
+        body: Any,
+        params: Map<String, Any> = emptyMap()
+    ): T {
+        return client.post("$baseUrl$path") {
+            parameter("api_key", apiKey)
+            params.forEach { (key, value) ->
+                parameter(key, value)
+            }
+            contentType(ContentType.Application.Json)
+            setBody(body)
         }.body()
     }
 
@@ -84,5 +97,47 @@ class TmdbClient {
 
     suspend fun searchMulti(query: String, language: String): TmdbListResponse<TmdbItemRemote> {
         return get("/search/multi", language, mapOf("query" to query))
+    }
+
+    suspend fun getAccountStates(movieId: String, sessionId: String): TmdbAccountStatesRemote {
+        return get("/movie/$movieId/account_states", "en", mapOf("session_id" to sessionId))
+    }
+
+    suspend fun markAsFavorite(
+        accountId: String,
+        sessionId: String,
+        mediaType: String,
+        mediaId: Int,
+        favorite: Boolean
+    ): TmdbStatusResponse {
+        val body = mapOf(
+            "media_type" to mediaType,
+            "media_id" to mediaId,
+            "favorite" to favorite
+        )
+        return post("/account/$accountId/favorite", body, mapOf("session_id" to sessionId))
+    }
+
+    suspend fun addToWatchlist(
+        accountId: String,
+        sessionId: String,
+        mediaType: String,
+        mediaId: Int,
+        watchlist: Boolean
+    ): TmdbStatusResponse {
+        val body = mapOf(
+            "media_type" to mediaType,
+            "media_id" to mediaId,
+            "watchlist" to watchlist
+        )
+        return post("/account/$accountId/watchlist", body, mapOf("session_id" to sessionId))
+    }
+
+    suspend fun getFavoriteMovies(accountId: String, sessionId: String, language: String): TmdbListResponse<TmdbItemRemote> {
+        return get("/account/$accountId/favorite/movies", language, mapOf("session_id" to sessionId))
+    }
+
+    suspend fun getWatchlistMovies(accountId: String, sessionId: String, language: String): TmdbListResponse<TmdbItemRemote> {
+        return get("/account/$accountId/watchlist/movies", language, mapOf("session_id" to sessionId))
     }
 }

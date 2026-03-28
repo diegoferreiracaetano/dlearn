@@ -8,7 +8,7 @@ info:
     **Test Credentials:**
     - Email: `admin@dlearn.com`
     - Password: `123456`
-  version: 1.8.2
+  version: 1.9.0
 servers:
   - url: http://localhost:8081
     description: Local Server
@@ -209,6 +209,9 @@ paths:
   /v1/app:
     post:
       summary: SDUI Gateway / BFF Generic Endpoint
+      description: |
+        Ponto de entrada único para renderização de telas e execução de ações.
+        Use os exemplos para carregar requests prontas.
       tags:
         - SDUI Gateway
       security:
@@ -224,6 +227,43 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AppRequest'
+            examples:
+              Home:
+                summary: Tela Inicial
+                value:
+                  path: "home"
+              MovieDetail:
+                summary: Detalhes do Filme
+                value:
+                  path: "movies"
+                  params:
+                    id: "550"
+              FavoriteAction:
+                summary: Marcar como favorito (Ação)
+                value:
+                  path: "v1/movie/favorite"
+                  params:
+                    id: "550"
+                    active: "true"
+                    returnPath: "movies"
+              WatchlistAction:
+                summary: Adicionar à Watchlist (Ação)
+                value:
+                  path: "v1/movie/watchlist"
+                  params:
+                    id: "550"
+                    active: "true"
+                    returnPath: "movies"
+              Profile:
+                summary: Tela de Perfil
+                value:
+                  path: "profile"
+              Search:
+                summary: Tela de Busca
+                value:
+                  path: "search"
+                  params:
+                    query: "Fight Club"
       responses:
         '200':
           description: OK
@@ -239,86 +279,6 @@ paths:
         - SDUI
       security:
         - bearerAuth: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
-
-  /v1/profile:
-    get:
-      summary: Get Profile Screen (SDUI)
-      tags:
-        - SDUI
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
-
-  /v1/profile/update:
-    post:
-      summary: Update Profile (SDUI Action)
-      tags:
-        - SDUI
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties:
-                type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
-
-  /v1/movie/detail:
-    get:
-      summary: Get Movie Detail (SDUI)
-      tags:
-        - SDUI
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: movieId
-          in: query
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
-
-  /v1/search:
-    get:
-      summary: Get Search Screen (SDUI)
-      tags:
-        - SDUI
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: query
-          in: query
-          required: false
-          schema:
-            type: string
       responses:
         '200':
           description: OK
@@ -354,14 +314,14 @@ components:
       required: false
       schema:
         type: string
-      example: en-US
+      example: pt-BR
     xCountry:
       name: X-Country
       in: header
       required: false
       schema:
         type: string
-      example: US
+      example: BR
     challengeToken:
       name: X-Challenge-Token
       in: header
@@ -442,6 +402,7 @@ components:
       properties:
         path:
           type: string
+          enum: ["home", "movies", "search", "favorite", "watchlist", "profile", "v1/movie/favorite", "v1/movie/watchlist", "welcome", "verify_account", "faq", "users"]
           example: "home"
         params:
           type: object
@@ -636,6 +597,16 @@ components:
               type: boolean
             isInList:
               type: boolean
+            favoriteActionUrl:
+              type: object
+              properties:
+                path: { type: string }
+                params: { type: object }
+            watchlistActionUrl:
+              type: object
+              properties:
+                path: { type: string }
+                params: { type: object }
             providers:
               type: array
               items:

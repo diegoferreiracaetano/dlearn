@@ -4,6 +4,8 @@ import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.FAQ
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.FAVORITE
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.HOME
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.MOVIES
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.MOVIE_FAVORITE
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.MOVIE_WATCHLIST
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.PROFILE
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.PROFILE_EDIT
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.PROFILE_UPDATE
@@ -47,8 +49,10 @@ class AppOrchestrator(
 
         return when (path) {
             HOME -> homeOrchestrator.execute(finalRequest, header)
-            FAVORITE -> favoriteOrchestrator.execute(finalRequest, header)
-            WATCHLIST -> watchlistOrchestrator.execute(finalRequest, header)
+            FAVORITE, 
+            MOVIE_FAVORITE -> favoriteOrchestrator.execute(finalRequest, header)
+            WATCHLIST, 
+            MOVIE_WATCHLIST -> watchlistOrchestrator.execute(finalRequest, header)
             PROFILE, 
             PROFILE_EDIT, 
             PROFILE_UPDATE -> profileOrchestrator.execute(finalRequest, header)

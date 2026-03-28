@@ -40,7 +40,8 @@ class CreateUserOrchestrator(
 
         return AuthResponse(
             user = savedUser,
-            accessToken = tokenService.generateAccessToken(savedUser),
+            provider = null,
+            accessToken = tokenService.generateAccessToken(savedUser, null),
             refreshToken = tokenService.generateRefreshToken(savedUser),
             challengeRequired = false
         )

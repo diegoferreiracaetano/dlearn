@@ -44,7 +44,8 @@ class AuthRepositoryRemote(
             sessionManager.login(
                 user = response.user,
                 accessToken = response.accessToken,
-                refreshToken = response.refreshToken
+                refreshToken = response.refreshToken,
+                provider = response.provider
             )
         }
     }

@@ -1,6 +1,12 @@
 package com.diegoferreiracaetano.dlearn.domain.repository
 
 interface FavoriteRepository {
-    fun toggleFavorite(userId: String, movieId: String): Boolean
-    fun getFavorites(userId: String): Set<String>
+    suspend fun markAsFavorite(
+        accountId: String,
+        sessionId: String,
+        mediaId: Int,
+        favorite: Boolean
+    ): Boolean
+    
+    suspend fun getFavorites(accountId: String, sessionId: String, language: String): List<Int>
 }

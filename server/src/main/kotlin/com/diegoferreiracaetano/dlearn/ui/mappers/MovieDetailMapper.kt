@@ -1,6 +1,9 @@
 package com.diegoferreiracaetano.dlearn.ui.mappers
 
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
@@ -17,6 +20,22 @@ class MovieDetailMapper(private val i18n: I18nProvider) {
             trailerId = data.trailerId,
             isFavorite = data.isFavorite,
             isInList = data.isInList,
+            favoriteActionUrl = AppPath(
+                path = "v1/movie/favorite",
+                params = mapOf(
+                    AppQueryParam.ID to data.id,
+                    "active" to (!data.isFavorite).toString(),
+                    "returnPath" to AppNavigationRoute.MOVIES
+                )
+            ),
+            watchlistActionUrl = AppPath(
+                path = "v1/movie/watchlist",
+                params = mapOf(
+                    AppQueryParam.ID to data.id,
+                    "active" to (!data.isInList).toString(),
+                    "returnPath" to AppNavigationRoute.MOVIES
+                )
+            ),
             providers = data.providers.map {
                 WatchProviderComponent(
                     name = it.name,

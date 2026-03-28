@@ -49,7 +49,7 @@ class FavoriteOrchestrator(
                     // Decide which screen to re-render based on returnPath
                     when (returnPath) {
                         AppNavigationRoute.MOVIES -> {
-                            movieDetailOrchestrator.execute(request, header).collect { emit(it) }
+                            movieDetailOrchestrator.exec\ute(request, header).collect { emit(it) }
                             return@flow
                         }
                         AppNavigationRoute.HOME -> {

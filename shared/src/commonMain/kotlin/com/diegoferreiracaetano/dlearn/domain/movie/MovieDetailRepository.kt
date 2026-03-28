@@ -5,6 +5,5 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.flow.Flow
 
 interface MovieDetailRepository {
-    fun getMovieDetail(movieId: String): Flow<Screen>
     fun execute(request: AppRequest): Flow<Screen>
 }

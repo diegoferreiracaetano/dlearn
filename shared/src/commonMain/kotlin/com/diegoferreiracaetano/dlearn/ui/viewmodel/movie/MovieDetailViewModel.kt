@@ -3,6 +3,8 @@ package com.diegoferreiracaetano.dlearn.ui.viewmodel.movie
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.movie.MovieDetailRepository
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
@@ -29,7 +31,12 @@ class MovieDetailViewModel(
 
     private fun fetchMovieDetail() {
         viewModelScope.launch {
-            repository.getMovieDetail(movieId)
+            repository.execute(
+                AppRequest(
+                    path = AppNavigationRoute.MOVIES,
+                    params = mapOf(AppQueryParam.ID to movieId)
+                )
+            )
                 .catch { e -> _uiState.value = UIState.Error(e) }
                 .collect { screen ->
                     _uiState.value = UIState.Success(screen)

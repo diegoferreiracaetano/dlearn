@@ -15,21 +15,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class MovieDetailRepositoryRemote(private val httpClient: HttpClient) : MovieDetailRepository {
-    override fun getMovieDetail(movieId: String): Flow<Screen> = flow {
-        val response = httpClient.post("v1/app") {
-            contentType(ContentType.Application.Json)
-            setBody(
-                AppRequest(
-                    path = AppNavigationRoute.MOVIES,
-                    params = mapOf(AppQueryParam.ID to movieId)
-                )
-            )
-        }.body<Screen>()
-        emit(response)
-    }
 
     override fun execute(request: AppRequest): Flow<Screen> = flow {
-        val response = httpClient.post(request.path) {
+        val response = httpClient.post("/v1/app") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }.body<Screen>()

@@ -1,5 +1,7 @@
 package com.diegoferreiracaetano.dlearn.domain.models
 
+import com.diegoferreiracaetano.dlearn.domain.video.MediaType
+
 data class MovieDetailDomainData(
     val id: String,
     val title: String,
@@ -13,8 +15,9 @@ data class MovieDetailDomainData(
     val seasons: List<SeasonDomainData>,
     val trailerId: String? = null,
     val isFavorite: Boolean = false,
-    val isInList: Boolean = false,
-    val providers: List<WatchProviderDomainData> = emptyList()
+    val isInWatchlist: Boolean = false,
+    val providers: List<WatchProviderDomainData> = emptyList(),
+    val mediaType: MediaType = MediaType.MOVIE
 )
 
 data class CastMemberDomainData(

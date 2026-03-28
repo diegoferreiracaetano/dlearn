@@ -2,6 +2,8 @@ package com.diegoferreiracaetano.dlearn.ui.mappers
 
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.FAVORITE
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.WATCHLIST
 import com.diegoferreiracaetano.dlearn.navigation.AppPath
 import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
@@ -19,21 +21,21 @@ class MovieDetailMapper(private val i18n: I18nProvider) {
             rating = data.rating.toDoubleOrNull(),
             trailerId = data.trailerId,
             isFavorite = data.isFavorite,
-            isInList = data.isInList,
+            isInWatchlist = data.isInWatchlist,
             favoriteActionUrl = AppPath(
-                path = "v1/movie/favorite",
+                path = AppNavigationRoute.MOVIES,
                 params = mapOf(
                     AppQueryParam.ID to data.id,
-                    "active" to (!data.isFavorite).toString(),
-                    "returnPath" to AppNavigationRoute.MOVIES
+                    AppQueryParam.MEDIA_TYPE to data.mediaType.name,
+                    FAVORITE to (!data.isFavorite).toString()
                 )
             ),
             watchlistActionUrl = AppPath(
-                path = "v1/movie/watchlist",
+                path = AppNavigationRoute.MOVIES,
                 params = mapOf(
                     AppQueryParam.ID to data.id,
-                    "active" to (!data.isInList).toString(),
-                    "returnPath" to AppNavigationRoute.MOVIES
+                    AppQueryParam.MEDIA_TYPE to data.mediaType.name,
+                    WATCHLIST to (!data.isInWatchlist).toString()
                 )
             ),
             providers = data.providers.map {

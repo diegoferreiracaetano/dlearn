@@ -110,12 +110,12 @@ class TmdbClient {
         mediaId: Int,
         favorite: Boolean
     ): TmdbStatusResponse {
-        val body = mapOf(
-            "media_type" to mediaType,
-            "media_id" to mediaId,
-            "favorite" to favorite
+        val requestBody = TmdbFavoriteRequest(
+            mediaType = mediaType,
+            mediaId = mediaId,
+            favorite = favorite
         )
-        return post("/account/$accountId/favorite", body, mapOf("session_id" to sessionId))
+        return post("/account/$accountId/favorite", requestBody, mapOf("session_id" to sessionId))
     }
 
     suspend fun addToWatchlist(
@@ -125,19 +125,39 @@ class TmdbClient {
         mediaId: Int,
         watchlist: Boolean
     ): TmdbStatusResponse {
-        val body = mapOf(
-            "media_type" to mediaType,
-            "media_id" to mediaId,
-            "watchlist" to watchlist
+        val requestBody = TmdbWatchlistRequest(
+            mediaType = mediaType,
+            mediaId = mediaId,
+            watchlist = watchlist
         )
-        return post("/account/$accountId/watchlist", body, mapOf("session_id" to sessionId))
+        return post("/account/$accountId/watchlist", requestBody, mapOf("session_id" to sessionId))
     }
 
-    suspend fun getFavoriteMovies(accountId: String, sessionId: String, language: String): TmdbListResponse<TmdbItemRemote> {
-        return get("/account/$accountId/favorite/movies", language, mapOf("session_id" to sessionId))
+    suspend fun getFavorite(accountId: String, sessionId: String, mediaType: String, language: String): TmdbListResponse<TmdbItemRemote> {
+        val type = if (mediaType.lowercase() == "movie") "movies" else "tv"
+        return get("/account/$accountId/favorite/$type", language, mapOf("session_id" to sessionId))
     }
 
-    suspend fun getWatchlistMovies(accountId: String, sessionId: String, language: String): TmdbListResponse<TmdbItemRemote> {
-        return get("/account/$accountId/watchlist/movies", language, mapOf("session_id" to sessionId))
+    suspend fun getWatchlist(accountId: String, sessionId: String, mediaType: String, language: String): TmdbListResponse<TmdbItemRemote> {
+        val type = if (mediaType.lowercase() == "movie") "movies" else "tv"
+        return get("/account/$accountId/watchlist/$type", language, mapOf("session_id" to sessionId))
+    }
+
+    // Auth methods
+
+    suspend fun createRequestToken(): TmdbRequestTokenResponse {
+        return get("/authentication/token/new", "en")
+    }
+
+    suspend fun validateWithLogin(request: TmdbLoginRequest): TmdbRequestTokenResponse {
+        return post("/authentication/token/validate_with_login", request)
+    }
+
+    suspend fun createSession(requestToken: String): TmdbSessionResponse {
+        return post("/authentication/session/new", TmdbSessionRequest(requestToken))
+    }
+
+    suspend fun getAccountDetails(sessionId: String): TmdbAccountResponse {
+        return get("/account", "en", mapOf("session_id" to sessionId))
     }
 }

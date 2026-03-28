@@ -1,12 +1,14 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
 import com.diegoferreiracaetano.dlearn.api.exception.challengePreference
-import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
+import com.diegoferreiracaetano.dlearn.domain.auth.AuthRequest
+import com.diegoferreiracaetano.dlearn.domain.auth.CreateUserRequest
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType.*
 import com.diegoferreiracaetano.dlearn.orchestrator.auth.CreateUserOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.auth.LoginOrchestrator
 import io.ktor.http.HttpHeaders.AcceptLanguage
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.plugins.*
 import io.ktor.server.request.header
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
@@ -21,25 +23,30 @@ fun Route.authController() {
 
     route("/v1/auth") {
         post("/login") {
-            val params = call.receive<Map<String, String>>()
-            val email = params["email"] ?: return@post call.respond(HttpStatusCode.BadRequest)
-            val password = params["password"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+            val request = call.receive<AuthRequest>()
             val language = call.request.header(AcceptLanguage) ?: "en"
 
-            val response = loginOrchestrator.login(email, password, language)
+            val response = loginOrchestrator.login(
+                email = request.email,
+                password = request.password,
+                metadata = request.metadata,
+                language = language
+            )
             call.respond(response)
         }
 
         challengePreference(OTP_EMAIL) {
             post("/register") {
-                val params = call.receive<Map<String, String>>()
-                val name = params["name"] ?: return@post call.respond(HttpStatusCode.BadRequest)
-                val email = params["email"] ?: return@post call.respond(HttpStatusCode.BadRequest)
-                val password =
-                    params["password"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+                val request = call.receive<CreateUserRequest>()
                 val language = call.request.header(AcceptLanguage) ?: "en"
 
-                val response = createUserOrchestrator.createUser(name, email, password, language)
+                val response = createUserOrchestrator.create(
+                    name = request.name,
+                    email = request.email,
+                    password = request.password,
+                    metadata = request.metadata,
+                    language = language
+                )
                 call.respond(HttpStatusCode.Created, response)
             }
         }

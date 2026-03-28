@@ -6,6 +6,8 @@ import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
 import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
 import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
 import com.diegoferreiracaetano.dlearn.domain.usecases.*
+import com.diegoferreiracaetano.dlearn.infrastructure.auth.ExternalAuthService
+import com.diegoferreiracaetano.dlearn.infrastructure.auth.TmdbAuthService
 import com.diegoferreiracaetano.dlearn.infrastructure.cache.InMemoryCacheManager
 import com.diegoferreiracaetano.dlearn.infrastructure.mappers.TmdbMapper
 import com.diegoferreiracaetano.dlearn.infrastructure.mappers.WatchProviderUrlMapper
@@ -28,35 +30,38 @@ val serverModule = module {
     single { TmdbMapper(get()) }
     single { VideoMapper() }
     
+    // Auth Services
+    single<ExternalAuthService> { TmdbAuthService(get()) }
+    
     // Cache Manager para o Servidor (In Memory)
     single<CacheManager> { InMemoryCacheManager(expiration = 10.minutes) }
     
     // API / Exception Handling / Auth
     single { ChallengeMapper() }
     single { TokenService() }
-    single<UserRepository> { UserDataService() }
+    single<UserRepository> { UserDataService(get()) }
     
     // Repositories / Services
-    single<FavoriteRepository> { FavoriteDataService(get()) }
-    single<WatchlistRepository> { WatchlistDataService(get()) }
+    single<FavoriteRepository> { FavoriteDataService(get(), get()) }
+    single<WatchlistRepository> { WatchlistDataService(get(), get()) }
     single { FaqDataService() }
     
     // Home
-    single { HomeDataService(get()) }
+    single { HomeDataService(get(), get()) }
     single { GetHomeDataUseCase(get()) }
     single { HomeMapper() }
     single { HomeScreenBuilder(get(), get()) }
     single { HomeOrchestrator(get(), get()) }
 
     // Auth & Login
-    single { LoginOrchestrator(get(), get(), get()) }
-    single { CreateUserOrchestrator(get(), get(), get()) }
+    single { LoginOrchestrator(get(), get(), getAll(), get()) }
+    single { CreateUserOrchestrator(get(), get(), getAll(), get()) }
 
     single { ProfileMapper(get()) }
     
     single { SettingsMapper(get()) }
     
-    single { MovieDetailDataService(get(), get()) }
+    single { MovieDetailDataService(get(), get(), get()) }
     single { GetMovieDetailUseCase(get()) }
     single { MovieDetailMapper(get()) }
     

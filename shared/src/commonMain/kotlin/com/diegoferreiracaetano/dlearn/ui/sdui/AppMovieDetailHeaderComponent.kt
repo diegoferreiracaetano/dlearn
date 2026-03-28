@@ -26,6 +26,6 @@ data class AppMovieDetailHeaderComponent(
     val favoriteActionUrl: String? = null,
     val watchlistActionUrl: String? = null,
     val isFavorite: Boolean = false,
-    val isInList: Boolean = false,
+    val isInWatchlist: Boolean = false,
     val providers: List<WatchProviderComponent> = emptyList()
 ) : Component

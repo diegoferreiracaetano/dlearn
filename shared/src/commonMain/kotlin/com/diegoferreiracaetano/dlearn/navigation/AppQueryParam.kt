@@ -9,4 +9,5 @@ object AppQueryParam {
     const val REF = "ref"
     const val ID = "id"
     const val USER_ID = "userId"
+    const val MEDIA_TYPE = "mediaType"
 }

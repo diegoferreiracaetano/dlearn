@@ -52,7 +52,7 @@ class AuthInterceptor(
                     if (refreshResponse.status == HttpStatusCode.OK) {
                         val auth = refreshResponse.body<AuthResponse>()
                         if (auth.accessToken != null && auth.refreshToken != null && auth.user != null) {
-                            sessionManager.login(auth.user, auth.provider, auth.accessToken, auth.refreshToken)
+                            sessionManager.login(auth.user, auth.accessToken, auth.refreshToken)
                             true
                         } else {
                             sessionManager.logout()

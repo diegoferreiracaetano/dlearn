@@ -1,0 +1,307 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    appVersion:
+      name: X-App-Version
+      in: header
+      required: false
+      schema:
+        type: integer
+      example: 1
+    userAgent:
+      name: User-Agent
+      in: header
+      required: false
+      schema:
+        type: string
+      example: "DLearn/1.0.0 (Swagger)"
+    acceptLanguage:
+      name: Accept-Language
+      in: header
+      required: false
+      schema:
+        type: string
+      example: pt-BR
+    xCountry:
+      name: X-Country
+      in: header
+      required: false
+      schema:
+        type: string
+      example: BR
+    challengeToken:
+      name: X-Challenge-Token
+      in: header
+      required: false
+      schema:
+        type: string
+  schemas:
+    # --- Auth & User ---
+    AppError:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/AppErrorCode'
+        message:
+          type: string
+          example: "E-mail já cadastrado"
+        details:
+          type: object
+          additionalProperties:
+            type: string
+    AppErrorCode:
+      type: string
+      enum: [UNKNOWN_ERROR, NETWORK_ERROR, SERVER_ERROR, BAD_REQUEST, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, TIMEOUT, INVALID_CREDENTIALS, USER_NOT_FOUND, USER_ALREADY_EXISTS, INVALID_TOKEN, EXPIRED_TOKEN, EMAIL_ALREADY_IN_USE, VALIDATION_FAILED, FIELD_REQUIRED, INVALID_FORMAT, MOVIE_NOT_FOUND, PAYMENT_FAILED, INSUFFICIENT_FUNDS, TRANSACTION_ID_REQUIRED, INVALID_CHALLENGE_CODE]
+    User:
+      type: object
+      required: [id, name, email]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        email: { type: string }
+        imageUrl: { type: string }
+        isPremium: { type: boolean }
+        phoneNumber: { type: string }
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        accessToken: { type: string }
+        refreshToken: { type: string }
+        challengeRequired: { type: boolean }
+
+    # --- Challenge Models ---
+    ChallengeType:
+      type: string
+      enum: [OTP_SMS, OTP_EMAIL, BIOMETRIC, PASSWORD, TOTP, PUSH_NOTIFICATION, KBA, DEVICE_BINDING, UNKNOWN]
+    ResolveChallengeRequest:
+      type: object
+      required: [type, answers]
+      properties:
+        type:
+          $ref: '#/components/schemas/ChallengeType'
+        answers: { type: string }
+    ResolveChallengeResponse:
+      type: object
+      properties:
+        validatedToken: { type: string }
+        success: { type: boolean }
+        message: { type: string }
+
+    # --- SDUI Core ---
+    AppRequest:
+      type: object
+      required: [path]
+      properties:
+        path:
+          type: string
+          enum: ["home", "movies", "search", "favorite", "watchlist", "profile", "v1/movie/favorite", "v1/movie/watchlist", "welcome", "verify_account", "faq", "users"]
+          example: "home"
+        params:
+          type: object
+          additionalProperties:
+            type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+    Screen:
+      type: object
+      properties:
+        id: { type: string }
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/Component'
+    Component:
+      type: object
+      discriminator:
+        propertyName: type
+      properties:
+        type: { type: string }
+
+    # --- SDUI Components ---
+    AppContainerComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            topBar: { $ref: '#/components/schemas/Component' }
+            searchBar: { $ref: '#/components/schemas/Component' }
+            chipGroup: { $ref: '#/components/schemas/Component' }
+            bottomBar: { $ref: '#/components/schemas/Component' }
+            components:
+              type: array
+              items: { $ref: '#/components/schemas/Component' }
+    AppTopBarComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title: { type: string }
+            subtitle: { type: string }
+            imageUrl: { type: string }
+            showSearch: { type: boolean }
+    AppTopBarListComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/AppTopBarItem' }
+            selectedRoute: { type: string }
+    AppTopBarItem:
+      type: object
+      properties:
+        topBar: { $ref: '#/components/schemas/AppTopBarComponent' }
+        route: { type: string }
+    AppSearchBarComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            query: { type: string }
+            placeholder: { type: string }
+            components:
+              type: array
+              items: { $ref: '#/components/schemas/Component' }
+    AppEmptyStateComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title: { type: string }
+            description: { type: string }
+            image: { $ref: '#/components/schemas/AppImageType' }
+    AppListComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            components:
+              type: array
+              items: { $ref: '#/components/schemas/Component' }
+    movie_item:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            id: { type: string }
+            title: { type: string }
+            subtitle: { type: string }
+            imageUrl: { type: string }
+            rating: { type: string }
+            year: { type: string }
+            genre: { type: string }
+            movieType: { type: string }
+            isPremium: { type: boolean }
+            rank: { type: integer }
+            actionUrl: { type: string }
+    AppMovieDetailHeaderComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title: { type: string }
+            imageUrl: { type: string }
+            year: { type: string }
+            duration: { type: string }
+            genre: { type: string }
+            rating: { type: number }
+            isFavorite: { type: boolean }
+            isInList: { type: boolean }
+            favoriteActionUrl: { type: string }
+            watchlistActionUrl: { type: string }
+    CarouselComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title: { type: string }
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/Component' }
+    MovieCarouselComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title: { type: string }
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/movie_item' }
+    BannerCarouselComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title: { type: string }
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/movie_item' }
+    ChipGroupComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/ChipItem' }
+    ChipItem:
+      type: object
+      properties:
+        id: { type: string }
+        label: { type: string }
+        isSelected: { type: boolean }
+        hasDropDown: { type: boolean }
+        options:
+          type: array
+          items: { $ref: '#/components/schemas/ChipItem' }
+        actionUrl: { type: string }
+    AppTextFieldComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            value: { type: string }
+            label: { $ref: '#/components/schemas/AppStringType' }
+            key: { type: string }
+    AppFeedbackComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title: { type: string }
+            description: { type: string }
+            primaryText: { type: string }
+    AppSnackbarComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            message: { type: string }
+            snackbarType: { $ref: '#/components/schemas/AppSnackbarType' }
+
+    # --- Types & Enums ---
+    AppSnackbarType:
+      type: string
+      enum: [SUCCESS, ERROR, WARNING]
+    AppIconType:
+      type: string
+      enum: [HOME, SEARCH, FAVORITE, PERSON, WATCHLIST, LOCK, STAR, UNKNOWN]
+    AppImageType:
+      type: object
+      properties:
+        url: { type: string }
+        placeholder: { type: string }
+    AppStringType:
+      type: object
+      properties:
+        value: { type: string }
+        isHtml: { type: boolean }

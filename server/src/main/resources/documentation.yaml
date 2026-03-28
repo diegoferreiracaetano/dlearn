@@ -8,7 +8,7 @@ info:
     **Test Credentials:**
     - Email: `admin@dlearn.com`
     - Password: `123456`
-  version: 1.9.0
+  version: 1.10.0
 servers:
   - url: http://localhost:8081
     description: Local Server
@@ -212,6 +212,14 @@ paths:
       description: |
         Ponto de entrada único para renderização de telas e execução de ações.
         Use os exemplos para carregar requests prontas.
+
+        **Principais Paths:**
+        - `home`: Dashboard principal. Aceita filtro via parâmetro `type` (ex: ALL, MOVIES, SERIES, FAVORITE, WATCHLIST).
+        - `movies`: Detalhes de um filme ou série.
+        - `search`: Busca global.
+        - `profile`: Perfil do usuário.
+        - `favorite`: Lista de favoritos do usuário.
+        - `watchlist`: Lista de filmes/séries para assistir.
       tags:
         - SDUI Gateway
       security:
@@ -232,28 +240,43 @@ paths:
                 summary: Tela Inicial
                 value:
                   path: "home"
+              HomeWithFilters:
+                summary: Home com filtros (Favoritos/Watchlist)
+                value:
+                  path: "home"
+                  params:
+                    type: "FAVORITE"
               MovieDetail:
                 summary: Detalhes do Filme
                 value:
                   path: "movies"
                   params:
                     id: "550"
+                    mediaType: "MOVIE"
               FavoriteAction:
-                summary: Marcar como favorito (Ação)
+                summary: Marcar como favorito (Ação no Detalhe)
                 value:
-                  path: "v1/movie/favorite"
+                  path: "movies"
                   params:
                     id: "550"
-                    active: "true"
-                    returnPath: "movies"
+                    mediaType: "MOVIE"
+                    favorite: "true"
               WatchlistAction:
-                summary: Adicionar à Watchlist (Ação)
+                summary: Adicionar à Watchlist (Ação no Detalhe)
                 value:
-                  path: "v1/movie/watchlist"
+                  path: "movies"
                   params:
                     id: "550"
-                    active: "true"
-                    returnPath: "movies"
+                    mediaType: "MOVIE"
+                    watchlist: "true"
+              FavoriteList:
+                summary: Tela de Favoritos
+                value:
+                  path: "favorite"
+              Watchlist:
+                summary: Tela de Watchlist
+                value:
+                  path: "watchlist"
               Profile:
                 summary: Tela de Perfil
                 value:
@@ -271,6 +294,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Screen'
+              examples:
+                HomeWithDropdown:
+                  summary: Home com Dropdown de Filtros (Favoritos e Watchlist)
+                  value:
+                    id: "home_screen"
+                    components:
+                      - type: "ChipGroupComponent"
+                        items:
+                          - id: "filter_type"
+                            label: "Explorar"
+                            isSelected: true
+                            hasDropDown: true
+                            options:
+                              - id: "ALL"
+                                label: "Tudo"
+                                actionUrl: "home?type=ALL"
+                              - id: "MOVIES"
+                                label: "Filmes"
+                                actionUrl: "home?type=MOVIES"
+                              - id: "SERIES"
+                                label: "Séries"
+                                actionUrl: "home?type=SERIES"
+                              - id: "FAVORITE"
+                                label: "Meus Favoritos"
+                                actionUrl: "home?type=FAVORITE"
+                              - id: "WATCHLIST"
+                                label: "Minha Lista"
+                                actionUrl: "home?type=WATCHLIST"
 
   /v1/main:
     get:
@@ -598,15 +649,9 @@ components:
             isInList:
               type: boolean
             favoriteActionUrl:
-              type: object
-              properties:
-                path: { type: string }
-                params: { type: object }
+              type: string
             watchlistActionUrl:
-              type: object
-              properties:
-                path: { type: string }
-                params: { type: object }
+              type: string
             providers:
               type: array
               items:

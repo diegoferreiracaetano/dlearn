@@ -17,26 +17,92 @@ paths:
       description: |
         Central gateway for dynamic screens and actions.
         The client sends a `path` (slug) and optional `params`.
+        
+        **Common Paths:**
+        - `home`: Main dashboard. Aceita filtro via parâmetro `type` (ex: ALL, MOVIES, SERIES, FAVORITE, WATCHLIST).
+        - `favorite`: User's favorite movies/series.
+        - `watchlist`: User's watchlist.
+        - `search`: Search for media.
+        - `profile`: User settings and info.
+        - `movie_detail`: Full info about a movie/series. (Requires `id` and `mediaType` in params).
       parameters:
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
-        - $ref: '#/components/parameters/country'
-        - $ref: '#/components/parameters/challengeToken'
-        - $ref: '#/components/parameters/challengePreference'
+        - $ref: 'components.yaml#/components/parameters/userId'
+        - $ref: 'components.yaml#/components/parameters/appVersion'
+        - $ref: 'components.yaml#/components/parameters/acceptLanguage'
+        - $ref: 'components.yaml#/components/parameters/country'
+        - $ref: 'components.yaml#/components/parameters/challengeToken'
+        - $ref: 'components.yaml#/components/parameters/challengePreference'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AppRequest'
+              $ref: 'components.yaml#/components/schemas/AppRequest'
+            examples:
+              Home:
+                summary: Tela Inicial
+                value:
+                  path: "home"
+                  params: { "type": "ALL" }
+              HomeWithFavoriteFilter:
+                summary: Filtro de Meus Favoritos
+                value:
+                  path: "home"
+                  params: { "type": "FAVORITE" }
+              HomeWithWatchlistFilter:
+                summary: Filtro de Minha Lista
+                value:
+                  path: "home"
+                  params: { "type": "WATCHLIST" }
+              Favorites:
+                summary: Tela de Favoritos (Nativa)
+                value:
+                  path: "favorite"
+              Watchlist:
+                summary: Tela de Watchlist (Nativa)
+                value:
+                  path: "watchlist"
+              MovieDetail:
+                summary: Detalhes do Filme
+                value:
+                  path: "movie_detail"
+                  params: { "id": "550", "mediaType": "MOVIE" }
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Screen'
+                $ref: 'components.yaml#/components/schemas/Screen'
+              examples:
+                HomeWithDropdown:
+                  summary: Resposta da Home com Dropdown de Filtros
+                  value:
+                    id: "home_screen"
+                    components:
+                      - type: "ChipGroupComponent"
+                        items:
+                          - id: "filter_type"
+                            label: "Explorar"
+                            isSelected: true
+                            hasDropDown: true
+                            options:
+                              - id: "ALL"
+                                label: "Tudo"
+                                actionUrl: "home?type=ALL"
+                              - id: "MOVIES"
+                                label: "Filmes"
+                                actionUrl: "home?type=MOVIES"
+                              - id: "SERIES"
+                                label: "Séries"
+                                actionUrl: "home?type=SERIES"
+                              - id: "FAVORITE"
+                                label: "Meus Favoritos"
+                                actionUrl: "home?type=FAVORITE"
+                              - id: "WATCHLIST"
+                                label: "Minha Lista"
+                                actionUrl: "home?type=WATCHLIST"
+
   /v1/auth/login:
     post:
       summary: User Login
@@ -47,19 +113,32 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
+              $ref: 'components.yaml#/components/schemas/AuthRequest'
       responses:
         '200':
           description: Successful login
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
+                $ref: 'components.yaml#/components/schemas/AuthResponse'
+  /v1/auth/register:
+    post:
+      summary: User Registration
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'components.yaml#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: 'components.yaml#/components/schemas/AuthResponse'
   /v1/auth/refresh:
     post:
       summary: Refresh Access Token
@@ -80,7 +159,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
+                $ref: 'components.yaml#/components/schemas/AuthResponse'
   /v1/auth/logout:
     post:
       summary: Logout User
@@ -89,730 +168,41 @@ paths:
       responses:
         '200':
           description: OK
-  /v1/main:
-    get:
-      summary: Get Main Shell (Legacy/Initial)
-      tags:
-        - Legacy
-      description: Returns the main screen shell configuration.
-      parameters:
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
-  /v1/home:
-    get:
-      summary: Get Home Screen (Legacy)
-      tags:
-        - Legacy
-      parameters: 
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
-        - name: type
-          in: query
-          required: false
-          schema:
-            type: string
-            enum: [ALL, MOVIE, SERIES]
-          example: ALL
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
-  /v1/profile:
-    get:
-      summary: Get Profile Screen (Legacy)
-      tags:
-        - Legacy
-      parameters:
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
-  /v1/profile/edit:
-    get:
-      summary: Get Edit Profile Screen (Legacy)
-      tags:
-        - Legacy
-      parameters:
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
-  /v1/profile/update:
-    post:
-      summary: Update Profile Data
-      tags:
-        - Profile
-      parameters:
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties:
-                type: string
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Screen'
   /v1/password/change:
     post:
       summary: Change User Password (MFA Protected)
       tags:
         - Security
-      description: |
-        Changes the user password. Protected by **Challenge Engine**.
-        Requires a valid token from challenge resolution.
       parameters:
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
-        - $ref: '#/components/parameters/challengeToken'
-        - $ref: '#/components/parameters/challengePreference'
+        - $ref: 'components.yaml#/components/parameters/userId'
+        - $ref: 'components.yaml#/components/parameters/challengeToken'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangePasswordRequest'
+              $ref: 'components.yaml#/components/schemas/ChangePasswordRequest'
       responses:
         '200':
           description: Password changed successfully
-        '428':
-          description: Precondition Required (Challenge Needed)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChallengeSession'
 
   /v1/auth/challenge/resolve:
     post:
       summary: Resolve Security Challenge
       tags:
         - Security
-      description: |
-        Validates the user response for a challenge and emits an authorization token.
       parameters:
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/appVersion'
-        - $ref: '#/components/parameters/acceptLanguage'
-        - $ref: '#/components/parameters/transactionId'
+        - $ref: 'components.yaml#/components/parameters/transactionId'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [type, answers]
-              properties:
-                type:
-                  type: string
-                answers:
-                  type: string
+              $ref: 'components.yaml#/components/schemas/ResolveChallengeRequest'
       responses:
         '200':
           description: Challenge Resolved
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResolveChallengeResponse'
-        '403':
-          description: Forbidden - Invalid code or type
-  /v1/auth/challenge/resend:
-    post:
-      summary: Resend Security Challenge
-      tags:
-        - Security
-      parameters:
-        - $ref: '#/components/parameters/transactionId'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-
-components:
-  parameters:
-    userId:
-      name: userId
-      in: query
-      required: false
-      schema:
-        type: string
-      example: diego
-    appVersion:
-      name: X-App-Version
-      in: header
-      required: false
-      schema:
-        type: integer
-      example: 1
-    acceptLanguage:
-      name: Accept-Language
-      in: header
-      required: false
-      schema:
-        type: string
-      example: pt-BR
-    country:
-      name: X-Country
-      in: header
-      required: false
-      schema:
-        type: string
-    transactionId:
-      name: X-Transaction-Id
-      in: header
-      required: true
-      schema:
-        type: string
-    challengeToken:
-      name: X-Challenge-Token
-      in: header
-      required: false
-      description: "Token obtained after resolving a challenge."
-      schema:
-        type: string
-    challengePreference:
-      name: X-Challenge-Preference
-      in: header
-      required: false
-      description: "Suggested challenge method (e.g. BIOMETRIC)."
-      schema:
-        $ref: '#/components/schemas/ChallengeType'
-  schemas:
-    # --- Auth Models ---
-    User:
-      type: object
-      required: [id, name, email]
-      properties:
-        id: { type: string }
-        name: { type: string }
-        email: { type: string }
-        imageUrl: { type: string }
-        isPremium: { type: boolean }
-        phoneNumber: { type: string }
-    AuthResponse:
-      type: object
-      properties:
-        user:
-          $ref: '#/components/schemas/User'
-        accessToken: { type: string }
-        refreshToken: { type: string }
-        challengeRequired: { type: boolean }
-        screen:
-          $ref: '#/components/schemas/Screen'
-
-    # --- Challenge Engine Models ---
-    ChallengeType:
-      type: string
-      enum: [OTP_SMS, OTP_EMAIL, BIOMETRIC, PASSWORD, TOTP, PUSH_NOTIFICATION, KBA, DEVICE_BINDING, UNKNOWN]
-    ChallengeStatus:
-      type: string
-      enum: [SUCCESS, CHALLENGE_REQUIRED, ERROR]
-    ChallengeSession:
-      type: object
-      required: [transactionId, challenges]
-      properties:
-        transactionId:
-          type: string
-        challenges:
-          type: array
-          items:
-            $ref: '#/components/schemas/Challenge'
-        expiresAt:
-          type: integer
-          format: int64
-    Challenge:
-      type: object
-      required: [challengeType]
-      properties:
-        challengeType:
-          $ref: '#/components/schemas/ChallengeType'
-        data:
-          type: object
-          additionalProperties:
-            type: string
-    ResolveChallengeResponse:
-      type: object
-      properties:
-        validatedToken:
-          type: string
-        success:
-          type: boolean
-        message:
-          type: string
-
-    # --- Business Models ---
-    ChangePasswordRequest:
-      type: object
-      required: [userId, newPassword]
-      properties:
-        userId:
-          type: string
-        newPassword:
-          type: string
-
-    # --- SDUI Models ---
-    AppRequest:
-      type: object
-      required: [path]
-      properties:
-        path:
-          type: string
-          description: Route path (e.g. 'home', 'profile', 'faq')
-        params:
-          type: object
-          additionalProperties:
-            type: string
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-        language:
-          type: string
-        country:
-          type: string
-        notificationsEnabled:
-          type: boolean
-    Screen:
-      type: object
-      properties:
-        id:
-          type: string
-        components:
-          type: array
-          items:
-            $ref: '#/components/schemas/Component'
-    Component:
-      type: object
-      discriminator:
-        propertyName: type
-      properties:
-        type:
-          type: string
-
-    # --- SDUI Components ---
-    AppContainerComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            topBar:
-              $ref: '#/components/schemas/Component'
-            searchBar:
-              $ref: '#/components/schemas/Component'
-            chipGroup:
-              $ref: '#/components/schemas/Component'
-            bottomBar:
-              $ref: '#/components/schemas/Component'
-            components:
-              type: array
-              items:
-                $ref: '#/components/schemas/Component'
-    AppTopBarComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            title:
-              type: string
-            subtitle:
-              type: string
-            imageUrl:
-              type: string
-            showSearch:
-              type: boolean
-    AppTopBarListComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            items:
-              type: array
-              items:
-                $ref: '#/components/schemas/AppTopBarItem'
-            selectedRoute:
-              type: string
-    AppTopBarItem:
-      type: object
-      properties:
-        topBar:
-          $ref: '#/components/schemas/AppTopBarComponent'
-        route:
-          type: string
-    AppSearchBarComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            query:
-              type: string
-            placeholder:
-              type: string
-            components:
-              type: array
-              items:
-                $ref: '#/components/schemas/Component'
-    AppEmptyStateComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            title:
-              type: string
-            description:
-              type: string
-            image:
-              $ref: '#/components/schemas/AppImageType'
-    AppListComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            components:
-              type: array
-              items:
-                $ref: '#/components/schemas/Component'
-    movie_item:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            id:
-              type: string
-            title:
-              type: string
-            subtitle:
-              type: string
-            imageUrl:
-              type: string
-            rating:
-              type: string
-            year:
-              type: string
-            duration:
-              type: string
-            contentRating:
-              type: string
-            genre:
-              type: string
-            movieType:
-              type: string
-            isPremium:
-              type: boolean
-            rank:
-              type: integer
-            actionUrl:
-              type: string
-    app_search_content:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-    AppMovieDetailHeaderComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            title:
-              type: string
-            imageUrl:
-              type: string
-            year:
-              type: string
-            duration:
-              type: string
-            genre:
-              type: string
-            rating:
-              type: number
-            trailerId:
-              type: string
-            downloadActionUrl:
-              type: string
-            shareActionUrl:
-              type: string
-            isFavorite:
-              type: boolean
-            isInList:
-              type: boolean
-            providers:
-              type: array
-              items:
-                $ref: '#/components/schemas/WatchProviderComponent'
-    WatchProviderComponent:
-      type: object
-      properties:
-        name:
-          type: string
-        iconUrl:
-          type: string
-        priceInfo:
-          type: string
-        appUrl:
-          type: string
-        webUrl:
-          type: string
-        tmdbUrl:
-          type: string
-    AppExpandableSectionComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            title:
-              type: string
-            text:
-              type: string
-            maxLines:
-              type: integer
-    CarouselComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            title:
-              type: string
-            items:
-              type: array
-              items:
-                $ref: '#/components/schemas/Component'
-    MovieCarouselComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            title:
-              type: string
-            items:
-              type: array
-              items:
-                $ref: '#/components/schemas/movie_item'
-    BannerCarouselComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            title:
-              type: string
-            items:
-              type: array
-              items:
-                $ref: '#/components/schemas/movie_item'
-    FullScreenBannerComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            id:
-              type: string
-            title:
-              type: string
-            subtitle:
-              type: string
-            imageUrl:
-              type: string
-    ChipGroupComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            items:
-              type: array
-              items:
-                $ref: '#/components/schemas/ChipItem'
-    ChipItem:
-      type: object
-      properties:
-        id:
-          type: string
-        label:
-          type: string
-        isSelected:
-          type: boolean
-        hasDropDown:
-          type: boolean
-        isFilter:
-          type: boolean
-        options:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChipItem'
-    UserRowComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            name:
-              type: string
-            role:
-              type: string
-            imageUrl:
-              type: string
-            actionUrl:
-              type: string
-    ProfileRowComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            name:
-              type: string
-            email:
-              type: string
-            imageUrl:
-              type: string
-            editActionUrl:
-              type: string
-    AppProfileHeaderComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            name:
-              type: string
-            email:
-              type: string
-            imageUrl:
-              type: string
-            onImagePickedAction:
-              type: string
-    AppTextFieldComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            value:
-              type: string
-            placeholder:
-              $ref: '#/components/schemas/AppStringType'
-            label:
-              $ref: '#/components/schemas/AppStringType'
-            supportingText:
-              $ref: '#/components/schemas/AppStringType'
-            isError:
-              type: boolean
-            fieldType:
-              $ref: '#/components/schemas/AppTextFieldType'
-            key:
-              type: string
-    AppFeedbackComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            title:
-              type: string
-            description:
-              type: string
-            imageSource:
-              type: string
-            primaryText:
-              type: string
-            secondaryText:
-              type: string
-    PremiumBannerComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            title:
-              type: string
-            description:
-              type: string
-            icon:
-              $ref: '#/components/schemas/AppIconType'
-    AppHtmlTextComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            html:
-              type: string
-    AppSnackbarComponent:
-      allOf:
-        - $ref: '#/components/schemas/Component'
-        - type: object
-          properties:
-            message:
-              type: string
-            snackbarType:
-              $ref: '#/components/schemas/AppSnackbarType'
-            durationMillis:
-              type: integer
-              format: int64
-
-    # --- Types & Enums ---
-    AppSnackbarType:
-      type: string
-      enum: [SUCCESS, ERROR, WARNING]
-    AppIconType:
-      type: string
-      enum: [IC_SEARCH, IC_BACK, IC_CLOSE, IC_SETTINGS, IC_CHEVRON_RIGHT, IC_USER, IC_LOCK, IC_INFO, IC_HELP]
-    AppImageType:
-      type: object
-      properties:
-        url:
-          type: string
-        placeholder:
-          type: string
-    AppAction:
-      type: object
-      properties:
-        type:
-          type: string
-        url:
-          type: string
-        params:
-          type: object
-          additionalProperties:
-            type: string
-    AppStringType:
-      type: object
-      properties:
-        value:
-          type: string
-        isHtml:
-          type: boolean
-        args:
-          type: array
-          items:
-            type: string
-    AppTextFieldType:
-      type: string
-      enum: [TEXT, EMAIL, PASSWORD, PHONE, NUMBER]
+                $ref: 'components.yaml#/components/schemas/ResolveChallengeResponse'

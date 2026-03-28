@@ -17,7 +17,6 @@ import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.USERS
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.VERIFY_ACCOUNT
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.WATCHLIST
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.WELCOME
-import com.diegoferreiracaetano.dlearn.navigation.AppPath
 import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -40,31 +39,26 @@ class AppOrchestrator(
         request: AppRequest,
         header: AppHeader
     ): Flow<Screen> {
-        val parsedRequest = AppPath.parse(request.path)
-        val path = parsedRequest.path
-        
-        // Merge params from path with original request params
-        val mergedParams = (request.params ?: emptyMap()) + (parsedRequest.params ?: emptyMap())
-        val finalRequest = request.copy(path = path, params = mergedParams)
+        val path = request.path
 
         return when (path) {
-            HOME -> homeOrchestrator.execute(finalRequest, header)
-            FAVORITE, 
-            MOVIE_FAVORITE -> favoriteOrchestrator.execute(finalRequest, header)
+            HOME -> homeOrchestrator.execute(request, header)
+            FAVORITE,
+            MOVIE_FAVORITE -> favoriteOrchestrator.execute(request, header)
             WATCHLIST, 
-            MOVIE_WATCHLIST -> watchlistOrchestrator.execute(finalRequest, header)
-            PROFILE, 
+            MOVIE_WATCHLIST -> watchlistOrchestrator.execute(request, header)
+            PROFILE,
             PROFILE_EDIT, 
-            PROFILE_UPDATE -> profileOrchestrator.execute(finalRequest, header)
-            FAQ -> faqOrchestrator.execute(finalRequest, header)
-            MOVIES -> movieDetailOrchestrator.execute(finalRequest, header)
-            SEARCH -> searchOrchestrator.execute(finalRequest, header)
-            WELCOME -> mainOrchestrator.execute(finalRequest, header)
-            VERIFY_ACCOUNT -> verifyAccountOrchestrator.execute(finalRequest, header)
+            PROFILE_UPDATE -> profileOrchestrator.execute(request, header)
+            FAQ -> faqOrchestrator.execute(request, header)
+            MOVIES -> movieDetailOrchestrator.execute(request, header)
+            SEARCH -> searchOrchestrator.execute(request, header)
+            WELCOME -> mainOrchestrator.execute(request, header)
+            VERIFY_ACCOUNT -> verifyAccountOrchestrator.execute(request, header)
             SETTINGS_NOTIFICATIONS, 
             SETTINGS_LANGUAGE, 
-            SETTINGS_COUNTRY -> settingsOrchestrator.execute(finalRequest, header)
-            USERS -> userListOrchestrator.execute(finalRequest, header)
+            SETTINGS_COUNTRY -> settingsOrchestrator.execute(request, header)
+            USERS -> userListOrchestrator.execute(request, header)
             else -> throw IllegalArgumentException("Invalid path: $path")
         }
     }

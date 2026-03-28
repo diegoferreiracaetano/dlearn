@@ -906,26 +906,10 @@
         "type" : "boolean"
       },
       "favoriteActionUrl" : {
-        "type" : "object",
-        "properties" : {
-          "path" : {
-            "type" : "string"
-          },
-          "params" : {
-            "type" : "object"
-          }
-        }
+        "type" : "string"
       },
       "watchlistActionUrl" : {
-        "type" : "object",
-        "properties" : {
-          "path" : {
-            "type" : "string"
-          },
-          "params" : {
-            "type" : "object"
-          }
-        }
+        "type" : "string"
       },
       "providers" : {
         "type" : "array",
@@ -1676,7 +1660,7 @@
         <div id="header">
           <div id="api-_">
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
-              <div class="app-desc">Version: 1.9.0</div>
+              <div class="app-desc">Version: 1.10.0</div>
             <hr>
             <div><p>API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows.
 Security and Multi-Factor Authentication (MFA) are handled by a Generic Challenge Engine.</p>
@@ -3988,6 +3972,14 @@ except ApiException as e:
                         <p></p>
                         <p class="marked">Ponto de entrada único para renderização de telas e execução de ações.
 Use os exemplos para carregar requests prontas.
+
+**Principais Paths:**
+- &#x60;home&#x60;: Dashboard principal. Aceita filtro via parâmetro &#x60;type&#x60; (ex: ALL, MOVIES, SERIES, FAVORITE, WATCHLIST).
+- &#x60;movies&#x60;: Detalhes de um filme ou série.
+- &#x60;search&#x60;: Busca global.
+- &#x60;profile&#x60;: Perfil do usuário.
+- &#x60;favorite&#x60;: Lista de favoritos do usuário.
+- &#x60;watchlist&#x60;: Lista de filmes/séries para assistir.
 </p>
                         <p></p>
                         <br />
@@ -4365,35 +4357,57 @@ except ApiException as e:
             "path" : "home"
           }
         },
+        "HomeWithFilters" : {
+          "summary" : "Home com filtros (Favoritos/Watchlist)",
+          "value" : {
+            "path" : "home",
+            "params" : {
+              "type" : "FAVORITE"
+            }
+          }
+        },
         "MovieDetail" : {
           "summary" : "Detalhes do Filme",
           "value" : {
             "path" : "movies",
             "params" : {
-              "id" : "550"
+              "id" : "550",
+              "mediaType" : "MOVIE"
             }
           }
         },
         "FavoriteAction" : {
-          "summary" : "Marcar como favorito (Ação)",
+          "summary" : "Marcar como favorito (Ação no Detalhe)",
           "value" : {
-            "path" : "v1/movie/favorite",
+            "path" : "movies",
             "params" : {
               "id" : "550",
-              "active" : "true",
-              "returnPath" : "movies"
+              "mediaType" : "MOVIE",
+              "favorite" : "true"
             }
           }
         },
         "WatchlistAction" : {
-          "summary" : "Adicionar à Watchlist (Ação)",
+          "summary" : "Adicionar à Watchlist (Ação no Detalhe)",
           "value" : {
-            "path" : "v1/movie/watchlist",
+            "path" : "movies",
             "params" : {
               "id" : "550",
-              "active" : "true",
-              "returnPath" : "movies"
+              "mediaType" : "MOVIE",
+              "watchlist" : "true"
             }
+          }
+        },
+        "FavoriteList" : {
+          "summary" : "Tela de Favoritos",
+          "value" : {
+            "path" : "favorite"
+          }
+        },
+        "Watchlist" : {
+          "summary" : "Tela de Watchlist",
+          "value" : {
+            "path" : "watchlist"
           }
         },
         "Profile" : {
@@ -4461,6 +4475,44 @@ except ApiException as e:
     "application/json" : {
       "schema" : {
         "$ref" : "#/components/schemas/Screen"
+      },
+      "examples" : {
+        "HomeWithDropdown" : {
+          "summary" : "Home com Dropdown de Filtros (Favoritos e Watchlist)",
+          "value" : {
+            "id" : "home_screen",
+            "components" : [ {
+              "type" : "ChipGroupComponent",
+              "items" : [ {
+                "id" : "filter_type",
+                "label" : "Explorar",
+                "isSelected" : true,
+                "hasDropDown" : true,
+                "options" : [ {
+                  "id" : "ALL",
+                  "label" : "Tudo",
+                  "actionUrl" : "home?type=ALL"
+                }, {
+                  "id" : "MOVIES",
+                  "label" : "Filmes",
+                  "actionUrl" : "home?type=MOVIES"
+                }, {
+                  "id" : "SERIES",
+                  "label" : "Séries",
+                  "actionUrl" : "home?type=SERIES"
+                }, {
+                  "id" : "FAVORITE",
+                  "label" : "Meus Favoritos",
+                  "actionUrl" : "home?type=FAVORITE"
+                }, {
+                  "id" : "WATCHLIST",
+                  "label" : "Minha Lista",
+                  "actionUrl" : "home?type=WATCHLIST"
+                } ]
+              } ]
+            } ]
+          }
+        }
       }
     }
   }

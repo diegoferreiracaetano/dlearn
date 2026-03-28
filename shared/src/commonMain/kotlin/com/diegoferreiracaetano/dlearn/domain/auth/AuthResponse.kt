@@ -1,13 +1,11 @@
 package com.diegoferreiracaetano.dlearn.domain.auth
 
-import com.diegoferreiracaetano.dlearn.domain.user.MovieProvider
 import com.diegoferreiracaetano.dlearn.domain.user.User
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AuthResponse(
     val user: User? = null,
-    val provider: MovieProvider? = null,
     val accessToken: String? = null,
     val refreshToken: String? = null,
     val challengeRequired: Boolean = false

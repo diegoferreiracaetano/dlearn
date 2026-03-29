@@ -17,7 +17,9 @@ class LoginOrchestrator(
     suspend fun login(
         email: String,
         password: String,
-        language: String
+        language: String,
+        tmdbUsername: String? = null,
+        tmdbPassword: String? = null
     ): AuthResponse {
         logger.info("Login attempt for email: $email")
         

@@ -16,12 +16,12 @@ class LinkExternalProviderUseCase(
     private val logger = LoggerFactory.getLogger(javaClass)
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    fun execute(userId: String) {
+    fun execute(userId: String, metadata: Map<String, String> = emptyMap()) {
         // Executamos em background para não bloquear o fluxo de autenticação principal
         scope.launch {
             try {
                 logger.info("Starting background external provider link for user: $userId")
-                authProviderSyncService.discoverAndSaveProviders(userId, emptyMap())
+                authProviderSyncService.discoverAndSaveProviders(userId, metadata)
                 logger.info("External provider link process finished for user: $userId")
             } catch (e: Exception) {
                 logger.error("Failed to link external provider for user: $userId", e)

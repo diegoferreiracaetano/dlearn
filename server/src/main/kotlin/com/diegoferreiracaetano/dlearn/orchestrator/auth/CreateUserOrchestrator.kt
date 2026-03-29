@@ -20,7 +20,9 @@ class CreateUserOrchestrator(
         name: String,
         email: String,
         password: String,
-        language: String
+        language: String,
+        tmdbUsername: String? = null,
+        tmdbPassword: String? = null
     ): AuthResponse {
         logger.info("Starting user creation for email: $email")
         

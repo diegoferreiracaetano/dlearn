@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
+import com.diegoferreiracaetano.dlearn.MetadataKeys
 import com.diegoferreiracaetano.dlearn.api.exception.challengePreference
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthRequest
 import com.diegoferreiracaetano.dlearn.domain.auth.CreateUserRequest
@@ -35,12 +36,18 @@ fun Route.authController() {
             val response = loginOrchestrator.login(
                 email = request.email,
                 password = request.password,
-                language = language
+                language = language,
+                tmdbUsername = request.tmdbUsername,
+                tmdbPassword = request.tmdbPassword
             )
 
             // 🔥 DISPARO AUTOMÁTICO E ASSÍNCRONO DO VÍNCULO TMDB
             response.user?.let { user ->
-                linkExternalProviderUseCase.execute(userId = user.id)
+                val metadata = mutableMapOf<String, String>()
+                request.tmdbUsername?.let { metadata[MetadataKeys.EXTERNAL_USERNAME] = it }
+                request.tmdbPassword?.let { metadata[MetadataKeys.EXTERNAL_PASSWORD] = it }
+                
+                linkExternalProviderUseCase.execute(userId = user.id, metadata = metadata)
             }
 
             call.respond(response)
@@ -63,12 +70,18 @@ fun Route.authController() {
                     name = request.name,
                     email = request.email,
                     password = request.password,
-                    language = language
+                    language = language,
+                    tmdbUsername = request.tmdbUsername,
+                    tmdbPassword = request.tmdbPassword
                 )
 
                 // 🔥 DISPARO AUTOMÁTICO E ASSÍNCRONO DO VÍNCULO TMDB
                 response.user?.let { user ->
-                    linkExternalProviderUseCase.execute(userId = user.id)
+                    val metadata = mutableMapOf<String, String>()
+                    request.tmdbUsername?.let { metadata[MetadataKeys.EXTERNAL_USERNAME] = it }
+                    request.tmdbPassword?.let { metadata[MetadataKeys.EXTERNAL_PASSWORD] = it }
+                    
+                    linkExternalProviderUseCase.execute(userId = user.id, metadata = metadata)
                 }
 
                 call.respond(HttpStatusCode.Created, response)

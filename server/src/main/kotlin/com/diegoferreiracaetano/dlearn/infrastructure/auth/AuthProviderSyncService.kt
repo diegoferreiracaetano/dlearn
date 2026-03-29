@@ -13,75 +13,72 @@ class AuthProviderSyncService(
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    suspend fun syncExistingProviders(
-        userId: String,
-        metadata: Map<String, String>
-    ) {
-        if (!featureToggleService.isEnabled(Feature.EXTERNAL_AUTH_SYNC)) return
-
-        val currentProviders = authProviderRepository.findByUserId(userId)
-        val updatedProviders = currentProviders.map { provider ->
-            val authService = authServices.find { it.provider == provider.provider }
-            if (authService != null && authService.canHandle(provider.metadata + metadata)) {
-                try {
-                    val authData = authService.authenticate(provider.metadata + metadata)
-                    if (authData.isNotEmpty()) {
-                        provider.copy(metadata = provider.metadata + authData)
-                    } else provider
-                } catch (e: Exception) {
-                    logger.error("Failed to sync provider ${provider.provider} for user $userId", e)
-                    provider
-                }
-            } else provider
-        }
-
-        if (updatedProviders != currentProviders) {
-            authProviderRepository.deleteByUserId(userId)
-            authProviderRepository.saveAll(userId, updatedProviders)
-        }
-    }
-
     suspend fun discoverAndSaveProviders(
         userId: String,
         metadata: Map<String, String>
     ) {
         if (!featureToggleService.isEnabled(Feature.EXTERNAL_AUTH_SYNC)) {
-            logger.info("External auth sync is disabled by feature toggle")
+            logger.info("[Sync] Feature disabled for user $userId")
             return
         }
 
-        logger.info("Discovering providers for user $userId with metadata keys: ${metadata.keys}")
+        logger.info("[Sync] Starting sync for user $userId. Metadata keys: ${metadata.keys}")
 
-        val providers = mutableListOf<AuthProvider>()
+        val existingProviders = try {
+            authProviderRepository.findByUserId(userId)
+        } catch (e: Exception) {
+            logger.error("[Sync] Failed to fetch existing providers for $userId", e)
+            emptyList()
+        }
+
+        val providersToSave = mutableListOf<AuthProvider>()
+
         authServices.forEach { service ->
-            if (service.canHandle(metadata)) {
-                logger.info("Service ${service.provider} can handle the provided metadata")
+            val isAlreadyLinked = existingProviders.any { it.provider == service.provider }
+            val canHandle = service.canHandle(metadata)
+
+            logger.info("[Sync] Provider ${service.provider}: alreadyLinked=$isAlreadyLinked, canHandle=$canHandle")
+
+            // Tentamos sincronizar se:
+            // 1. Não está vinculado E o serviço consegue lidar com os metadados atuais.
+            // 2. OU se o front enviou metadados explicitamente (indica uma tentativa de (re)vínculo).
+            if (canHandle) {
                 try {
+                    logger.info("[Sync] Authenticating with ${service.provider} for user $userId...")
                     val authData = service.authenticate(metadata)
+                    
                     if (authData.isNotEmpty()) {
                         val externalId = authData["external_id"] ?: ""
-                        providers.add(
-                            AuthProvider(
-                                provider = service.provider,
-                                externalId = externalId,
-                                metadata = authData
-                            )
+                        val providerInfo = AuthProvider(
+                            provider = service.provider,
+                            externalId = externalId,
+                            metadata = authData
                         )
-                        logger.info("Successfully authenticated with ${service.provider}. External ID: $externalId")
+                        providersToSave.add(providerInfo)
+                        logger.info("[Sync] ${service.provider} authenticated successfully. ExternalId: $externalId")
                     } else {
-                        logger.warn("Service ${service.provider} returned empty auth data")
+                        logger.warn("[Sync] ${service.provider} returned empty authentication data")
                     }
                 } catch (e: Exception) {
-                    logger.error("Error authenticating with ${service.provider} during discovery", e)
+                    logger.error("[Sync] Error during authentication with ${service.provider}", e)
+                }
+            } else {
+                if (!isAlreadyLinked) {
+                    logger.info("[Sync] Skipping ${service.provider}: No credentials provided and not yet linked.")
                 }
             }
         }
         
-        if (providers.isNotEmpty()) {
-            logger.info("Saving ${providers.size} new providers for user $userId")
-            authProviderRepository.saveAll(userId, providers)
+        if (providersToSave.isNotEmpty()) {
+            try {
+                logger.info("[Sync] Saving ${providersToSave.size} providers to DB...")
+                authProviderRepository.saveAll(userId, providersToSave)
+                logger.info("[Sync] Successfully persisted providers for user $userId")
+            } catch (e: Exception) {
+                logger.error("[Sync] Failed to save providers to repository", e)
+            }
         } else {
-            logger.info("No providers discovered for user $userId")
+            logger.info("[Sync] No providers were identified for saving.")
         }
     }
 }

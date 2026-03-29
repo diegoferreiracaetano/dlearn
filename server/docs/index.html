@@ -948,15 +948,9 @@
     "path" : {
       "type" : "string",
       "example" : "home",
-      "enum" : [ "home", "movies", "search", "favorite", "watchlist", "profile", "v1/movie/favorite", "v1/movie/watchlist", "welcome", "verify_account", "faq", "users" ]
+      "enum" : [ "home", "movies", "search", "favorite", "watchlist", "profile", "welcome", "verify_account", "faq", "users" ]
     },
     "params" : {
-      "type" : "object",
-      "additionalProperties" : {
-        "type" : "string"
-      }
-    },
-    "metadata" : {
       "type" : "object",
       "additionalProperties" : {
         "type" : "string"
@@ -1660,7 +1654,7 @@
         <div id="header">
           <div id="api-_">
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
-              <div class="app-desc">Version: 1.10.0</div>
+              <div class="app-desc">Version: 1.11.0</div>
             <hr>
             <div><p>API for Server-Driven UI in DLearn App. Supporting dynamic routes and generic flows.
 Security and Multi-Factor Authentication (MFA) are handled by a Generic Challenge Engine.</p>
@@ -2317,8 +2311,9 @@ public class AuthenticationApiExample {
         AuthenticationApi apiInstance = new AuthenticationApi();
         Object body = ; // Object | 
         String acceptLanguage = acceptLanguage_example; // String | 
+        String xChallengeToken = xChallengeToken_example; // String | 
         try {
-            AuthResponse result = apiInstance.v1AuthLoginPost(body, acceptLanguage);
+            AuthResponse result = apiInstance.v1AuthLoginPost(body, acceptLanguage, xChallengeToken);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AuthenticationApi#v1AuthLoginPost");
@@ -2337,8 +2332,9 @@ public class AuthenticationApiExample {
         AuthenticationApi apiInstance = new AuthenticationApi();
         Object body = ; // Object | 
         String acceptLanguage = acceptLanguage_example; // String | 
+        String xChallengeToken = xChallengeToken_example; // String | 
         try {
-            AuthResponse result = apiInstance.v1AuthLoginPost(body, acceptLanguage);
+            AuthResponse result = apiInstance.v1AuthLoginPost(body, acceptLanguage, xChallengeToken);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AuthenticationApi#v1AuthLoginPost");
@@ -2354,12 +2350,14 @@ public class AuthenticationApiExample {
                             <div class="tab-pane" id="examples-Authentication-v1AuthLoginPost-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Object *body = ; // 
 String *acceptLanguage = acceptLanguage_example; //  (optional)
+String *xChallengeToken = xChallengeToken_example; //  (optional)
 
 AuthenticationApi *apiInstance = [[AuthenticationApi alloc] init];
 
 // Login with credentials
 [apiInstance v1AuthLoginPostWith:body
     acceptLanguage:acceptLanguage
+    xChallengeToken:xChallengeToken
               completionHandler: ^(AuthResponse output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -2378,6 +2376,7 @@ var api = new DLearnBffApi.AuthenticationApi()
 var body = ; // {{Object}} 
 var opts = { 
   'acceptLanguage': acceptLanguage_example // {{String}} 
+  'xChallengeToken': xChallengeToken_example // {{String}} 
 };
 var callback = function(error, data, response) {
   if (error) {
@@ -2410,11 +2409,12 @@ namespace Example
             var apiInstance = new AuthenticationApi();
             var body = new Object(); // Object | 
             var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
+            var xChallengeToken = xChallengeToken_example;  // String |  (optional) 
 
             try
             {
                 // Login with credentials
-                AuthResponse result = apiInstance.v1AuthLoginPost(body, acceptLanguage);
+                AuthResponse result = apiInstance.v1AuthLoginPost(body, acceptLanguage, xChallengeToken);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -2434,9 +2434,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 $api_instance = new Swagger\Client\ApiAuthenticationApi();
 $body = ; // Object | 
 $acceptLanguage = acceptLanguage_example; // String | 
+$xChallengeToken = xChallengeToken_example; // String | 
 
 try {
-    $result = $api_instance->v1AuthLoginPost($body, $acceptLanguage);
+    $result = $api_instance->v1AuthLoginPost($body, $acceptLanguage, $xChallengeToken);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling AuthenticationApi->v1AuthLoginPost: ', $e->getMessage(), PHP_EOL;
@@ -2452,9 +2453,10 @@ use WWW::SwaggerClient::AuthenticationApi;
 my $api_instance = WWW::SwaggerClient::AuthenticationApi->new();
 my $body = WWW::SwaggerClient::Object::Object->new(); # Object | 
 my $acceptLanguage = acceptLanguage_example; # String | 
+my $xChallengeToken = xChallengeToken_example; # String | 
 
 eval { 
-    my $result = $api_instance->v1AuthLoginPost(body => $body, acceptLanguage => $acceptLanguage);
+    my $result = $api_instance->v1AuthLoginPost(body => $body, acceptLanguage => $acceptLanguage, xChallengeToken => $xChallengeToken);
     print Dumper($result);
 };
 if ($@) {
@@ -2473,10 +2475,11 @@ from pprint import pprint
 api_instance = swagger_client.AuthenticationApi()
 body =  # Object | 
 acceptLanguage = acceptLanguage_example # String |  (optional)
+xChallengeToken = xChallengeToken_example # String |  (optional)
 
 try: 
     # Login with credentials
-    api_response = api_instance.v1_auth_login_post(body, acceptLanguage=acceptLanguage)
+    api_response = api_instance.v1_auth_login_post(body, acceptLanguage=acceptLanguage, xChallengeToken=xChallengeToken)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling AuthenticationApi->v1AuthLoginPost: %s\n" % e)</code></pre>
@@ -2497,6 +2500,22 @@ except ApiException as e:
                                   
                                   
                                       <div id="d2e199_v1AuthLoginPost_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                                  <tr><td style="width:150px;">X-Challenge-Token</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1AuthLoginPost_xChallengeToken">
                                           <div class="json-schema-view">
                                               <div class="primitive">
                                                   <span class="type">
@@ -3336,8 +3355,9 @@ public class AuthenticationApiExample {
         AuthenticationApi apiInstance = new AuthenticationApi();
         Object body = ; // Object | 
         String acceptLanguage = acceptLanguage_example; // String | 
+        String xChallengeToken = xChallengeToken_example; // String | 
         try {
-            AuthResponse result = apiInstance.v1AuthRegisterPost(body, acceptLanguage);
+            AuthResponse result = apiInstance.v1AuthRegisterPost(body, acceptLanguage, xChallengeToken);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AuthenticationApi#v1AuthRegisterPost");
@@ -3356,8 +3376,9 @@ public class AuthenticationApiExample {
         AuthenticationApi apiInstance = new AuthenticationApi();
         Object body = ; // Object | 
         String acceptLanguage = acceptLanguage_example; // String | 
+        String xChallengeToken = xChallengeToken_example; // String | 
         try {
-            AuthResponse result = apiInstance.v1AuthRegisterPost(body, acceptLanguage);
+            AuthResponse result = apiInstance.v1AuthRegisterPost(body, acceptLanguage, xChallengeToken);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AuthenticationApi#v1AuthRegisterPost");
@@ -3373,12 +3394,14 @@ public class AuthenticationApiExample {
                             <div class="tab-pane" id="examples-Authentication-v1AuthRegisterPost-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Object *body = ; // 
 String *acceptLanguage = acceptLanguage_example; //  (optional)
+String *xChallengeToken = xChallengeToken_example; //  (optional)
 
 AuthenticationApi *apiInstance = [[AuthenticationApi alloc] init];
 
 // Register a new user (Native Flow)
 [apiInstance v1AuthRegisterPostWith:body
     acceptLanguage:acceptLanguage
+    xChallengeToken:xChallengeToken
               completionHandler: ^(AuthResponse output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -3397,6 +3420,7 @@ var api = new DLearnBffApi.AuthenticationApi()
 var body = ; // {{Object}} 
 var opts = { 
   'acceptLanguage': acceptLanguage_example // {{String}} 
+  'xChallengeToken': xChallengeToken_example // {{String}} 
 };
 var callback = function(error, data, response) {
   if (error) {
@@ -3429,11 +3453,12 @@ namespace Example
             var apiInstance = new AuthenticationApi();
             var body = new Object(); // Object | 
             var acceptLanguage = acceptLanguage_example;  // String |  (optional) 
+            var xChallengeToken = xChallengeToken_example;  // String |  (optional) 
 
             try
             {
                 // Register a new user (Native Flow)
-                AuthResponse result = apiInstance.v1AuthRegisterPost(body, acceptLanguage);
+                AuthResponse result = apiInstance.v1AuthRegisterPost(body, acceptLanguage, xChallengeToken);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -3453,9 +3478,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 $api_instance = new Swagger\Client\ApiAuthenticationApi();
 $body = ; // Object | 
 $acceptLanguage = acceptLanguage_example; // String | 
+$xChallengeToken = xChallengeToken_example; // String | 
 
 try {
-    $result = $api_instance->v1AuthRegisterPost($body, $acceptLanguage);
+    $result = $api_instance->v1AuthRegisterPost($body, $acceptLanguage, $xChallengeToken);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling AuthenticationApi->v1AuthRegisterPost: ', $e->getMessage(), PHP_EOL;
@@ -3471,9 +3497,10 @@ use WWW::SwaggerClient::AuthenticationApi;
 my $api_instance = WWW::SwaggerClient::AuthenticationApi->new();
 my $body = WWW::SwaggerClient::Object::Object->new(); # Object | 
 my $acceptLanguage = acceptLanguage_example; # String | 
+my $xChallengeToken = xChallengeToken_example; # String | 
 
 eval { 
-    my $result = $api_instance->v1AuthRegisterPost(body => $body, acceptLanguage => $acceptLanguage);
+    my $result = $api_instance->v1AuthRegisterPost(body => $body, acceptLanguage => $acceptLanguage, xChallengeToken => $xChallengeToken);
     print Dumper($result);
 };
 if ($@) {
@@ -3492,10 +3519,11 @@ from pprint import pprint
 api_instance = swagger_client.AuthenticationApi()
 body =  # Object | 
 acceptLanguage = acceptLanguage_example # String |  (optional)
+xChallengeToken = xChallengeToken_example # String |  (optional)
 
 try: 
     # Register a new user (Native Flow)
-    api_response = api_instance.v1_auth_register_post(body, acceptLanguage=acceptLanguage)
+    api_response = api_instance.v1_auth_register_post(body, acceptLanguage=acceptLanguage, xChallengeToken=xChallengeToken)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling AuthenticationApi->v1AuthRegisterPost: %s\n" % e)</code></pre>
@@ -3516,6 +3544,22 @@ except ApiException as e:
                                   
                                   
                                       <div id="d2e199_v1AuthRegisterPost_acceptLanguage">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                                  <tr><td style="width:150px;">X-Challenge-Token</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_v1AuthRegisterPost_xChallengeToken">
                                           <div class="json-schema-view">
                                               <div class="primitive">
                                                   <span class="type">

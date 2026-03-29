@@ -7,6 +7,7 @@ import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
 import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
 import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
 import com.diegoferreiracaetano.dlearn.domain.usecases.*
+import com.diegoferreiracaetano.dlearn.domain.usecases.auth.LinkExternalProviderUseCase
 import com.diegoferreiracaetano.dlearn.infrastructure.auth.AuthProviderSyncService
 import com.diegoferreiracaetano.dlearn.infrastructure.auth.ExternalAuthService
 import com.diegoferreiracaetano.dlearn.infrastructure.auth.TmdbAuthService
@@ -69,7 +70,7 @@ val serverModule = module {
     single { ChallengeDataService() }
     single { PasswordDataService(get(), get()) }
     
-    // CORREÇÃO: Usar bind para garantir que o Koin reconheça como ExternalAuthService
+    // External Auth Services
     single { TmdbAuthService(get()) }
     single<ExternalAuthService> { get<TmdbAuthService>() }
     
@@ -82,6 +83,7 @@ val serverModule = module {
     single { GetMovieDetailUseCase(get()) }
     single { GetSearchDataUseCase(get()) }
     single { ChangePasswordUseCase(get()) }
+    single { LinkExternalProviderUseCase(get()) }
 
     // 6. Mapeadores de UI (SDUI)
     single { HomeMapper() }
@@ -107,8 +109,8 @@ val serverModule = module {
     // 8. Orchestrators (Gateways de Tela)
     single { HomeOrchestrator(get(), get()) }
     single { MovieDetailOrchestrator(get(), get()) }
-    single { LoginOrchestrator(get(), get(), get(), get()) }
-    single { CreateUserOrchestrator(get(), get(), get(), get()) }
+    single { LoginOrchestrator(get(), get(), get()) }
+    single { CreateUserOrchestrator(get(), get(), get()) }
     single { PasswordOrchestrator(get()) }
     single { WatchlistOrchestrator(get(), get(), get(), get()) }
     single { FavoriteOrchestrator(get(), get(), get(), get()) }

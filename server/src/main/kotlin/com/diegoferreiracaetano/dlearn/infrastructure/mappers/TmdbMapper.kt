@@ -44,6 +44,14 @@ class TmdbMapper(private val urlMapper: WatchProviderUrlMapper) {
         )
     }
 
+    fun createEmptyAccountStates(favorite: Boolean, watchlist: Boolean): TmdbAccountStatesRemote {
+        return TmdbAccountStatesRemote(
+            id = 0,
+            favorite = favorite,
+            watchlist = watchlist
+        )
+    }
+
     private fun toCastMember(cast: TmdbCastRemote) = CastMemberDomainData(
         name = cast.name,
         role = cast.character,

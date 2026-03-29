@@ -10,4 +10,8 @@ object AuthProviderTable : Table("auth_providers") {
     val metadata = text("metadata").nullable() // JSON string
 
     override val primaryKey = PrimaryKey(id)
+
+    init {
+        uniqueIndex("idx_user_provider_unique", userId, provider)
+    }
 }

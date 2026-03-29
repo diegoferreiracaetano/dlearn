@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.ui.screens
 
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppImageType
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppListComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -22,7 +21,7 @@ class FavoriteScreenBuilder(private val i18n: I18nProvider) {
                 )
             )
         } else {
-            components.add(AppListComponent(components = items))
+            components.addAll(items)
         }
 
         return Screen(

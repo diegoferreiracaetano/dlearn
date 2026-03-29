@@ -26,10 +26,9 @@ object AppPath {
      */
     operator fun invoke(
         path: String,
-        params: Map<String, String>? = null,
-        metadata: Map<String, String>? = null
+        params: Map<String, String>? = null
     ): String {
-        return build(AppRequest(path = path, params = params, metadata = metadata))
+        return build(AppRequest(path = path, params = params))
     }
 
     /**

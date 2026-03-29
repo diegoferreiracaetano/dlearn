@@ -16,15 +16,7 @@ object DatabaseFactory {
         val database = Database.connect(jdbcUrl, driverClassName)
         
         transaction(database) {
-            SchemaUtils.create(UserTable, AuthProviderTable)
-            
-            // Add default user if not exists
-//            UserTable.insertIgnore {
-//                it[id] = "1"
-//                it[name] = "Diego Caetano"
-//                it[email] = "admin@dlearn.com"
-//                it[password] = "123456"
-//            }
+            SchemaUtils.create(UserTable, AuthProviderTable, FavoriteTable, WatchlistTable)
         }
     }
 

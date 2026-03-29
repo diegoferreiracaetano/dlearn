@@ -8,7 +8,7 @@ info:
     **Test Credentials:**
     - Email: `admin@dlearn.com`
     - Password: `123456`
-  version: 1.10.0
+  version: 1.11.0
 servers:
   - url: http://localhost:8081
     description: Local Server
@@ -21,6 +21,7 @@ paths:
         - Authentication
       parameters:
         - $ref: '#/components/parameters/acceptLanguage'
+        - $ref: '#/components/parameters/challengeToken'
       requestBody:
         required: true
         content:
@@ -55,6 +56,7 @@ paths:
         - Authentication
       parameters:
         - $ref: '#/components/parameters/acceptLanguage'
+        - $ref: '#/components/parameters/challengeToken'
       requestBody:
         required: true
         content:
@@ -453,13 +455,9 @@ components:
       properties:
         path:
           type: string
-          enum: ["home", "movies", "search", "favorite", "watchlist", "profile", "v1/movie/favorite", "v1/movie/watchlist", "welcome", "verify_account", "faq", "users"]
+          enum: ["home", "movies", "search", "favorite", "watchlist", "profile", "welcome", "verify_account", "faq", "users"]
           example: "home"
         params:
-          type: object
-          additionalProperties:
-            type: string
-        metadata:
           type: object
           additionalProperties:
             type: string
@@ -956,12 +954,10 @@ components:
       properties:
         value:
           type: string
-        isHtml:
-          type: boolean
+        isHtml: { type: boolean }
         args:
           type: array
-          items:
-            type: string
+          items: { type: string }
     AppTextFieldType:
       type: string
       enum: [TEXT, EMAIL, PASSWORD, PHONE, NUMBER, NONE]

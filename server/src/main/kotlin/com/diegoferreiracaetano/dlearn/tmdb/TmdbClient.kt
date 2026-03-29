@@ -88,8 +88,9 @@ class TmdbClient(private val client: HttpClient) {
         return get(TmdbEndpoints.SEARCH_MULTI, language, mapOf("query" to query))
     }
 
-    suspend fun getAccountStates(movieId: String, sessionId: String): TmdbAccountStatesRemote {
-        return get(TmdbEndpoints.accountStates(movieId), "en", mapOf("session_id" to sessionId))
+    suspend fun getAccountStates(movieId: String, sessionId: String, isGuest: Boolean = false): TmdbAccountStatesRemote {
+        val params = if (isGuest) mapOf("guest_session_id" to sessionId) else mapOf("session_id" to sessionId)
+        return get(TmdbEndpoints.accountStates(movieId), "en", params)
     }
 
     suspend fun markAsFavorite(
@@ -97,8 +98,11 @@ class TmdbClient(private val client: HttpClient) {
         sessionId: String,
         mediaType: String,
         mediaId: Int,
-        favorite: Boolean
+        favorite: Boolean,
+        isGuest: Boolean = false
     ): TmdbStatusResponse {
+        if (isGuest) return TmdbStatusResponse(success = true, statusCode = 1, statusMessage = "Success (Local Only for Guest)")
+        
         val requestBody = TmdbFavoriteRequest(
             mediaType = mediaType,
             mediaId = mediaId,
@@ -112,8 +116,11 @@ class TmdbClient(private val client: HttpClient) {
         sessionId: String,
         mediaType: String,
         mediaId: Int,
-        watchlist: Boolean
+        watchlist: Boolean,
+        isGuest: Boolean = false
     ): TmdbStatusResponse {
+        if (isGuest) return TmdbStatusResponse(success = true, statusCode = 1, statusMessage = "Success (Local Only for Guest)")
+        
         val requestBody = TmdbWatchlistRequest(
             mediaType = mediaType,
             mediaId = mediaId,
@@ -140,6 +147,10 @@ class TmdbClient(private val client: HttpClient) {
 
     suspend fun createSession(requestToken: String): TmdbSessionResponse {
         return post("/authentication/session/new", TmdbSessionRequest(requestToken))
+    }
+
+    suspend fun createGuestSession(): TmdbGuestSessionResponse {
+        return get("/authentication/guest_session/new", "en")
     }
 
     suspend fun getAccountDetails(sessionId: String): TmdbAccountResponse {

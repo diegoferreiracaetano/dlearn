@@ -4,6 +4,7 @@ import com.diegoferreiracaetano.dlearn.api.exception.challengePreference
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthRequest
 import com.diegoferreiracaetano.dlearn.domain.auth.CreateUserRequest
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType.*
+import com.diegoferreiracaetano.dlearn.domain.usecases.auth.LinkExternalProviderUseCase
 import com.diegoferreiracaetano.dlearn.orchestrator.auth.CreateUserOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.auth.LoginOrchestrator
 import io.ktor.http.HttpHeaders.AcceptLanguage
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory
 fun Route.authController() {
     val loginOrchestrator by inject<LoginOrchestrator>()
     val createUserOrchestrator by inject<CreateUserOrchestrator>()
+    val linkExternalProviderUseCase by inject<LinkExternalProviderUseCase>()
     val logger = LoggerFactory.getLogger("AuthController")
 
     route("/v1/auth") {
@@ -28,14 +30,19 @@ fun Route.authController() {
             val request = call.receive<AuthRequest>()
             val language = call.request.header(AcceptLanguage) ?: "en"
             
-            logger.info("Login request received for ${request.email} with metadata: ${request.metadata.keys}")
+            logger.info("Login request received for ${request.email}")
 
             val response = loginOrchestrator.login(
                 email = request.email,
                 password = request.password,
-                metadata = request.metadata,
                 language = language
             )
+
+            // 🔥 DISPARO AUTOMÁTICO E ASSÍNCRONO DO VÍNCULO TMDB
+            response.user?.let { user ->
+                linkExternalProviderUseCase.execute(userId = user.id)
+            }
+
             call.respond(response)
         }
 
@@ -50,15 +57,20 @@ fun Route.authController() {
                 
                 val language = call.request.header(AcceptLanguage) ?: "en"
                 
-                logger.info("Register request received for ${request.email}. Metadata size: ${request.metadata.size}. Keys: ${request.metadata.keys}")
+                logger.info("Register request received for ${request.email}")
 
                 val response = createUserOrchestrator.create(
                     name = request.name,
                     email = request.email,
                     password = request.password,
-                    metadata = request.metadata,
                     language = language
                 )
+
+                // 🔥 DISPARO AUTOMÁTICO E ASSÍNCRONO DO VÍNCULO TMDB
+                response.user?.let { user ->
+                    linkExternalProviderUseCase.execute(userId = user.id)
+                }
+
                 call.respond(HttpStatusCode.Created, response)
             }
         }

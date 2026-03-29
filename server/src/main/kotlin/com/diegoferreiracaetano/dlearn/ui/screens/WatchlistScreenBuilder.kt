@@ -22,7 +22,7 @@ class WatchlistScreenBuilder(private val i18n: I18nProvider) {
                 )
             )
         } else {
-            components.add(AppListComponent(components = items))
+            components.addAll(items)
         }
 
         return Screen(

@@ -2,29 +2,24 @@ package com.diegoferreiracaetano.dlearn
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.diegoferreiracaetano.dlearn.api.controllers.*
+import com.diegoferreiracaetano.dlearn.api.configureRouting
 import com.diegoferreiracaetano.dlearn.api.exception.configureStatusPages
-import com.diegoferreiracaetano.dlearn.di.serverModule
 import com.diegoferreiracaetano.dlearn.infrastructure.db.DatabaseFactory
 import com.diegoferreiracaetano.dlearn.infrastructure.services.TokenService
+import com.diegoferreiracaetano.dlearn.di.serverModule
 import io.ktor.http.CacheControl
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.CachingOptions
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.application.Application
-import io.ktor.server.application.install
-import io.ktor.server.auth.Authentication
-import io.ktor.server.auth.authenticate
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.netty.EngineMain
 import io.ktor.server.plugins.cachingheaders.CachingHeaders
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.plugins.openapi.openAPI
-import io.ktor.server.plugins.swagger.swaggerUI
 import io.ktor.server.response.respond
-import io.ktor.server.routing.routing
 import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
@@ -89,18 +84,6 @@ fun Application.module() {
     // StatusPages deve vir após a maioria dos plugins que alteram a resposta
     configureStatusPages()
 
-    routing {
-        swaggerUI(path = "swagger", swaggerFile = "documentation.yaml")
-        openAPI(path = "openapi", swaggerFile = "documentation.yaml")
-
-        authController()
-        challengeController()
-        passwordController() // Movi para fora do authenticate para suportar fluxo deslogado
-
-        authenticate("auth-jwt") {
-            mainController()
-            appController()
-            userController()
-        }
-    }
+    // Configura as rotas isoladamente
+    configureRouting()
 }

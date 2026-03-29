@@ -28,6 +28,13 @@ object TokenConstants {
     const val SECRET = "dlearn-secret-key-change-it-in-prod"
 }
 
+object MetadataKeys {
+    const val TMDB_SESSION_ID = "sessionId"
+    const val TMDB_ACCOUNT_ID = "accountId"
+    const val EXTERNAL_USERNAME = "external_username"
+    const val EXTERNAL_PASSWORD = "external_password"
+}
+
 object TmdbConstants {
     const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/"
     const val IMAGE_W500 = "w500"

@@ -8,6 +8,7 @@ object UserTable : Table("users") {
     val email = varchar("email", 128).uniqueIndex()
     val password = varchar("password", 128)
     val avatarUrl = varchar("avatar_url", 255).nullable()
+    val isPremium = bool("is_premium").default(false)
 
     override val primaryKey = PrimaryKey(id)
 }

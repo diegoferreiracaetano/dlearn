@@ -1,0 +1,8 @@
+package com.diegoferreiracaetano.dlearn.domain.user
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+enum class AccountProvider {
+    TMDB, GOOGLE, APPLE, FACEBOOK
+}

@@ -16,15 +16,19 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
+import org.slf4j.LoggerFactory
 
 fun Route.authController() {
     val loginOrchestrator by inject<LoginOrchestrator>()
     val createUserOrchestrator by inject<CreateUserOrchestrator>()
+    val logger = LoggerFactory.getLogger("AuthController")
 
     route("/v1/auth") {
         post("/login") {
             val request = call.receive<AuthRequest>()
             val language = call.request.header(AcceptLanguage) ?: "en"
+            
+            logger.info("Login request received for ${request.email} with metadata: ${request.metadata.keys}")
 
             val response = loginOrchestrator.login(
                 email = request.email,
@@ -37,8 +41,16 @@ fun Route.authController() {
 
         challengePreference(OTP_EMAIL) {
             post("/register") {
-                val request = call.receive<CreateUserRequest>()
+                val request = try {
+                    call.receive<CreateUserRequest>()
+                } catch (e: Exception) {
+                    logger.error("Failed to receive CreateUserRequest", e)
+                    throw BadRequestException("Invalid request body")
+                }
+                
                 val language = call.request.header(AcceptLanguage) ?: "en"
+                
+                logger.info("Register request received for ${request.email}. Metadata size: ${request.metadata.size}. Keys: ${request.metadata.keys}")
 
                 val response = createUserOrchestrator.create(
                     name = request.name,

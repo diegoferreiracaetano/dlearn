@@ -18,7 +18,7 @@ class SearchDataService(private val tmdbClient: TmdbClient) {
 
         searchResponse.results.map { item ->
             val isMovie = item.title != null
-            val mediaType = if (isMovie) MediaType.MOVIE else MediaType.SERIES
+            val mediaType = if (isMovie) MediaType.MOVIES else MediaType.SERIES
             val genres = if (isMovie) movieGenres.await() else tvGenres.await()
             item.toVideo(mediaType, genres)
         }.sortedByDescending { it.rating ?: 0f }

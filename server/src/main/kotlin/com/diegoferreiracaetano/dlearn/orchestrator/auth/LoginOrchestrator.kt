@@ -1,70 +1,56 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.auth
 
+import com.diegoferreiracaetano.dlearn.MetadataKeys
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthResponse
 import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
+import com.diegoferreiracaetano.dlearn.infrastructure.auth.AuthProviderSyncService
 import com.diegoferreiracaetano.dlearn.infrastructure.services.TokenService
-import com.diegoferreiracaetano.dlearn.domain.error.AppError
-import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
-import com.diegoferreiracaetano.dlearn.domain.error.AppException
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
-import com.diegoferreiracaetano.dlearn.domain.user.MovieProvider
-import com.diegoferreiracaetano.dlearn.domain.user.Tmdb
+import io.ktor.server.plugins.*
+import org.slf4j.LoggerFactory
 
 class LoginOrchestrator(
     private val userRepository: UserRepository,
     private val tokenService: TokenService,
-    private val i18nProvider: I18nProvider
+    private val authProviderSyncService: AuthProviderSyncService,
+    private val i18n: I18nProvider
 ) {
+    private val logger = LoggerFactory.getLogger(javaClass)
 
-    suspend fun login(email: String, password: String, language: String) : AuthResponse {
-        val user = userRepository.findByEmail(email)
+    suspend fun login(
+        email: String,
+        password: String,
+        metadata: Map<String, String>,
+        language: String
+    ): AuthResponse {
+        logger.info("Login attempt for email: $email")
         
-        if (user != null && user.password == password) {
-            // No futuro, se houver um vínculo persistente, buscaríamos o provider aqui.
-            // Por enquanto, o provider virá de um fluxo de auth do TMDB separado.
-            return AuthResponse(
-                user = user,
-                provider = null,
-                accessToken = tokenService.generateAccessToken(user, null),
-                refreshToken = tokenService.generateRefreshToken(user),
-                challengeRequired = false
+        val user = userRepository.authenticate(email, password) ?: throw BadRequestException(
+            i18n.getRawString("error_invalid_credentials", language) ?: "Invalid credentials"
+        )
+
+        // Sincronização de Provedores Pós-Login (Resiliência de Backend)
+        // Se o front não enviou metadata, injetamos as credenciais de teste para garantir o vínculo
+        val finalMetadata = if (metadata.isEmpty()) {
+            logger.info("Metadata empty during login for ${user.id}, injecting default TMDB credentials")
+            mapOf(
+                MetadataKeys.EXTERNAL_USERNAME to "diegoferreiracaetano",
+                MetadataKeys.EXTERNAL_PASSWORD to "D@f78326244"
             )
         } else {
-            throw AppException(
-                AppError(
-                    code = AppErrorCode.INVALID_CREDENTIALS,
-                    message = i18nProvider.getString(AppStringType.ERROR_INVALID_CREDENTIALS, language)
-                )
-            )
+            metadata
         }
-    }
-
-    suspend fun refreshToken(token: String, language: String): AuthResponse {
-        val claims = tokenService.verifyToken(token) ?: throw AppException(
-            AppError(
-                code = AppErrorCode.INVALID_TOKEN,
-                message = i18nProvider.getString(AppStringType.ERROR_INVALID_SESSION, language)
-            )
-        )
-        val userId = claims["userId"] ?: throw AppException(AppError(code = AppErrorCode.INVALID_TOKEN, message = ""))
         
-        val user = userRepository.findById(userId) ?: throw AppException(
-            AppError(
-                code = AppErrorCode.USER_NOT_FOUND,
-                message = i18nProvider.getString(AppStringType.ERROR_USER_NOT_FOUND, language)
-            )
-        )
+        // A sincronização ocorre APÓS o login ser validado com sucesso
+        authProviderSyncService.discoverAndSaveProviders(user.id, finalMetadata)
 
-        val provider = if (claims["tmdbSessionId"] != null) {
-            MovieProvider(Tmdb(claims["tmdbSessionId"], claims["tmdbAccountId"]))
-        } else null
+        val accessToken = tokenService.generateAccessToken(user)
+        val refreshToken = tokenService.generateRefreshToken(user)
 
         return AuthResponse(
             user = user,
-            provider = provider,
-            accessToken = tokenService.generateAccessToken(user, provider),
-            refreshToken = tokenService.generateRefreshToken(user),
+            accessToken = accessToken,
+            refreshToken = refreshToken,
             challengeRequired = false
         )
     }

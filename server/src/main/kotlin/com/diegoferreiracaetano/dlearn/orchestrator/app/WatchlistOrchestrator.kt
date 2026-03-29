@@ -3,7 +3,7 @@ package com.diegoferreiracaetano.dlearn.orchestrator.app
 import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.model.toVideo
-import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.WATCHLIST
 import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.network.AppHeader
 import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
@@ -11,13 +11,15 @@ import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.WatchlistScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapLatest
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class WatchlistOrchestrator(
     private val watchlistScreenBuilder: WatchlistScreenBuilder,
@@ -26,67 +28,61 @@ class WatchlistOrchestrator(
     private val tmdbClient: TmdbClient
 ) : Orchestrator, KoinComponent {
 
-    private val movieDetailOrchestrator: MovieDetailOrchestrator by inject()
-    private val homeOrchestrator: HomeOrchestrator by inject()
-
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun execute(request: AppRequest, header: AppHeader): Flow<Screen> {
         val movieId = request.params?.get(AppQueryParam.ID)
-        val active = request.params?.get("active")?.toBoolean() ?: false
-        val returnPath = request.params?.get("returnPath")
+        val isToggleAction = request.params?.containsKey(WATCHLIST) == true
+        val mediaTypeString = request.params?.get(AppQueryParam.MEDIA_TYPE)
 
         return flow {
-            if (movieId != null) {
-                // Perform the action via Repository (SOLID)
-                val success = watchlistRepository.addToWatchlist(
-                    accountId = header.tmdbAccountId ?: "",
-                    sessionId = header.tmdbSessionId ?: "",
-                    mediaId = movieId.toInt(),
-                    watchlist = active
-                )
-                
-                if (success) {
-                    // Decide which screen to re-render based on returnPath
-                    when (returnPath) {
-                        AppNavigationRoute.MOVIES -> {
-                            movieDetailOrchestrator.execute(request, header).collect { emit(it) }
-                            return@flow
-                        }
-                        AppNavigationRoute.HOME -> {
-                            homeOrchestrator.execute(request, header).collect { emit(it) }
-                            return@flow
-                        }
-                    }
-                }
+            if (movieId != null && isToggleAction) {
+                val mediaType = mediaTypeString?.let { MediaType.valueOf(it) }
+                    ?: throw IllegalArgumentException("mediaType is required for watchlist action")
+                val active = request.params?.get(WATCHLIST)?.toBoolean() ?: false
+                addToWatchlist(movieId, mediaType, active, header)
             }
-            
-            // Default behavior: return the watchlist list
-            getWatchlistList(header).collect { emit(it) }
+            emitAll(getWatchlistList(header))
         }
     }
 
-    private fun getWatchlistList(header: AppHeader): Flow<Screen> = flow {
-        coroutineScope {
-            val language = header.language
-            val sessionId = header.tmdbSessionId
-            val accountId = header.tmdbAccountId
+    suspend fun addToWatchlist(movieId: String, mediaType: MediaType, active: Boolean, header: AppHeader) {
+        val userId = header.userId
+        watchlistRepository.addToWatchlist(
+            userId = userId,
+            mediaId = movieId.toInt(),
+            mediaType = mediaType,
+            watchlist = active
+        )
+    }
 
-            if (sessionId == null || accountId == null) {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun getWatchlistList(header: AppHeader): Flow<Screen> {
+        val language = header.language
+        val userId = header.userId
+
+        if (userId == "guest") {
+            return flow {
                 emit(watchlistScreenBuilder.build(language, emptyList()))
-                return@coroutineScope
+            }
+        }
+
+        return watchlistRepository.getWatchlist(userId, language).mapLatest { watchlistItems ->
+            val videos = coroutineScope {
+                watchlistItems.map { (id, mediaType) ->
+                    async {
+                        runCatching {
+                            if (mediaType == MediaType.MOVIES) {
+                                tmdbClient.getMovieDetail(id.toString(), language).toVideo(mediaType)
+                            } else {
+                                tmdbClient.getTvShowDetail(id.toString(), language).toVideo(mediaType)
+                            }
+                        }.getOrNull()
+                    }
+                }.awaitAll().filterNotNull()
             }
 
-            val watchlistIds = watchlistRepository.getWatchlist(accountId, sessionId, language)
-
-            val videos = watchlistIds.map { id ->
-                async {
-                    runCatching {
-                        tmdbClient.getMovieDetail(id.toString(), language).toVideo(MediaType.MOVIE)
-                    }.getOrNull()
-                }
-            }.awaitAll().filterNotNull()
-
             val items = videoMapper.toMovieItemComponents(videos)
-            emit(watchlistScreenBuilder.build(language, items))
+            watchlistScreenBuilder.build(language, items)
         }
     }
 }

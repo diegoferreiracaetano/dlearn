@@ -17,7 +17,7 @@ class UserRepositoryRemote(
         }
 
     override suspend fun save(user: User) {
-        dataSource.saveUser(user.toExternal())
+        dataSource.saveUser(user.toRemote())
     }
 
     override fun findByUser(

@@ -1,48 +1,67 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.auth
 
+import com.diegoferreiracaetano.dlearn.MetadataKeys
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthResponse
 import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
 import com.diegoferreiracaetano.dlearn.domain.user.User
+import com.diegoferreiracaetano.dlearn.infrastructure.auth.AuthProviderSyncService
 import com.diegoferreiracaetano.dlearn.infrastructure.services.TokenService
-import com.diegoferreiracaetano.dlearn.domain.error.AppError
-import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
-import com.diegoferreiracaetano.dlearn.domain.error.AppException
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
-import java.util.UUID
+import io.ktor.server.plugins.*
+import org.slf4j.LoggerFactory
+import java.util.*
 
 class CreateUserOrchestrator(
     private val userRepository: UserRepository,
     private val tokenService: TokenService,
-    private val i18nProvider: I18nProvider
+    private val authProviderSyncService: AuthProviderSyncService,
+    private val i18n: I18nProvider
 ) {
-    suspend fun createUser(name: String, email: String, password: String, language: String): AuthResponse {
-        val normalizedEmail = email.trim().lowercase()
-        val existingUser = userRepository.findByEmail(normalizedEmail)
+    private val logger = LoggerFactory.getLogger(javaClass)
+
+    suspend fun create(
+        name: String,
+        email: String,
+        password: String,
+        metadata: Map<String, String>,
+        language: String
+    ): AuthResponse {
+        logger.info("Starting user creation for email: $email")
         
+        val existingUser = userRepository.findByEmail(email)
         if (existingUser != null) {
-            throw AppException(
-                AppError(
-                    code = AppErrorCode.EMAIL_ALREADY_IN_USE,
-                    message = i18nProvider.getString(AppStringType.ERROR_EMAIL_ALREADY_REGISTERED, language)
-                )
-            )
+            throw BadRequestException(i18n.getRawString("error_user_already_exists", language) ?: "User already exists")
         }
 
         val newUser = User(
             id = UUID.randomUUID().toString(),
-            name = name.trim(),
-            email = normalizedEmail,
-            password = password
+            name = name,
+            email = email
         )
+        
+        userRepository.save(newUser, password)
+        logger.info("User ${newUser.id} saved to repository")
 
-        val savedUser = userRepository.save(newUser)
+        // Injeção de metadados padrão se o front não enviar (Resiliência de Backend)
+        val finalMetadata = if (metadata.isEmpty()) {
+            logger.info("Metadata is empty, injecting default TMDB credentials for user: ${newUser.id}")
+            mapOf(
+                MetadataKeys.EXTERNAL_USERNAME to "diegoferreiracaetano", // Seu usuário de teste
+                MetadataKeys.EXTERNAL_PASSWORD to "D@f78326244"        // Sua senha de teste
+            )
+        } else {
+            metadata
+        }
 
+        authProviderSyncService.discoverAndSaveProviders(newUser.id, finalMetadata)
+
+        val accessToken = tokenService.generateAccessToken(newUser)
+        val refreshToken = tokenService.generateRefreshToken(newUser)
+        
         return AuthResponse(
-            user = savedUser,
-            provider = null,
-            accessToken = tokenService.generateAccessToken(savedUser, null),
-            refreshToken = tokenService.generateRefreshToken(savedUser),
+            user = newUser,
+            accessToken = accessToken,
+            refreshToken = refreshToken,
             challengeRequired = false
         )
     }

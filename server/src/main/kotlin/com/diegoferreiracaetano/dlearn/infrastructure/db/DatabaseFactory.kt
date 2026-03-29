@@ -1,5 +1,7 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.db
 
+import com.diegoferreiracaetano.dlearn.MetadataKeys
+import com.diegoferreiracaetano.dlearn.domain.user.AccountProvider
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -14,15 +16,15 @@ object DatabaseFactory {
         val database = Database.connect(jdbcUrl, driverClassName)
         
         transaction(database) {
-            SchemaUtils.create(UserTable)
+            SchemaUtils.create(UserTable, AuthProviderTable)
             
             // Add default user if not exists
-            UserTable.insertIgnore {
-                it[id] = "1"
-                it[name] = "Diego Caetano"
-                it[email] = "admin@dlearn.com"
-                it[password] = "123456"
-            }
+//            UserTable.insertIgnore {
+//                it[id] = "1"
+//                it[name] = "Diego Caetano"
+//                it[email] = "admin@dlearn.com"
+//                it[password] = "123456"
+//            }
         }
     }
 

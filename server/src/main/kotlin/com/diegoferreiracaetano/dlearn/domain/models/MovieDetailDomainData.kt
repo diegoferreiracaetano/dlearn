@@ -17,7 +17,7 @@ data class MovieDetailDomainData(
     val isFavorite: Boolean = false,
     val isInWatchlist: Boolean = false,
     val providers: List<WatchProviderDomainData> = emptyList(),
-    val mediaType: MediaType = MediaType.MOVIE
+    val mediaType: MediaType = MediaType.MOVIES
 )
 
 data class CastMemberDomainData(

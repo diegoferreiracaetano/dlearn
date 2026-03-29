@@ -51,7 +51,7 @@ class HomeMapper() {
             duration = null,
             contentRating = "L",
             genre = categories.firstOrNull()?.title,
-            movieType = if (mediaType == MediaType.MOVIE) "Filme" else "Série",
+            movieType = if (mediaType == MediaType.MOVIES) "Filme" else "Série",
             isPremium = false,
             isFavorite = isFavorite,
             rank = rank,

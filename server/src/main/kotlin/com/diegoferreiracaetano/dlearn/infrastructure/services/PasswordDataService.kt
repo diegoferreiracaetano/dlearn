@@ -19,7 +19,7 @@ class PasswordDataService(
         val user = userRepository.findById(request.userId) ?: userRepository.findByEmail(request.userId)
             ?: throw NoSuchElementException("User not found")
 
-        userRepository.save(user.copy(password = request.newPassword))
+        userRepository.update(user, password = request.newPassword)
 
         return ChangePasswordResponse(message = "Password changed successfully")
     }

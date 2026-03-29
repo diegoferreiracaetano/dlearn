@@ -21,7 +21,7 @@ class VideoMapper {
             duration = null,
             contentRating = "L",
             genre = video.categories.firstOrNull()?.title,
-            movieType = if (video.mediaType == MediaType.MOVIE) "Filme" else "Série",
+            movieType = if (video.mediaType == MediaType.MOVIES) "Filme" else "Série",
             actionUrl = AppPath(AppNavigationRoute.MOVIES, mapOf(AppQueryParam.ID to video.id))
         )
     }

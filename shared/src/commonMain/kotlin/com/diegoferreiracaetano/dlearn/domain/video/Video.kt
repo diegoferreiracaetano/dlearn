@@ -16,7 +16,7 @@ data class Video(
     val rating: Float? = null,
     val progress: Float = 0f,
     val type: VideoType = VideoType.DEFAULT,
-    val mediaType: MediaType = MediaType.MOVIE,
+    val mediaType: MediaType = MediaType.MOVIES,
     val category: HomeCategory? = null
 )
 
@@ -28,6 +28,6 @@ enum class VideoType {
 
 @Serializable
 enum class MediaType {
-    MOVIE,
+    MOVIES,
     SERIES
 }

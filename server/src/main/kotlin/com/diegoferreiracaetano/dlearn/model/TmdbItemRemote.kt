@@ -33,7 +33,7 @@ fun TmdbItemRemote.toVideo(
     } ?: emptyList()
 
     val type = when (mediaType) {
-        "movie" -> MediaType.MOVIE
+        "movie" -> MediaType.MOVIES
         "tv" -> MediaType.SERIES
         else -> fallbackMediaType
     }

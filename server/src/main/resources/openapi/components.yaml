@@ -1,0 +1,200 @@
+components:
+  parameters:
+    userId:
+      name: X-User-Id
+      in: header
+      required: false
+      schema:
+        type: string
+    appVersion:
+      name: X-App-Version
+      in: header
+      required: true
+      schema:
+        type: string
+    acceptLanguage:
+      name: Accept-Language
+      in: header
+      required: false
+      schema:
+        type: string
+        default: "en-US"
+    country:
+      name: X-Country
+      in: header
+      required: false
+      schema:
+        type: string
+    challengeToken:
+      name: X-Challenge-Token
+      in: header
+      required: false
+      schema:
+        type: string
+    challengePreference:
+      name: X-Challenge-Preference
+      in: header
+      required: false
+      schema:
+        type: string
+        enum: [SMS, EMAIL, TOTP]
+    transactionId:
+      name: transactionId
+      in: query
+      required: true
+      schema:
+        type: string
+
+  schemas:
+    # --- SDUI Base ---
+    Component:
+      type: object
+      required: [type, id]
+      discriminator:
+        propertyName: type
+      properties:
+        type: { type: string }
+        id: { type: string }
+
+    Screen:
+      type: object
+      properties:
+        id: { type: string }
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/Component'
+
+    AppRequest:
+      type: object
+      required: [path]
+      properties:
+        path: { type: string }
+        params:
+          type: object
+          additionalProperties: { type: string }
+
+    # --- Authentication ---
+    AuthRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string }
+        socialToken: { type: string }
+        authType:
+          type: string
+          enum: [PASSWORD, GOOGLE, FACEBOOK, APPLE]
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken: { type: string }
+        refreshToken: { type: string }
+        user: { $ref: '#/components/schemas/User' }
+
+    User:
+      type: object
+      properties:
+        id: { type: string }
+        email: { type: string }
+        name: { type: string }
+        photoUrl: { type: string }
+
+    CreateUserRequest:
+      type: object
+      required: [email, password, name]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string }
+        name: { type: string }
+
+    ChangePasswordRequest:
+      type: object
+      required: [oldPassword, newPassword]
+      properties:
+        oldPassword: { type: string }
+        newPassword: { type: string }
+
+    # --- Security / Challenge ---
+    ResolveChallengeRequest:
+      type: object
+      required: [answer]
+      properties:
+        answer: { type: string }
+
+    ResolveChallengeResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        challengeToken: { type: string }
+        message: { type: string }
+
+    # --- SDUI Components ---
+    AppContainerComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            topBar: { $ref: '#/components/schemas/Component' }
+            searchBar: { $ref: '#/components/schemas/Component' }
+            bottomBar: { $ref: '#/components/schemas/Component' }
+    
+    AppTopBarComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title: { type: string }
+            subtitle: { type: string }
+            showBackButton: { type: boolean }
+    
+    AppLoadingComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            message: { type: string }
+
+    movie_item:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title: { type: string }
+            imageUrl: { type: string }
+            rating: { type: number }
+            releaseDate: { type: string }
+            mediaType: { type: string, enum: [MOVIE, TV] }
+            actionUrl: { type: string }
+
+    MovieCarouselComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            title: { type: string }
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/movie_item' }
+
+    ChipGroupComponent:
+      allOf:
+        - $ref: '#/components/schemas/Component'
+        - type: object
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/ChipComponent' }
+
+    ChipComponent:
+      type: object
+      properties:
+        id: { type: string }
+        label: { type: string }
+        isSelected: { type: boolean }
+        hasDropDown: { type: boolean }
+        actionUrl: { type: string }
+        options:
+          type: array
+          items: { $ref: '#/components/schemas/ChipComponent' }

@@ -1,15 +1,16 @@
 package com.diegoferreiracaetano.dlearn.domain.repository
 
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
-import kotlinx.coroutines.flow.Flow
 
 interface WatchlistRepository {
-    suspend fun addToWatchlist(
+    suspend fun toggleWatchlist(
         userId: String,
         mediaId: Int,
         mediaType: MediaType,
-        watchlist: Boolean
+        isWatchlist: Boolean
     )
     
-    fun getWatchlist(userId: String, language: String): Flow<List<Pair<Int, MediaType>>>
+    suspend fun isWatchlist(userId: String, mediaId: Int, mediaType: MediaType): Boolean
+
+    suspend fun getWatchlist(userId: String): List<Pair<Int, MediaType>>
 }

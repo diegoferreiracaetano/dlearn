@@ -1,103 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DLearn</string>
-    <string name="app_subtitle">Learning Platform</string>
-
-    <string name="title_email">E-mail</string>
-    <string name="title_password">Password</string>
-    <string name="title_name">Name</string>
-    <string name="title_change_name">Change name</string>
-    <string name="title_change_password">Change password</string>
-
-    <string name="otp_error_default">Invalid code. Try again.</string>
-    <string name="otp_resend_prompt">Didn't receive the code? </string>
-    <string name="otp_resend_now">Resend now</string>
-    <string name="otp_resend_in">Resend in %1$s</string>
-
-    <string name="email_message_validation">Enter a valid email.</string>
-    <string name="password_message_validation">Use a valid password.</string>
-
-    <string name="login_screen_title">Welcome back!</string>
-    <string name="login_screen_subtitle">Please enter your details.</string>
-    <string name="login_forgot_password">Forgot password?</string>
+    <string name="app_subtitle">Your Personalized Learning Path</string>
     <string name="login_action">Login</string>
-
-    <string name="signup_screen_title">Let's get started</string>
-    <string name="signup_screen_subtitle">The latest movies and series are here</string>
-    <string name="signup_agree_terms">I agree to the Terms of Service and Privacy Policy</string>
     <string name="signup_action">Sign Up</string>
-
-    <string name="onboarding_title_1">The largest streaming of local and international movies</string>
-    <string name="onboarding_description_1">Semper in cursus magna et eu varius nunc adipiscing. Elementum justo, laoreet id sem varius parturient.</string>
-    <string name="onboarding_title_2">Offers high-quality viewing without ads</string>
-    <string name="onboarding_description_2">Semper in cursus magna et eu varius nunc adipiscing. Elementum justo, laoreet id sem varius parturient.</string>
-    <string name="onboarding_title_3">Our service brings together your favorite series</string>
-    <string name="onboarding_description_3">Semper in cursus magna et eu varius nunc adipiscing. Elementum justo, laoreet id sem varius parturient.</string>
-
-    <string name="onboarding_already_have_account">Already have an account? </string>
+    <string name="onboarding_already_have_account">Already have an account?</string>
     <string name="onboarding_or_signup_with">Or sign up with</string>
 
-    <string name="reset_password_title">Reset Password</string>
-    <string name="reset_password_subtitle">Recover your account password</string>
-    <string name="reset_password_action">Next</string>
+    <!-- Auth Errors -->
+    <string name="error_unknown">An unknown error occurred</string>
+    <string name="error_network">Network error. Please check your connection</string>
+    <string name="error_server">Server error. Please try again later</string>
+    <string name="error_validation">Invalid data. Please check the fields</string>
+    <string name="error_unauthorized">Unauthorized access</string>
+    <string name="error_forbidden">Access denied</string>
+    <string name="error_not_found">Resource not found</string>
+    <string name="error_timeout">Request timed out</string>
+    <string name="error_invalid_credentials">Invalid email or password</string>
+    <string name="error_user_already_exists">User already exists</string>
+    <string name="error_service_unavailable">Service unavailable</string>
 
-    <string name="verify_account_title">Verifying your account</string>
-    <string name="verify_account_subtitle">We just sent a 4-digit code to your email</string>
-    <string name="verify_account_action">Continue</string>
+    <!-- Social Auth Errors -->
+    <string name="error_social_auth_config_missing">Authentication service not configured for this app</string>
+    <string name="error_unsupported_credential_type">This login method is not supported on this device</string>
+    <string name="error_social_auth_failed">Social authentication failed</string>
+    <string name="error_social_auth_canceled">Login canceled by user</string>
 
-    <string name="create_password_title">Create New Password</string>
-    <string name="create_password_subtitle">Enter your new password</string>
-    <string name="create_password_action">Reset</string>
-    <string name="create_password_confirm">Confirm Password</string>
-
-    <string name="action_back">Back</string>
-    <string name="action_favorite">Favorite</string>
-    <string name="action_watch">Watch</string>
-    <string name="action_add_to_list">My list</string>
-    <string name="error_provider_link">Could not open provider link at this time.</string>
-    <string name="error_unknown">An unexpected error occurred. Please try again.</string>
-    <string name="error_network">No internet connection. Please check your network.</string>
-    <string name="error_server">Server error. We are working to fix it.</string>
-    <string name="error_unauthorized">Your session has expired. Please login again.</string>
-    <string name="error_forbidden">You don\'t have permission to perform this action.</string>
-    <string name="error_not_found">Resource not found.</string>
-    <string name="error_timeout">Request timeout. Please try again.</string>
-    <string name="error_invalid_credentials">Invalid email or password.</string>
-    <string name="error_user_already_exists">An account with this email already exists.</string>
-    <string name="error_validation">Please check the fields and try again.</string>
-    <string name="error_service_unavailable">Service unavailable.</string>
-
-
-    <string name="watchlist_empty_title">Your watchlist is empty</string>
-    <string name="watchlist_empty_description">Save movies and series to watch later and they will appear here.</string>
-
-    <!-- Profile & Edit Profile -->
-    <string name="profile_title">Profile</string>
-    <string name="home_title">Home</string>
-    <string name="nav_home">Home</string>
-    <string name="nav_watchlist">Watchlist</string>
-    <string name="nav_search">Search</string>
-    <string name="nav_favorites">Favorites</string>
-    <string name="nav_profile">Profile</string>
-    <string name="edit_profile_title">Edit Profile</string>
-    <string name="field_full_name">Full Name</string>
-    <string name="field_email">Email</string>
-    <string name="field_password">Password</string>
-    <string name="field_phone_number">Phone Number</string>
-    <string name="save_changes">Save Changes</string>
-    <string name="update_profile_success">Profile updated successfully!</string>
-    <string name="update_profile_error">Failed to update profile.</string>
-
-    <!-- Settings & Dialogs -->
-    <string name="clear_cache_title">Are you sure?</string>
-    <string name="clear_cache_description">This will remove all downloaded and temporary data from the app.</string>
-    <string name="clear_cache_confirm">Clear</string>
-    <string name="clear_cache_cancel">Cancel</string>
-    <string name="confirm">Confirm</string>
-    <string name="cancel">Cancel</string>
-
-    <!-- Logout -->
-    <string name="logout_title">Sign Out</string>
-    <string name="logout_description">Are you sure you want to sign out of your account?</string>
-    <string name="logout_confirm">Sign Out</string>
+    <!-- Challenge Errors -->
+    <string name="error_challenge_required">Verification required</string>
+    <string name="error_invalid_challenge_code">Invalid verification code</string>
+    <string name="error_challenge_expired">Verification code expired</string>
+    <string name="error_transaction_id_required">Transaction ID is required</string>
 </resources>

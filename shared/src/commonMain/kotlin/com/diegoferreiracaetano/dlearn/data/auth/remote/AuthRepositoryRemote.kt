@@ -39,6 +39,26 @@ class AuthRepositoryRemote(
         emit(response)
     }
 
+    override fun socialLogin(
+        provider: String,
+        idToken: String,
+        accessToken: String?
+    ): Flow<AuthResponse> = flow {
+        val response = httpClient.post("/v1/auth/social-login") {
+            contentType(ContentType.Application.Json)
+            setBody(
+                mapOf(
+                    "provider" to provider,
+                    "id_token" to idToken,
+                    "access_token" to accessToken
+                )
+            )
+        }.body<AuthResponse>()
+
+        handleAuthResponse(response)
+        emit(response)
+    }
+
     private suspend fun handleAuthResponse(response: AuthResponse) {
         if (response.accessToken != null && response.refreshToken != null && response.user != null) {
             sessionManager.login(

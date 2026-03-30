@@ -8,6 +8,14 @@ plugins {
     alias(libs.plugins.buildconfig)
 }
 
+buildConfig {
+    packageName("com.diegoferreiracaetano.dlearn")
+    buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", providers.gradleProperty("GOOGLE_WEB_CLIENT_ID").getOrElse(""))
+    buildConfigField("String", "APPLE_CLIENT_ID", providers.gradleProperty("APPLE_CLIENT_ID").getOrElse(""))
+    buildConfigField("String", "FACEBOOK_APP_ID", providers.gradleProperty("FACEBOOK_APP_ID").getOrElse(""))
+}
+
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -48,17 +56,21 @@ kotlin {
             api(libs.multiplatform.settings.coroutines)
             implementation(libs.multiplatform.settings.no.arg)
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.kotlinx.coroutines.test)
-        }
 
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.firebase.auth)
+            implementation(libs.firebase.common)
+            
+            implementation(libs.androidx.credentials)
+            implementation(libs.androidx.credentials.play.services.auth)
+            implementation(libs.googleid)
         }
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.firebase.auth)
+            implementation(libs.firebase.common)
         }
 
         wasmJsMain.dependencies {

@@ -22,10 +22,14 @@ import dlearn.composeapp.generated.resources.error_network
 import dlearn.composeapp.generated.resources.error_not_found
 import dlearn.composeapp.generated.resources.error_server
 import dlearn.composeapp.generated.resources.error_service_unavailable
+import dlearn.composeapp.generated.resources.error_social_auth_canceled
+import dlearn.composeapp.generated.resources.error_social_auth_config_missing
+import dlearn.composeapp.generated.resources.error_social_auth_failed
 import dlearn.composeapp.generated.resources.error_timeout
 import dlearn.composeapp.generated.resources.error_transaction_id_required
 import dlearn.composeapp.generated.resources.error_unauthorized
 import dlearn.composeapp.generated.resources.error_unknown
+import dlearn.composeapp.generated.resources.error_unsupported_credential_type
 import dlearn.composeapp.generated.resources.error_user_already_exists
 import dlearn.composeapp.generated.resources.error_validation
 import org.jetbrains.compose.resources.StringResource
@@ -54,6 +58,12 @@ fun AppErrorCode.toResource(): StringResource {
         AppErrorCode.MOVIE_NOT_FOUND -> Res.string.error_not_found
         AppErrorCode.SERVICE_UNAVAILABLE -> Res.string.error_service_unavailable
         
+        // Social Auth Errors
+        AppErrorCode.SOCIAL_AUTH_CONFIG_MISSING -> Res.string.error_social_auth_config_missing
+        AppErrorCode.UNSUPPORTED_CREDENTIAL_TYPE -> Res.string.error_unsupported_credential_type
+        AppErrorCode.SOCIAL_AUTH_FAILED -> Res.string.error_social_auth_failed
+        AppErrorCode.SOCIAL_AUTH_CANCELED -> Res.string.error_social_auth_canceled
+
         // Challenge Errors
         AppErrorCode.CHALLENGE_REQUIRED -> Res.string.error_challenge_required
         AppErrorCode.INVALID_CHALLENGE_CODE -> Res.string.error_invalid_challenge_code

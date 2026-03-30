@@ -45,6 +45,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.core.splashscreen)
             implementation(libs.koin.android)
+            implementation(libs.firebase.auth)
+            implementation(libs.firebase.common)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -66,6 +68,11 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+
+        iosMain.dependencies {
+            implementation(libs.firebase.auth)
+            implementation(libs.firebase.common)
         }
     }
 }

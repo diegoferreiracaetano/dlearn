@@ -11,14 +11,11 @@ import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.WatchlistScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.mapLatest
 import org.koin.core.component.KoinComponent
 
 class WatchlistOrchestrator(
@@ -28,61 +25,39 @@ class WatchlistOrchestrator(
     private val tmdbClient: TmdbClient
 ) : Orchestrator, KoinComponent {
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun execute(request: AppRequest, header: AppHeader): Flow<Screen> {
-        val movieId = request.params?.get(AppQueryParam.ID)
-        val isToggleAction = request.params?.containsKey(WATCHLIST) == true
+    override fun execute(request: AppRequest, header: AppHeader): Flow<Screen> = flow {
+        val userId = header.userId ?: ""
+        val movieId = request.params?.get(AppQueryParam.ID)?.toIntOrNull()
         val mediaTypeString = request.params?.get(AppQueryParam.MEDIA_TYPE)
+        val isToggleAction = request.params?.containsKey(WATCHLIST) == true
 
-        return flow {
-            if (movieId != null && isToggleAction) {
-                val mediaType = mediaTypeString?.let { MediaType.valueOf(it) }
-                    ?: throw IllegalArgumentException("mediaType is required for watchlist action")
-                val active = request.params?.get(WATCHLIST)?.toBoolean() ?: false
-                addToWatchlist(movieId, mediaType, active, header)
-            }
-            emitAll(getWatchlistList(header))
+        if (movieId != null && mediaTypeString != null && isToggleAction) {
+            val mediaType = MediaType.valueOf(mediaTypeString)
+            val active = request.params?.get(WATCHLIST)?.toBoolean() ?: false
+            watchlistRepository.toggleWatchlist(userId, movieId, mediaType, active)
         }
+
+        emit(getWatchlistScreen(userId, header.language))
     }
 
-    suspend fun addToWatchlist(movieId: String, mediaType: MediaType, active: Boolean, header: AppHeader) {
-        val userId = header.userId
-        watchlistRepository.addToWatchlist(
-            userId = userId,
-            mediaId = movieId.toInt(),
-            mediaType = mediaType,
-            watchlist = active
-        )
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun getWatchlistList(header: AppHeader): Flow<Screen> {
-        val language = header.language
-        val userId = header.userId
-
-        if (userId == "guest") {
-            return flow {
-                emit(watchlistScreenBuilder.build(language, emptyList()))
-            }
+    private suspend fun getWatchlistScreen(userId: String, language: String): Screen {
+        val watchlistItems = watchlistRepository.getWatchlist(userId)
+        
+        val videos = coroutineScope {
+            watchlistItems.map { (id, mediaType) ->
+                async {
+                    runCatching {
+                        if (mediaType == MediaType.MOVIES) {
+                            tmdbClient.getMovieDetail(id.toString(), language).toVideo(mediaType)
+                        } else {
+                            tmdbClient.getTvShowDetail(id.toString(), language).toVideo(mediaType)
+                        }
+                    }.getOrNull()
+                }
+            }.awaitAll().filterNotNull()
         }
 
-        return watchlistRepository.getWatchlist(userId, language).mapLatest { watchlistItems ->
-            val videos = coroutineScope {
-                watchlistItems.map { (id, mediaType) ->
-                    async {
-                        runCatching {
-                            if (mediaType == MediaType.MOVIES) {
-                                tmdbClient.getMovieDetail(id.toString(), language).toVideo(mediaType)
-                            } else {
-                                tmdbClient.getTvShowDetail(id.toString(), language).toVideo(mediaType)
-                            }
-                        }.getOrNull()
-                    }
-                }.awaitAll().filterNotNull()
-            }
-
-            val items = videoMapper.toMovieItemComponents(videos)
-            watchlistScreenBuilder.build(language, items)
-        }
+        val items = videoMapper.toMovieItemComponents(videos)
+        return watchlistScreenBuilder.build(language, items)
     }
 }

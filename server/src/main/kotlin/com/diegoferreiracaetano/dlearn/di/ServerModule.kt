@@ -58,7 +58,7 @@ val serverModule = module {
     // 3. Repositórios (Data Sources)
     single<AuthProviderRepository> { AuthProviderDataService() }
     single<UserRepository> { UserDataService() }
-    single<FavoriteRepository> { FavoriteDataService(get(), get()) }
+    single<FavoriteRepository> { FavoriteDataService() }
     single<WatchlistRepository> { WatchlistDataService(get(), get()) }
 
     // 4. Serviços de Domínio e Lógica de Negócio
@@ -108,7 +108,7 @@ val serverModule = module {
 
     // 8. Orchestrators (Gateways de Tela)
     single { HomeOrchestrator(get(), get()) }
-    single { MovieDetailOrchestrator(get(), get()) }
+    single { MovieDetailOrchestrator(get(), get(), get(), get()) }
     single { LoginOrchestrator(get(), get(), get()) }
     single { CreateUserOrchestrator(get(), get(), get()) }
     single { PasswordOrchestrator(get()) }

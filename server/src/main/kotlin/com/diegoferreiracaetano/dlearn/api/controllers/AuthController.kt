@@ -32,9 +32,7 @@ fun Route.authController() {
             val response = loginOrchestrator.login(
                 email = request.email,
                 password = request.password,
-                language = language,
-                tmdbUsername = request.tmdbUsername,
-                tmdbPassword = request.tmdbPassword
+                language = language
             )
 
             response.user?.let { user ->
@@ -44,6 +42,23 @@ fun Route.authController() {
                 
                 linkExternalProviderUseCase.execute(userId = user.id, metadata = metadata)
             }
+
+            call.respond(response)
+        }
+
+        post("/social-login") {
+            val params = call.receive<Map<String, String?>>()
+            val provider = params["provider"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+            val idToken = params["id_token"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+            val accessToken = params["access_token"]
+            val language = call.request.header(AcceptLanguage) ?: "en"
+
+            val response = loginOrchestrator.socialLogin(
+                provider = provider,
+                idToken = idToken,
+                accessToken = accessToken,
+                language = language
+            )
 
             call.respond(response)
         }

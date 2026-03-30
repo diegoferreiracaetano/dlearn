@@ -24,6 +24,12 @@ enum class AppErrorCode {
     EXPIRED_TOKEN,
     EMAIL_ALREADY_IN_USE,
 
+    // Social Auth Errors
+    SOCIAL_AUTH_CONFIG_MISSING,
+    UNSUPPORTED_CREDENTIAL_TYPE,
+    SOCIAL_AUTH_FAILED,
+    SOCIAL_AUTH_CANCELED,
+
     // Validation Errors
     VALIDATION_FAILED,
     FIELD_REQUIRED,

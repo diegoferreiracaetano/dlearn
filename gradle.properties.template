@@ -14,3 +14,9 @@ android.useAndroidX=true
 # The Movie DB API (Get your key at https://www.themoviedb.org/settings/api)
 THE_MOVIE_DB_BASE_URL="https://api.themoviedb.org/3"
 THE_MOVIE_DB_API_KEY=""
+
+# Social Login
+GOOGLE_WEB_CLIENT_ID="YOUR_GOOGLE_WEB_CLIENT_ID.apps.googleusercontent.com"
+APPLE_CLIENT_ID="com.yourdomain.app"
+FACEBOOK_APP_ID="YOUR_FACEBOOK_APP_ID"
+FACEBOOK_CLIENT_TOKEN="YOUR_FACEBOOK_CLIENT_TOKEN"

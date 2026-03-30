@@ -21,3 +21,7 @@ node_modules/
 # Secrets and sensitive data
 gradle.properties
 !gradle.properties.template
+
+# Firebase configuration files
+google-services.json
+GoogleService-Info.plist

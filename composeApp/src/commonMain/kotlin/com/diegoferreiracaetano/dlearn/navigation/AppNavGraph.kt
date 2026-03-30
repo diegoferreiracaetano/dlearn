@@ -83,6 +83,7 @@ fun AppNavGraph(
             WelcomeScreen(
                 onSignUpClick = { navController.navigate(SignUp.route) },
                 onLoginClick = { navController.navigate(Login.route) },
+                onNavigateToHome = { navController.navigateToRoute(Home.route) },
                 modifier = modifier
             )
         }

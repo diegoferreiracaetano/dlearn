@@ -33,7 +33,7 @@ dependencies {
 
     // Koin
     implementation(libs.koin.core)
-    implementation("io.insert-koin:koin-ktor:4.1.0")
+    implementation(libs.koin.ktor)
 
     // Swagger & OpenAPI
     implementation(libs.ktor.server.openapi)

@@ -6,7 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4F8FBB492F7AC71000FD4BC0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4F8FBB482F7AC71000FD4BC0 /* GoogleService-Info.plist */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		4F8FBB482F7AC71000FD4BC0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9A9D54DCEFBA091C7406C599 /* DLearn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DLearn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -61,6 +66,7 @@
 				BBCE27346BD8E5A1F1DFCC94 /* Configuration */,
 				DB79C9756E4D3DA5227D1D80 /* iosApp */,
 				7485B49CC619EE0D3B773DA2 /* Products */,
+				4F8FBB482F7AC71000FD4BC0 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -128,6 +134,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F8FBB492F7AC71000FD4BC0 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.di
 
 import com.diegoferreiracaetano.dlearn.data.auth.challenge.OtpChallengeHandler
 import com.diegoferreiracaetano.dlearn.data.auth.challenge.remote.ChallengeRepositoryRemote
+import com.diegoferreiracaetano.dlearn.domain.auth.SocialSignInUseCase
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeCoordinator
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeEngine
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeHandler
@@ -12,6 +13,9 @@ import org.koin.dsl.module
 val authModule = module {
     single { SessionManager(get()) }
     
+    // Use Cases
+    factory { SocialSignInUseCase(get(), get()) }
+    
     // Challenge Engine & Coordinator
     single { ChallengeCoordinator(get()) }
     single { ChallengeEngine(get(), getAll()) }
@@ -19,7 +23,6 @@ val authModule = module {
     // Handlers de Desafio
     single { OtpChallengeHandler() }
     single<ChallengeHandler> { get<OtpChallengeHandler>() }
-    // O BiometricChallengeHandler será injetado pelo platformAuthModule se disponível
 
     // Repository
     single<ChallengeRepository> { ChallengeRepositoryRemote(get(), get(), get()) }

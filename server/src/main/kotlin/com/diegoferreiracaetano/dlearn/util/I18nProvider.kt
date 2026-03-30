@@ -13,7 +13,7 @@ open class I18nProvider {
         return getRawString(key.name.lowercase(), language) ?: key.name
     }
 
-    open fun getRawString(
+    private fun getRawString(
         key: String,
         language: String
     ): String? {

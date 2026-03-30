@@ -4,6 +4,7 @@ import com.diegoferreiracaetano.dlearn.domain.auth.AuthResponse
 import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
 import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.infrastructure.services.TokenService
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import io.ktor.server.plugins.*
 import java.util.*
@@ -23,7 +24,7 @@ class CreateUserOrchestrator(
     ): AuthResponse {
         val existingUser = userRepository.findByEmail(email)
         if (existingUser != null) {
-            throw BadRequestException(i18n.getRawString("error_user_already_exists", language).orEmpty())
+            throw BadRequestException(i18n.getString(AppStringType.ERROR_EMAIL_ALREADY_REGISTERED, language))
         }
 
         val newUser = User(

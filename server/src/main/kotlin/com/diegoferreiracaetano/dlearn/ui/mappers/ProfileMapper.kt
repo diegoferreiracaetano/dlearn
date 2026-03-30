@@ -90,12 +90,30 @@ class ProfileMapper(private val i18n: I18nProvider) {
 
     fun toGeneralSection(currentLang: String, currentCountry: String?): SectionComponent {
         // Busca o nome traduzido do idioma (ex: language_pt_br)
-        val langKey = "language_${currentLang.replace("-", "_").lowercase()}"
-        val languageDisplayName = i18n.getRawString(langKey, currentLang) ?: currentLang
+        val languageType = when (currentLang.lowercase().replace("-", "_")) {
+            "pt_br" -> AppStringType.LANGUAGE_PT_BR
+            "en_us" -> AppStringType.LANGUAGE_EN_US
+            "es_es" -> AppStringType.LANGUAGE_ES_ES
+            else -> AppStringType.UNKNOWN
+        }
+        val languageDisplayName = if (languageType != AppStringType.UNKNOWN) {
+            i18n.getString(languageType, currentLang)
+        } else {
+            currentLang
+        }
 
         // Busca o nome traduzido do país (ex: country_br)
-        val countryKey = "country_${currentCountry?.lowercase()}"
-        val countryDisplayName = currentCountry?.let { i18n.getRawString(countryKey, currentLang) } ?: currentCountry ?: ""
+        val countryType = when (currentCountry?.lowercase()) {
+            "br" -> AppStringType.COUNTRY_BR
+            "us" -> AppStringType.COUNTRY_US
+            "es" -> AppStringType.COUNTRY_ES
+            else -> AppStringType.UNKNOWN
+        }
+        val countryDisplayName = if (countryType != AppStringType.UNKNOWN) {
+            i18n.getString(countryType, currentLang)
+        } else {
+            currentCountry ?: ""
+        }
 
         return SectionComponent(
             title = i18n.getString(AppStringType.SECTION_GENERAL, currentLang),

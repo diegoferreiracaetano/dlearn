@@ -83,7 +83,7 @@ val serverModule = module {
     single { GetMovieDetailUseCase(get()) }
     single { GetSearchDataUseCase(get()) }
     single { ChangePasswordUseCase(get()) }
-    single { LinkExternalProviderUseCase(get()) }
+    single { LinkExternalProviderUseCase(get(), get()) }
 
     // 6. Mapeadores de UI (SDUI)
     single { HomeMapper() }
@@ -109,7 +109,7 @@ val serverModule = module {
     // 8. Orchestrators (Gateways de Tela)
     single { HomeOrchestrator(get(), get()) }
     single { MovieDetailOrchestrator(get(), get(), get(), get()) }
-    single { LoginOrchestrator(get(), get(), get()) }
+    single { LoginOrchestrator(get(), get(), get(), get()) }
     single { CreateUserOrchestrator(get(), get(), get()) }
     single { PasswordOrchestrator(get()) }
     single { WatchlistOrchestrator(get(), get(), get(), get()) }

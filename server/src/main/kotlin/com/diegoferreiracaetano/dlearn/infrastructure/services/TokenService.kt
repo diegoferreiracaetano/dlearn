@@ -32,6 +32,7 @@ class TokenService(
             .withAudience(audience)
             .withIssuer(issuer)
             .withClaim(CLAIM_USER_ID, user.id)
+            .withClaim(CLAIM_EMAIL, user.email)
             .withExpiresAt(Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
             .sign(algorithm)
     }

@@ -1,17 +1,25 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.auth
 
+import com.diegoferreiracaetano.dlearn.MetadataKeys
+import com.diegoferreiracaetano.dlearn.SocialAuthConstants
+import com.diegoferreiracaetano.dlearn.TokenConstants
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthResponse
 import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
+import com.diegoferreiracaetano.dlearn.domain.usecases.auth.LinkExternalProviderUseCase
 import com.diegoferreiracaetano.dlearn.infrastructure.services.TokenService
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
-import io.ktor.server.plugins.*
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
+import com.diegoferreiracaetano.dlearn.domain.error.AppException
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import java.util.*
 import kotlinx.serialization.json.*
 
 class LoginOrchestrator(
     private val userRepository: UserRepository,
     private val tokenService: TokenService,
+    private val linkExternalProviderUseCase: LinkExternalProviderUseCase,
     private val i18n: I18nProvider
 ) {
     private val json = Json { ignoreUnknownKeys = true }
@@ -21,8 +29,11 @@ class LoginOrchestrator(
         password: String,
         language: String
     ): AuthResponse {
-        val user = userRepository.authenticate(email, password) ?: throw BadRequestException(
-            i18n.getRawString("error_invalid_credentials", language).orEmpty()
+        val user = userRepository.authenticate(email, password) ?: throw AppException(
+            AppError(
+                code = AppErrorCode.INVALID_CREDENTIALS,
+                message = i18n.getString(AppStringType.ERROR_INVALID_CREDENTIALS, language)
+            )
         )
 
         val accessToken = tokenService.generateAccessToken(user)
@@ -42,28 +53,7 @@ class LoginOrchestrator(
         accessToken: String?,
         language: String
     ): AuthResponse {
-        
-        // Extrai informações do idToken (JWT) se for Google ou Apple
-        var email = "social_$provider@example.com"
-        var name = provider.replaceFirstChar { it.uppercase() } + " User"
-        var picture: String? = null
-
-        try {
-            if (provider == "google" || provider == "apple") {
-                val parts = idToken.split(".")
-                if (parts.size >= 2) {
-                    val payload = String(Base64.getDecoder().decode(parts[1]))
-                    val jsonObject = json.parseToJsonElement(payload).jsonObject
-                    
-                    email = jsonObject["email"]?.jsonPrimitive?.content ?: email
-                    name = jsonObject["name"]?.jsonPrimitive?.content ?: 
-                           "${jsonObject["given_name"]?.jsonPrimitive?.content ?: ""} ${jsonObject["family_name"]?.jsonPrimitive?.content ?: ""}".trim().ifEmpty { name }
-                    picture = jsonObject["picture"]?.jsonPrimitive?.content
-                }
-            }
-        } catch (e: Exception) {
-            // Se falhar o parse, mantém os dados default do provider
-        }
+        val (email, name, picture) = extractSocialUserInfo(idToken, provider, language)
 
         var user = userRepository.findByEmail(email)
         if (user == null) {
@@ -78,6 +68,14 @@ class LoginOrchestrator(
             )
         }
 
+        val metadata = mutableMapOf<String, String>()
+        metadata[MetadataKeys.AUTH_TYPE] = provider
+        metadata[MetadataKeys.EXTERNAL_ID] = email
+        accessToken?.let { metadata[MetadataKeys.ACCESS_TOKEN] = it }
+        metadata[MetadataKeys.ID_TOKEN] = idToken
+
+        linkExternalProviderUseCase.execute(userId = user!!.id, metadata = metadata)
+
         val newAccessToken = tokenService.generateAccessToken(user)
         val newRefreshToken = tokenService.generateRefreshToken(user)
 
@@ -89,16 +87,61 @@ class LoginOrchestrator(
         )
     }
 
+    private fun extractSocialUserInfo(idToken: String, provider: String, language: String): Triple<String, String, String?> {
+        try {
+            val parts = idToken.split(SocialAuthConstants.JWT_SEPARATOR)
+            if (parts.size < 2) throw Exception("Invalid JWT format")
+            
+            val payload = String(Base64.getDecoder().decode(parts[1]))
+            val jsonObject = json.parseToJsonElement(payload).jsonObject
+            
+            val email = jsonObject[SocialAuthConstants.CLAIM_EMAIL]?.jsonPrimitive?.content
+                ?: throw Exception("Email not found in social token")
+                
+            val firstName = jsonObject[SocialAuthConstants.CLAIM_GIVEN_NAME]?.jsonPrimitive?.content ?: ""
+            val lastName = jsonObject[SocialAuthConstants.CLAIM_FAMILY_NAME]?.jsonPrimitive?.content ?: ""
+            
+            val name = jsonObject[SocialAuthConstants.CLAIM_NAME]?.jsonPrimitive?.content ?: 
+                       "$firstName $lastName".trim().ifEmpty { 
+                           provider.replaceFirstChar { it.uppercase() } + SocialAuthConstants.DEFAULT_NAME_SUFFIX
+                       }
+            val picture = jsonObject[SocialAuthConstants.CLAIM_PICTURE]?.jsonPrimitive?.content
+            
+            return Triple(email, name, picture)
+        } catch (e: Exception) {
+            throw AppException(
+                AppError(
+                    code = AppErrorCode.SOCIAL_AUTH_FAILED,
+                    message = i18n.getString(AppStringType.ERROR_SOCIAL_AUTH_FAILED, language)
+                ),
+                cause = e
+            )
+        }
+    }
+
     suspend fun refreshToken(refreshToken: String, language: String): AuthResponse {
-        val claims = tokenService.verifyToken(refreshToken) ?: throw BadRequestException(
-            i18n.getRawString("error_invalid_refresh_token", language).orEmpty()
+        val claims = tokenService.verifyToken(refreshToken) ?: throw AppException(
+            AppError(
+                code = AppErrorCode.EXPIRED_TOKEN,
+                message = i18n.getString(AppStringType.ERROR_INVALID_REFRESH_TOKEN, language)
+            )
         )
-        val userId = claims["user_id"] ?: throw BadRequestException(
-            i18n.getRawString("error_invalid_token_payload", language).orEmpty()
+        
+        val userId = claims[TokenConstants.CLAIM_USER_ID] ?: throw AppException(
+            AppError(
+                code = AppErrorCode.INVALID_TOKEN,
+                message = i18n.getString(AppStringType.ERROR_INVALID_TOKEN_PAYLOAD, language)
+            )
         )
-        val user = userRepository.findById(userId) ?: throw BadRequestException(
-            i18n.getRawString("error_user_not_found", language).orEmpty()
+        
+        val user = userRepository.findById(userId) ?: throw AppException(
+            AppError(
+                code = AppErrorCode.USER_NOT_FOUND,
+                message = i18n.getString(AppStringType.ERROR_USER_NOT_FOUND, language)
+            )
         )
+
+        linkExternalProviderUseCase.execute(userId = user.id)
 
         val newAccessToken = tokenService.generateAccessToken(user)
         val newRefreshToken = tokenService.generateRefreshToken(user)

@@ -18,21 +18,17 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
-import org.slf4j.LoggerFactory
 
 fun Route.authController() {
     val loginOrchestrator by inject<LoginOrchestrator>()
     val createUserOrchestrator by inject<CreateUserOrchestrator>()
     val linkExternalProviderUseCase by inject<LinkExternalProviderUseCase>()
-    val logger = LoggerFactory.getLogger("AuthController")
 
     route("/v1/auth") {
         post("/login") {
             val request = call.receive<AuthRequest>()
             val language = call.request.header(AcceptLanguage) ?: "en"
             
-            logger.info("Login request received for ${request.email}")
-
             val response = loginOrchestrator.login(
                 email = request.email,
                 password = request.password,
@@ -41,7 +37,6 @@ fun Route.authController() {
                 tmdbPassword = request.tmdbPassword
             )
 
-            // 🔥 DISPARO AUTOMÁTICO E ASSÍNCRONO DO VÍNCULO TMDB
             response.user?.let { user ->
                 val metadata = mutableMapOf<String, String>()
                 request.tmdbUsername?.let { metadata[MetadataKeys.EXTERNAL_USERNAME] = it }
@@ -55,17 +50,9 @@ fun Route.authController() {
 
         challengePreference(OTP_EMAIL) {
             post("/register") {
-                val request = try {
-                    call.receive<CreateUserRequest>()
-                } catch (e: Exception) {
-                    logger.error("Failed to receive CreateUserRequest", e)
-                    throw BadRequestException("Invalid request body")
-                }
-                
+                val request = call.receive<CreateUserRequest>()
                 val language = call.request.header(AcceptLanguage) ?: "en"
                 
-                logger.info("Register request received for ${request.email}")
-
                 val response = createUserOrchestrator.create(
                     name = request.name,
                     email = request.email,
@@ -75,7 +62,6 @@ fun Route.authController() {
                     tmdbPassword = request.tmdbPassword
                 )
 
-                // 🔥 DISPARO AUTOMÁTICO E ASSÍNCRONO DO VÍNCULO TMDB
                 response.user?.let { user ->
                     val metadata = mutableMapOf<String, String>()
                     request.tmdbUsername?.let { metadata[MetadataKeys.EXTERNAL_USERNAME] = it }

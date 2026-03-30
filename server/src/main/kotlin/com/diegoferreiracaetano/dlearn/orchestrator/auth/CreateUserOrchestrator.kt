@@ -6,7 +6,6 @@ import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.infrastructure.services.TokenService
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import io.ktor.server.plugins.*
-import org.slf4j.LoggerFactory
 import java.util.*
 
 class CreateUserOrchestrator(
@@ -14,8 +13,6 @@ class CreateUserOrchestrator(
     private val tokenService: TokenService,
     private val i18n: I18nProvider
 ) {
-    private val logger = LoggerFactory.getLogger(javaClass)
-
     suspend fun create(
         name: String,
         email: String,
@@ -24,11 +21,9 @@ class CreateUserOrchestrator(
         tmdbUsername: String? = null,
         tmdbPassword: String? = null
     ): AuthResponse {
-        logger.info("Starting user creation for email: $email")
-        
         val existingUser = userRepository.findByEmail(email)
         if (existingUser != null) {
-            throw BadRequestException(i18n.getRawString("error_user_already_exists", language) ?: "User already exists")
+            throw BadRequestException(i18n.getRawString("error_user_already_exists", language).orEmpty())
         }
 
         val newUser = User(
@@ -38,7 +33,6 @@ class CreateUserOrchestrator(
         )
         
         userRepository.save(newUser, password)
-        logger.info("User ${newUser.id} saved to repository")
 
         val accessToken = tokenService.generateAccessToken(newUser)
         val refreshToken = tokenService.generateRefreshToken(newUser)

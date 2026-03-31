@@ -7,6 +7,9 @@ import com.diegoferreiracaetano.dlearn.api.exception.configureStatusPages
 import com.diegoferreiracaetano.dlearn.infrastructure.db.DatabaseFactory
 import com.diegoferreiracaetano.dlearn.infrastructure.services.TokenService
 import com.diegoferreiracaetano.dlearn.di.serverModule
+import com.diegoferreiracaetano.dlearn.server.BuildConfig.AUDIENCE
+import com.diegoferreiracaetano.dlearn.server.BuildConfig.ISSUER
+import com.diegoferreiracaetano.dlearn.server.BuildConfig.SECRET
 import io.ktor.http.CacheControl
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
@@ -51,13 +54,13 @@ fun Application.module() {
             realm = "dlearn"
             verifier(
                 JWT
-                    .require(Algorithm.HMAC256("dlearn-secret-key-change-it-in-prod"))
-                    .withAudience("dlearn-audience")
-                    .withIssuer("com.diegoferreiracaetano.dlearn")
+                    .require(Algorithm.HMAC256(SECRET))
+                    .withAudience(AUDIENCE)
+                    .withIssuer(ISSUER)
                     .build()
             )
             validate { credential ->
-                if (credential.payload.getClaim("userId").asString() != null) {
+                if (credential.payload.getClaim(TokenConstants.CLAIM_USER_ID).asString() != null) {
                     JWTPrincipal(credential.payload)
                 } else {
                     null

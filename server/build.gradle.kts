@@ -60,4 +60,8 @@ buildConfig {
     packageName("com.diegoferreiracaetano.dlearn.server")
     buildConfigField("String", "THE_MOVIE_DB_BASE_URL", providers.gradleProperty("THE_MOVIE_DB_BASE_URL").get())
     buildConfigField("String", "THE_MOVIE_DB_API_KEY", providers.gradleProperty("THE_MOVIE_DB_API_KEY").get())
+    buildConfigField("String", "SECRET", "dlearn-secret-key-change-it-in-prod")
+    buildConfigField("String", "ISSUER", "com.diegoferreiracaetano.dlearn")
+    buildConfigField("String", "AUDIENCE", "dlearn-audience")
+
 }

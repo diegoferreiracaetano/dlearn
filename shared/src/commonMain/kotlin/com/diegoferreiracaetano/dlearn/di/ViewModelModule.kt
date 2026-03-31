@@ -13,7 +13,7 @@ import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpViewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    single { MainViewModel(get(), get()) }
+    factory { MainViewModel(get(), get()) }
     factory { AppViewModel(get()) }
     factory { SettingsViewModel(get(), get()) }
     factory { (movieId: String) -> MovieDetailViewModel(movieId, get()) }

@@ -155,7 +155,7 @@ val serverModule = module {
     single { FavoriteOrchestrator(get(), get(), get(), get()) }
     single { SearchOrchestrator(get(), get(), get(), get()) }
     single { ProfileOrchestrator(get(), get(), get()) }
-    single { MainOrchestrator(get()) }
+    single { MainOrchestrator(get(),get()) }
     single { FaqOrchestrator(get(), get()) }
     single { VerifyAccountOrchestrator(get()) }
     single { SettingsOrchestrator(get()) }

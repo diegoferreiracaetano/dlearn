@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.auth.network
 
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthResponse
+import com.diegoferreiracaetano.dlearn.domain.auth.RefreshTokenRequest
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -46,7 +47,7 @@ class AuthInterceptor(
                     val refreshResponse = client.post("/v1/auth/refresh") {
                         auth(AuthMode.NONE)
                         contentType(ContentType.Application.Json)
-                        setBody(mapOf("refresh_token" to refreshToken))
+                        setBody(RefreshTokenRequest(refreshToken))
                     }
 
                     if (refreshResponse.status == HttpStatusCode.OK) {

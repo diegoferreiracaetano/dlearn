@@ -1,10 +1,10 @@
 package com.diegoferreiracaetano.dlearn.domain.models
 
+import com.diegoferreiracaetano.dlearn.domain.challenge.ChallengeStatus
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ChangePasswordRequest(
-    val userId: String,
     val newPassword: String
 )
 

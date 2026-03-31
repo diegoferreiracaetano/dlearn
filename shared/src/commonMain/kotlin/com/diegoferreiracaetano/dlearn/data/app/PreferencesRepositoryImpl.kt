@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.data.app
 
+import com.diegoferreiracaetano.dlearn.Platform
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
@@ -8,15 +9,24 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class PreferencesRepositoryImpl(private val settings: Settings) : PreferencesRepository {
+class PreferencesRepositoryImpl(
+    private val settings: Settings,
+    private val platform: Platform
+) : PreferencesRepository {
 
     private val _onConfigurationChanged = MutableStateFlow(0L)
     override val onConfigurationChanged: StateFlow<Long> = _onConfigurationChanged.asStateFlow()
+
+    init {
+        // Garante que o locale salvo nas preferências seja aplicado ao iniciar o repositório
+        updatePlatformLocale()
+    }
 
     override var language: String
         get() = settings.getString(KEY_LANGUAGE, DEFAULT_LANGUAGE)
         set(value) {
             settings[KEY_LANGUAGE] = value
+            updatePlatformLocale()
             notifyChange()
         }
 
@@ -24,6 +34,7 @@ class PreferencesRepositoryImpl(private val settings: Settings) : PreferencesRep
         get() = settings.getString(KEY_COUNTRY, DEFAULT_COUNTRY)
         set(value) {
             settings[KEY_COUNTRY] = value
+            updatePlatformLocale()
             notifyChange()
         }
 
@@ -45,6 +56,10 @@ class PreferencesRepositoryImpl(private val settings: Settings) : PreferencesRep
     override fun clear() {
         settings.clear()
         notifyChange()
+    }
+
+    private fun updatePlatformLocale() {
+        platform.updateLocale(language, country)
     }
 
     private fun notifyChange() {

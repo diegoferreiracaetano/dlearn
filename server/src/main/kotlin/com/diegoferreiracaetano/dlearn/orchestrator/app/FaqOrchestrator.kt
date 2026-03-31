@@ -15,7 +15,8 @@ class FaqOrchestrator(
 ) : Orchestrator {
     override fun execute(
         request: AppRequest,
-        header: AppHeader
+        header: AppHeader,
+        userId: String
     ): Flow<Screen> = flow {
         val language = header.language
         val reference = request.params?.get(AppQueryParam.REF) ?: "default"

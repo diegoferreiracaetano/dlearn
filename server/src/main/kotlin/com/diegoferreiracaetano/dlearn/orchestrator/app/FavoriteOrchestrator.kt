@@ -24,8 +24,11 @@ class FavoriteOrchestrator(
     private val movieClient: MovieClient
 ) : Orchestrator, KoinComponent {
 
-    override fun execute(request: AppRequest, header: AppHeader): Flow<Screen> = flow {
-        val userId = header.userId ?: throw IllegalStateException("User ID is required")
+    override fun execute(
+        request: AppRequest, 
+        header: AppHeader,
+        userId: String
+    ): Flow<Screen> = flow {
         val movieId = request.params?.get(AppQueryParam.ID)?.toIntOrNull()
         val mediaTypeString = request.params?.get(AppQueryParam.MEDIA_TYPE)
         val isToggleAction = request.params?.containsKey(FAVORITE) == true

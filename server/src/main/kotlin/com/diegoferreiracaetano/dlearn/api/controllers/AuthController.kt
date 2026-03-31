@@ -3,6 +3,7 @@ package com.diegoferreiracaetano.dlearn.api.controllers
 import com.diegoferreiracaetano.dlearn.api.exception.challengePreference
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthRequest
 import com.diegoferreiracaetano.dlearn.domain.auth.CreateUserRequest
+import com.diegoferreiracaetano.dlearn.domain.auth.RefreshTokenRequest
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType.OTP_EMAIL
 import com.diegoferreiracaetano.dlearn.orchestrator.auth.CreateUserOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.auth.LoginOrchestrator
@@ -68,11 +69,10 @@ fun Route.authController() {
         }
 
         post("/refresh") {
-            val params = call.receive<Map<String, String>>()
-            val refreshToken = params["refresh_token"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+            val request = call.receive<RefreshTokenRequest>()
             val language = call.request.header(AcceptLanguage) ?: "en"
 
-            val response = loginOrchestrator.refreshToken(refreshToken, language)
+            val response = loginOrchestrator.refreshToken(request.refreshToken, language)
             call.respond(response)
         }
 

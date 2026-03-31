@@ -24,7 +24,8 @@ class MovieDetailOrchestrator(
 
     override fun execute(
         request: AppRequest,
-        header: AppHeader
+        header: AppHeader,
+        userId: String
     ): Flow<Screen> {
         val movieIdString = request.params?.get(AppQueryParam.ID)
             ?: throw IllegalArgumentException("MovieId missing")
@@ -34,7 +35,6 @@ class MovieDetailOrchestrator(
         val mediaTypeString = request.params?.get(AppQueryParam.MEDIA_TYPE)
         val isFavoriteAction = request.params?.containsKey(FAVORITE) == true
         val isWatchlistAction = request.params?.containsKey(WATCHLIST) == true
-        val userId = header.userId ?: ""
 
         return flow {
             val language = header.language
@@ -54,7 +54,7 @@ class MovieDetailOrchestrator(
             }
 
             // Busca os dados (agora com o estado de favorito/watchlist atualizado no nosso banco)
-            val domainData = getMovieDetailUseCase.execute(movieIdString, language, header)
+            val domainData = getMovieDetailUseCase.execute(movieIdString, language, userId)
             emit(screenBuilder.build(domainData, language))
         }
     }

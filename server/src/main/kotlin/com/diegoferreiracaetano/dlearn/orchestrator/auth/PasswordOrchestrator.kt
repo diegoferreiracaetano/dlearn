@@ -11,9 +11,10 @@ class PasswordOrchestrator(
 ) {
     fun changePassword(
         request: ChangePasswordRequest,
+        userId: String,
         challengeToken: String?
     ): Flow<ChangePasswordResponse> = flow {
-        val response = changePasswordUseCase.execute(request, challengeToken)
+        val response = changePasswordUseCase.execute(request, userId, challengeToken)
         emit(response)
     }
 }

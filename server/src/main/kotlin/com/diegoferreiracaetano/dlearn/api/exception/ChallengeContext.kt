@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.api.exception
 
+import com.diegoferreiracaetano.dlearn.api.util.userId
 import com.diegoferreiracaetano.dlearn.auth.network.SecurityConstants
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 import com.diegoferreiracaetano.dlearn.domain.models.ChallengeCode
@@ -47,7 +48,7 @@ val ChallengePlugin = createRouteScopedPlugin("ChallengePlugin", ::ChallengeConf
         val lang = call.request.acceptLanguage() ?: "en"
 
         if (token == null || !challengeDataService.isTokenValidated(token)) {
-            val userId = call.request.queryParameters["userId"] ?: "guest"
+            val userId = try { call.userId } catch (e: Exception) { "anonymous" }
             val transactionId = challengeDataService.generateChallenge(userId) 
             
             throw ChallengeException(

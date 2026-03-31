@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface Orchestrator {
     fun execute(
         request: AppRequest,
-        header: AppHeader
+        header: AppHeader,
+        userId: String
     ): Flow<Screen>
 }

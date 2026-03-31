@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
 import com.diegoferreiracaetano.dlearn.AppConstants
+import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
@@ -18,10 +19,15 @@ class MainScreenBuilder(
     private val i18n: I18nProvider
 ) {
     fun build(
-        lang: String
+        lang: String,
+        user: User? = null
     ): Screen {
 
         val selectedActionUrl = AppNavigationRoute.HOME
+
+        val topBarTitle = user?.name ?: i18n.getString(AppStringType.HOME_TITLE, lang)
+        val topBarSubtitle = if (user != null) i18n.getString(AppStringType.HOME_SUBTITLE, lang) else null
+        val topBarImageUrl = user?.imageUrl ?: AppConstants.AVATAR_PLACEHOLDER
 
         val topBar = AppTopBarListComponent(
             selectedActionUrl = selectedActionUrl,
@@ -29,9 +35,9 @@ class MainScreenBuilder(
                 AppTopBarItem(
                     actionUrl = AppNavigationRoute.HOME,
                     topBar = AppTopBarComponent(
-                        title = i18n.getString(AppStringType.HOME_TITLE, lang),
-                        subtitle = i18n.getString(AppStringType.HOME_SUBTITLE, lang),
-                        imageUrl = AppConstants.AVATAR_PLACEHOLDER,
+                        title = topBarTitle,
+                        subtitle = topBarSubtitle,
+                        imageUrl = topBarImageUrl,
                         showSearch = true
                     )
                 ),
@@ -46,8 +52,7 @@ class MainScreenBuilder(
                     topBar =  AppTopBarComponent(
                         title = i18n.getString(AppStringType.NAV_FAVORITES, lang)
                     )
-                )
-,
+                ),
                 AppTopBarItem(
                     actionUrl = AppNavigationRoute.PROFILE,
                     topBar =  AppTopBarComponent(

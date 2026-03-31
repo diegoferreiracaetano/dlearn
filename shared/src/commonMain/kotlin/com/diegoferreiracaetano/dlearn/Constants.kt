@@ -10,8 +10,6 @@ object Constants {
 }
 
 object AppConstants {
-
-    const val GUEST_USER_ID = "guest"
     const val AVATAR_PLACEHOLDER = "https://avatars.githubusercontent.com/u/1023?v=4"
     const val X_COUNTRY = "X-Country"
     const val X_NOTIFICATIONS_ENABLED = "X-Notifications-Enabled"
@@ -24,21 +22,13 @@ object TokenConstants {
 }
 
 object MetadataKeys {
-    const val EXTERNAL_USERNAME = "external_username"
-    const val EXTERNAL_PASSWORD = "external_password"
     const val EXTERNAL_ID = "external_id"
     const val AUTH_TYPE = "auth_type"
-    const val USERNAME = "username"
-    const val GUEST_PREFIX = "guest_"
-    const val EXPIRES_AT = "expires_at"
     const val ACCESS_TOKEN = "access_token"
     const val ID_TOKEN = "id_token"
 }
 
 object SocialAuthConstants {
-    const val PROVIDER_GOOGLE = "google"
-    const val PROVIDER_APPLE = "apple"
-    
     const val CLAIM_EMAIL = "email"
     const val CLAIM_NAME = "name"
     const val CLAIM_PICTURE = "picture"

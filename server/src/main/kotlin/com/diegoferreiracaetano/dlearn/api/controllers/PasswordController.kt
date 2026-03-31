@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.api.controllers
 
 import com.diegoferreiracaetano.dlearn.api.exception.challengePreference
 import com.diegoferreiracaetano.dlearn.api.exception.challengeToken
+import com.diegoferreiracaetano.dlearn.api.util.userId
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 import com.diegoferreiracaetano.dlearn.domain.models.*
 import com.diegoferreiracaetano.dlearn.orchestrator.auth.PasswordOrchestrator
@@ -28,6 +29,7 @@ fun Route.passwordController() {
 
                 orchestrator.changePassword(
                     request = request,
+                    userId = call.userId,
                     challengeToken = call.challengeToken
                 ).collect { response ->
                     call.respond(HttpStatusCode.OK, response)

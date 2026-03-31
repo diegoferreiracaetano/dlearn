@@ -124,12 +124,12 @@ val sharedModule = module {
     single<UserRepository> { UserRepositoryRemote(get()) }
     single { Settings() }
     single<KeyValueStorage> { SettingsKeyValueStorage(get()) }
-    single<PreferencesRepository> { PreferencesRepositoryImpl(get()) }
+    single<PreferencesRepository> { PreferencesRepositoryImpl(get(), getPlatform()) }
 
     // Novo Gerenciador de Cache (Interface e Implementação persistente para o App)
     single<CacheManager> { PersistentCacheManager(get(), get()) }
 
-    single<PasswordRepository> { PasswordRepositoryRemote(get(), get()) }
+    single<PasswordRepository> { PasswordRepositoryRemote(get()) }
     single<HomeRepository> { HomeRepositoryRemote(get()) }
     single<ProfileRepository> { ProfileRepositoryRemote(get()) }
     single<MovieDetailRepository> { MovieDetailRepositoryRemote(get()) }

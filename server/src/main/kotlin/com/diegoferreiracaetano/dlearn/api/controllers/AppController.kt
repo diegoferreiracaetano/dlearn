@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
 import com.diegoferreiracaetano.dlearn.api.util.appHeader
+import com.diegoferreiracaetano.dlearn.api.util.userId
 import com.diegoferreiracaetano.dlearn.orchestrator.app.Orchestrator
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import io.ktor.server.application.call
@@ -21,7 +22,8 @@ fun Route.appController() {
 
             orchestrator.execute(
                 request = request,
-                header = header
+                header = header,
+                userId = call.userId
             ).collect { screen ->
                 call.respond(screen)
             }

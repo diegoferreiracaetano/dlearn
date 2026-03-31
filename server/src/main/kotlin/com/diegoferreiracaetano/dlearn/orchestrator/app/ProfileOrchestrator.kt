@@ -23,11 +23,11 @@ class ProfileOrchestrator(
 
     override fun execute(
         request: AppRequest,
-        header: AppHeader
+        header: AppHeader,
+        userId: String
     ): Flow<Screen> {
         val path = AppPath.parse(request.path).path
         val language = header.language
-        val userId = header.userId
         
         return when (path) {
             AppNavigationRoute.PROFILE -> getProfileData(userId, header.userAgent.appVersion, language, header.country)

@@ -8,15 +8,19 @@ class PasswordDataService(
     private val challengeDataService: ChallengeDataService,
     private val userRepository: UserRepository
 ) {
-    suspend fun changePassword(request: ChangePasswordRequest, challengeToken: String?): ChangePasswordResponse {
-        challengeToken?.let { token ->
+    suspend fun changePassword(request: ChangePasswordRequest, userId: String, challengeToken: String?): ChangePasswordResponse {
+        val resolvedUserId = challengeToken?.let { token ->
             if (!challengeDataService.isTokenValidated(token)) {
                 throw SecurityException("Invalid or expired challenge token")
             }
+            val userIdFromToken = challengeDataService.getUserIdByToken(token)
             challengeDataService.consumeToken(token)
-        } ?: throw SecurityException("Challenge token required for password change")
+            userIdFromToken
+        } ?: if (userId != "anonymous") userId else throw SecurityException("Challenge token required for password change")
 
-        val user = userRepository.findById(request.userId) ?: userRepository.findByEmail(request.userId)
+        if (resolvedUserId == null) throw NoSuchElementException("User not found for the provided token")
+
+        val user = userRepository.findById(resolvedUserId) ?: userRepository.findByEmail(resolvedUserId)
             ?: throw NoSuchElementException("User not found")
 
         userRepository.update(user, password = request.newPassword)

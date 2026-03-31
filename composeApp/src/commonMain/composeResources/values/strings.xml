@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DLearn</string>
     <string name="app_subtitle">Your Personalized Learning Path</string>
@@ -5,6 +6,12 @@
     <string name="signup_action">Sign Up</string>
     <string name="onboarding_already_have_account">Already have an account?</string>
     <string name="onboarding_or_signup_with">Or sign up with</string>
+
+    <!-- Profile & Fields -->
+    <string name="field_full_name">Full Name</string>
+    <string name="field_email">Email</string>
+    <string name="field_phone_number">Phone Number</string>
+    <string name="save_changes">Save Changes</string>
 
     <!-- Auth Errors -->
     <string name="error_unknown">An unknown error occurred</string>

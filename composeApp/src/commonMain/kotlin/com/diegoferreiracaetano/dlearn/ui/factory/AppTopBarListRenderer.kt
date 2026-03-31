@@ -31,7 +31,6 @@ class AppTopBarListRenderer : ComponentRenderer {
                     profileImageSource = item.topBar.imageUrl?.let {
                         AppImageSource.Url(it)
                     },
-                    onBack = actions.onBackClick,
                     onSearchClick = if (item.topBar.showSearch) actions.onSearchClick else null
                 )
             }

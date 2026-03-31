@@ -18,11 +18,10 @@ class HomeDataService(
     suspend fun fetchHomeData(
         language: String,
         type: HomeFilterType = HomeFilterType.ALL,
-        header: AppHeader? = null
+        userId: String
     ): HomeDomainData = coroutineScope {
-        val userId = header?.userId ?: AppConstants.GUEST_USER_ID
 
-        // 1. Buscamos favoritos do banco local (Source of Truth)
+
         val favorites = runCatching {
             favoriteRepository.getFavorites(userId).map { it.first }
         }.getOrElse { emptyList() }

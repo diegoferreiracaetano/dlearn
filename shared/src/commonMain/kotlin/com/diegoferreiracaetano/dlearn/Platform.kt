@@ -11,6 +11,7 @@ interface Platform {
     val language: String
     val appVersion: String
     val deviceModel: String
+    fun updateLocale(language: String, country: String)
 }
 
 expect fun getPlatform(): Platform

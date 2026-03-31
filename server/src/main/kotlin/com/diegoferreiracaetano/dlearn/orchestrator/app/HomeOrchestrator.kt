@@ -18,18 +18,18 @@ class HomeOrchestrator(
 
     override fun execute(
         request: AppRequest,
-        header: AppHeader
+        header: AppHeader,
+        userId: String
     ): Flow<Screen> {
         val type = request.params?.get("type")?.let {
             runCatching { HomeFilterType.valueOf(it) }.getOrNull()
         } ?: HomeFilterType.ALL
 
         val language = header.language
-        val userId = header.userId
         val cacheKey = "home_${header.userAgent.appVersion}_${language}_${type}_$userId"
 
         return flow {
-            val domainData = getHomeDataUseCase.execute(language, type, header)
+            val domainData = getHomeDataUseCase.execute(language, type, userId)
             val screen = screenBuilder.build(domainData, language, type)
             emit(screen)
         }.toCache(

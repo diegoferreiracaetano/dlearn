@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ChangePasswordRequest(
-    val userId: String,
     val newPassword: String
 )
 

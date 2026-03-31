@@ -44,6 +44,7 @@ class TokenService(
                 .withIssuer(issuer)
                 .build()
             val decoded = verifier.verify(token)
+
             mapOf(
                 CLAIM_USER_ID to decoded.getClaim(CLAIM_USER_ID).asString(),
                 CLAIM_EMAIL to decoded.getClaim(CLAIM_EMAIL).asString()

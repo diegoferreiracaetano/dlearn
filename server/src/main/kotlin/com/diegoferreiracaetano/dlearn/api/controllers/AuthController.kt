@@ -4,13 +4,12 @@ import com.diegoferreiracaetano.dlearn.MetadataKeys
 import com.diegoferreiracaetano.dlearn.api.exception.challengePreference
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthRequest
 import com.diegoferreiracaetano.dlearn.domain.auth.CreateUserRequest
-import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType.*
+import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType.OTP_EMAIL
 import com.diegoferreiracaetano.dlearn.domain.usecases.auth.LinkExternalProviderUseCase
 import com.diegoferreiracaetano.dlearn.orchestrator.auth.CreateUserOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.auth.LoginOrchestrator
 import io.ktor.http.HttpHeaders.AcceptLanguage
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.plugins.*
 import io.ktor.server.request.header
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond

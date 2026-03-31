@@ -46,11 +46,8 @@ fun Route.challengeController() {
             
             val body = call.receive<ResolveChallengeBody>()
 
-            val type = try {
-                ChallengeType.valueOf(body.type)
-            } catch (e: Exception) {
-                throw AppException(AppError(AppErrorCode.INVALID_CHALLENGE_CODE))
-            }
+            val type = ChallengeType.entries.find { it.name == body.type }
+                ?: throw AppException(AppError(AppErrorCode.INVALID_CHALLENGE_CODE))
 
             // O backend agora recebe 'answers' como String (ex: o código OTP direto)
             val validatedToken = service.resolveChallenge(

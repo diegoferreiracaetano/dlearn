@@ -31,12 +31,16 @@ class AppTopBarListRenderer : ComponentRenderer {
                     profileImageSource = item.topBar.imageUrl?.let {
                         AppImageSource.Url(it)
                     },
-
-                    onSearchClick = actions.onSearchClick
+                    onBack = actions.onBackClick,
+                    onSearchClick = if (item.topBar.showSearch) actions.onSearchClick else null
                 )
             }
 
-            AppTopBar(configs, topBarList.selectedActionUrl)
+            AppTopBar(
+                configs = configs,
+                selectedRoute = actions.currentRoute,
+                modifier = modifier
+            )
         }
     }
 }

@@ -1,20 +1,18 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.services
 
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
+import com.diegoferreiracaetano.dlearn.domain.repository.MovieClient
 import com.diegoferreiracaetano.dlearn.infrastructure.db.DatabaseFactory.dbQuery
 import com.diegoferreiracaetano.dlearn.infrastructure.db.FavoriteTable
 import com.diegoferreiracaetano.dlearn.infrastructure.db.WatchlistTable
-import com.diegoferreiracaetano.dlearn.infrastructure.mappers.TmdbMapper
 import com.diegoferreiracaetano.dlearn.network.AppHeader
-import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.selectAll
 
 class MovieDetailDataService(
-    private val tmdbClient: TmdbClient,
-    private val tmdbMapper: TmdbMapper
+    private val movieClient: MovieClient
 ) {
     suspend fun fetchMovieDetail(
         movieId: String,
@@ -24,11 +22,11 @@ class MovieDetailDataService(
         val userId = header.userId
         val mediaIdInt = movieId.toIntOrNull() ?: 0
 
-        val tmdbMovieDeferred = async {
+        val movieDetailDeferred = async {
             runCatching {
-                tmdbClient.getMovieDetail(movieId, language)
+                movieClient.getMovieDetail(movieId, language)
             }.getOrElse {
-                tmdbClient.getTvShowDetail(movieId, language)
+                movieClient.getTvShowDetail(movieId, language)
             }
         }
 
@@ -47,10 +45,13 @@ class MovieDetailDataService(
             }
         }
 
-        val tmdbMovie = tmdbMovieDeferred.await()
+        val movieDetail = movieDetailDeferred.await()
         val (localFavorite, localWatchlist) = localStatesDeferred.await()
 
         // 2. Usamos o estado local para Favoritos/Watchlist
-        tmdbMapper.toMovieDetail(tmdbMovie, localFavorite, localWatchlist)
+        movieDetail.copy(
+            isFavorite = localFavorite,
+            isInWatchlist = localWatchlist
+        )
     }
 }

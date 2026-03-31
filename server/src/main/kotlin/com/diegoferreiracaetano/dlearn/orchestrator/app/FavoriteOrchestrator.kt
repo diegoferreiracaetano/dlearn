@@ -1,12 +1,11 @@
 package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
+import com.diegoferreiracaetano.dlearn.domain.repository.MovieClient
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
-import com.diegoferreiracaetano.dlearn.model.toVideo
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.FAVORITE
 import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.network.AppHeader
-import com.diegoferreiracaetano.dlearn.tmdb.TmdbClient
 import com.diegoferreiracaetano.dlearn.ui.mappers.VideoMapper
 import com.diegoferreiracaetano.dlearn.ui.screens.FavoriteScreenBuilder
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
@@ -22,7 +21,7 @@ class FavoriteOrchestrator(
     private val favoriteScreenBuilder: FavoriteScreenBuilder,
     private val favoriteRepository: FavoriteRepository,
     private val videoMapper: VideoMapper,
-    private val tmdbClient: TmdbClient
+    private val movieClient: MovieClient
 ) : Orchestrator, KoinComponent {
 
     override fun execute(request: AppRequest, header: AppHeader): Flow<Screen> = flow {
@@ -48,13 +47,16 @@ class FavoriteOrchestrator(
                 async {
                     runCatching {
                         if (mediaType == MediaType.MOVIES) {
-                            tmdbClient.getMovieDetail(id.toString(), language).toVideo(mediaType)
+                            movieClient.getMovieDetail(id.toString(), language)
                         } else {
-                            tmdbClient.getTvShowDetail(id.toString(), language).toVideo(mediaType)
+                            movieClient.getTvShowDetail(id.toString(), language)
                         }
                     }.getOrNull()
                 }
-            }.awaitAll().filterNotNull()
+            }.awaitAll().filterNotNull().map { 
+                // Convert MovieDetailDomainData to Video
+                it.toVideo()
+            }
         }
 
         val items = videoMapper.toMovieItemComponents(videos)

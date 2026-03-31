@@ -21,19 +21,13 @@ object AppConstants {
 object TokenConstants {
     const val CLAIM_USER_ID = "user_id"
     const val CLAIM_EMAIL = "email"
-    const val CLAIM_TMDB_SESSION_ID = "tmdbSessionId"
-    const val CLAIM_TMDB_ACCOUNT_ID = "tmdbAccountId"
 }
 
 object MetadataKeys {
-    const val TMDB_SESSION_ID = "sessionId"
-    const val TMDB_ACCOUNT_ID = "accountId"
     const val EXTERNAL_USERNAME = "external_username"
     const val EXTERNAL_PASSWORD = "external_password"
     const val EXTERNAL_ID = "external_id"
     const val AUTH_TYPE = "auth_type"
-    const val AUTH_TYPE_FULL = "full_session"
-    const val AUTH_TYPE_GUEST = "guest_session"
     const val USERNAME = "username"
     const val GUEST_PREFIX = "guest_"
     const val EXPIRES_AT = "expires_at"

@@ -1,11 +1,9 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.services
 
 import com.diegoferreiracaetano.dlearn.AppConstants
-import com.diegoferreiracaetano.dlearn.MetadataKeys
 import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
 import com.diegoferreiracaetano.dlearn.domain.models.HomeDomainData
-import com.diegoferreiracaetano.dlearn.domain.repository.AuthProviderRepository
-import com.diegoferreiracaetano.dlearn.domain.user.AccountProvider
+import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType.MOVIES
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType.SERIES
 import com.diegoferreiracaetano.dlearn.domain.video.Video
@@ -18,7 +16,7 @@ import kotlinx.coroutines.coroutineScope
 
 class HomeDataService(
     private val tmdbClient: TmdbClient,
-    private val authProviderRepository: AuthProviderRepository
+    private val favoriteRepository: FavoriteRepository
 ) {
     suspend fun fetchHomeData(
         language: String,
@@ -27,21 +25,11 @@ class HomeDataService(
     ): HomeDomainData = coroutineScope {
         val userId = header?.userId ?: AppConstants.GUEST_USER_ID
 
-        val tmdbAccount = if (userId != AppConstants.GUEST_USER_ID) {
-            authProviderRepository.findByUserId(userId).find { it.provider == AccountProvider.TMDB }
-        } else null
-
-        val sessionId = tmdbAccount?.metadata?.get(MetadataKeys.TMDB_SESSION_ID)
-        val accountId = tmdbAccount?.metadata?.get(MetadataKeys.TMDB_ACCOUNT_ID)
-
+        // 1. Buscamos favoritos do banco local (Source of Truth)
         val favoritesDeferred = async {
-            if (sessionId != null && accountId != null) {
-                try {
-                    tmdbClient.getFavorite(accountId, sessionId, MOVIES, language).results.map { it.id }
-                } catch (e: Exception) {
-                    emptyList()
-                }
-            } else emptyList()
+            runCatching {
+                favoriteRepository.getFavorites(userId).map { it.first }
+            }.getOrElse { emptyList() }
         }
 
         val movieGenres = async { runCatching { tmdbClient.getMovieGenres(language).genres }.getOrElse { emptyList() } }

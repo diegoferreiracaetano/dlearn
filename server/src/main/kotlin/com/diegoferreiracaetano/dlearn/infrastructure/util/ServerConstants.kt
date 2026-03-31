@@ -19,11 +19,6 @@ object ServerConstants {
         const val SEARCH_MULTI = "/search/multi"
         fun movieDetail(id: String) = "/movie/$id"
         fun tvDetail(id: String) = "/tv/$id"
-        fun accountStates(id: String) = "/movie/$id/account_states"
-        fun favorite(accountId: String) = "/account/$accountId/favorite"
-        fun watchlist(accountId: String) = "/account/$accountId/watchlist"
-        fun favoriteList(accountId: String, type: String) = "/account/$accountId/favorite/$type"
-        fun watchlistList(accountId: String, type: String) = "/account/$accountId/watchlist/$type"
     }
 
     object HomeConfig {

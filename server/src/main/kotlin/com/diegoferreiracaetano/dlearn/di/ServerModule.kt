@@ -10,7 +10,6 @@ import com.diegoferreiracaetano.dlearn.domain.usecases.*
 import com.diegoferreiracaetano.dlearn.domain.usecases.auth.LinkExternalProviderUseCase
 import com.diegoferreiracaetano.dlearn.infrastructure.auth.AuthProviderSyncService
 import com.diegoferreiracaetano.dlearn.infrastructure.auth.ExternalAuthService
-import com.diegoferreiracaetano.dlearn.infrastructure.auth.TmdbAuthService
 import com.diegoferreiracaetano.dlearn.infrastructure.cache.InMemoryCacheManager
 import com.diegoferreiracaetano.dlearn.infrastructure.mappers.TmdbMapper
 import com.diegoferreiracaetano.dlearn.infrastructure.mappers.WatchProviderUrlMapper
@@ -59,11 +58,11 @@ val serverModule = module {
     single<AuthProviderRepository> { AuthProviderDataService() }
     single<UserRepository> { UserDataService() }
     single<FavoriteRepository> { FavoriteDataService() }
-    single<WatchlistRepository> { WatchlistDataService(get(), get()) }
+    single<WatchlistRepository> { WatchlistDataService() }
 
     // 4. Serviços de Domínio e Lógica de Negócio
     single { HomeDataService(get(), get()) }
-    single { MovieDetailDataService(get(), get(), get()) }
+    single { MovieDetailDataService(get(), get()) }
     single { SearchDataService(get()) }
     single { FaqDataService() }
     single { TokenService() }
@@ -71,9 +70,6 @@ val serverModule = module {
     single { PasswordDataService(get(), get()) }
     
     // External Auth Services
-    single { TmdbAuthService(get()) }
-    single<ExternalAuthService> { get<TmdbAuthService>() }
-    
     single { AuthProviderSyncService(getAll<ExternalAuthService>(), get(), get()) }
     
     single { ChallengeMapper() }

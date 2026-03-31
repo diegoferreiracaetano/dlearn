@@ -12,7 +12,8 @@ class TmdbMapper(private val urlMapper: WatchProviderUrlMapper) {
 
     fun toMovieDetail(
         response: TmdbMovieDetailRemote,
-        accountStates: TmdbAccountStatesRemote? = null
+        isFavorite: Boolean = false,
+        isInWatchlist: Boolean = false
     ): MovieDetailDomainData {
         val movieTitle = response.title ?: response.name ?: ""
         val countryProviders = response.watchProviders?.results?.get(TmdbConstants.DEFAULT_REGION)
@@ -35,20 +36,12 @@ class TmdbMapper(private val urlMapper: WatchProviderUrlMapper) {
             trailerId = response.videos?.results
                 ?.filter { it.site == TmdbConstants.SITE_YOUTUBE && (it.type == TmdbConstants.TYPE_TRAILER || it.type == TmdbConstants.TYPE_TEASER) }
                 ?.firstOrNull()?.key,
-            isFavorite = accountStates?.favorite ?: false,
-            isInWatchlist = accountStates?.watchlist ?: false,
+            isFavorite = isFavorite,
+            isInWatchlist = isInWatchlist,
             providers = countryProviders?.flatrate?.map { provider ->
                 toWatchProvider(provider, movieTitle, imdbId, countryProviders.link)
             } ?: emptyList(),
             mediaType = mediaType
-        )
-    }
-
-    fun createEmptyAccountStates(favorite: Boolean, watchlist: Boolean): TmdbAccountStatesRemote {
-        return TmdbAccountStatesRemote(
-            id = 0,
-            favorite = favorite,
-            watchlist = watchlist
         )
     }
 

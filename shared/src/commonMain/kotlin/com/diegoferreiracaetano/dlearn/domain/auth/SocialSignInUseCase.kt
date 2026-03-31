@@ -18,7 +18,6 @@ class SocialSignInUseCase(
             AccountProvider.GOOGLE -> socialAuthManager.googleSignIn()
             AccountProvider.APPLE -> socialAuthManager.appleSignIn()
             AccountProvider.FACEBOOK -> socialAuthManager.facebookSignIn()
-            else -> SocialAuthResult.Error(AppErrorCode.UNSUPPORTED_CREDENTIAL_TYPE)
         }
 
         when (socialResult) {

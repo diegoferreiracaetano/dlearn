@@ -1,11 +1,9 @@
 package com.diegoferreiracaetano.dlearn.api.controllers
 
-import com.diegoferreiracaetano.dlearn.MetadataKeys
 import com.diegoferreiracaetano.dlearn.api.exception.challengePreference
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthRequest
 import com.diegoferreiracaetano.dlearn.domain.auth.CreateUserRequest
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType.OTP_EMAIL
-import com.diegoferreiracaetano.dlearn.domain.usecases.auth.LinkExternalProviderUseCase
 import com.diegoferreiracaetano.dlearn.orchestrator.auth.CreateUserOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.auth.LoginOrchestrator
 import io.ktor.http.HttpHeaders.AcceptLanguage
@@ -21,7 +19,6 @@ import org.koin.ktor.ext.inject
 fun Route.authController() {
     val loginOrchestrator by inject<LoginOrchestrator>()
     val createUserOrchestrator by inject<CreateUserOrchestrator>()
-    val linkExternalProviderUseCase by inject<LinkExternalProviderUseCase>()
 
     route("/v1/auth") {
         post("/login") {
@@ -33,14 +30,6 @@ fun Route.authController() {
                 password = request.password,
                 language = language
             )
-
-            response.user?.let { user ->
-                val metadata = mutableMapOf<String, String>()
-                request.tmdbUsername?.let { metadata[MetadataKeys.EXTERNAL_USERNAME] = it }
-                request.tmdbPassword?.let { metadata[MetadataKeys.EXTERNAL_PASSWORD] = it }
-                
-                linkExternalProviderUseCase.execute(userId = user.id, metadata = metadata)
-            }
 
             call.respond(response)
         }
@@ -71,18 +60,8 @@ fun Route.authController() {
                     name = request.name,
                     email = request.email,
                     password = request.password,
-                    language = language,
-                    tmdbUsername = request.tmdbUsername,
-                    tmdbPassword = request.tmdbPassword
+                    language = language
                 )
-
-                response.user?.let { user ->
-                    val metadata = mutableMapOf<String, String>()
-                    request.tmdbUsername?.let { metadata[MetadataKeys.EXTERNAL_USERNAME] = it }
-                    request.tmdbPassword?.let { metadata[MetadataKeys.EXTERNAL_PASSWORD] = it }
-                    
-                    linkExternalProviderUseCase.execute(userId = user.id, metadata = metadata)
-                }
 
                 call.respond(HttpStatusCode.Created, response)
             }

@@ -1,15 +1,16 @@
 package com.diegoferreiracaetano.dlearn.tmdb
 
-import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.infrastructure.util.ServerConstants.TmdbEndpoints
-import com.diegoferreiracaetano.dlearn.model.*
+import com.diegoferreiracaetano.dlearn.model.TmdbGenresResponse
+import com.diegoferreiracaetano.dlearn.model.TmdbItemRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbListResponse
+import com.diegoferreiracaetano.dlearn.model.TmdbMovieDetailRemote
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_API_KEY
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_BASE_URL
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.request.*
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 
 class TmdbClient(private val client: HttpClient) {
     private val apiKey = THE_MOVIE_DB_API_KEY
@@ -26,21 +27,6 @@ class TmdbClient(private val client: HttpClient) {
             params.forEach { (key, value) ->
                 parameter(key, value)
             }
-        }.body()
-    }
-
-    private suspend inline fun <reified T> post(
-        path: String,
-        body: Any,
-        params: Map<String, Any> = emptyMap()
-    ): T {
-        return client.post("$baseUrl$path") {
-            parameter("api_key", apiKey)
-            params.forEach { (key, value) ->
-                parameter(key, value)
-            }
-            contentType(ContentType.Application.Json)
-            setBody(body)
         }.body()
     }
 
@@ -86,74 +72,5 @@ class TmdbClient(private val client: HttpClient) {
 
     suspend fun searchMulti(query: String, language: String): TmdbListResponse<TmdbItemRemote> {
         return get(TmdbEndpoints.SEARCH_MULTI, language, mapOf("query" to query))
-    }
-
-    suspend fun getAccountStates(movieId: String, sessionId: String, isGuest: Boolean = false): TmdbAccountStatesRemote {
-        val params = if (isGuest) mapOf("guest_session_id" to sessionId) else mapOf("session_id" to sessionId)
-        return get(TmdbEndpoints.accountStates(movieId), "en", params)
-    }
-
-    suspend fun markAsFavorite(
-        accountId: String,
-        sessionId: String,
-        mediaType: String,
-        mediaId: Int,
-        favorite: Boolean,
-        isGuest: Boolean = false
-    ): TmdbStatusResponse {
-        if (isGuest) return TmdbStatusResponse(success = true, statusCode = 1, statusMessage = "Success (Local Only for Guest)")
-        
-        val requestBody = TmdbFavoriteRequest(
-            mediaType = mediaType,
-            mediaId = mediaId,
-            favorite = favorite
-        )
-        return post(TmdbEndpoints.favorite(accountId), requestBody, mapOf("session_id" to sessionId))
-    }
-
-    suspend fun addToWatchlist(
-        accountId: String,
-        sessionId: String,
-        mediaType: String,
-        mediaId: Int,
-        watchlist: Boolean,
-        isGuest: Boolean = false
-    ): TmdbStatusResponse {
-        if (isGuest) return TmdbStatusResponse(success = true, statusCode = 1, statusMessage = "Success (Local Only for Guest)")
-        
-        val requestBody = TmdbWatchlistRequest(
-            mediaType = mediaType,
-            mediaId = mediaId,
-            watchlist = watchlist
-        )
-        return post(TmdbEndpoints.watchlist(accountId), requestBody, mapOf("session_id" to sessionId))
-    }
-
-    suspend fun getFavorite(accountId: String, sessionId: String, type: MediaType, language: String): TmdbListResponse<TmdbItemRemote> {
-        return get(TmdbEndpoints.favoriteList(accountId, type.name), language, mapOf("session_id" to sessionId))
-    }
-
-    suspend fun getWatchlist(accountId: String, sessionId: String, mediaType: MediaType, language: String): TmdbListResponse<TmdbItemRemote> {
-        return get(TmdbEndpoints.watchlistList(accountId, mediaType.name), language, mapOf("session_id" to sessionId))
-    }
-
-    suspend fun createRequestToken(): TmdbRequestTokenResponse {
-        return get("/authentication/token/new", "en")
-    }
-
-    suspend fun validateWithLogin(request: TmdbLoginRequest): TmdbRequestTokenResponse {
-        return post("/authentication/token/validate_with_login", request)
-    }
-
-    suspend fun createSession(requestToken: String): TmdbSessionResponse {
-        return post("/authentication/session/new", TmdbSessionRequest(requestToken))
-    }
-
-    suspend fun createGuestSession(): TmdbGuestSessionResponse {
-        return get("/authentication/guest_session/new", "en")
-    }
-
-    suspend fun getAccountDetails(sessionId: String): TmdbAccountResponse {
-        return get("/account", "en", mapOf("session_id" to sessionId))
     }
 }

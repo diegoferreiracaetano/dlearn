@@ -1,10 +1,6 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.services
 
-import com.diegoferreiracaetano.dlearn.AppConstants
-import com.diegoferreiracaetano.dlearn.MetadataKeys
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
-import com.diegoferreiracaetano.dlearn.domain.repository.AuthProviderRepository
-import com.diegoferreiracaetano.dlearn.domain.user.AccountProvider
 import com.diegoferreiracaetano.dlearn.infrastructure.db.DatabaseFactory.dbQuery
 import com.diegoferreiracaetano.dlearn.infrastructure.db.FavoriteTable
 import com.diegoferreiracaetano.dlearn.infrastructure.db.WatchlistTable
@@ -18,7 +14,6 @@ import org.jetbrains.exposed.sql.selectAll
 
 class MovieDetailDataService(
     private val tmdbClient: TmdbClient,
-    private val authProviderRepository: AuthProviderRepository,
     private val tmdbMapper: TmdbMapper
 ) {
     suspend fun fetchMovieDetail(
@@ -37,14 +32,6 @@ class MovieDetailDataService(
             }
         }
 
-        var isGuestSession = false
-        val sessionId = if (userId != AppConstants.GUEST_USER_ID) {
-            val providers = authProviderRepository.findByUserId(userId)
-            val tmdbAccount = providers.find { it.provider == AccountProvider.TMDB }
-            isGuestSession = tmdbAccount?.metadata?.get("auth_type") == "guest_session"
-            tmdbAccount?.metadata?.get(MetadataKeys.TMDB_SESSION_ID)
-        } else null
-
         // 1. Buscamos o estado local sempre (Source of Truth)
         val localStatesDeferred = async {
             dbQuery {
@@ -60,25 +47,10 @@ class MovieDetailDataService(
             }
         }
 
-        // 2. Buscamos do TMDB se houver sessão (para ratings principalmente)
-        val accountStatesDeferred = async {
-            sessionId?.let { sid ->
-                runCatching {
-                    tmdbClient.getAccountStates(movieId, sid, isGuestSession)
-                }.getOrNull()
-            }
-        }
-
         val tmdbMovie = tmdbMovieDeferred.await()
-        val accountStates = accountStatesDeferred.await()
         val (localFavorite, localWatchlist) = localStatesDeferred.await()
 
-        // 3. Mesclamos preferindo o estado local para Favoritos/Watchlist
-        val finalAccountStates = (accountStates ?: tmdbMapper.createEmptyAccountStates(localFavorite, localWatchlist)).copy(
-            favorite = localFavorite,
-            watchlist = localWatchlist
-        )
-
-        tmdbMapper.toMovieDetail(tmdbMovie, finalAccountStates)
+        // 2. Usamos o estado local para Favoritos/Watchlist
+        tmdbMapper.toMovieDetail(tmdbMovie, localFavorite, localWatchlist)
     }
 }

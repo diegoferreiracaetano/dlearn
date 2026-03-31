@@ -18,9 +18,7 @@ class CreateUserOrchestrator(
         name: String,
         email: String,
         password: String,
-        language: String,
-        tmdbUsername: String? = null,
-        tmdbPassword: String? = null
+        language: String
     ): AuthResponse {
         val existingUser = userRepository.findByEmail(email)
         if (existingUser != null) {

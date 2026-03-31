@@ -17,19 +17,11 @@ val ApplicationCall.jwtPrincipal: JWTPrincipal?
 val ApplicationCall.userId: String
     get() = jwtPrincipal?.payload?.getClaim(TokenConstants.CLAIM_USER_ID)?.asString() ?: "guest"
 
-val ApplicationCall.tmdbSessionId: String?
-    get() = jwtPrincipal?.payload?.getClaim(TokenConstants.CLAIM_TMDB_SESSION_ID)?.asString()
-
-val ApplicationCall.tmdbAccountId: String?
-    get() = jwtPrincipal?.payload?.getClaim(TokenConstants.CLAIM_TMDB_ACCOUNT_ID)?.asString()
-
 val ApplicationCall.appHeader: AppHeader
     get() = AppHeader(
         paramUserAgent = request.header(UserAgent),
         paramLanguage = request.header(AcceptLanguage),
         paramCountry = request.header(X_COUNTRY),
         notificationsEnabled = request.header(X_NOTIFICATIONS_ENABLED)?.toBoolean() ?: true,
-        userId = userId,
-        tmdbSessionId = tmdbSessionId,
-        tmdbAccountId = tmdbAccountId
+        userId = userId
     )

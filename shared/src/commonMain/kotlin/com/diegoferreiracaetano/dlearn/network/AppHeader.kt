@@ -9,9 +9,7 @@ data class AppHeader(
     val paramLanguage: String? = null,
     val paramCountry: String? = null,
     val notificationsEnabled: Boolean = true,
-    val userId: String = "guest",
-    val tmdbSessionId: String? = null,
-    val tmdbAccountId: String? = null
+    val userId: String = "guest"
 ) {
     @Transient
     val userAgent: AppUserAgent = AppUserAgent.fromHeader(paramUserAgent)

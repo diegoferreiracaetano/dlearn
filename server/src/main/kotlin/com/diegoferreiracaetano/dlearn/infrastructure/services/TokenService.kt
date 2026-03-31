@@ -2,12 +2,12 @@ package com.diegoferreiracaetano.dlearn.infrastructure.services
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.diegoferreiracaetano.dlearn.TokenConstants.AUDIENCE
 import com.diegoferreiracaetano.dlearn.TokenConstants.CLAIM_EMAIL
 import com.diegoferreiracaetano.dlearn.TokenConstants.CLAIM_USER_ID
-import com.diegoferreiracaetano.dlearn.TokenConstants.ISSUER
-import com.diegoferreiracaetano.dlearn.TokenConstants.SECRET
 import com.diegoferreiracaetano.dlearn.domain.user.User
+import com.diegoferreiracaetano.dlearn.server.BuildConfig.AUDIENCE
+import com.diegoferreiracaetano.dlearn.server.BuildConfig.ISSUER
+import com.diegoferreiracaetano.dlearn.server.BuildConfig.SECRET
 import java.util.Date
 
 class TokenService(

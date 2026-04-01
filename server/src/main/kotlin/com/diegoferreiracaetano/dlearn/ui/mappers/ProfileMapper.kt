@@ -6,8 +6,13 @@ import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.ui.sdui.*
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
+import com.diegoferreiracaetano.dlearn.infrastructure.services.FeatureToggleService
+import com.diegoferreiracaetano.dlearn.infrastructure.services.Feature
 
-class ProfileMapper(private val i18n: I18nProvider) {
+class ProfileMapper(
+    private val i18n: I18nProvider,
+    private val featureToggleService: FeatureToggleService
+) {
     fun toHeader(data: User): ProfileRowComponent {
         return ProfileRowComponent(
             name = data.name,
@@ -69,22 +74,31 @@ class ProfileMapper(private val i18n: I18nProvider) {
     }
 
     fun toAccountSection(lang: String): SectionComponent {
-        return SectionComponent(
-            title = i18n.getString(AppStringType.SECTION_ACCOUNT, lang),
-            items = listOf(
+        val items = mutableListOf<SectionItem>()
+        
+        if (featureToggleService.isEnabled(Feature.MEMBER_SECTION)) {
+            items.add(
                 SectionItem(
                     id = "member",
                     label = i18n.getString(AppStringType.ITEM_MEMBER, lang),
                     icon = AppIconType.PERSON,
                     actionUrl = AppNavigationRoute.MEMBER
-                ),
-                SectionItem(
-                    id = "password",
-                    label = i18n.getString(AppStringType.ITEM_PASSWORD, lang),
-                    icon = AppIconType.LOCK,
-                    actionUrl = AppNavigationRoute.PROFILE_CHANGE_PASSWORD
                 )
             )
+        }
+
+        items.add(
+            SectionItem(
+                id = "password",
+                label = i18n.getString(AppStringType.ITEM_PASSWORD, lang),
+                icon = AppIconType.LOCK,
+                actionUrl = AppNavigationRoute.PROFILE_CHANGE_PASSWORD
+            )
+        )
+
+        return SectionComponent(
+            title = i18n.getString(AppStringType.SECTION_ACCOUNT, lang),
+            items = items
         )
     }
 

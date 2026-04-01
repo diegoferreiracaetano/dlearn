@@ -23,7 +23,7 @@ class TmdbMapper(private val urlMapper: WatchProviderUrlMapper) {
         val mediaType = if (response.title != null) MediaType.MOVIES else MediaType.SERIES
 
         return MovieDetailDomainData(
-            id = response.id.toString(),
+            id = "${mediaType.name}_${response.id}",
             title = movieTitle,
             imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}${response.posterPath}",
             year = (response.releaseDate ?: response.firstAirDate ?: "").take(4),

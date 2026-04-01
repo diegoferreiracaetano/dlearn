@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.domain.repository.MovieClient
 import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
-import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.WATCHLIST
 import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.network.AppHeader
@@ -29,31 +28,25 @@ class WatchlistOrchestrator(
         header: AppHeader,
         userId: String
     ): Flow<Screen> = flow {
-        val movieId = request.params?.get(AppQueryParam.ID)?.toIntOrNull()
-        val mediaTypeString = request.params?.get(AppQueryParam.MEDIA_TYPE)
+        val movieId = request.params?.get(AppQueryParam.ID)
         val isToggleAction = request.params?.containsKey(WATCHLIST) == true
 
-        if (movieId != null && mediaTypeString != null && isToggleAction) {
-            val mediaType = MediaType.valueOf(mediaTypeString)
+        if (movieId != null && isToggleAction) {
             val active = request.params?.get(WATCHLIST)?.toBoolean() ?: false
-            watchlistRepository.toggleWatchlist(userId, movieId, mediaType, active)
+            watchlistRepository.toggleWatchlist(userId, movieId, active)
         }
 
         emit(getWatchlistScreen(userId, header.language))
     }
 
     private suspend fun getWatchlistScreen(userId: String, language: String): Screen {
-        val watchlistItems = watchlistRepository.getWatchlist(userId)
+        val watchlistIds = watchlistRepository.getWatchlist(userId)
         
         val videos = coroutineScope {
-            watchlistItems.map { (id, mediaType) ->
+            watchlistIds.map { id ->
                 async {
                     runCatching {
-                        if (mediaType == MediaType.MOVIES) {
-                            movieClient.getMovieDetail(id.toString(), language)
-                        } else {
-                            movieClient.getTvShowDetail(id.toString(), language)
-                        }
+                        movieClient.getMovieDetail(id, language)
                     }.getOrNull()
                 }
             }.awaitAll().filterNotNull().map { it.toVideo() }

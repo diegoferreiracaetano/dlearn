@@ -9,34 +9,49 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class FavoriteDataService : FavoriteRepository {
 
-    override suspend fun toggleFavorite(userId: String, mediaId: Int, mediaType: MediaType, isFavorite: Boolean) {
+    private fun parseMovieId(movieId: String): Pair<Int, MediaType> {
+        val parts = movieId.split("_")
+        val mediaType = if (parts.size == 2) {
+            runCatching { MediaType.valueOf(parts[0]) }.getOrElse { MediaType.MOVIES }
+        } else {
+            MediaType.MOVIES
+        }
+        val tmdbId = parts.last().toIntOrNull() ?: 0
+        return tmdbId to mediaType
+    }
+
+    override suspend fun toggleFavorite(userId: String, mediaId: String, isFavorite: Boolean) {
+        val (id, type) = parseMovieId(mediaId)
         dbQuery {
             if (isFavorite) {
                 FavoriteTable.insertIgnore {
                     it[this.userId] = userId
-                    it[this.mediaId] = mediaId
-                    it[this.mediaType] = mediaType.name
+                    it[this.mediaId] = id
+                    it[this.mediaType] = type.name
                 }
             } else {
                 FavoriteTable.deleteWhere {
                     (FavoriteTable.userId eq userId) and 
-                    (FavoriteTable.mediaId eq mediaId) and 
-                    (FavoriteTable.mediaType eq mediaType.name)
+                    (FavoriteTable.mediaId eq id) and 
+                    (FavoriteTable.mediaType eq type.name)
                 }
             }
         }
     }
 
-    override suspend fun isFavorite(userId: String, mediaId: Int, mediaType: MediaType): Boolean = dbQuery {
-        FavoriteTable.selectAll().where {
-            (FavoriteTable.userId eq userId) and 
-            (FavoriteTable.mediaId eq mediaId) and 
-            (FavoriteTable.mediaType eq mediaType.name)
-        }.count() > 0
+    override suspend fun isFavorite(userId: String, mediaId: String): Boolean {
+        val (id, type) = parseMovieId(mediaId)
+        return dbQuery {
+            FavoriteTable.selectAll().where {
+                (FavoriteTable.userId eq userId) and 
+                (FavoriteTable.mediaId eq id) and 
+                (FavoriteTable.mediaType eq type.name)
+            }.count() > 0
+        }
     }
 
-    override suspend fun getFavorites(userId: String): List<Pair<Int, MediaType>> = dbQuery {
+    override suspend fun getFavorites(userId: String): List<String> = dbQuery {
         FavoriteTable.selectAll().where { FavoriteTable.userId eq userId }
-            .map { it[FavoriteTable.mediaId] to MediaType.valueOf(it[FavoriteTable.mediaType]) }
+            .map { "${it[FavoriteTable.mediaType]}_${it[FavoriteTable.mediaId]}" }
     }
 }

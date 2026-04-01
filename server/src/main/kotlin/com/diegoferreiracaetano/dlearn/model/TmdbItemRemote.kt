@@ -39,7 +39,7 @@ fun TmdbItemRemote.toVideo(
     }
 
     return Video(
-        id = id.toString(),
+        id = "${type.name}_$id",
         title = title ?: name ?: "",
         subtitle = (releaseDate ?: firstAirDate ?: "").take(4),
         description = overview ?: "",

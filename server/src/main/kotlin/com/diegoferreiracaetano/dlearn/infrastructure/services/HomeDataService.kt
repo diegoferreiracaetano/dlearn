@@ -1,13 +1,11 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.services
 
-import com.diegoferreiracaetano.dlearn.AppConstants
 import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
 import com.diegoferreiracaetano.dlearn.domain.models.HomeDomainData
 import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
 import com.diegoferreiracaetano.dlearn.domain.repository.MovieClient
 import com.diegoferreiracaetano.dlearn.domain.video.Video
 import com.diegoferreiracaetano.dlearn.infrastructure.util.ServerConstants.HomeConfig
-import com.diegoferreiracaetano.dlearn.network.AppHeader
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
@@ -21,9 +19,8 @@ class HomeDataService(
         userId: String
     ): HomeDomainData = coroutineScope {
 
-
         val favorites = runCatching {
-            favoriteRepository.getFavorites(userId).map { it.first }
+            favoriteRepository.getFavorites(userId)
         }.getOrElse { emptyList() }
 
         val movieGenresDeferred = async { runCatching { movieClient.getMovieGenres(language) }.getOrElse { emptyList() } }
@@ -37,29 +34,29 @@ class HomeDataService(
         val popularMoviesDeferred = async {
             if (type == HomeFilterType.SERIES) emptyList<Video>()
             else runCatching { 
-                movieClient.getPopularMovies(language, favorites)
-            }.getOrElse { emptyList() }
+                movieClient.getPopularMovies(language)
+            }.getOrElse { emptyList() }.applyFavorites(favorites)
         }
 
         val popularSeriesDeferred = async {
             if (type == HomeFilterType.MOVIES) emptyList()
             else runCatching {
-                movieClient.getPopularSeries(language, favorites)
-            }.getOrElse { emptyList() }
+                movieClient.getPopularSeries(language)
+            }.getOrElse { emptyList() }.applyFavorites(favorites)
         }
 
         val topRatedMoviesDeferred = async {
             if (type == HomeFilterType.SERIES) emptyList<Video>()
             else runCatching {
-                movieClient.getTopRatedMovies(language, favorites)
-            }.getOrElse { emptyList() }
+                movieClient.getTopRatedMovies(language)
+            }.getOrElse { emptyList() }.applyFavorites(favorites)
         }
 
         val topRatedSeriesDeferred = async {
             if (type == HomeFilterType.MOVIES) emptyList<Video>()
             else runCatching {
-                movieClient.getTopRatedSeries(language, favorites)
-            }.getOrElse { emptyList() }
+                movieClient.getTopRatedSeries(language)
+            }.getOrElse { emptyList() }.applyFavorites(favorites)
         }
 
         val popularMovies = popularMoviesDeferred.await()
@@ -71,11 +68,11 @@ class HomeDataService(
             category.name to async {
                 runCatching {
                     if (type == HomeFilterType.SERIES) {
-                        movieClient.getTvByGenre(category.id, language, favorites)
+                        movieClient.getTvByGenre(category.id, language)
                     } else {
-                        movieClient.getMoviesByGenre(category.id, language, favorites)
+                        movieClient.getMoviesByGenre(category.id, language)
                     }
-                }.getOrElse { emptyList() }
+                }.getOrElse { emptyList() }.applyFavorites(favorites)
             }
         }.mapValues { it.value.await() }
 
@@ -85,5 +82,11 @@ class HomeDataService(
             popular = (popularMovies + popularSeries).shuffled().take(HomeConfig.MAX_POPULAR),
             categories = categoryVideosMap
         )
+    }
+
+    private fun List<Video>.applyFavorites(favorites: List<String>): List<Video> {
+        return map { video ->
+            video.copy(isFavorite = favorites.contains(video.id))
+        }
     }
 }

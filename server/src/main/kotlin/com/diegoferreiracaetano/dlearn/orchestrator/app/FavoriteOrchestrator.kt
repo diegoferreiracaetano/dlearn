@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
 import com.diegoferreiracaetano.dlearn.domain.repository.MovieClient
-import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.FAVORITE
 import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.network.AppHeader
@@ -29,37 +28,28 @@ class FavoriteOrchestrator(
         header: AppHeader,
         userId: String
     ): Flow<Screen> = flow {
-        val movieId = request.params?.get(AppQueryParam.ID)?.toIntOrNull()
-        val mediaTypeString = request.params?.get(AppQueryParam.MEDIA_TYPE)
+        val movieId = request.params?.get(AppQueryParam.ID)
         val isToggleAction = request.params?.containsKey(FAVORITE) == true
 
-        if (movieId != null && mediaTypeString != null && isToggleAction) {
-            val mediaType = MediaType.valueOf(mediaTypeString)
+        if (movieId != null && isToggleAction) {
             val active = request.params?.get(FAVORITE)?.toBoolean() ?: false
-            favoriteRepository.toggleFavorite(userId, movieId, mediaType, active)
+            favoriteRepository.toggleFavorite(userId, movieId, active)
         }
 
         emit(getFavoriteScreen(userId, header.language))
     }
 
     private suspend fun getFavoriteScreen(userId: String, language: String): Screen {
-        val favoriteItems = favoriteRepository.getFavorites(userId)
+        val favoriteIds = favoriteRepository.getFavorites(userId)
         
         val videos = coroutineScope {
-            favoriteItems.map { (id, mediaType) ->
+            favoriteIds.map { id ->
                 async {
                     runCatching {
-                        if (mediaType == MediaType.MOVIES) {
-                            movieClient.getMovieDetail(id.toString(), language)
-                        } else {
-                            movieClient.getTvShowDetail(id.toString(), language)
-                        }
+                        movieClient.getMovieDetail(id, language)
                     }.getOrNull()
                 }
-            }.awaitAll().filterNotNull().map { 
-                // Convert MovieDetailDomainData to Video
-                it.toVideo()
-            }
+            }.awaitAll().filterNotNull().map { it.toVideo() }
         }
 
         val items = videoMapper.toMovieItemComponents(videos)

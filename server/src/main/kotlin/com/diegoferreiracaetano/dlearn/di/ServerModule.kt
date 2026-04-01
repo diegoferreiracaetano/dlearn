@@ -127,7 +127,7 @@ val serverModule = module {
     // 6. Mapeadores de UI (SDUI)
     single { HomeMapper() }
     single { MovieDetailMapper(get()) }
-    single { ProfileMapper(get()) }
+    single { ProfileMapper(get(), get()) }
     single { SettingsMapper(get()) }
     single { VideoMapper() }
 

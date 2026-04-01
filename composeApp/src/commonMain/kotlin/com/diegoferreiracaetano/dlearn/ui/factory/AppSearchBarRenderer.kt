@@ -29,7 +29,7 @@ class AppSearchBarRenderer : ComponentRenderer {
 
         AppSearchBar(
             onSearch = { query->
-                actions.onSearch(AppPath(
+                actions.onAction(AppPath(
                     searchComponent.actionUrl, mapOf(AppQueryParam.Q to query)
                 ))
             },

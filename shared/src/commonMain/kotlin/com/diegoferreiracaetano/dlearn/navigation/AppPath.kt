@@ -29,14 +29,18 @@ object AppPath {
         params: Map<String, String>? = null,
         metadata: Map<String, String>? = null
     ): String {
-        return build(AppRequest(path = path, params = params, metadata = metadata))
+        return build(parse(path, params, metadata))
     }
 
     /**
      * PARSE: Interpreta uma string de PATH e converte em um [AppRequest].
      */
-    fun parse(fullPath: String?): AppRequest {
-        if (fullPath.isNullOrBlank()) return AppRequest(path = "")
+    fun parse(
+        fullPath: String?,
+        params: Map<String, String>? = null,
+        metadata: Map<String, String>? = null
+    ): AppRequest {
+        if (fullPath.isNullOrBlank()) return AppRequest(path = "", params = params, metadata = metadata)
 
         val (pathPart, queryPart) = fullPath.split("?", limit = 2)
             .let { it[0] to it.getOrNull(1) }
@@ -46,14 +50,16 @@ object AppPath {
             if (parts.size == 2) parts[0] to parts[1] else null
         }?.toMap()
 
+        val combinedParams = when {
+            queryMap != null && params != null -> queryMap + params
+            queryMap != null -> queryMap
+            else -> params
+        }
+
         return AppRequest(
             path = pathPart.trim('/'),
-            params = queryMap
+            params = combinedParams,
+            metadata = metadata
         )
     }
-
-    /**
-     * Atalho para parse usando invoke.
-     */
-    operator fun invoke(fullPath: String?): AppRequest = parse(fullPath)
 }

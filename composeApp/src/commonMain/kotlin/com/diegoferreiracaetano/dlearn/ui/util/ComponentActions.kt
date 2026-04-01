@@ -1,7 +1,5 @@
 package com.diegoferreiracaetano.dlearn.ui.util
 
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
-
 data class ComponentActions(
     val onItemClick: (String) -> Unit = {},
     val onMovieClick: (String) -> Unit = {},
@@ -12,7 +10,6 @@ data class ComponentActions(
     val onClose: () -> Unit = {},
     val onRetry: () -> Unit = {},
     val currentRoute: String = "",
-    val onSearch: (String) -> Unit = {},
-    val onQueryChange: (String) -> Unit = {},
-    val execute: (AppRequest) -> Unit = {}
+    val onAction: (String) -> Unit = {},
+    val onQueryChange: (String) -> Unit = {}
 )

@@ -55,8 +55,8 @@ fun NavController.navigateToPath(path: String, params: Map<String, String>? = nu
     } else {
         // Usa o novo AppPath para construir a rota SDUI padrão
         val url = AppPath(path, params)
-        val sduiRoute = "${AppNavigationRoute.APP_PREFIX}?${AppNavigationRoute.ARG_PATH}=$url"
-        navigate(sduiRoute)
+        val route = AppPath.invoke(AppNavigationRoute.APP_PREFIX, mapOf(AppNavigationRoute.ARG_PATH to url))
+        navigate(route)
     }
 }
 

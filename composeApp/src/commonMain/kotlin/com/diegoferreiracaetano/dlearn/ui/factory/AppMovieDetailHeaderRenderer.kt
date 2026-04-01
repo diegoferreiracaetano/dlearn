@@ -9,6 +9,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSou
 import com.diegoferreiracaetano.dlearn.designsystem.components.movie.AppMovieDetailHeader
 import com.diegoferreiracaetano.dlearn.designsystem.components.movie.MovieItem
 import com.diegoferreiracaetano.dlearn.designsystem.components.movie.WatchProvider
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppMovieDetailHeaderComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
@@ -78,12 +79,12 @@ class AppMovieDetailHeaderRenderer : ComponentRenderer {
             isInList = header.isInWatchlist,
             onFavoriteClick = { 
                 header.favoriteActionUrl?.let { url ->
-                    actions.execute(AppRequest.fromUrl(url))
+                    actions.onAction(AppPath.invoke(url))
                 }
             },
             onAddToListClick = { 
                 header.watchlistActionUrl?.let { url ->
-                    actions.execute(AppRequest.fromUrl(url))
+                    actions.onAction(AppPath.invoke(url))
                 }
             },
             modifier = modifier

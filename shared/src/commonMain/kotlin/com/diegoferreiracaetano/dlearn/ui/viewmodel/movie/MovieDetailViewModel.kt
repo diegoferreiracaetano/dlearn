@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.movie.MovieDetailRepository
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.navigation.AppPath
 import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -44,9 +45,9 @@ class MovieDetailViewModel(
         }
     }
 
-    fun execute(request: AppRequest) {
+    fun execute(fullUrl: String) {
         viewModelScope.launch {
-            repository.execute(request)
+            repository.execute(AppPath.parse(fullUrl))
                 .catch { e -> _uiState.value = UIState.Error(e) }
                 .collect { screen ->
                     _uiState.value = UIState.Success(screen)

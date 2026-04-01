@@ -41,7 +41,7 @@ fun MovieDetailScreen(
             onItemClick = onItemClick,
             onBackClick = onBackClick,
             onRetry = viewModel::retry,
-            execute = viewModel::execute
+            onAction = viewModel::execute
         )
     }
 

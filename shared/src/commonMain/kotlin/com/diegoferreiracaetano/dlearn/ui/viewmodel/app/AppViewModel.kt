@@ -23,10 +23,7 @@ class AppViewModel(
     private var lastRequest: AppRequest? = null
 
     fun fetch(path: String, params: Map<String, String>? = null) {
-        if (params != null)
-            fetch(AppRequest(path, params))
-        else
-            fetch(AppPath.parse(path))
+        fetch(AppPath.parse(path, params))
     }
 
     fun retry() {

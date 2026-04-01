@@ -10,8 +10,5 @@ data class AppRequest(
     val metadata: Map<String, String>? = null
 ) {
     companion object {
-        fun fromUrl(url: String): AppRequest {
-            return AppPath.parse(url)
-        }
     }
 }

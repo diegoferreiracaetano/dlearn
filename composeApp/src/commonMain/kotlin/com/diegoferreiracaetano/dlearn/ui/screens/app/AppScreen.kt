@@ -48,7 +48,7 @@ fun AppScreen(
             onTabSelected = onTabSelected,
             onBackClick = onBackClick,
             onRetry = viewModel::retry,
-            onSearch = viewModel::fetch,
+            onAction = viewModel::fetch,
             onClose = onClose,
         )
     }

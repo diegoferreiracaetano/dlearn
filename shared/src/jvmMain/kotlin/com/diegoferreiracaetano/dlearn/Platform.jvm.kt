@@ -11,8 +11,8 @@ class JVMPlatform : Platform {
     override fun updateLocale(language: String, country: String) {
         val locale = when {
             language.contains("-") -> Locale.forLanguageTag(language)
-            country.isNotEmpty() -> Locale(language, country)
-            else -> Locale(language)
+            country.isNotEmpty() -> Locale.Builder().setLanguage(language).setRegion(country).build()
+            else -> Locale.Builder().setLanguage(language).build()
         }
         Locale.setDefault(locale)
     }

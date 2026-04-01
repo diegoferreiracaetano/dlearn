@@ -55,22 +55,23 @@ kotlin {
             api(libs.multiplatform.settings)
             api(libs.multiplatform.settings.coroutines)
             implementation(libs.multiplatform.settings.no.arg)
+
         }
 
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
-            implementation(libs.firebase.auth)
-            implementation(libs.firebase.common)
-            
             implementation(libs.androidx.credentials)
             implementation(libs.androidx.credentials.play.services.auth)
             implementation(libs.googleid)
+            implementation(project.dependencies.platform(libs.android.firebase.bom))
+            api(libs.firebase.auth)
+            api(libs.firebase.common)
         }
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
-            implementation(libs.firebase.auth)
-            implementation(libs.firebase.common)
+            api(libs.firebase.auth)
+            api(libs.firebase.common)
         }
 
         wasmJsMain.dependencies {

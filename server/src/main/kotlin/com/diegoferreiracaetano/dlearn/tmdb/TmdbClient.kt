@@ -80,13 +80,21 @@ internal class TmdbClient(
     }
 
     override suspend fun getMovieDetail(movieId: String, language: String): MovieDetailDomainData {
-        val response = get<TmdbMovieDetailRemote>(TmdbEndpoints.movieDetail(movieId), language, mapOf("append_to_response" to "credits,videos,watch/providers,external_ids"))
+        val response = getMovieDetailRemote(movieId, language)
         return tmdbMapper.toMovieDetail(response)
     }
 
     override suspend fun getTvShowDetail(tvId: String, language: String): MovieDetailDomainData {
-        val response = get<TmdbMovieDetailRemote>(TmdbEndpoints.tvDetail(tvId), language, mapOf("append_to_response" to "credits,videos,watch/providers,external_ids"))
+        val response = getTvShowDetailRemote(tvId, language)
         return tmdbMapper.toMovieDetail(response)
+    }
+
+    override suspend fun getMovieDetailRemote(movieId: String, language: String): TmdbMovieDetailRemote {
+        return get(TmdbEndpoints.movieDetail(movieId), language, mapOf("append_to_response" to "credits,videos,watch/providers,external_ids"))
+    }
+
+    override suspend fun getTvShowDetailRemote(tvId: String, language: String): TmdbMovieDetailRemote {
+        return get(TmdbEndpoints.tvDetail(tvId), language, mapOf("append_to_response" to "credits,videos,watch/providers,external_ids"))
     }
 
     override suspend fun searchMulti(query: String, language: String): List<Video> {
@@ -97,5 +105,19 @@ internal class TmdbClient(
                 val isMovie = item.title != null
                 item.toVideo(if (isMovie) MediaType.MOVIES else MediaType.SERIES, if (isMovie) mGenres else tGenres)
             }
+    }
+
+    override suspend fun getAccountStates(id: String, sessionId: String, isGuest: Boolean): TmdbAccountStatesRemote? {
+        val path = if (isGuest) TmdbEndpoints.movieDetail(id) else TmdbEndpoints.accountStates(id)
+        return try {
+            get(path, "en-US", mapOf("session_id" to sessionId))
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override suspend fun getFavorite(accountId: String, sessionId: String, mediaType: MediaType, language: String): TmdbListResponse<TmdbItemRemote> {
+        val path = if (mediaType == MediaType.MOVIES) TmdbEndpoints.favoriteMovies(accountId) else TmdbEndpoints.favoriteTv(accountId)
+        return get(path, language, mapOf("session_id" to sessionId))
     }
 }

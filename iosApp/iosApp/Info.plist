@@ -13,5 +13,16 @@
 		<key>UILaunchScreen</key>
 		<dict/>
 	</dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.620735012273-2fooqto7mqjbg0bbq7egaulg1sgk1on4</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

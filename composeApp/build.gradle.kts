@@ -23,6 +23,7 @@ kotlin {
             framework {
                 baseName = "ComposeApp"
                 isStatic = true
+                export(projects.shared)
                 freeCompilerArgs += listOf("-Xbinary=bundleId=com.diegoferreiracaetano.composeapp")
             }
         }
@@ -45,8 +46,6 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.core.splashscreen)
             implementation(libs.koin.android)
-            implementation(libs.firebase.auth)
-            implementation(libs.firebase.common)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -58,7 +57,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(projects.shared)
+            api(projects.shared)
             implementation(libs.designsystem)
 
             implementation(libs.navigation.compose)
@@ -68,11 +67,6 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-        }
-
-        iosMain.dependencies {
-            implementation(libs.firebase.auth)
-            implementation(libs.firebase.common)
         }
     }
 }

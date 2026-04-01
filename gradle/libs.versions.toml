@@ -40,7 +40,7 @@ firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebase-
 firebase-common = { module = "dev.gitlive:firebase-common", version.ref = "firebase-gitlive" }
 android-google-signin = { module = "com.google.android.gms:play-services-auth", version = "21.3.0" }
 android-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
-android-firebase-auth = { module = "com.google.firebase:firebase-auth-ktx" }
+android-firebase-auth = { module = "com.google.firebase:firebase-auth" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "androidx-credentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidx-credentials" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
@@ -109,3 +109,4 @@ kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versio
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 googleServices = { id = "com.google.gms.google-services", version.ref = "google-services" }
+kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }

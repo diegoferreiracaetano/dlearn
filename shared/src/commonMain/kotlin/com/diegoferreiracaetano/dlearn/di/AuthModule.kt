@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.di
 
 import com.diegoferreiracaetano.dlearn.data.auth.challenge.OtpChallengeHandler
 import com.diegoferreiracaetano.dlearn.data.auth.challenge.remote.ChallengeRepositoryRemote
+import com.diegoferreiracaetano.dlearn.domain.auth.SocialAuthManager
 import com.diegoferreiracaetano.dlearn.domain.auth.SocialSignInUseCase
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeCoordinator
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeEngine
@@ -12,6 +13,7 @@ import org.koin.dsl.module
 
 val authModule = module {
     single { SessionManager(get()) }
+    single { SocialAuthManager() }
     
     // Use Cases
     factory { SocialSignInUseCase(get(), get()) }
@@ -27,5 +29,3 @@ val authModule = module {
     // Repository
     single<ChallengeRepository> { ChallengeRepositoryRemote(get(), get(), get()) }
 }
-
-expect val platformAuthModule: org.koin.core.module.Module

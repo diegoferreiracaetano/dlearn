@@ -1,13 +1,17 @@
-package com.diegoferreiracaetano.dlearn.domain.auth
+package com.diegoferreiracaetano.dlearn.data.auth
 
+import com.diegoferreiracaetano.dlearn.domain.auth.AccountProvider
 import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.util.fromJson
 import com.diegoferreiracaetano.dlearn.util.toJson
 import com.russhwolf.settings.Settings
 
-class WasmJsAccountProvider : AccountProvider {
-    private val settings = Settings()
-
+/**
+ * Implementação única de AccountProvider usando multiplatform-settings.
+ * Elimina a necessidade de implementações específicas por plataforma.
+ */
+class SettingsAccountProvider(private val settings: Settings) : AccountProvider {
+    
     override suspend fun saveAccount(
         user: User, 
         accessToken: String, 

@@ -1,15 +1,9 @@
 package com.diegoferreiracaetano.dlearn.domain.auth
 
-import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
+expect open class SocialAuthManager() {
+    open suspend fun googleSignIn(): SocialAuthResult
+    open suspend fun appleSignIn(): SocialAuthResult
+    open suspend fun facebookSignIn(): SocialAuthResult
 
-interface SocialAuthManager {
-    suspend fun googleSignIn(): SocialAuthResult
-    suspend fun appleSignIn(): SocialAuthResult
-    suspend fun facebookSignIn(): SocialAuthResult
-}
-
-sealed class SocialAuthResult {
-    data class Success(val idToken: String, val accessToken: String? = null) : SocialAuthResult()
-    data class Error(val error: AppErrorCode) : SocialAuthResult()
-    object Cancelled : SocialAuthResult()
+    open suspend fun signOut()
 }

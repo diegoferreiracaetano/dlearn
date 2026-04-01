@@ -1,7 +1,6 @@
 package com.diegoferreiracaetano.dlearn.domain.auth
 
 import com.diegoferreiracaetano.dlearn.domain.error.AppError
-import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
 import com.diegoferreiracaetano.dlearn.domain.error.AppException
 import com.diegoferreiracaetano.dlearn.domain.user.AccountProvider
 import com.diegoferreiracaetano.dlearn.domain.user.UseCase
@@ -14,27 +13,27 @@ class SocialSignInUseCase(
 ) : UseCase<AccountProvider, Flow<Unit>> {
 
     override fun invoke(params: AccountProvider): Flow<Unit> = flow {
-        val socialResult = when (params) {
+        val result = when (params) {
             AccountProvider.GOOGLE -> socialAuthManager.googleSignIn()
             AccountProvider.APPLE -> socialAuthManager.appleSignIn()
             AccountProvider.FACEBOOK -> socialAuthManager.facebookSignIn()
         }
 
-        when (socialResult) {
+        when (result) {
             is SocialAuthResult.Success -> {
                 authRepository.socialLogin(
                     provider = params.name.lowercase(),
-                    idToken = socialResult.idToken,
-                    accessToken = socialResult.accessToken
+                    idToken = result.idToken,
+                    accessToken = result.accessToken
                 ).collect {
                     emit(Unit)
                 }
             }
-            is SocialAuthResult.Error -> {
-                throw AppException(AppError(code = socialResult.error))
+            is SocialAuthResult.Failure -> {
+                throw AppException(AppError(code = result.error))
             }
-            SocialAuthResult.Cancelled -> {
-                // Silencioso ou lançar exceção específica se necessário
+            is SocialAuthResult.Cancelled -> {
+                // Silencioso ou emitir evento de cancelamento se necessário
             }
         }
     }

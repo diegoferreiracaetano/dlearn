@@ -6,6 +6,7 @@ import com.diegoferreiracaetano.dlearn.auth.network.AuthInterceptor
 import com.diegoferreiracaetano.dlearn.auth.network.ChallengeInterceptor
 import com.diegoferreiracaetano.dlearn.data.app.PreferencesRepositoryImpl
 import com.diegoferreiracaetano.dlearn.data.app.remote.AppRepositoryRemote
+import com.diegoferreiracaetano.dlearn.data.auth.SettingsAccountProvider
 import com.diegoferreiracaetano.dlearn.data.auth.remote.AuthRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.cache.CacheManager
 import com.diegoferreiracaetano.dlearn.data.cache.PersistentCacheManager
@@ -21,6 +22,7 @@ import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserNetworkDataSo
 import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserRepositoryRemote
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
+import com.diegoferreiracaetano.dlearn.domain.auth.AccountProvider
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthRepository
 import com.diegoferreiracaetano.dlearn.domain.home.HomeRepository
 import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
@@ -48,13 +50,13 @@ import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
 val sharedModule = module {
-    includes(authModule, platformAuthModule, viewModelModule)
+    includes(authModule, viewModelModule)
 
     single { GlobalEventDispatcher() }
 
     single { AppUserAgentProvider(getPlatform(), get()) }
-    
-    single { 
+
+    single {
         Json {
             ignoreUnknownKeys = true
             prettyPrint = true
@@ -66,10 +68,10 @@ val sharedModule = module {
     single {
         val userAgentProvider = get<AppUserAgentProvider>()
         val preferencesRepository = get<PreferencesRepository>()
-        
+
         HttpClient {
-            expectSuccess = true 
-            
+            expectSuccess = true
+
             install(ContentNegotiation) {
                 json(get<Json>())
             }
@@ -90,7 +92,7 @@ val sharedModule = module {
                     port = 8081
                 }
             }
-            
+
             install(ChallengeInterceptor) {
                 engine = get()
                 json = get()
@@ -100,16 +102,16 @@ val sharedModule = module {
 
             plugin(HttpSend).intercept { request ->
                 authInterceptor.intercept(request)
-                
+
                 // Adicionando headers globais dinâmicos
                 val agent = userAgentProvider.get()
                 request.header(HttpHeaders.UserAgent, agent.toHeader())
                 request.header(HttpHeaders.AcceptLanguage, preferencesRepository.language)
                 request.header(X_COUNTRY, preferencesRepository.country)
                 request.header(X_NOTIFICATIONS_ENABLED, preferencesRepository.notificationsEnabled.toString())
-                
+
                 val call = execute(request)
-                
+
                 if (authInterceptor.handleUnauthorized(call.response)) {
                     authInterceptor.intercept(request)
                     execute(request)
@@ -119,6 +121,8 @@ val sharedModule = module {
             }
         }
     }
+
+    single<AccountProvider> { SettingsAccountProvider(get()) }
 
     single { UserNetworkDataSource() }
     single<UserRepository> { UserRepositoryRemote(get()) }
@@ -135,9 +139,9 @@ val sharedModule = module {
     single<MovieDetailRepository> { MovieDetailRepositoryRemote(get()) }
 
     single<MainRepository> { MainRepositoryRemote(get()) }
-    
+
     single<AppRepository> { AppRepositoryRemote(get()) }
-    
+
     single<AuthRepository> {
         AuthRepositoryRemote(
             httpClient = get(), sessionManager = get())

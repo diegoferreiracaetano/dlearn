@@ -36,7 +36,8 @@ class SearchOrchestrator(
     ): Flow<Screen> =
         flow {
             val homeData = getHomeDataUseCase.execute(appHeader.language, userId = userId)
-            val popularItems = videoMapper.toMovieItemComponents(homeData.popular, appHeader.language)
+            val popularItems =
+                videoMapper.toMovieItemComponents(homeData.popular, appHeader.language)
             emit(searchScreenBuilder.buildMain(appHeader.language, popularItems))
         }
 

@@ -30,9 +30,9 @@ class AppTopBarListRenderer : ComponentRenderer {
                         title = item.topBar.title,
                         subtitle = item.topBar.subtitle,
                         profileImageSource =
-                            item.topBar.imageUrl?.let {
-                                AppImageSource.Url(it)
-                            },
+                        item.topBar.imageUrl?.let {
+                            AppImageSource.Url(it)
+                        },
                         onSearchClick = if (item.topBar.showSearch) actions.onSearchClick else null,
                     )
                 }

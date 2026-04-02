@@ -34,6 +34,8 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+private const val ONBOARDING_IMAGE_WEIGHT = 2.5f
+
 private data class OnboardingPageModel(
     val title: StringResource,
     val description: StringResource,
@@ -83,10 +85,11 @@ fun OnboardingScreen(
                     Spacer(modifier = Modifier.weight(1f))
                     AppImage(
                         source = Resource(pages[pageIndex].image),
-                        modifier = Modifier
+                        modifier =
+                        Modifier
                             .padding(16.dp)
                             .fillMaxWidth()
-                            .weight(2.5f),
+                            .weight(ONBOARDING_IMAGE_WEIGHT),
                     )
                     Spacer(modifier = Modifier.weight(2f))
                 }

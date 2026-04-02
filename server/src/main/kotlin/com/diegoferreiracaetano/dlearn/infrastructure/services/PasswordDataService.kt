@@ -23,9 +23,10 @@ class PasswordDataService(
     ): ChangePasswordResponse {
         val resolvedUserId = resolveUserId(userId, challengeToken)
 
-        val user = userRepository.findById(resolvedUserId)
-            ?: userRepository.findByEmail(resolvedUserId)
-            ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND))
+        val user =
+            userRepository.findById(resolvedUserId)
+                ?: userRepository.findByEmail(resolvedUserId)
+                ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND))
 
         userRepository.update(user, password = request.newPassword)
 
@@ -35,15 +36,14 @@ class PasswordDataService(
     private fun resolveUserId(
         userId: String,
         challengeToken: String?,
-    ): String {
-        return challengeToken?.let { token ->
+    ): String =
+        challengeToken?.let { token ->
             validateTokenAndGetUserId(token)
         } ?: if (userId != ANONYMOUS_USER) {
             userId
         } else {
             throw AppException(AppError(AppErrorCode.CHALLENGE_REQUIRED))
         }
-    }
 
     private fun validateTokenAndGetUserId(token: String): String {
         if (!challengeDataService.isTokenValidated(token)) {

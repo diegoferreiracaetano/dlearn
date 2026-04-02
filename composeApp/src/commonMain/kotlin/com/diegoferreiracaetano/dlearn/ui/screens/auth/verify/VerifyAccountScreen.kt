@@ -72,7 +72,8 @@ fun VerifyAccountScreen(
         },
     ) { innerModifier ->
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .then(innerModifier)
                 .padding(24.dp),
@@ -135,7 +136,8 @@ fun VerifyAccountScreen(
                     Text(
                         text = stringResource(Res.string.otp_resend_now),
                         fontWeight = FontWeight.Bold,
-                        color = if (uiState is VerifyAccountUiState.Loading) {
+                        color =
+                        if (uiState is VerifyAccountUiState.Loading) {
                             MaterialTheme.colorScheme.onSurfaceVariant
                         } else {
                             MaterialTheme.colorScheme.primary

@@ -15,10 +15,20 @@ data class AppUserAgent(
             if (header.isNullOrBlank()) return AppUserAgent("DLearn", "1.0.0", "Unknown")
             return try {
                 val appPart = header.substringBefore(" ")
-                val deviceName = header.substringAfter("(", "").substringBeforeLast(")", "Unknown").substringBefore(";")
-                val (appName, appVersion) = if (appPart.contains("/")) appPart.split("/") else listOf(appPart, "1.0.0")
+                val deviceName = header.substringAfter("(", "").substringBeforeLast(")", "Unknown")
+                    .substringBefore(";")
+                val (appName, appVersion) = if (appPart.contains("/")) {
+                    appPart.split("/")
+                } else {
+                    listOf(
+                        appPart,
+                        "1.0.0"
+                    )
+                }
                 AppUserAgent(appName, appVersion, deviceName.trim())
-            } catch (@Suppress("SwallowedException") e: Exception) {
+            } catch (
+                @Suppress("SwallowedException") e: Exception,
+            ) {
                 AppUserAgent("DLearn", "1.0.0", "Unknown")
             }
         }

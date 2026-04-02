@@ -6,7 +6,8 @@ class JVMPlatform : Platform {
     override val name: String = "Java ${System.getProperty("java.version")}"
     override val language: String get() = Locale.getDefault().toLanguageTag()
     override val appVersion: String = "1.0.0"
-    override val deviceModel: String = System.getProperty("os.name") + " " + System.getProperty("os.version")
+    override val deviceModel: String =
+        System.getProperty("os.name") + " " + System.getProperty("os.version")
 
     override fun updateLocale(
         language: String,
@@ -21,6 +22,7 @@ class JVMPlatform : Platform {
                         .setLanguage(language)
                         .setRegion(country)
                         .build()
+
                 else -> Locale.Builder().setLanguage(language).build()
             }
         Locale.setDefault(locale)

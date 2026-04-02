@@ -1,7 +1,7 @@
 build:
   maxIssues: 0
   excludeCorrectable: false
-  weights: {}
+  weights: { }
   excludes:
     - '**/build/**'
     - '**/generated/**'

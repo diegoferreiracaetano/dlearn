@@ -30,6 +30,7 @@ internal class TmdbClient(
     private val apiKey = THE_MOVIE_DB_API_KEY
     private val baseUrl = THE_MOVIE_DB_BASE_URL
 
+    @Suppress("RedundantSuspendModifier")
     private suspend inline fun <reified T : Any> get(
         path: String,
         language: String,
@@ -88,8 +89,10 @@ internal class TmdbClient(
     override suspend fun getMovieGenres(language: String): List<TmdbGenre> =
         get<TmdbGenresResponse>(TmdbEndpoints.MOVIE_GENRES, language).genres
 
-    override suspend fun getTvGenres(language: String): List<TmdbGenre> =
-        get<TmdbGenresResponse>(TmdbEndpoints.TV_GENRES, language).genres
+    override suspend fun getTvGenres(language: String): List<TmdbGenre> = get<TmdbGenresResponse>(
+        TmdbEndpoints.TV_GENRES,
+        language
+    ).genres
 
     override suspend fun getMoviesByGenre(
         genreId: Int,
@@ -146,15 +149,16 @@ internal class TmdbClient(
     ): List<Video> {
         val mGenres = getMovieGenres(language)
         val tGenres = getTvGenres(language)
-        return get<TmdbListResponse<TmdbItemRemote>>(
-            TmdbEndpoints.SEARCH_MULTI,
-            language,
-            mapOf(TmdbConstants.PARAM_QUERY to query),
-        ).results
-            .map { item ->
-                val isMovie = item.title != null
-                val type = if (isMovie) MediaType.MOVIES else MediaType.SERIES
-                item.toVideo(type, if (isMovie) mGenres else tGenres)
-            }
+        val results =
+            get<TmdbListResponse<TmdbItemRemote>>(
+                TmdbEndpoints.SEARCH_MULTI,
+                language,
+                mapOf(TmdbConstants.PARAM_QUERY to query),
+            ).results
+        return results.map { item ->
+            val isMovie = item.title != null
+            val type = if (isMovie) MediaType.MOVIES else MediaType.SERIES
+            item.toVideo(type, if (isMovie) mGenres else tGenres)
+        }
     }
 }

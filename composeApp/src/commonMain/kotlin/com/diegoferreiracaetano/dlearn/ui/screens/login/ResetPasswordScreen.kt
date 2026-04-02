@@ -52,7 +52,8 @@ fun ResetPasswordScreen(
         },
     ) { innerModifier ->
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .then(innerModifier)
                 .padding(24.dp),

@@ -35,8 +35,8 @@ class MovieDetailScreenBuilder(
                 AppContainerComponent(
                     topBar = topBar,
                     components = components,
-                ),
-            ),
+                )
+            )
         )
     }
 }

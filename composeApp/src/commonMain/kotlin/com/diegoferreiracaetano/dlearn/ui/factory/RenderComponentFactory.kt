@@ -130,14 +130,34 @@ class RenderComponentFactory(
             is AppTopBarComponent -> appTopBarRenderer.Render(component, actions, modifier)
             is AppTopBarListComponent -> appTopBarListRenderer.Render(component, actions, modifier)
             is AppSearchBarComponent -> appSearchBarRenderer.Render(component, actions, modifier)
-            is BottomNavigationComponent -> bottomNavigationRenderer.Render(component, actions, modifier)
-            is AppSectionTitleComponent -> appSectionTitleRenderer.Render(component, actions, modifier)
-            is AppProfileHeaderComponent -> appProfileHeaderRenderer.Render(component, actions, modifier)
+            is BottomNavigationComponent -> bottomNavigationRenderer.Render(
+                component,
+                actions,
+                modifier
+            )
+
+            is AppSectionTitleComponent -> appSectionTitleRenderer.Render(
+                component,
+                actions,
+                modifier
+            )
+
+            is AppProfileHeaderComponent -> appProfileHeaderRenderer.Render(
+                component,
+                actions,
+                modifier
+            )
+
             is AppTextFieldComponent -> appTextFieldRenderer.Render(component, actions, modifier)
             is AppSnackbarComponent -> appSnackbarRenderer.Render(component, actions, modifier)
             is AppHtmlTextComponent -> appHtmlTextRenderer.Render(component, actions, modifier)
             is AppSwitchRowComponent -> appSwitchRowRenderer.Render(component, actions, modifier)
-            is AppSelectionRowComponent -> appSelectionRowRenderer.Render(component, actions, modifier)
+            is AppSelectionRowComponent -> appSelectionRowRenderer.Render(
+                component,
+                actions,
+                modifier
+            )
+
             else -> return false
         }
         return true
@@ -152,17 +172,36 @@ class RenderComponentFactory(
     ) {
         when (component) {
             is MovieCarouselComponent -> movieCarouselRenderer.Render(component, actions, modifier)
-            is BannerCarouselComponent -> bannerCarouselRenderer.Render(component, actions, modifier)
+            is BannerCarouselComponent -> bannerCarouselRenderer.Render(
+                component,
+                actions,
+                modifier
+            )
+
             is CarouselComponent -> carouselRenderer.Render(component, actions, modifier)
-            is FullScreenBannerComponent -> fullScreenBannerRenderer.Render(component, actions, modifier)
+            is FullScreenBannerComponent -> fullScreenBannerRenderer.Render(
+                component,
+                actions,
+                modifier
+            )
+
             is ChipGroupComponent -> chipGroupRenderer.Render(component, actions, modifier)
             is ProfileRowComponent -> profileRenderer.Render(component, actions, modifier)
             is UserRowComponent -> userRenderer.Render(component, actions, modifier)
             is PremiumBannerComponent -> premiumBannerRenderer.Render(component, actions, modifier)
             is SectionComponent -> sectionRenderer.Render(component, actions, modifier)
             is FooterComponent -> footerRenderer.Render(component, actions, modifier)
-            is AppMovieDetailHeaderComponent -> movieDetailHeaderRenderer.Render(component, actions, modifier)
-            is AppExpandableSectionComponent -> expandableSectionRenderer.Render(component, actions, modifier)
+            is AppMovieDetailHeaderComponent -> movieDetailHeaderRenderer.Render(
+                component,
+                actions,
+                modifier
+            )
+
+            is AppExpandableSectionComponent -> expandableSectionRenderer.Render(
+                component,
+                modifier
+            )
+
             is AppMainContentComponent -> mainContentRenderer.Render(component, actions, modifier)
             is MovieItemComponent -> movieItemRenderer.Render(component, actions, modifier)
             else -> Unit

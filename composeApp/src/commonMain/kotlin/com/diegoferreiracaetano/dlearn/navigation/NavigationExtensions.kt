@@ -57,7 +57,8 @@ fun NavController.navigateToPath(
         navigate(path)
     } else {
         val url = AppPath(path, params)
-        val route = AppPath.invoke(AppNavigationRoute.APP_PREFIX, mapOf(AppNavigationRoute.ARG_PATH to url))
+        val route =
+            AppPath.invoke(AppNavigationRoute.APP_PREFIX, mapOf(AppNavigationRoute.ARG_PATH to url))
         navigate(route)
     }
 }

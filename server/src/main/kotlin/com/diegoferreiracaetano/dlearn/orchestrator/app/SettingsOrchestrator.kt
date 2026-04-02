@@ -22,7 +22,10 @@ class SettingsOrchestrator(
             val screen: Screen =
                 when (path) {
                     AppNavigationRoute.SETTINGS_NOTIFICATIONS -> {
-                        builder.buildNotificationScreen(header.notificationsEnabled, header.language)
+                        builder.buildNotificationScreen(
+                            header.notificationsEnabled,
+                            header.language
+                        )
                     }
 
                     AppNavigationRoute.SETTINGS_LANGUAGE -> {

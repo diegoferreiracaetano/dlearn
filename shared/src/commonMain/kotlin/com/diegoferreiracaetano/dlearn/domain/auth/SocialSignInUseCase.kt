@@ -31,9 +31,11 @@ class SocialSignInUseCase(
                             emit(Unit)
                         }
                 }
+
                 is SocialAuthResult.Failure -> {
                     throw AppException(AppError(code = result.error))
                 }
+
                 is SocialAuthResult.Cancelled -> {}
             }
         }

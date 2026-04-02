@@ -10,7 +10,9 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.AppTextFieldType
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
-class VerifyAccountScreenBuilder(private val i18n: I18nProvider) {
+class VerifyAccountScreenBuilder(
+    private val i18n: I18nProvider,
+) {
     fun build(lang: String): Screen =
         Screen(
             components =
@@ -27,9 +29,18 @@ class VerifyAccountScreenBuilder(private val i18n: I18nProvider) {
                 ),
                 AppFeedbackComponent(
                     title = i18n.getString(AppStringType.VERIFY_ACCOUNT_FEEDBACK_TITLE, lang),
-                    description = i18n.getString(AppStringType.VERIFY_ACCOUNT_FEEDBACK_DESC, lang),
-                    primaryText = i18n.getString(AppStringType.VERIFY_ACCOUNT_PRIMARY_BUTTON, lang),
-                    secondaryText = i18n.getString(AppStringType.VERIFY_ACCOUNT_SECONDARY_BUTTON, lang),
+                    description = i18n.getString(
+                        AppStringType.VERIFY_ACCOUNT_FEEDBACK_DESC,
+                        lang
+                    ),
+                    primaryText = i18n.getString(
+                        AppStringType.VERIFY_ACCOUNT_PRIMARY_BUTTON,
+                        lang
+                    ),
+                    secondaryText = i18n.getString(
+                        AppStringType.VERIFY_ACCOUNT_SECONDARY_BUTTON,
+                        lang
+                    ),
                 ),
             ),
         )

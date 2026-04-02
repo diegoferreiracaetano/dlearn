@@ -47,8 +47,8 @@ class EditProfileScreenBuilder(
                 AppContainerComponent(
                     topBar = topBar,
                     components = components,
-                ),
-            ),
+                )
+            )
         )
     }
 }

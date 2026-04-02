@@ -50,7 +50,9 @@ class PreferencesRepositoryImpl(
         when (key) {
             KEY_LANGUAGE -> language = value
             KEY_COUNTRY -> country = value
-            KEY_NOTIFICATIONS -> notificationsEnabled = value.toBooleanStrictOrNull() ?: DEFAULT_NOTIFICATIONS
+            KEY_NOTIFICATIONS ->
+                notificationsEnabled =
+                    value.toBooleanStrictOrNull() ?: DEFAULT_NOTIFICATIONS
         }
     }
 

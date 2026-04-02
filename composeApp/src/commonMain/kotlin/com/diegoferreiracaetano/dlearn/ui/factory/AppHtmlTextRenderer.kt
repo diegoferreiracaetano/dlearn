@@ -24,9 +24,9 @@ class AppHtmlTextRenderer : ComponentRenderer {
             html = htmlComponent.html,
             style = MaterialTheme.typography.bodyLarge,
             modifier =
-                modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+            modifier
+                .fillMaxWidth()
+                .padding(16.dp),
         )
     }
 }

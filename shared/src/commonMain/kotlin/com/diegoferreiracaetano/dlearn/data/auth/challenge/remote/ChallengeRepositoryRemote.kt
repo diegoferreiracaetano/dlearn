@@ -53,10 +53,12 @@ class ChallengeRepositoryRemote(
 
     override fun resolveChallenge(answer: String): Flow<ChallengeResult> =
         flow {
-            val session = coordinator.currentSession
-                ?: error("Nenhuma sessão de desafio ativa")
-            val challenge = coordinator.activeChallenge
-                ?: error("Desafio ativo não encontrado")
+            val session =
+                coordinator.currentSession
+                    ?: error("Nenhuma sessão de desafio ativa")
+            val challenge =
+                coordinator.activeChallenge
+                    ?: error("Desafio ativo não encontrado")
 
             try {
                 val response =
@@ -120,7 +122,9 @@ class ChallengeRepositoryRemote(
                         setBody(ResendChallengeRequest(type = challenge.challengeType.name))
                     }
                 emit(response.status.value in HTTP_SUCCESS_RANGE_START..HTTP_SUCCESS_RANGE_END)
-            } catch (@Suppress("SwallowedException") e: Exception) {
+            } catch (
+                @Suppress("SwallowedException") e: Exception,
+            ) {
                 emit(false)
             }
         }

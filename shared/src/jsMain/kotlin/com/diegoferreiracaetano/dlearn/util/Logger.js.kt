@@ -4,8 +4,11 @@ class JSLogger : Logger {
     override fun d(
         tag: String,
         message: String,
+        throwable: Throwable?,
     ) {
-        println("KMP_LOG [$tag]: $message")
+        val logMessage = if (throwable != null) "$message: ${throwable.message}" else message
+        println("KMP_LOG [$tag]: $logMessage")
+        throwable?.printStackTrace()
     }
 }
 

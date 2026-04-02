@@ -47,7 +47,8 @@ class VerifyAccountViewModel(
                     if (success) {
                         _uiState.value = VerifyAccountUiState.Idle
                     } else {
-                        _uiState.value = VerifyAccountUiState.Error(Throwable("Failed to resend OTP"))
+                        _uiState.value =
+                            VerifyAccountUiState.Error(Throwable("Failed to resend OTP"))
                     }
                 }
         }

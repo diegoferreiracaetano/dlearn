@@ -30,42 +30,52 @@ suspend fun Throwable.toAppException(): AppException =
                 cause = this,
             )
         }
+
         is ServerResponseException -> {
             val appError = runCatching { response.body<AppError>() }.getOrNull()
             val fallbackMessage = runCatching { response.bodyAsText() }.getOrNull() ?: message
 
             AppException(
-                error = appError ?: AppError(
+                error =
+                appError ?: AppError(
                     code = response.status.toAppErrorCode(),
                     message = fallbackMessage,
                 ),
                 cause = this,
             )
         }
+
         is RedirectResponseException -> {
             AppException(
                 error = AppError(code = AppErrorCode.UNKNOWN_ERROR, message = message),
                 cause = this,
             )
         }
+
         is HttpRequestTimeoutException -> {
             AppException(
                 error = AppError(code = AppErrorCode.TIMEOUT, message = message),
                 cause = this,
             )
         }
+
         is IOException -> {
             AppException(
                 error = AppError(code = AppErrorCode.NETWORK_ERROR, message = message),
                 cause = this,
             )
         }
+
         is SerializationException -> {
             AppException(
-                error = AppError(code = AppErrorCode.UNKNOWN_ERROR, message = "Error parsing response"),
+                error = AppError(
+                    code = AppErrorCode.UNKNOWN_ERROR,
+                    message = "Error parsing response"
+                ),
                 cause = this,
             )
         }
+
         else -> {
             AppException(
                 error = AppError(code = AppErrorCode.UNKNOWN_ERROR, message = message),

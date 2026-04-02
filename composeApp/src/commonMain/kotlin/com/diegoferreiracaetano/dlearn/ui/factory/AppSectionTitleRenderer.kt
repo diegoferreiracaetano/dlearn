@@ -22,9 +22,9 @@ class AppSectionTitleRenderer : ComponentRenderer {
         AppSectionTitle(
             title = sectionTitle.title,
             modifier =
-                modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
         )
     }
 }

@@ -4,6 +4,7 @@ interface Logger {
     fun d(
         tag: String,
         message: String,
+        throwable: Throwable? = null,
     )
 }
 

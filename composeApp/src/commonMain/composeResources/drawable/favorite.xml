@@ -11,45 +11,45 @@
         <path
             android:fillColor="#12CDD9"
             android:fillType="evenOdd"
-            android:pathData="M38 4C19.2 4 4 19.2 4 38C4 56.8 19.2 72 38 72C56.8 72 72 56.8 72 38C72 19.2 56.8 4 38 4Z"/>
+            android:pathData="M38 4C19.2 4 4 19.2 4 38C4 56.8 19.2 72 38 72C56.8 72 72 56.8 72 38C72 19.2 56.8 4 38 4Z" />
 
         <!-- Card / content container -->
         <path
             android:fillColor="#FFFFFF"
             android:fillType="evenOdd"
-            android:pathData="M18 18H58C60.2 18 62 19.8 62 22V46C62 48.2 60.2 50 58 50H18C15.8 50 14 48.2 14 46V22C14 19.8 15.8 18 18 18Z"/>
+            android:pathData="M18 18H58C60.2 18 62 19.8 62 22V46C62 48.2 60.2 50 58 50H18C15.8 50 14 48.2 14 46V22C14 19.8 15.8 18 18 18Z" />
 
         <!-- Favorite star (main element) -->
         <path
             android:fillColor="#FF8700"
-            android:pathData="M38 26L41.5 33H49L43 37.5L45.5 45L38 40.5L30.5 45L33 37.5L27 33H34.5Z"/>
+            android:pathData="M38 26L41.5 33H49L43 37.5L45.5 45L38 40.5L30.5 45L33 37.5L27 33H34.5Z" />
 
         <!-- Bottom list lines -->
         <path
             android:fillColor="#12CDD9"
-            android:pathData="M20 54H44V57H20Z"/>
+            android:pathData="M20 54H44V57H20Z" />
         <path
             android:fillColor="#12CDD9"
-            android:pathData="M20 60H52V63H20Z"/>
+            android:pathData="M20 60H52V63H20Z" />
 
         <!-- Small highlight badge -->
         <path
             android:fillColor="#FFC144"
-            android:pathData="M54 54C56.2 54 58 55.8 58 58C58 60.2 56.2 62 54 62C51.8 62 50 60.2 50 58C50 55.8 51.8 54 54 54Z"/>
+            android:pathData="M54 54C56.2 54 58 55.8 58 58C58 60.2 56.2 62 54 62C51.8 62 50 60.2 50 58C50 55.8 51.8 54 54 54Z" />
 
         <!-- Heart inside badge -->
         <path
             android:fillColor="#000000"
-            android:pathData="M54 60L52.2 58.3C51.4 57.5 51.4 56.2 52.2 55.4C53 54.6 54.2 55 54 56C53.8 55 55 54.6 55.8 55.4C56.6 56.2 56.6 57.5 55.8 58.3Z"/>
+            android:pathData="M54 60L52.2 58.3C51.4 57.5 51.4 56.2 52.2 55.4C53 54.6 54.2 55 54 56C53.8 55 55 54.6 55.8 55.4C56.6 56.2 56.6 57.5 55.8 58.3Z" />
 
         <!-- Top small indicators -->
         <path
             android:fillColor="#000000"
-            android:pathData="M24 23C25 23 26 24 26 25C26 26 25 27 24 27C23 27 22 26 22 25C22 24 23 23 24 23Z"/>
+            android:pathData="M24 23C25 23 26 24 26 25C26 26 25 27 24 27C23 27 22 26 22 25C22 24 23 23 24 23Z" />
 
         <path
             android:fillColor="#000000"
-            android:pathData="M30 23C31 23 32 24 32 25C32 26 31 27 30 27C29 27 28 26 28 25C28 24 29 23 30 23Z"/>
+            android:pathData="M30 23C31 23 32 24 32 25C32 26 31 27 30 27C29 27 28 26 28 25C28 24 29 23 30 23Z" />
 
     </group>
 </vector>

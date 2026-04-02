@@ -28,7 +28,7 @@ paths:
           application/json:
             schema:
               type: object
-              required: [email, password]
+              required: [ email, password ]
               properties:
                 email:
                   type: string
@@ -69,7 +69,7 @@ paths:
           application/json:
             schema:
               type: object
-              required: [name, email, password]
+              required: [ name, email, password ]
               properties:
                 name:
                   type: string
@@ -109,7 +109,7 @@ paths:
           application/json:
             schema:
               type: object
-              required: [refresh_token]
+              required: [ refresh_token ]
               properties:
                 refresh_token:
                   type: string
@@ -132,7 +132,7 @@ paths:
       tags:
         - Authentication
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '200':
           description: OK
@@ -184,7 +184,7 @@ paths:
       tags:
         - User
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '200':
           description: OK
@@ -200,7 +200,7 @@ paths:
       tags:
         - User
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/challengeToken'
       requestBody:
@@ -209,7 +209,7 @@ paths:
           application/json:
             schema:
               type: object
-              required: [userId, newPassword]
+              required: [ userId, newPassword ]
               properties:
                 userId:
                   type: string
@@ -237,7 +237,7 @@ paths:
       tags:
         - SDUI Gateway
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/appVersion'
         - $ref: '#/components/parameters/userAgent'
@@ -343,7 +343,7 @@ paths:
       tags:
         - SDUI
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '200':
           description: OK
@@ -409,10 +409,10 @@ components:
             type: string
     AppErrorCode:
       type: string
-      enum: [UNKNOWN_ERROR, NETWORK_ERROR, SERVER_ERROR, BAD_REQUEST, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, TIMEOUT, INVALID_CREDENTIALS, USER_NOT_FOUND, USER_ALREADY_EXISTS, INVALID_TOKEN, EXPIRED_TOKEN, EMAIL_ALREADY_IN_USE, VALIDATION_FAILED, FIELD_REQUIRED, INVALID_FORMAT, MOVIE_NOT_FOUND, PAYMENT_FAILED, INSUFFICIENT_FUNDS, TRANSACTION_ID_REQUIRED, INVALID_CHALLENGE_CODE]
+      enum: [ UNKNOWN_ERROR, NETWORK_ERROR, SERVER_ERROR, BAD_REQUEST, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, TIMEOUT, INVALID_CREDENTIALS, USER_NOT_FOUND, USER_ALREADY_EXISTS, INVALID_TOKEN, EXPIRED_TOKEN, EMAIL_ALREADY_IN_USE, VALIDATION_FAILED, FIELD_REQUIRED, INVALID_FORMAT, MOVIE_NOT_FOUND, PAYMENT_FAILED, INSUFFICIENT_FUNDS, TRANSACTION_ID_REQUIRED, INVALID_CHALLENGE_CODE ]
     User:
       type: object
-      required: [id, name, email]
+      required: [ id, name, email ]
       properties:
         id:
           type: string
@@ -441,10 +441,10 @@ components:
     # --- Challenge Models ---
     ChallengeType:
       type: string
-      enum: [OTP_SMS, OTP_EMAIL, BIOMETRIC, PASSWORD, TOTP, PUSH_NOTIFICATION, KBA, DEVICE_BINDING, UNKNOWN]
+      enum: [ OTP_SMS, OTP_EMAIL, BIOMETRIC, PASSWORD, TOTP, PUSH_NOTIFICATION, KBA, DEVICE_BINDING, UNKNOWN ]
     ResolveChallengeRequest:
       type: object
-      required: [type, answers]
+      required: [ type, answers ]
       properties:
         type:
           $ref: '#/components/schemas/ChallengeType'
@@ -463,11 +463,11 @@ components:
     # --- SDUI Core ---
     AppRequest:
       type: object
-      required: [path]
+      required: [ path ]
       properties:
         path:
           type: string
-          enum: ["home", "movies", "search", "favorite", "watchlist", "profile", "welcome", "verify_account", "faq", "users"]
+          enum: [ "home", "movies", "search", "favorite", "watchlist", "profile", "welcome", "verify_account", "faq", "users" ]
           example: "home"
         params:
           type: object
@@ -950,10 +950,10 @@ components:
     # --- Types & Enums ---
     AppSnackbarType:
       type: string
-      enum: [SUCCESS, ERROR, WARNING]
+      enum: [ SUCCESS, ERROR, WARNING ]
     AppIconType:
       type: string
-      enum: [HOME, SEARCH, FAVORITE, PERSON, WATCHLIST, LOCK, NOTIFICATIONS, LANGUAGE, PUBLIC, DELETE, POLICY, HELP, INFO, WORKSPACE_PREMIUM, PLAY_ARROW, DOWNLOAD, SHARE, CALENDAR_MONTH, SCHEDULE, STAR, UNKNOWN]
+      enum: [ HOME, SEARCH, FAVORITE, PERSON, WATCHLIST, LOCK, NOTIFICATIONS, LANGUAGE, PUBLIC, DELETE, POLICY, HELP, INFO, WORKSPACE_PREMIUM, PLAY_ARROW, DOWNLOAD, SHARE, CALENDAR_MONTH, SCHEDULE, STAR, UNKNOWN ]
     AppImageType:
       type: object
       properties:
@@ -972,4 +972,4 @@ components:
           items: { type: string }
     AppTextFieldType:
       type: string
-      enum: [TEXT, EMAIL, PASSWORD, PHONE, NUMBER, NONE]
+      enum: [ TEXT, EMAIL, PASSWORD, PHONE, NUMBER, NONE ]

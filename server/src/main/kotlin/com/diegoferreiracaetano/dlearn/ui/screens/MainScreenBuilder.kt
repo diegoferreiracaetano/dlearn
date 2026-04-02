@@ -25,7 +25,8 @@ class MainScreenBuilder(
         val selectedActionUrl = AppNavigationRoute.HOME
 
         val topBarTitle = user?.name ?: i18n.getString(AppStringType.HOME_TITLE, lang)
-        val topBarSubtitle = if (user != null) i18n.getString(AppStringType.HOME_SUBTITLE, lang) else null
+        val topBarSubtitle =
+            if (user != null) i18n.getString(AppStringType.HOME_SUBTITLE, lang) else null
         val topBarImageUrl = user?.imageUrl ?: AppConstants.AVATAR_PLACEHOLDER
 
         val topBar =

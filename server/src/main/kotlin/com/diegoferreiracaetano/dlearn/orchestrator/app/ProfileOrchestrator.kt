@@ -32,7 +32,13 @@ class ProfileOrchestrator(
         val language = header.language
 
         return when (path) {
-            AppNavigationRoute.PROFILE -> getProfileData(userId, header.userAgent.appVersion, language, header.country)
+            AppNavigationRoute.PROFILE -> getProfileData(
+                userId,
+                header.userAgent.appVersion,
+                language,
+                header.country
+            )
+
             AppNavigationRoute.PROFILE_EDIT -> getEditProfileData(userId, language)
             AppNavigationRoute.PROFILE_UPDATE -> updateProfile(userId, language)
             else -> throw IllegalArgumentException("Invalid profile path: $path")
@@ -47,7 +53,8 @@ class ProfileOrchestrator(
     ): Flow<Screen> {
         val cacheKey = "profile_${userId}_${appVersion}_${lang}_$country"
         return flow {
-            val user = userRepository.findById(userId) ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND))
+            val user = userRepository.findById(userId)
+                ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND))
             val screen = screenBuilder.build(user, lang, country)
             emit(screen)
         }.toCache(
@@ -61,7 +68,8 @@ class ProfileOrchestrator(
         lang: String,
     ): Flow<Screen> =
         flow {
-            val user = userRepository.findById(userId) ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND))
+            val user = userRepository.findById(userId)
+                ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND))
             emit(editScreenBuilder.build(user, lang))
         }
 
@@ -71,7 +79,11 @@ class ProfileOrchestrator(
     ): Flow<Screen> =
         flow {
             try {
-                val user = userRepository.findById(userId) ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND))
+                val user = userRepository.findById(userId) ?: throw AppException(
+                    AppError(
+                        AppErrorCode.USER_NOT_FOUND
+                    )
+                )
                 emit(
                     editScreenBuilder.build(
                         data = user,
@@ -81,8 +93,9 @@ class ProfileOrchestrator(
                     ),
                 )
             } catch (e: Exception) {
-                val user = userRepository.findById(userId)
-                    ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND), cause = e)
+                val user =
+                    userRepository.findById(userId)
+                        ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND), cause = e)
                 emit(
                     editScreenBuilder.build(
                         data = user,

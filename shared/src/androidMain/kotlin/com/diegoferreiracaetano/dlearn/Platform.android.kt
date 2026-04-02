@@ -16,8 +16,8 @@ class AndroidPlatform : Platform {
         val locale =
             when {
                 language.contains(Constants.DASH) -> Locale.forLanguageTag(language)
-                country.isNotEmpty() -> Locale(language, country)
-                else -> Locale(language)
+                country.isNotEmpty() -> Locale.Builder().setLanguage(language).setRegion(country).build()
+                else -> Locale.Builder().setLanguage(language).build()
             }
         Locale.setDefault(locale)
     }

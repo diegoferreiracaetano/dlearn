@@ -110,7 +110,10 @@ val sharedModule =
                     request.header(HttpHeaders.UserAgent, agent.toHeader())
                     request.header(HttpHeaders.AcceptLanguage, preferencesRepository.language)
                     request.header(X_COUNTRY, preferencesRepository.country)
-                    request.header(X_NOTIFICATIONS_ENABLED, preferencesRepository.notificationsEnabled.toString())
+                    request.header(
+                        X_NOTIFICATIONS_ENABLED,
+                        preferencesRepository.notificationsEnabled.toString()
+                    )
 
                     val call = execute(request)
 

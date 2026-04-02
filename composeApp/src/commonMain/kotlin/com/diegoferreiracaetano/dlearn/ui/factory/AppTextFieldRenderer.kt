@@ -40,9 +40,9 @@ class AppTextFieldRenderer : ComponentRenderer {
             isError = textField.isError,
             type = textField.fieldType.toTextFieldType(),
             modifier =
-                modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
         )
     }
 }

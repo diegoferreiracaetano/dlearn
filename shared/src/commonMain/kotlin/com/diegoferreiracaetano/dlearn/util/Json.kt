@@ -1,6 +1,5 @@
 package com.diegoferreiracaetano.dlearn.util
 
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 inline fun <reified T> T.toJson(): String where T : Any = Json.encodeToString(this)

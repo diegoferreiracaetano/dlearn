@@ -9,7 +9,6 @@ import com.diegoferreiracaetano.dlearn.domain.error.AppException
 import com.diegoferreiracaetano.dlearn.infrastructure.services.ChallengeDataService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
-import io.ktor.server.application.call
 import io.ktor.server.request.header
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
@@ -57,14 +56,16 @@ private suspend fun handleResolveChallenge(
     val transactionId = getTransactionId(call)
     val body = call.receive<ResolveChallengeBody>()
 
-    val type = ChallengeType.entries.find { it.name == body.type }
-        ?: throw AppException(AppError(AppErrorCode.INVALID_CHALLENGE_CODE))
+    val type =
+        ChallengeType.entries.find { it.name == body.type }
+            ?: throw AppException(AppError(AppErrorCode.INVALID_CHALLENGE_CODE))
 
-    val validatedToken = service.resolveChallenge(
-        transactionId = transactionId,
-        type = type,
-        answers = mapOf(Constants.OTP_KEY to body.answers),
-    )
+    val validatedToken =
+        service.resolveChallenge(
+            transactionId = transactionId,
+            type = type,
+            answers = mapOf(Constants.OTP_KEY to body.answers),
+        )
 
     if (validatedToken != null) {
         respondWithSuccess(call, validatedToken)
@@ -73,12 +74,14 @@ private suspend fun handleResolveChallenge(
     }
 }
 
-private fun getTransactionId(call: ApplicationCall): String {
-    return call.request.header(SecurityConstants.HEADER_TRANSACTION_ID)
+private fun getTransactionId(call: ApplicationCall): String =
+    call.request.header(SecurityConstants.HEADER_TRANSACTION_ID)
         ?: throw AppException(AppError(AppErrorCode.TRANSACTION_ID_REQUIRED))
-}
 
-private suspend fun respondWithSuccess(call: ApplicationCall, validatedToken: String) {
+private suspend fun respondWithSuccess(
+    call: ApplicationCall,
+    validatedToken: String,
+) {
     call.respond(
         HttpStatusCode.OK,
         ChallengeResponse(

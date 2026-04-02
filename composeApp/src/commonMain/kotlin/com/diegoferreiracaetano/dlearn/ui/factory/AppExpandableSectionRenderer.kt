@@ -9,20 +9,18 @@ import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppSectionTitle
 import com.diegoferreiracaetano.dlearn.designsystem.components.text.AppExpandableText
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppExpandableSectionComponent
-import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 
 class AppExpandableSectionRenderer {
     @Composable
     fun Render(
         component: AppExpandableSectionComponent,
-        actions: ComponentActions,
         modifier: Modifier = Modifier,
     ) {
         Column(
             modifier =
-                modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
         ) {
             AppSectionTitle(
                 title = component.title,

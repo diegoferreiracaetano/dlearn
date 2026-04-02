@@ -37,7 +37,7 @@ components:
       required: false
       schema:
         type: string
-        enum: [SMS, EMAIL, TOTP]
+        enum: [ SMS, EMAIL, TOTP ]
     transactionId:
       name: transactionId
       in: query
@@ -49,7 +49,7 @@ components:
     # --- SDUI Base ---
     Component:
       type: object
-      required: [type, id]
+      required: [ type, id ]
       discriminator:
         propertyName: type
       properties:
@@ -67,7 +67,7 @@ components:
 
     AppRequest:
       type: object
-      required: [path]
+      required: [ path ]
       properties:
         path: { type: string }
         params:
@@ -77,14 +77,14 @@ components:
     # --- Authentication ---
     AuthRequest:
       type: object
-      required: [email, password]
+      required: [ email, password ]
       properties:
         email: { type: string, format: email }
         password: { type: string }
         socialToken: { type: string }
         authType:
           type: string
-          enum: [PASSWORD, GOOGLE, FACEBOOK, APPLE]
+          enum: [ PASSWORD, GOOGLE, FACEBOOK, APPLE ]
 
     AuthResponse:
       type: object
@@ -103,7 +103,7 @@ components:
 
     CreateUserRequest:
       type: object
-      required: [email, password, name]
+      required: [ email, password, name ]
       properties:
         email: { type: string, format: email }
         password: { type: string }
@@ -111,7 +111,7 @@ components:
 
     ChangePasswordRequest:
       type: object
-      required: [oldPassword, newPassword]
+      required: [ oldPassword, newPassword ]
       properties:
         oldPassword: { type: string }
         newPassword: { type: string }
@@ -119,7 +119,7 @@ components:
     # --- Security / Challenge ---
     ResolveChallengeRequest:
       type: object
-      required: [answer]
+      required: [ answer ]
       properties:
         answer: { type: string }
 
@@ -165,7 +165,7 @@ components:
             imageUrl: { type: string }
             rating: { type: number }
             releaseDate: { type: string }
-            mediaType: { type: string, enum: [MOVIE, TV] }
+            mediaType: { type: string, enum: [ MOVIE, TV ] }
             actionUrl: { type: string }
 
     MovieCarouselComponent:

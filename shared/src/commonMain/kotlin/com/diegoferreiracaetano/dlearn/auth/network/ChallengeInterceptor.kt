@@ -52,7 +52,9 @@ class ChallengeInterceptor(
                     val responseBody =
                         try {
                             savedResponse.bodyAsText()
-                        } catch (@Suppress("SwallowedException") e: Exception) {
+                        } catch (
+                            @Suppress("SwallowedException") e: Exception,
+                        ) {
                             proceedWith(savedResponse)
                             return@intercept
                         }
@@ -60,7 +62,9 @@ class ChallengeInterceptor(
                     val session =
                         try {
                             plugin.json.decodeFromString<ChallengeSession>(responseBody)
-                        } catch (@Suppress("SwallowedException") e: Exception) {
+                        } catch (
+                            @Suppress("SwallowedException") e: Exception,
+                        ) {
                             proceedWith(savedResponse)
                             return@intercept
                         }
@@ -84,7 +88,10 @@ class ChallengeInterceptor(
 
                                 contentType(ContentType.Application.Json)
                                 header(SecurityConstants.HEADER_CHALLENGE_TOKEN, validatedToken)
-                                header(SecurityConstants.HEADER_TRANSACTION_ID, session.transactionId)
+                                header(
+                                    SecurityConstants.HEADER_TRANSACTION_ID,
+                                    session.transactionId
+                                )
                             }
 
                         proceedWith(retryCall)

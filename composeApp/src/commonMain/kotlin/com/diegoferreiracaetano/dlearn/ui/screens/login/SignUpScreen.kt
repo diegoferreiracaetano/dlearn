@@ -61,6 +61,7 @@ fun SignUpScreen(
             is SignUpUIState.Error -> {
                 snackbarHostState.showSnackbar(state.error.toAppMessage())
             }
+
             else -> Unit
         }
     }
@@ -100,7 +101,8 @@ fun SignUpContent(
         },
     ) { innerModifier ->
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .then(innerModifier)
                 .padding(24.dp),

@@ -151,11 +151,11 @@ fun AppNavGraph(
         dialog(
             route = VerifyAccount.route,
             dialogProperties =
-                DialogProperties(
-                    usePlatformDefaultWidth = false,
-                    dismissOnBackPress = true,
-                    dismissOnClickOutside = false,
-                ),
+            DialogProperties(
+                usePlatformDefaultWidth = false,
+                dismissOnBackPress = true,
+                dismissOnClickOutside = false,
+            ),
         ) {
             VerifyAccountScreen(
                 onBackClick = { navController.popBackStack() },
@@ -247,19 +247,19 @@ fun AppNavGraph(
         composable(
             route = AppNavigationRoute.SDUI_APP_ROUTE,
             arguments =
-                listOf(
-                    navArgument(AppNavigationRoute.ARG_PATH) { type = NavType.StringType },
-                    navArgument(AppNavigationRoute.ARG_PARAMS) {
-                        type = NavType.StringType
-                        nullable = true
-                        defaultValue = null
-                    },
-                    navArgument(AppQueryParam.REF) {
-                        type = NavType.StringType
-                        nullable = true
-                        defaultValue = null
-                    },
-                ),
+            listOf(
+                navArgument(AppNavigationRoute.ARG_PATH) { type = NavType.StringType },
+                navArgument(AppNavigationRoute.ARG_PARAMS) {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                },
+                navArgument(AppQueryParam.REF) {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                },
+            ),
         ) { backStackEntry ->
             AppScreen(
                 path = backStackEntry.sduiPath,
@@ -275,7 +275,12 @@ fun AppNavGraph(
 
         composable(
             route = MovieDetail.route,
-            arguments = listOf(navArgument(AppNavigationRoute.ARG_ID) { type = NavType.StringType }),
+            arguments =
+            listOf(
+                navArgument(AppNavigationRoute.ARG_ID) {
+                    type = NavType.StringType
+                },
+            ),
         ) { backStackEntry ->
             val movieId = backStackEntry.readOrDefault(AppNavigationRoute.ARG_ID, "")
             MovieDetailScreen(

@@ -49,24 +49,26 @@ class LoginOrchestrator(
         accessToken: String?,
         language: String,
     ): AuthResponse {
-        val (email, name, picture) = extractSocialUserInfo(idToken, provider)
+        val (email, name, picture) = extractSocialUserInfo(idToken, provider, language)
 
-        val user = userRepository.findByEmail(email) ?: userRepository.save(
-            User(
-                id = UUID.randomUUID().toString(),
-                name = name,
-                email = email,
-                imageUrl = picture,
-            ),
-            password = UUID.randomUUID().toString(),
-        )
+        val user =
+            userRepository.findByEmail(email) ?: userRepository.save(
+                User(
+                    id = UUID.randomUUID().toString(),
+                    name = name,
+                    email = email,
+                    imageUrl = picture,
+                ),
+                password = UUID.randomUUID().toString(),
+            )
 
-        val metadata = mutableMapOf<String, String>().apply {
-            put(MetadataKeys.AUTH_TYPE, provider)
-            put(MetadataKeys.EXTERNAL_ID, email)
-            accessToken?.let { put(MetadataKeys.ACCESS_TOKEN, it) }
-            put(MetadataKeys.ID_TOKEN, idToken)
-        }
+        val metadata =
+            mutableMapOf<String, String>().apply {
+                put(MetadataKeys.AUTH_TYPE, provider)
+                put(MetadataKeys.EXTERNAL_ID, email)
+                accessToken?.let { put(MetadataKeys.ACCESS_TOKEN, it) }
+                put(MetadataKeys.ID_TOKEN, idToken)
+            }
 
         linkExternalProviderUseCase.execute(userId = user.id, metadata = metadata)
 
@@ -76,20 +78,31 @@ class LoginOrchestrator(
     private fun extractSocialUserInfo(
         idToken: String,
         provider: String,
+        language: String,
     ): Triple<String, String, String?> {
         val payload = getPayloadFromIdToken(idToken)
         val jsonObject = json.parseToJsonElement(payload).jsonObject
 
         val email = jsonObject[SocialAuthConstants.CLAIM_EMAIL]?.jsonPrimitive?.content
-            ?: throw AppException(AppError(AppErrorCode.SOCIAL_AUTH_FAILED, "Email not found in social token"))
+        if (email == null) {
+            throw AppException(
+                AppError(
+                    AppErrorCode.SOCIAL_AUTH_FAILED,
+                    i18n.getString(AppStringType.ERROR_SOCIAL_EMAIL_NOT_FOUND, language),
+                ),
+            )
+        }
 
-        val firstName = jsonObject[SocialAuthConstants.CLAIM_GIVEN_NAME]?.jsonPrimitive?.content.orEmpty()
-        val lastName = jsonObject[SocialAuthConstants.CLAIM_FAMILY_NAME]?.jsonPrimitive?.content.orEmpty()
+        val firstName =
+            jsonObject[SocialAuthConstants.CLAIM_GIVEN_NAME]?.jsonPrimitive?.content.orEmpty()
+        val lastName =
+            jsonObject[SocialAuthConstants.CLAIM_FAMILY_NAME]?.jsonPrimitive?.content.orEmpty()
 
-        val name = jsonObject[SocialAuthConstants.CLAIM_NAME]?.jsonPrimitive?.content
-            ?: "$firstName $lastName".trim().ifEmpty {
-                provider.replaceFirstChar { it.uppercase() } + SocialAuthConstants.DEFAULT_NAME_SUFFIX
-            }
+        val name =
+            jsonObject[SocialAuthConstants.CLAIM_NAME]?.jsonPrimitive?.content
+                ?: "$firstName $lastName".trim().ifEmpty {
+                    provider.replaceFirstChar { it.uppercase() } + SocialAuthConstants.DEFAULT_NAME_SUFFIX
+                }
         val picture = jsonObject[SocialAuthConstants.CLAIM_PICTURE]?.jsonPrimitive?.content
 
         return Triple(email, name, picture)
@@ -107,41 +120,56 @@ class LoginOrchestrator(
         refreshToken: String,
         language: String,
     ): AuthResponse {
-        val claims = tokenService.verifyToken(refreshToken)
-            ?: throw AppException(
-                AppError(
-                    AppErrorCode.EXPIRED_TOKEN,
-                    i18n.getString(AppStringType.ERROR_INVALID_REFRESH_TOKEN, language)
-                )
-            )
-
-        val userId = claims[TokenConstants.CLAIM_USER_ID]
-            ?: throw AppException(
-                AppError(
-                    AppErrorCode.INVALID_TOKEN,
-                    i18n.getString(AppStringType.ERROR_INVALID_TOKEN_PAYLOAD, language)
-                )
-            )
-
-        val user = userRepository.findById(userId)
-            ?: throw AppException(
-                AppError(
-                    AppErrorCode.USER_NOT_FOUND,
-                    i18n.getString(AppStringType.ERROR_USER_NOT_FOUND, language)
-                )
-            )
+        val user = getValidatedUser(refreshToken, language)
 
         linkExternalProviderUseCase.execute(userId = user.id)
 
         return generateAuthResponse(user)
     }
 
-    private fun generateAuthResponse(user: User): AuthResponse {
-        return AuthResponse(
+    private suspend fun getValidatedUser(
+        refreshToken: String,
+        language: String,
+    ): User {
+        val claims =
+            tokenService.verifyToken(refreshToken)
+                ?: throw AppException(
+                    AppError(
+                        AppErrorCode.EXPIRED_TOKEN,
+                        i18n.getString(AppStringType.ERROR_INVALID_REFRESH_TOKEN, language),
+                    ),
+                )
+
+        return findUserByClaims(claims, language)
+    }
+
+    private suspend fun findUserByClaims(
+        claims: Map<String, String?>,
+        language: String,
+    ): User {
+        val userId =
+            claims[TokenConstants.CLAIM_USER_ID]
+                ?: throw AppException(
+                    AppError(
+                        AppErrorCode.INVALID_TOKEN,
+                        i18n.getString(AppStringType.ERROR_INVALID_TOKEN_PAYLOAD, language),
+                    ),
+                )
+
+        return userRepository.findById(userId)
+            ?: throw AppException(
+                AppError(
+                    AppErrorCode.USER_NOT_FOUND,
+                    i18n.getString(AppStringType.ERROR_USER_NOT_FOUND, language),
+                ),
+            )
+    }
+
+    private fun generateAuthResponse(user: User): AuthResponse =
+        AuthResponse(
             user = user,
             accessToken = tokenService.generateAccessToken(user),
             refreshToken = tokenService.generateRefreshToken(user),
             challengeRequired = false,
         )
-    }
 }

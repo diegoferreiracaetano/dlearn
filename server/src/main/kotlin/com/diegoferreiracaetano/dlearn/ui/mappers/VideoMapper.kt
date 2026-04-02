@@ -12,7 +12,9 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.MovieItemComponent
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import java.util.Locale
 
-class VideoMapper(private val i18n: I18nProvider) {
+class VideoMapper(
+    private val i18n: I18nProvider,
+) {
     fun toMovieItem(
         video: Video,
         lang: String,

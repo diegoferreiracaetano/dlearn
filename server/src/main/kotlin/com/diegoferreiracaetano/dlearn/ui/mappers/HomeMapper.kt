@@ -14,7 +14,9 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.MovieItemComponent
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import java.util.Locale
 
-class HomeMapper(private val i18n: I18nProvider) {
+class HomeMapper(
+    private val i18n: I18nProvider,
+) {
     fun toBannerMain(video: Video): FullScreenBannerComponent =
         FullScreenBannerComponent(
             id = video.id,

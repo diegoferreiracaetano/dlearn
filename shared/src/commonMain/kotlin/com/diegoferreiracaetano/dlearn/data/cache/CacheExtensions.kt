@@ -9,7 +9,7 @@ import org.koin.core.component.get
 
 enum class CacheStrategy {
     NETWORK_FIRST,
-    CACHE_FIRST
+    CACHE_FIRST,
 }
 
 @PublishedApi

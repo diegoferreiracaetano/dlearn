@@ -26,11 +26,13 @@ class VerifyOtpUseCase(
                             message = "Sucesso",
                             validatedToken = result.data["validatedToken"],
                         )
+
                     is ChallengeResult.Failure ->
                         ResolveChallengeResponse(
                             success = false,
                             message = result.error.message ?: "Erro na verificação",
                         )
+
                     is ChallengeResult.Cancelled ->
                         ResolveChallengeResponse(
                             success = false,

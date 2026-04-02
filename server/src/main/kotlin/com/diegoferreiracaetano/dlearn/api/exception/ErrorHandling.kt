@@ -67,7 +67,10 @@ private suspend fun handleGeneralThrowable(
     val challenge = challengeMapper.toChallengeSession(cause, preferredType)
 
     if (challenge != null) {
-        call.respond(HttpStatusCode.fromValue(Constants.HTTP_STATUS_PRECONDITION_REQUIRED), challenge)
+        call.respond(
+            HttpStatusCode.fromValue(Constants.HTTP_STATUS_PRECONDITION_REQUIRED),
+            challenge
+        )
     } else {
         val (status, code) = mapThrowableToErrorResponse(cause)
         call.respond(

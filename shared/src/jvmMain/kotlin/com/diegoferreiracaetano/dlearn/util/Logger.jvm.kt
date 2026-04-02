@@ -1,12 +1,15 @@
 package com.diegoferreiracaetano.dlearn.util
 
-class JSLogger : Logger {
+class JVMLogger : Logger {
     override fun d(
         tag: String,
         message: String,
+        throwable: Throwable?,
     ) {
-        println("KMP_LOG [$tag]: $message")
+        val logMessage = if (throwable != null) "$message: ${throwable.message}" else message
+        println("KMP_LOG [$tag]: $logMessage")
+        throwable?.printStackTrace()
     }
 }
 
-actual fun getLogger(): Logger = JSLogger()
+actual fun getLogger(): Logger = JVMLogger()

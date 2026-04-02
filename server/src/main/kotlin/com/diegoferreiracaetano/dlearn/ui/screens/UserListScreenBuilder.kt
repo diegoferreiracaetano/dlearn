@@ -12,7 +12,9 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UserRowComponent
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
-class UserListScreenBuilder(private val i18n: I18nProvider) {
+class UserListScreenBuilder(
+    private val i18n: I18nProvider,
+) {
     fun build(
         users: List<User>,
         lang: String,
@@ -36,7 +38,10 @@ class UserListScreenBuilder(private val i18n: I18nProvider) {
                         i18n.getString(AppStringType.USER_ROLE_FREE, lang)
                     },
                     imageUrl = user.imageUrl,
-                    actionUrl = AppPath(AppNavigationRoute.PROFILE, mapOf(AppQueryParam.USER_ID to user.id)),
+                    actionUrl = AppPath(
+                        AppNavigationRoute.PROFILE,
+                        mapOf(AppQueryParam.USER_ID to user.id)
+                    ),
                 )
             }
 

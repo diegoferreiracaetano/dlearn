@@ -41,7 +41,8 @@ class AuthInterceptor(
         if (response.status == HttpStatusCode.Unauthorized) {
             return mutex.withLock {
                 val currentToken = sessionManager.token()
-                val requestToken = response.request.headers[HttpHeaders.Authorization]?.removePrefix("Bearer ")
+                val requestToken =
+                    response.request.headers[HttpHeaders.Authorization]?.removePrefix("Bearer ")
 
                 if (currentToken != requestToken && currentToken != null) {
                     return@withLock true
@@ -70,7 +71,9 @@ class AuthInterceptor(
                         sessionManager.logout()
                         false
                     }
-                } catch (@Suppress("SwallowedException") e: Exception) {
+                } catch (
+                    @Suppress("SwallowedException") e: Exception,
+                ) {
                     sessionManager.logout()
                     false
                 }

@@ -40,7 +40,11 @@ class AppContainerRenderer : ComponentRenderer {
                 },
                 searchBar = {
                     container.searchBar?.let { searchBar ->
-                        RenderComponent(component = searchBar, actions = actions, modifier = modifier)
+                        RenderComponent(
+                            component = searchBar,
+                            actions = actions,
+                            modifier = modifier
+                        )
                     }
                 },
                 chipGroup = {
@@ -50,7 +54,11 @@ class AppContainerRenderer : ComponentRenderer {
                 },
                 bottomBar = {
                     container.bottomBar?.let { bottomBar ->
-                        RenderComponent(component = bottomBar, actions = actions, modifier = modifier)
+                        RenderComponent(
+                            component = bottomBar,
+                            actions = actions,
+                            modifier = modifier
+                        )
                     }
                 },
             ) { baseModifier ->

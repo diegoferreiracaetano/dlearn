@@ -72,7 +72,8 @@ fun Application.module() {
                 }
             }
             challenge { _, _ ->
-                val lang = call.request.headers[HttpHeaders.AcceptLanguage] ?: LocaleConstants.LANG_PT_BR
+                val lang =
+                    call.request.headers[HttpHeaders.AcceptLanguage] ?: LocaleConstants.LANG_PT_BR
                 call.respond(
                     HttpStatusCode.Unauthorized,
                     i18n.getString(AppStringType.ERROR_INVALID_SESSION, lang),

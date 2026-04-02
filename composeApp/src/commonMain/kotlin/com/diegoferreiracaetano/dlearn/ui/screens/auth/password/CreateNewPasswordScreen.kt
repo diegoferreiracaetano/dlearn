@@ -69,6 +69,7 @@ fun CreateNewPasswordScreen(
                 )
                 onSuccess()
             }
+
             is CreateNewPasswordUiState.Error -> {
                 snackbarHostState.showAppSnackBar(
                     scope = scope,
@@ -76,6 +77,7 @@ fun CreateNewPasswordScreen(
                     type = SnackbarType.ERROR,
                 )
             }
+
             else -> {}
         }
     }
@@ -97,7 +99,8 @@ fun CreateNewPasswordScreen(
             }
 
             Column(
-                modifier = Modifier
+                modifier =
+                Modifier
                     .fillMaxSize()
                     .then(innerModifier)
                     .padding(24.dp),

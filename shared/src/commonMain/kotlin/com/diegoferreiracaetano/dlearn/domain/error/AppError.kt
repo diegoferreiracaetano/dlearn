@@ -54,7 +54,7 @@ data class AppError(
     val details: Map<String, String>? = null,
 )
 
-class AppException(
+open class AppException(
     val error: AppError,
     cause: Throwable? = null,
 ) : Exception(error.message ?: error.code.name, cause)

@@ -12,7 +12,8 @@ import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 class BiometricChallengeHandler(
     private val biometricProvider: BiometricProvider,
 ) : ChallengeHandler {
-    override fun canHandle(challenge: Challenge): Boolean = challenge.challengeType == ChallengeType.BIOMETRIC
+    override fun canHandle(challenge: Challenge): Boolean =
+        challenge.challengeType == ChallengeType.BIOMETRIC
 
     override suspend fun handle(
         challenge: Challenge,

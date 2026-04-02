@@ -22,7 +22,12 @@ class CreateUserOrchestrator(
     ): AuthResponse {
         val existingUser = userRepository.findByEmail(email)
         if (existingUser != null) {
-            throw BadRequestException(i18n.getString(AppStringType.ERROR_EMAIL_ALREADY_REGISTERED, language))
+            throw BadRequestException(
+                i18n.getString(
+                    AppStringType.ERROR_EMAIL_ALREADY_REGISTERED,
+                    language
+                )
+            )
         }
 
         val newUser =

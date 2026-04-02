@@ -96,7 +96,8 @@ fun AppContent(
 fun AppScreenWatchlistPreview() {
     val watchlistEmptyMock =
         Screen(
-            components = listOf(
+            components =
+            listOf(
                 AppEmptyStateComponent(
                     title = "WATCHLIST_EMPTY_TITLE",
                     description = "WATCHLIST_EMPTY_DESCRIPTION",
@@ -112,7 +113,8 @@ fun AppScreenWatchlistPreview() {
     ) {
         AppContent(
             uiState = uiState,
-            actions = ComponentActions(
+            actions =
+            ComponentActions(
                 onRetry = {},
             ),
             modifier = Modifier.fillMaxSize(),

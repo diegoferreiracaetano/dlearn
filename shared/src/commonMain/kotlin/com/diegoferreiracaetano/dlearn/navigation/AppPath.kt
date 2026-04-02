@@ -38,7 +38,13 @@ object AppPath {
         params: Map<String, String>? = null,
         metadata: Map<String, String>? = null,
     ): AppRequest {
-        if (fullPath.isNullOrBlank()) return AppRequest(path = "", params = params, metadata = metadata)
+        if (fullPath.isNullOrBlank()) {
+            return AppRequest(
+                path = "",
+                params = params,
+                metadata = metadata
+            )
+        }
 
         val (pathPart, queryPart) =
             fullPath

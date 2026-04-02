@@ -28,24 +28,34 @@ class TmdbMapper(
             id = "${mediaType.name}_${response.id}",
             title = movieTitle,
             imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}${response.posterPath}",
-            year = (response.releaseDate ?: response.firstAirDate.orEmpty()).take(TmdbConstants.YEAR_CHAR_COUNT),
+            year = (
+                response.releaseDate
+                    ?: response.firstAirDate.orEmpty()
+                ).take(TmdbConstants.YEAR_CHAR_COUNT),
             duration = response.runtime?.toString().orEmpty(),
-            genre = response.genres.firstOrNull()?.name.orEmpty(),
+            genre =
+            response.genres
+                .firstOrNull()
+                ?.name
+                .orEmpty(),
             rating = String.format(Locale.US, "%.1f", response.voteAverage ?: 0.0),
             storyLine = response.overview.orEmpty(),
             cast =
             response.credits
                 ?.cast
                 ?.take(TmdbConstants.MAX_CAST_SIZE)
-                ?.map { toCastMember(it) }.orEmpty(),
+                ?.map { toCastMember(it) }
+                .orEmpty(),
             seasons = emptyList(),
             trailerId = getTrailerId(response),
             isFavorite = isFavorite,
             isInWatchlist = isInWatchlist,
             providers =
-            countryProviders?.flatrate?.map { provider ->
-                toWatchProvider(provider, movieTitle, imdbId, countryProviders.link)
-            }.orEmpty(),
+            countryProviders
+                ?.flatrate
+                ?.map { provider ->
+                    toWatchProvider(provider, movieTitle, imdbId, countryProviders.link)
+                }.orEmpty(),
             mediaType = mediaType,
         )
     }
@@ -63,7 +73,8 @@ class TmdbMapper(
         CastMemberDomainData(
             name = cast.name,
             role = cast.character,
-            imageUrl = cast.profilePath?.let { path ->
+            imageUrl =
+            cast.profilePath?.let { path ->
                 "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W185}$path"
             },
         )

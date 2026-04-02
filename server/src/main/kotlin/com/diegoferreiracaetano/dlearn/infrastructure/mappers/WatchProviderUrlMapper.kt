@@ -24,13 +24,15 @@ class WatchProviderUrlMapper {
         val providerUrl =
             when (providerId) {
                 WatchProviderIds.NETFLIX, WatchProviderIds.NETFLIX_ALT -> {
-                    val app = "${WatchProviderSchemes.NETFLIX}${WatchProviderPaths.NETFLIX_SEARCH}$encodedTitle"
+                    val app =
+                        "${WatchProviderSchemes.NETFLIX}${WatchProviderPaths.NETFLIX_SEARCH}$encodedTitle"
                     val web = "${WatchProviderPaths.NETFLIX_WEB_SEARCH}$encodedTitle"
                     app to web
                 }
 
                 WatchProviderIds.DISNEY_PLUS -> {
-                    val app = "${WatchProviderSchemes.DISNEY_PLUS}${WatchProviderPaths.DISNEY_SEARCH}$encodedTitle"
+                    val app =
+                        "${WatchProviderSchemes.DISNEY_PLUS}${WatchProviderPaths.DISNEY_SEARCH}$encodedTitle"
                     val web = "${WatchProviderPaths.DISNEY_WEB_SEARCH}$encodedTitle"
                     app to web
                 }
@@ -52,13 +54,15 @@ class WatchProviderUrlMapper {
                 }
 
                 WatchProviderIds.APPLE_TV -> {
-                    val app = "${WatchProviderSchemes.APPLE_TV}${WatchProviderPaths.APPLE_SEARCH}$encodedTitle"
+                    val app =
+                        "${WatchProviderSchemes.APPLE_TV}${WatchProviderPaths.APPLE_SEARCH}$encodedTitle"
                     val web = "${WatchProviderPaths.APPLE_WEB_SEARCH}$encodedTitle"
                     app to web
                 }
 
                 WatchProviderIds.HBO_MAX, WatchProviderIds.MAX -> {
-                    val app = "${WatchProviderSchemes.HBO_MAX}${WatchProviderPaths.HBO_SEARCH}$encodedTitle"
+                    val app =
+                        "${WatchProviderSchemes.HBO_MAX}${WatchProviderPaths.HBO_SEARCH}$encodedTitle"
                     val web = "${WatchProviderPaths.MAX_WEB_SEARCH}$encodedTitle"
                     app to web
                 }

@@ -10,33 +10,49 @@ plugins {
 
 buildConfig {
     packageName("com.diegoferreiracaetano.dlearn")
-    buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", providers.gradleProperty("GOOGLE_WEB_CLIENT_ID").getOrElse(""))
-    buildConfigField("String", "APPLE_CLIENT_ID", providers.gradleProperty("APPLE_CLIENT_ID").getOrElse(""))
-    buildConfigField("String", "FACEBOOK_APP_ID", providers.gradleProperty("FACEBOOK_APP_ID").getOrElse(""))
+    buildConfigField(
+        "String",
+        "GOOGLE_WEB_CLIENT_ID",
+        providers.gradleProperty("GOOGLE_WEB_CLIENT_ID").getOrElse("")
+    )
+    buildConfigField(
+        "String",
+        "APPLE_CLIENT_ID",
+        providers.gradleProperty("APPLE_CLIENT_ID").getOrElse("")
+    )
+    buildConfigField(
+        "String",
+        "FACEBOOK_APP_ID",
+        providers.gradleProperty("FACEBOOK_APP_ID").getOrElse("")
+    )
 }
 
 
 kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     iosArm64()
     iosSimulatorArm64()
-    
+
     jvm()
-    
+
     js {
         browser()
     }
-    
+
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         browser()
     }
-    
+
     sourceSets {
 
         commonMain.dependencies {
@@ -46,7 +62,7 @@ kotlin {
 
             api(libs.androidx.lifecycle.viewmodel)
             api(libs.androidx.lifecycle.runtimeCompose)
-            
+
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)

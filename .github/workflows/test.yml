@@ -3,14 +3,14 @@ name: Test
 on:
   pull_request:
   push:
-    branches: [main, develop]
+    branches: [ main, develop ]
 
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ ubuntu-latest, macos-latest ]
 
     steps:
       - uses: actions/checkout@v4

@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.kotlinJvm) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.detekt)
-    alias(libs.plugins.ktlint)
     alias(libs.plugins.kotlinSerialization) apply false
     alias(libs.plugins.buildconfig) apply false
     alias(libs.plugins.googleServices) apply false
@@ -16,16 +15,9 @@ val detektVersion = libs.versions.detekt.get()
 
 subprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
     dependencies {
         "detektPlugins"("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
-    }
-
-    // Configuração mínima para o KtLint funcionar em todos os módulos
-    ktlint {
-        android.set(true)
-        ignoreFailures.set(true)
     }
 
     detekt {
@@ -50,8 +42,10 @@ subprojects {
             taskName.contains("release") -> file("${rootDir}/config/detekt/baseline-${project.name}-release.xml")
             else -> file("${rootDir}/config/detekt/baseline-${project.name}.xml")
         }
-        
-        baseline.set(baselineFile)
+
+        if (baselineFile.exists()) {
+            baseline.set(baselineFile)
+        }
 
         reports {
             html.required = true
@@ -90,16 +84,4 @@ tasks.register("detektBaselineAll") {
     dependsOn(subprojects.map { sub ->
         sub.tasks.withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>()
     })
-}
-
-tasks.register("ktlintFormatAll") {
-    group = "formatting"
-    description = "Runs ktlintFormat on all subprojects"
-    dependsOn(subprojects.map { it.tasks.matching { t -> t.name == "ktlintFormat" } })
-}
-
-tasks.register("ktlintCheckAll") {
-    group = "verification"
-    description = "Runs ktlintCheck on all subprojects"
-    dependsOn(subprojects.map { it.tasks.matching { t -> t.name == "ktlintCheck" } })
 }

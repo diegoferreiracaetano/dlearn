@@ -25,7 +25,8 @@ class AuthProviderDataService : AuthProviderRepository {
                     AuthProvider(
                         provider = AccountProvider.valueOf(row[AuthProviderTable.provider]),
                         externalId = row[AuthProviderTable.externalId],
-                        metadata = row[AuthProviderTable.metadata]?.let { Json.decodeFromString(it) } ?: emptyMap(),
+                        metadata = row[AuthProviderTable.metadata]?.let { Json.decodeFromString(it) }
+                            ?: emptyMap(),
                     )
                 }
         }
@@ -51,7 +52,10 @@ class AuthProviderDataService : AuthProviderRepository {
 
                     logger.info("Successfully persisted AuthProvider ${provider.provider} (ID: $id) for user $userId")
                 } catch (e: Exception) {
-                    logger.error("Failed to insert AuthProvider ${provider.provider} for user $userId", e)
+                    logger.error(
+                        "Failed to insert AuthProvider ${provider.provider} for user $userId",
+                        e
+                    )
                     throw e
                 }
             }

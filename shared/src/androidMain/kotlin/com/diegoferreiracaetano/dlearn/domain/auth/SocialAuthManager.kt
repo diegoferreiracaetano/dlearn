@@ -6,12 +6,15 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
 import com.diegoferreiracaetano.dlearn.BuildConfig
 import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
+import com.diegoferreiracaetano.dlearn.util.getLogger
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+
+private const val TAG = "SocialAuthManager"
 
 /**
  * Implementação Android do SocialAuthManager.
@@ -55,6 +58,7 @@ actual open class SocialAuthManager actual constructor() : KoinComponent {
                             GoogleIdTokenCredential.createFrom(credential.data)
                         }
                     } catch (e: Exception) {
+                        getLogger().d(TAG, "Error parsing credential", e)
                         null
                     }
 
@@ -64,8 +68,10 @@ actual open class SocialAuthManager actual constructor() : KoinComponent {
                     SocialAuthResult.Failure(AppErrorCode.UNSUPPORTED_CREDENTIAL_TYPE)
                 }
             } catch (e: GetCredentialException) {
+                getLogger().d(TAG, "GetCredentialException during googleSignIn", e)
                 SocialAuthResult.Failure(AppErrorCode.SOCIAL_AUTH_FAILED)
             } catch (e: Exception) {
+                getLogger().d(TAG, "Unknown error during googleSignIn", e)
                 SocialAuthResult.Failure(AppErrorCode.UNKNOWN_ERROR)
             }
         }

@@ -72,9 +72,21 @@ fun MainScreenPreview() {
     val bottomNavItems =
         listOf(
             BottomNavItem(AppNavigationRoute.HOME, AppNavigationRoute.HOME, AppIconType.HOME),
-            BottomNavItem(AppNavigationRoute.WATCHLIST, AppNavigationRoute.WATCHLIST, AppIconType.WATCHLIST),
-            BottomNavItem(AppNavigationRoute.FAVORITE, AppNavigationRoute.FAVORITE, AppIconType.FAVORITE),
-            BottomNavItem(AppNavigationRoute.PROFILE, AppNavigationRoute.PROFILE, AppIconType.PERSON),
+            BottomNavItem(
+                AppNavigationRoute.WATCHLIST,
+                AppNavigationRoute.WATCHLIST,
+                AppIconType.WATCHLIST,
+            ),
+            BottomNavItem(
+                AppNavigationRoute.FAVORITE,
+                AppNavigationRoute.FAVORITE,
+                AppIconType.FAVORITE,
+            ),
+            BottomNavItem(
+                AppNavigationRoute.PROFILE,
+                AppNavigationRoute.PROFILE,
+                AppIconType.PERSON,
+            ),
         )
 
     val selectedRoute = AppNavigationRoute.HOME
@@ -82,7 +94,8 @@ fun MainScreenPreview() {
     val components =
         listOf(
             AppContainerComponent(
-                topBar = AppTopBarListComponent(
+                topBar =
+                AppTopBarListComponent(
                     listOf(
                         AppTopBarItem(
                             AppTopBarComponent(title = "DLearn", showSearch = true),
@@ -91,7 +104,8 @@ fun MainScreenPreview() {
                     ),
                     selectedActionUrl = selectedRoute,
                 ),
-                bottomBar = BottomNavigationComponent(
+                bottomBar =
+                BottomNavigationComponent(
                     items = bottomNavItems,
                     selectedActionUrl = selectedRoute,
                 ),

@@ -4,7 +4,6 @@ import com.diegoferreiracaetano.dlearn.api.util.appHeader
 import com.diegoferreiracaetano.dlearn.api.util.userId
 import com.diegoferreiracaetano.dlearn.orchestrator.app.Orchestrator
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
-import io.ktor.server.application.call
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route

@@ -52,7 +52,8 @@ class SearchScreenBuilder(
         val contentComponents =
             if (results.isEmpty()) {
                 val emptyTitle = i18n.getString(AppStringType.SEARCH_EMPTY_TITLE, lang)
-                val emptyDescription = i18n.getString(AppStringType.SEARCH_EMPTY_DESCRIPTION, lang, query)
+                val emptyDescription =
+                    i18n.getString(AppStringType.SEARCH_EMPTY_DESCRIPTION, lang, query)
 
                 listOf(
                     AppEmptyStateComponent(

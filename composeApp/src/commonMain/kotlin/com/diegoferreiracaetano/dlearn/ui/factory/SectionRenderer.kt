@@ -24,9 +24,9 @@ class SectionRenderer : ComponentRenderer {
 
         Column(
             modifier =
-                modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
         ) {
             AppSectionTitle(
                 title = section.title,

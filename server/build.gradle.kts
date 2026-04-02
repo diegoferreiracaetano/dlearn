@@ -59,8 +59,16 @@ dependencies {
 
 buildConfig {
     packageName("com.diegoferreiracaetano.dlearn.server")
-    buildConfigField("String", "THE_MOVIE_DB_BASE_URL", providers.gradleProperty("THE_MOVIE_DB_BASE_URL").get())
-    buildConfigField("String", "THE_MOVIE_DB_API_KEY", providers.gradleProperty("THE_MOVIE_DB_API_KEY").get())
+    buildConfigField(
+        "String",
+        "THE_MOVIE_DB_BASE_URL",
+        providers.gradleProperty("THE_MOVIE_DB_BASE_URL").get()
+    )
+    buildConfigField(
+        "String",
+        "THE_MOVIE_DB_API_KEY",
+        providers.gradleProperty("THE_MOVIE_DB_API_KEY").get()
+    )
     buildConfigField("String", "SECRET", providers.gradleProperty("SECRET").get())
     buildConfigField("String", "ISSUER", providers.gradleProperty("ISSUER").get())
     buildConfigField("String", "AUDIENCE", providers.gradleProperty("AUDIENCE").get())

@@ -71,9 +71,12 @@ fun WelcomeScreen(
             is LoginUIState.Success -> {
                 onNavigateToHome()
             }
+
             is LoginUIState.Error -> {
                 snackbarHostState.showSnackbar(state.throwable.toAppMessage())
-            } else -> Unit
+            }
+
+            else -> Unit
         }
     }
 
@@ -102,7 +105,8 @@ fun WelcomeContent(
         snackBarHostState = snackbarHostState,
     ) { innerModifier ->
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .then(innerModifier)
                 .padding(16.dp),

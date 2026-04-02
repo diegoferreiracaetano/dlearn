@@ -64,6 +64,7 @@ fun LoginScreen(
             is LoginUIState.Error -> {
                 snackbarHostState.showSnackbar(state.throwable.toAppMessage())
             }
+
             else -> Unit
         }
     }
@@ -102,7 +103,8 @@ fun LoginContent(
         },
     ) { innerModifier ->
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .then(innerModifier)
                 .padding(24.dp),

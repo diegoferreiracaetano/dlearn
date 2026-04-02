@@ -4,8 +4,9 @@ class AndroidLogger : Logger {
     override fun d(
         tag: String,
         message: String,
+        throwable: Throwable?,
     ) {
-        android.util.Log.d(tag, message)
+        android.util.Log.d(tag, message, throwable)
     }
 }
 

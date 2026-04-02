@@ -16,10 +16,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import dlearn.composeapp.generated.resources.Res
 import dlearn.composeapp.generated.resources.app_name
 import dlearn.composeapp.generated.resources.app_subtitle
@@ -28,9 +26,8 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
-private const val SPLASH_WAIT_TIME: Long = 2000
+private const val SPLASH_WAIT_TIME = 2000L
 
 @Composable
 fun SplashScreen(
@@ -41,7 +38,8 @@ fun SplashScreen(
 
     @OptIn(ExperimentalResourceApi::class)
     Box(
-        modifier = modifier
+        modifier =
+        modifier
             .background(MaterialTheme.colorScheme.primary)
             .fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -58,7 +56,8 @@ fun SplashScreen(
             Image(
                 painter = painterResource(Res.drawable.dlearn_logo),
                 contentDescription = null,
-                modifier = Modifier
+                modifier =
+                Modifier
                     .heightIn(max = 90.dp),
             )
 
@@ -71,17 +70,9 @@ fun SplashScreen(
 
             Text(
                 text = stringResource(Res.string.app_subtitle),
-                fontStyle = FontStyle.Italic,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun SplashScreenPreview() {
-    DLearnTheme {
-        SplashScreen({ })
     }
 }

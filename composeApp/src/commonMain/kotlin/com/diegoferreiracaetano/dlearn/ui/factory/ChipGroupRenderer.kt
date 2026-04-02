@@ -20,23 +20,23 @@ class ChipGroupRenderer : ComponentRenderer {
         AppChipGroup(
             modifier = modifier,
             items =
-                chipGroup.items.map { item ->
-                    AppChipItem(
-                        label = item.label,
-                        onClick = {
-                            if (!item.hasDropDown) {
-                                actions.onAction(item.actionUrl)
-                            }
-                        },
-                        hasDropDown = item.hasDropDown,
-                        isFilter = item.isFilter,
-                        isSelected = item.isSelected,
-                        dropDownOptions = item.options?.map { it.label } ?: emptyList(),
-                        onOptionSelected = {
+            chipGroup.items.map { item ->
+                AppChipItem(
+                    label = item.label,
+                    onClick = {
+                        if (!item.hasDropDown) {
                             actions.onAction(item.actionUrl)
-                        },
-                    )
-                },
+                        }
+                    },
+                    hasDropDown = item.hasDropDown,
+                    isFilter = item.isFilter,
+                    isSelected = item.isSelected,
+                    dropDownOptions = item.options?.map { it.label } ?: emptyList(),
+                    onOptionSelected = {
+                        actions.onAction(item.actionUrl)
+                    },
+                )
+            },
             onFilterChanged = { label ->
                 if (label == null) {
                     actions.onAction(chipGroup.cleanUrl)

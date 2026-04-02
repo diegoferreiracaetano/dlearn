@@ -15,18 +15,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class PasswordRepositoryRemote(
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
 ) : PasswordRepository {
-    
-    override fun changePassword(newPassword: String): Flow<ChangePasswordResponse> = flow {
-        val request = ChangePasswordRequest(newPassword = newPassword)
-        
-        val response = httpClient.post("v1/password/change") {
-            auth(AuthMode.OPTIONAL)
-            contentType(ContentType.Application.Json)
-            setBody(request)
-        }.body<ChangePasswordResponse>()
-        
-        emit(response)
-    }
+    override fun changePassword(newPassword: String): Flow<ChangePasswordResponse> =
+        flow {
+            val request = ChangePasswordRequest(newPassword = newPassword)
+
+            val response =
+                httpClient
+                    .post("v1/password/change") {
+                        auth(AuthMode.OPTIONAL)
+                        contentType(ContentType.Application.Json)
+                        setBody(request)
+                    }.body<ChangePasswordResponse>()
+
+            emit(response)
+        }
 }

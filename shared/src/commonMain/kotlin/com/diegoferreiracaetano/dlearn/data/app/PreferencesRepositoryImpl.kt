@@ -11,9 +11,8 @@ import kotlinx.coroutines.flow.update
 
 class PreferencesRepositoryImpl(
     private val settings: Settings,
-    private val platform: Platform
+    private val platform: Platform,
 ) : PreferencesRepository {
-
     private val _onConfigurationChanged = MutableStateFlow(0L)
     override val onConfigurationChanged: StateFlow<Long> = _onConfigurationChanged.asStateFlow()
 
@@ -45,7 +44,10 @@ class PreferencesRepositoryImpl(
             notifyChange()
         }
 
-    override fun updatePreference(key: String, value: String) {
+    override fun updatePreference(
+        key: String,
+        value: String,
+    ) {
         when (key) {
             KEY_LANGUAGE -> language = value
             KEY_COUNTRY -> country = value

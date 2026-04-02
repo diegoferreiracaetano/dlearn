@@ -16,22 +16,23 @@ class AppSnackbarRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val snackbarComponent = component as? AppSnackbarComponent ?: return
         val snackbarHostState = LocalSnackbarHostState.current
 
-        val snackbarType = when (snackbarComponent.snackbarType) {
-            AppSnackbarType.SUCCESS -> SnackbarType.SUCCESS
-            AppSnackbarType.ERROR -> SnackbarType.ERROR
-            AppSnackbarType.WARNING -> SnackbarType.WARNING
-        }
+        val snackbarType =
+            when (snackbarComponent.snackbarType) {
+                AppSnackbarType.SUCCESS -> SnackbarType.SUCCESS
+                AppSnackbarType.ERROR -> SnackbarType.ERROR
+                AppSnackbarType.WARNING -> SnackbarType.WARNING
+            }
 
         LaunchedEffect(snackbarComponent) {
             snackbarHostState.showAppSnackBar(
                 scope = this,
                 message = snackbarComponent.message,
-                type = snackbarType
+                type = snackbarType,
             )
         }
     }

@@ -16,18 +16,18 @@ class CarouselRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val carouselComponent = component as? CarouselComponent ?: return
-        
+
         LazyRow(
             modifier = modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 16.dp)
+            contentPadding = PaddingValues(horizontal = 16.dp),
         ) {
             items(carouselComponent.items) { item ->
                 RenderComponent(
                     component = item,
-                    actions = actions
+                    actions = actions,
                 )
             }
         }

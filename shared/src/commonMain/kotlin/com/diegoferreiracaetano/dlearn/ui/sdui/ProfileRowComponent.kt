@@ -7,5 +7,5 @@ data class ProfileRowComponent(
     val name: String,
     val email: String,
     val imageUrl: String? = null,
-    val editActionUrl: String? = null
+    val editActionUrl: String? = null,
 ) : Component

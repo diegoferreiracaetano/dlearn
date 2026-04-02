@@ -13,10 +13,10 @@ class AppSwitchRowRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val switchRow = component as? AppSwitchRowComponent ?: return
-        
+
         AppTextRow(
             label = switchRow.title,
             value = switchRow.subtitle,
@@ -25,7 +25,7 @@ class AppSwitchRowRenderer : ComponentRenderer {
             onCheckedChange = { isChecked ->
                 actions.onSelectChanged(switchRow.preferenceKey, isChecked.toString())
             },
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }

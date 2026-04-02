@@ -16,16 +16,17 @@ class AppHtmlTextRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val htmlComponent = component as? AppHtmlTextComponent ?: return
-        
+
         AppHtmlText(
             html = htmlComponent.html,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         )
     }
 }

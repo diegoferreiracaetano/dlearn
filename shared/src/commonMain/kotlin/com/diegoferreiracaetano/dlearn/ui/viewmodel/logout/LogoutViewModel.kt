@@ -6,9 +6,8 @@ import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import kotlinx.coroutines.launch
 
 class LogoutViewModel(
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
 ) : ViewModel() {
-
     fun logout() {
         viewModelScope.launch {
             sessionManager.logout()

@@ -8,7 +8,7 @@ data class AppHeader(
     val paramUserAgent: String? = null,
     val paramLanguage: String? = null,
     val paramCountry: String? = null,
-    val notificationsEnabled: Boolean = true
+    val notificationsEnabled: Boolean = true,
 ) {
     @Transient
     val userAgent: AppUserAgent = AppUserAgent.fromHeader(paramUserAgent)

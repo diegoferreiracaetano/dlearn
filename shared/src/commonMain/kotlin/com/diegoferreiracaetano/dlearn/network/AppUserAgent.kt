@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class AppUserAgent(
     val appName: String,
     val appVersion: String,
-    val deviceName: String
+    val deviceName: String,
 ) {
     fun toHeader(): String = "$appName/$appVersion ($deviceName)"
 

@@ -8,7 +8,7 @@ private const val AUTH_MODE = "AuthMode"
 enum class AuthMode {
     REQUIRED,
     OPTIONAL,
-    NONE
+    NONE,
 }
 
 val AuthModeKey = AttributeKey<AuthMode>(AUTH_MODE)

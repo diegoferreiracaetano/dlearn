@@ -11,15 +11,15 @@ import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
  * TODO: Implementar BiometricProvider nativo (iOS/Android) para capturar a credencial local.
  */
 class BiometricChallengeHandler(
-    private val biometricProvider: BiometricProvider
+    private val biometricProvider: BiometricProvider,
 ) : ChallengeHandler {
+    override fun canHandle(challenge: Challenge): Boolean = challenge.challengeType == ChallengeType.BIOMETRIC
 
-    override fun canHandle(challenge: Challenge): Boolean {
-        return challenge.challengeType == ChallengeType.BIOMETRIC
-    }
-
-    override suspend fun handle(challenge: Challenge, session: ChallengeSession): ChallengeResult {
-        return try {
+    override suspend fun handle(
+        challenge: Challenge,
+        session: ChallengeSession,
+    ): ChallengeResult =
+        try {
             // Chama a interface que será implementada via Expect/Actual ou Injeção Nativa
             val result = biometricProvider.authenticate()
             if (result is BiometricResult.Success) {
@@ -31,7 +31,6 @@ class BiometricChallengeHandler(
         } catch (e: Exception) {
             ChallengeResult.Failure(e)
         }
-    }
 }
 
 /**
@@ -42,6 +41,9 @@ interface BiometricProvider {
 }
 
 sealed interface BiometricResult {
-    data class Success(val token: String) : BiometricResult
+    data class Success(
+        val token: String,
+    ) : BiometricResult
+
     data object Failure : BiometricResult
 }

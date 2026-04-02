@@ -17,8 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.designsystem.components.carousel.PageCarousel
 import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImage
-import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
-import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource.*
+import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource.Resource
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import dlearn.composeapp.generated.resources.Res
 import dlearn.composeapp.generated.resources.onboarding1
@@ -46,23 +45,24 @@ fun OnboardingScreen(
     onFinish: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val pages = listOf(
-        OnboardingPageModel(
-            Res.string.onboarding_title_1,
-            Res.string.onboarding_description_1,
-            Res.drawable.onboarding1,
-        ),
-        OnboardingPageModel(
-            Res.string.onboarding_title_2,
-            Res.string.onboarding_description_2,
-            Res.drawable.onboarding2,
-        ),
-        OnboardingPageModel(
-            Res.string.onboarding_title_3,
-            Res.string.onboarding_description_3,
-            Res.drawable.onboarding3,
-        ),
-    )
+    val pages =
+        listOf(
+            OnboardingPageModel(
+                Res.string.onboarding_title_1,
+                Res.string.onboarding_description_1,
+                Res.drawable.onboarding1,
+            ),
+            OnboardingPageModel(
+                Res.string.onboarding_title_2,
+                Res.string.onboarding_description_2,
+                Res.drawable.onboarding2,
+            ),
+            OnboardingPageModel(
+                Res.string.onboarding_title_3,
+                Res.string.onboarding_description_3,
+                Res.drawable.onboarding3,
+            ),
+        )
 
     PageCarousel(
         pageCount = pages.size,
@@ -78,25 +78,26 @@ fun OnboardingScreen(
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
                     AppImage(
                         source = Resource(pages[pageIndex].image),
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth()
-                            .weight(2.5f)
+                        modifier =
+                            Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth()
+                                .weight(2.5f),
                     )
                     Spacer(modifier = Modifier.weight(2f))
                 }
-           }
+            }
         },
         infoContent = { pageIndex ->
             val currentPage = pages[pageIndex]
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(horizontal = 8.dp)
+                modifier = Modifier.padding(horizontal = 8.dp),
             ) {
                 Text(
                     text = stringResource(currentPage.title),
@@ -115,7 +116,7 @@ fun OnboardingScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-        }
+        },
     )
 }
 

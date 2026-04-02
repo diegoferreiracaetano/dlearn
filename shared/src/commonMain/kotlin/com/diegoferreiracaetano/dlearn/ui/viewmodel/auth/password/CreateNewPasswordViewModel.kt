@@ -11,24 +11,24 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class CreateNewPasswordViewModel(
-    private val passwordRepository: PasswordRepository
+    private val passwordRepository: PasswordRepository,
 ) : ViewModel() {
-
-    private val _uiState = MutableStateFlow<CreateNewPasswordUiState>(
-        CreateNewPasswordUiState.Idle)
+    private val _uiState =
+        MutableStateFlow<CreateNewPasswordUiState>(
+            CreateNewPasswordUiState.Idle,
+        )
     val uiState = _uiState.asStateFlow()
 
     fun changePassword(newPassword: String) {
         viewModelScope.launch {
             _uiState.value = CreateNewPasswordUiState.Loading
-            passwordRepository.changePassword(newPassword)
+            passwordRepository
+                .changePassword(newPassword)
                 .onStart {
                     _uiState.value = CreateNewPasswordUiState.Loading
-                }
-                .catch { error ->
+                }.catch { error ->
                     _uiState.value = CreateNewPasswordUiState.Error(error.message.toString())
-                }
-                .collect { response ->
+                }.collect { response ->
                     _uiState.value = CreateNewPasswordUiState.Success(response.message)
                 }
         }

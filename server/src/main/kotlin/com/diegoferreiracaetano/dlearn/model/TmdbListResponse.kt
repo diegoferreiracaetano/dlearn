@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TmdbListResponse<T>(
-    val results: List<T>
+    val results: List<T>,
 )

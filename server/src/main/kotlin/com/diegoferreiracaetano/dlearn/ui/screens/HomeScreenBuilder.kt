@@ -15,49 +15,55 @@ import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
 class HomeScreenBuilder(
     private val mapper: HomeMapper,
-    private val i18n: I18nProvider
+    private val i18n: I18nProvider,
 ) {
     fun build(
         data: HomeDomainData,
         lang: String,
-        type: HomeFilterType = HomeFilterType.ALL
+        type: HomeFilterType = HomeFilterType.ALL,
     ): Screen {
         val components = mutableListOf<Component>()
 
         components.add(
             ChipGroupComponent(
-                cleanUrl = AppPath(
-                    path = AppNavigationRoute.HOME,
-                    params = mapOf(AppQueryParam.TYPE to HomeFilterType.ALL.name)
-                ),
-                items = listOf(
-                    ChipItem(
-                        id = HomeFilterType.SERIES.name,
-                        label = i18n.getString(AppStringType.FILTER_SERIES, lang),
-                        isSelected = type == HomeFilterType.SERIES,
-                        actionUrl = AppPath(
-                            path = AppNavigationRoute.HOME,
-                            params = mapOf(AppQueryParam.TYPE to HomeFilterType.SERIES.name)
+                cleanUrl =
+                    AppPath(
+                        path = AppNavigationRoute.HOME,
+                        params = mapOf(AppQueryParam.TYPE to HomeFilterType.ALL.name),
+                    ),
+                items =
+                    listOf(
+                        ChipItem(
+                            id = HomeFilterType.SERIES.name,
+                            label = i18n.getString(AppStringType.FILTER_SERIES, lang),
+                            isSelected = type == HomeFilterType.SERIES,
+                            actionUrl =
+                                AppPath(
+                                    path = AppNavigationRoute.HOME,
+                                    params = mapOf(AppQueryParam.TYPE to HomeFilterType.SERIES.name),
+                                ),
+                        ),
+                        ChipItem(
+                            id = HomeFilterType.MOVIES.name,
+                            label = i18n.getString(AppStringType.FILTER_MOVIES, lang),
+                            isSelected = type == HomeFilterType.MOVIES,
+                            actionUrl =
+                                AppPath(
+                                    path = AppNavigationRoute.HOME,
+                                    params = mapOf(AppQueryParam.TYPE to HomeFilterType.MOVIES.name),
+                                ),
                         ),
                     ),
-                    ChipItem(
-                        id = HomeFilterType.MOVIES.name,
-                        label = i18n.getString(AppStringType.FILTER_MOVIES, lang),
-                        isSelected = type == HomeFilterType.MOVIES,
-                        actionUrl = AppPath(
-                            path = AppNavigationRoute.HOME,
-                            params = mapOf(AppQueryParam.TYPE to HomeFilterType.MOVIES.name)
-                        )
-                    )
-                )
-            )
+            ),
         )
         data.banner?.let {
             components.add(mapper.toBannerMain(it))
         }
 
         if (data.top10.isNotEmpty()) {
-            components.add(mapper.toCarousel(i18n.getString(AppStringType.SECTION_TOP_10, lang), data.top10, showRank = true))
+            components.add(
+                mapper.toCarousel(i18n.getString(AppStringType.SECTION_TOP_10, lang), data.top10, showRank = true),
+            )
         }
 
         if (data.popular.isNotEmpty()) {
@@ -71,7 +77,7 @@ class HomeScreenBuilder(
         }
 
         return Screen(
-            components = components
+            components = components,
         )
     }
 }

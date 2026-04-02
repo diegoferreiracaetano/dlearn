@@ -1,19 +1,26 @@
 package com.diegoferreiracaetano.dlearn.auth.network
 
-import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthResponse
 import com.diegoferreiracaetano.dlearn.domain.auth.RefreshTokenRequest
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
+import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.request
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 class AuthInterceptor(
     private val sessionManager: SessionManager,
-    private val client: HttpClient
+    private val client: HttpClient,
 ) {
     private val mutex = Mutex()
 
@@ -36,19 +43,20 @@ class AuthInterceptor(
                 // Check if the token was already refreshed by another thread
                 val currentToken = sessionManager.token()
                 val requestToken = response.request.headers[HttpHeaders.Authorization]?.removePrefix("Bearer ")
-                
+
                 if (currentToken != requestToken && currentToken != null) {
                     return@withLock true
                 }
 
                 val refreshToken = sessionManager.refreshToken() ?: return@withLock false
-                
+
                 return@withLock try {
-                    val refreshResponse = client.post("/v1/auth/refresh") {
-                        auth(AuthMode.NONE)
-                        contentType(ContentType.Application.Json)
-                        setBody(RefreshTokenRequest(refreshToken))
-                    }
+                    val refreshResponse =
+                        client.post("/v1/auth/refresh") {
+                            auth(AuthMode.NONE)
+                            contentType(ContentType.Application.Json)
+                            setBody(RefreshTokenRequest(refreshToken))
+                        }
 
                     if (refreshResponse.status == HttpStatusCode.OK) {
                         val auth = refreshResponse.body<AuthResponse>()

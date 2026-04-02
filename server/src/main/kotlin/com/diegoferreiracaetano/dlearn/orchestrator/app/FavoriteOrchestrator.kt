@@ -20,37 +20,45 @@ class FavoriteOrchestrator(
     private val favoriteScreenBuilder: FavoriteScreenBuilder,
     private val favoriteRepository: FavoriteRepository,
     private val videoMapper: VideoMapper,
-    private val movieClient: MovieClient
-) : Orchestrator, KoinComponent {
-
+    private val movieClient: MovieClient,
+) : Orchestrator,
+    KoinComponent {
     override fun execute(
-        request: AppRequest, 
+        request: AppRequest,
         header: AppHeader,
-        userId: String
-    ): Flow<Screen> = flow {
-        val movieId = request.params?.get(AppQueryParam.ID)
-        val isToggleAction = request.params?.containsKey(FAVORITE) == true
+        userId: String,
+    ): Flow<Screen> =
+        flow {
+            val movieId = request.params?.get(AppQueryParam.ID)
+            val isToggleAction = request.params?.containsKey(FAVORITE) == true
 
-        if (movieId != null && isToggleAction) {
-            val active = request.params?.get(FAVORITE)?.toBoolean() ?: false
-            favoriteRepository.toggleFavorite(userId, movieId, active)
+            if (movieId != null && isToggleAction) {
+                val active = request.params?.get(FAVORITE)?.toBoolean() ?: false
+                favoriteRepository.toggleFavorite(userId, movieId, active)
+            }
+
+            emit(getFavoriteScreen(userId, header.language))
         }
 
-        emit(getFavoriteScreen(userId, header.language))
-    }
-
-    private suspend fun getFavoriteScreen(userId: String, language: String): Screen {
+    private suspend fun getFavoriteScreen(
+        userId: String,
+        language: String,
+    ): Screen {
         val favoriteIds = favoriteRepository.getFavorites(userId)
-        
-        val videos = coroutineScope {
-            favoriteIds.map { id ->
-                async {
-                    runCatching {
-                        movieClient.getMovieDetail(id, language)
-                    }.getOrNull()
-                }
-            }.awaitAll().filterNotNull().map { it.toVideo() }
-        }
+
+        val videos =
+            coroutineScope {
+                favoriteIds
+                    .map { id ->
+                        async {
+                            runCatching {
+                                movieClient.getMovieDetail(id, language)
+                            }.getOrNull()
+                        }
+                    }.awaitAll()
+                    .filterNotNull()
+                    .map { it.toVideo() }
+            }
 
         val items = videoMapper.toMovieItemComponents(videos)
         return favoriteScreenBuilder.build(language, items)

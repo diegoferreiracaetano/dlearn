@@ -5,19 +5,20 @@ package com.diegoferreiracaetano.dlearn.domain.auth.challenge
  */
 class ChallengeEngine(
     private val coordinator: ChallengeCoordinator,
-    private val handlers: List<ChallengeHandler>
+    private val handlers: List<ChallengeHandler>,
 ) {
     /**
      * Resolve uma sessão de desafio utilizando o handler apropriado.
      */
     suspend fun resolve(session: ChallengeSession): ChallengeResult {
         val challenge = session.challenge
-        
+
         // Encontra um handler capaz de lidar com o desafio enviado pelo servidor
-        val handler = handlers.find {
-            it.canHandle(challenge)
-        }
-            ?: return ChallengeResult.Failure(Exception("Nenhum handler encontrado para o desafio: ${challenge.challengeType}"))
+        val handler =
+            handlers.find {
+                it.canHandle(challenge)
+            }
+                ?: return ChallengeResult.Failure(Exception("Nenhum handler encontrado para o desafio: ${challenge.challengeType}"))
 
         // O coordinator armazena a sessão e o desafio ativo para uso posterior pelo repositório
         return coordinator.run {

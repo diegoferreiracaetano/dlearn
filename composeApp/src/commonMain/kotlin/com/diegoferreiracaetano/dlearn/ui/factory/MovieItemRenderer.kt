@@ -15,14 +15,14 @@ class MovieItemRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val movieItem = component as? MovieItemComponent ?: return
 
         AppMovieItem(
             movie = movieItem.toMovieItem(),
             onClick = { actions.onMovieClick(movieItem.id) },
-            modifier = modifier.padding(horizontal = 16.dp)
+            modifier = modifier.padding(horizontal = 16.dp),
         )
     }
 }

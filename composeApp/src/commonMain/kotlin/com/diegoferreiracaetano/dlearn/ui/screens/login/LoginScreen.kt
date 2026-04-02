@@ -29,7 +29,6 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTop
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
-import com.diegoferreiracaetano.dlearn.ui.util.toAppError
 import com.diegoferreiracaetano.dlearn.ui.util.toAppMessage
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginUIState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
@@ -40,7 +39,6 @@ import dlearn.composeapp.generated.resources.login_screen_subtitle
 import dlearn.composeapp.generated.resources.login_screen_title
 import dlearn.composeapp.generated.resources.title_email
 import dlearn.composeapp.generated.resources.title_password
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -51,7 +49,7 @@ fun LoginScreen(
     onNavigateToHome: () -> Unit,
     onForgotPasswordClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = koinViewModel()
+    viewModel: LoginViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -76,7 +74,7 @@ fun LoginScreen(
         onForgotPasswordClick = onForgotPasswordClick,
         isLoading = uiState is LoginUIState.Loading,
         snackbarHostState = snackbarHostState,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -88,7 +86,7 @@ fun LoginContent(
     onForgotPasswordClick: () -> Unit,
     isLoading: Boolean,
     snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var email by remember { mutableStateOf("admin@dlearn.com") }
     var password by remember { mutableStateOf("123456") }
@@ -99,30 +97,31 @@ fun LoginContent(
         topBar = {
             AppTopBar(
                 title = stringResource(Res.string.login_action),
-                onBack = onBackClick
+                onBack = onBackClick,
             )
-        }
+        },
     ) { innerModifier ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .then(innerModifier)
-                .padding(24.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .then(innerModifier)
+                    .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.Top,
         ) {
             Text(
                 text = stringResource(Res.string.login_screen_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Text(
                 text = stringResource(Res.string.login_screen_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -133,7 +132,7 @@ fun LoginContent(
                 placeholder = Res.string.title_email,
                 label = Res.string.title_email,
                 type = TextFieldType.EMAIL,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -144,17 +143,17 @@ fun LoginContent(
                 placeholder = Res.string.title_password,
                 label = Res.string.title_password,
                 type = TextFieldType.PASSWORD,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             TextButton(
                 onClick = onForgotPasswordClick,
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier.align(Alignment.End),
             ) {
                 Text(
                     text = stringResource(Res.string.login_forgot_password),
                     style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
 
@@ -164,7 +163,7 @@ fun LoginContent(
                 text = stringResource(Res.string.login_action),
                 onClick = { onLoginClick(email, password) },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = !isLoading
+                enabled = !isLoading,
             )
         }
     }
@@ -179,7 +178,7 @@ fun LoginScreenPreview() {
             onLoginClick = { _, _ -> },
             onForgotPasswordClick = {},
             isLoading = false,
-            snackbarHostState = remember { SnackbarHostState() }
+            snackbarHostState = remember { SnackbarHostState() },
         )
     }
 }

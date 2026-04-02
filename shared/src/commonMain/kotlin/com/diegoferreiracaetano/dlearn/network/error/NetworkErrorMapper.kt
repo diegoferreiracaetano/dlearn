@@ -13,68 +13,69 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
 
-suspend fun Throwable.toAppException(): AppException {
-    return when (this) {
+suspend fun Throwable.toAppException(): AppException =
+    when (this) {
         is AppException -> this
         is ClientRequestException -> {
             val appError = runCatching { response.body<AppError>() }.getOrNull()
             val fallbackMessage = runCatching { response.bodyAsText() }.getOrNull() ?: message
-            
+
             AppException(
-                error = appError ?: AppError(
-                    code = response.status.toAppErrorCode(),
-                    message = fallbackMessage
-                ),
-                cause = this
+                error =
+                    appError ?: AppError(
+                        code = response.status.toAppErrorCode(),
+                        message = fallbackMessage,
+                    ),
+                cause = this,
             )
         }
         is ServerResponseException -> {
             val appError = runCatching { response.body<AppError>() }.getOrNull()
             val fallbackMessage = runCatching { response.bodyAsText() }.getOrNull() ?: message
-            
+
             AppException(
-                error = appError ?: AppError(
-                    code = response.status.toAppErrorCode(),
-                    message = fallbackMessage
-                ),
-                cause = this
+                error =
+                    appError ?: AppError(
+                        code = response.status.toAppErrorCode(),
+                        message = fallbackMessage,
+                    ),
+                cause = this,
             )
         }
         is RedirectResponseException -> {
             AppException(
                 error = AppError(code = AppErrorCode.UNKNOWN_ERROR, message = message),
-                cause = this
+                cause = this,
             )
         }
         is HttpRequestTimeoutException -> {
             AppException(
                 error = AppError(code = AppErrorCode.TIMEOUT, message = message),
-                cause = this
+                cause = this,
             )
         }
         is IOException -> {
             AppException(
                 error = AppError(code = AppErrorCode.NETWORK_ERROR, message = message),
-                cause = this
+                cause = this,
             )
         }
         is SerializationException -> {
             AppException(
                 error = AppError(code = AppErrorCode.UNKNOWN_ERROR, message = "Error parsing response"),
-                cause = this
+                cause = this,
             )
         }
         else -> {
             AppException(
                 error = AppError(code = AppErrorCode.UNKNOWN_ERROR, message = message),
-                cause = this
+                cause = this,
             )
         }
     }
-}
 
-private fun HttpStatusCode.toAppErrorCode(): AppErrorCode {
-    return when (this.value) {
+private fun HttpStatusCode.toAppErrorCode(): AppErrorCode =
+    when (this.value) {
         HttpStatusCode.BadRequest.value -> AppErrorCode.BAD_REQUEST
         HttpStatusCode.Unauthorized.value -> AppErrorCode.UNAUTHORIZED
         HttpStatusCode.Forbidden.value -> AppErrorCode.FORBIDDEN
@@ -88,4 +89,3 @@ private fun HttpStatusCode.toAppErrorCode(): AppErrorCode {
         428 -> AppErrorCode.CHALLENGE_REQUIRED
         else -> AppErrorCode.UNKNOWN_ERROR
     }
-}

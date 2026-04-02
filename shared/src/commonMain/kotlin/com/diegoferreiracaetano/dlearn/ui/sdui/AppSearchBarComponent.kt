@@ -7,5 +7,5 @@ data class AppSearchBarComponent(
     val query: String = "",
     val placeholder: String = "",
     val actionUrl: String = "",
-    val components: List<Component> = emptyList()
+    val components: List<Component> = emptyList(),
 ) : Component

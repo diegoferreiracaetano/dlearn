@@ -44,17 +44,17 @@ enum class AppErrorCode {
     // Specific Domain Errors
     MOVIE_NOT_FOUND,
     PAYMENT_FAILED,
-    INSUFFICIENT_FUNDS
+    INSUFFICIENT_FUNDS,
 }
 
 @Serializable
 data class AppError(
     val code: AppErrorCode,
     val message: String? = null,
-    val details: Map<String, String>? = null
+    val details: Map<String, String>? = null,
 )
 
 class AppException(
     val error: AppError,
-    cause: Throwable? = null
+    cause: Throwable? = null,
 ) : Exception(error.message ?: error.code.name, cause)

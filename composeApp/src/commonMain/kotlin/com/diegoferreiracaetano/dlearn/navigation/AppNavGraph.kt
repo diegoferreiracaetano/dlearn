@@ -17,7 +17,25 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.*
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.ChangePassword
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.CreateNewPassword
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Favorite
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Home
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Login
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Logout
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.MovieDetail
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Onboarding
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Profile
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.ResetPassword
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Search
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.SettingsClearCache
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.SettingsCountry
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.SettingsLanguage
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.SettingsNotifications
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.SignUp
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.VerifyAccount
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Watchlist
+import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Welcome
 import com.diegoferreiracaetano.dlearn.ui.screens.app.AppScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.auth.password.CreateNewPasswordScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.auth.verify.VerifyAccountScreen
@@ -43,13 +61,14 @@ fun AppNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    snackbarHostState: SnackbarHostState = LocalSnackbarHostState.current
+    snackbarHostState: SnackbarHostState = LocalSnackbarHostState.current,
 ) {
     val isLoggedIn by sessionManager.isLoggedIn.collectAsState()
 
-    val eventHandler = remember(navController, snackbarHostState, coroutineScope) {
-        GlobalEventHandler(navController, snackbarHostState, coroutineScope)
-    }
+    val eventHandler =
+        remember(navController, snackbarHostState, coroutineScope) {
+            GlobalEventHandler(navController, snackbarHostState, coroutineScope)
+        }
 
     LaunchedEffect(eventDispatcher, eventHandler) {
         eventDispatcher.events.collect { event ->
@@ -75,7 +94,7 @@ fun AppNavGraph(
         composable(Onboarding.route) {
             OnboardingScreen(
                 onFinish = { navController.navigate(Welcome.route) },
-                modifier = modifier
+                modifier = modifier,
             )
         }
 
@@ -84,7 +103,7 @@ fun AppNavGraph(
                 onSignUpClick = { navController.navigate(SignUp.route) },
                 onLoginClick = { navController.navigate(Login.route) },
                 onNavigateToHome = { navController.navigateToRoute(Home.route) },
-                modifier = modifier
+                modifier = modifier,
             )
         }
 
@@ -93,7 +112,7 @@ fun AppNavGraph(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToHome = { navController.navigateToRoute(Home.route) },
                 onForgotPasswordClick = { navController.navigate(ResetPassword.route) },
-                modifier = modifier
+                modifier = modifier,
             )
         }
 
@@ -101,7 +120,7 @@ fun AppNavGraph(
             SignUpScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToHome = { navController.navigateToRoute(Home.route) },
-                modifier = modifier
+                modifier = modifier,
             )
         }
 
@@ -109,7 +128,7 @@ fun AppNavGraph(
             ResetPasswordScreen(
                 onBackClick = { navController.popBackStack() },
                 onNextClick = { navController.navigate(AppNavigationRoute.VERIFY_ACCOUNT) },
-                modifier = modifier
+                modifier = modifier,
             )
         }
 
@@ -117,7 +136,7 @@ fun AppNavGraph(
             CreateNewPasswordScreen(
                 onBackClick = { navController.popBackStack() },
                 onSuccess = { navController.popBackStack() },
-                modifier = modifier
+                modifier = modifier,
             )
         }
 
@@ -125,22 +144,23 @@ fun AppNavGraph(
             CreateNewPasswordScreen(
                 onBackClick = { navController.popBackStack() },
                 onSuccess = { navController.popBackStack() },
-                modifier = modifier
+                modifier = modifier,
             )
         }
-        
+
         dialog(
             route = VerifyAccount.route,
-            dialogProperties = DialogProperties(
-                usePlatformDefaultWidth = false,
-                dismissOnBackPress = true,
-                dismissOnClickOutside = false
-            )
+            dialogProperties =
+                DialogProperties(
+                    usePlatformDefaultWidth = false,
+                    dismissOnBackPress = true,
+                    dismissOnClickOutside = false,
+                ),
         ) {
             VerifyAccountScreen(
                 onBackClick = { navController.popBackStack() },
                 onContinueClick = { navController.popBackStack() },
-                modifier = modifier
+                modifier = modifier,
             )
         }
 
@@ -151,7 +171,7 @@ fun AppNavGraph(
                 onItemClick = { route -> navController.navigateToPath(route) },
                 onSearchClick = { navController.navigateToPath(Search.route) },
                 modifier = modifier,
-                currentRoute = Home.route
+                currentRoute = Home.route,
             )
         }
 
@@ -161,7 +181,7 @@ fun AppNavGraph(
                 onItemClick = { route -> navController.navigateToPath(route) },
                 onTabSelected = { route -> navController.navigateToRoute(route) },
                 modifier = modifier,
-                currentRoute = Watchlist.route
+                currentRoute = Watchlist.route,
             )
         }
 
@@ -171,7 +191,7 @@ fun AppNavGraph(
                 onItemClick = { route -> navController.navigateToPath(route) },
                 onTabSelected = { route -> navController.navigateToRoute(route) },
                 modifier = modifier,
-                currentRoute = Favorite.route
+                currentRoute = Favorite.route,
             )
         }
 
@@ -182,7 +202,7 @@ fun AppNavGraph(
                 onTabSelected = { route -> navController.navigateToRoute(route) },
                 onClose = { navController.navigate(Logout.route) },
                 modifier = modifier,
-                currentRoute = Profile.route
+                currentRoute = Profile.route,
             )
         }
 
@@ -190,7 +210,7 @@ fun AppNavGraph(
             SettingsScreen(
                 path = AppNavigationRoute.SETTINGS_NOTIFICATIONS,
                 onBackClick = { navController.popBackStack() },
-                modifier = modifier
+                modifier = modifier,
             )
         }
 
@@ -198,7 +218,7 @@ fun AppNavGraph(
             SettingsScreen(
                 path = AppNavigationRoute.SETTINGS_LANGUAGE,
                 onBackClick = { navController.popBackStack() },
-                modifier = modifier
+                modifier = modifier,
             )
         }
 
@@ -206,39 +226,40 @@ fun AppNavGraph(
             SettingsScreen(
                 path = AppNavigationRoute.SETTINGS_COUNTRY,
                 onBackClick = { navController.popBackStack() },
-                modifier = modifier
+                modifier = modifier,
             )
         }
 
         dialog(SettingsClearCache.route) {
             CleanCacheScreen(
                 onBackClick = { navController.popBackStack() },
-                modifier = modifier
+                modifier = modifier,
             )
         }
 
         dialog(Logout.route) {
             LogoutScreen(
                 onBackClick = { navController.popBackStack() },
-                modifier = modifier
+                modifier = modifier,
             )
         }
 
         composable(
             route = AppNavigationRoute.SDUI_APP_ROUTE,
-            arguments = listOf(
-                navArgument(AppNavigationRoute.ARG_PATH) { type = NavType.StringType },
-                navArgument(AppNavigationRoute.ARG_PARAMS) {
-                    type = NavType.StringType
-                    nullable = true
-                    defaultValue = null
-                },
-                navArgument(AppQueryParam.REF) {
-                    type = NavType.StringType
-                    nullable = true
-                    defaultValue = null
-                }
-            )
+            arguments =
+                listOf(
+                    navArgument(AppNavigationRoute.ARG_PATH) { type = NavType.StringType },
+                    navArgument(AppNavigationRoute.ARG_PARAMS) {
+                        type = NavType.StringType
+                        nullable = true
+                        defaultValue = null
+                    },
+                    navArgument(AppQueryParam.REF) {
+                        type = NavType.StringType
+                        nullable = true
+                        defaultValue = null
+                    },
+                ),
         ) { backStackEntry ->
             AppScreen(
                 path = backStackEntry.sduiPath,
@@ -248,13 +269,13 @@ fun AppNavGraph(
                 onTabSelected = { route -> navController.navigateToRoute(route) },
                 onMovieClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
                 onItemClick = { route -> navController.navigateToPath(route) },
-                modifier = modifier
+                modifier = modifier,
             )
         }
 
         composable(
             route = MovieDetail.route,
-            arguments = listOf(navArgument(AppNavigationRoute.ARG_ID) { type = NavType.StringType })
+            arguments = listOf(navArgument(AppNavigationRoute.ARG_ID) { type = NavType.StringType }),
         ) { backStackEntry ->
             val movieId = backStackEntry.readOrDefault(AppNavigationRoute.ARG_ID, "")
             MovieDetailScreen(
@@ -262,7 +283,7 @@ fun AppNavGraph(
                 onBackClick = { navController.popBackStack() },
                 onItemClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
                 onMovieClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
-                modifier = modifier
+                modifier = modifier,
             )
         }
     }

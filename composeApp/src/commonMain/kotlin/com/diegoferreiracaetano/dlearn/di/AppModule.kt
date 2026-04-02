@@ -48,72 +48,73 @@ fun doInitKoin() {
     initKoin()
 }
 
-val appModule = module {
-    single { AppLoadingRenderer() }
-    single { AppErrorRenderer() }
-    single { AppEmptyStateRenderer() }
-    single { AppFeedbackRenderer() }
-    single { AppContainerRenderer() }
-    single { AppListRenderer() }
-    single { AppTopBarRenderer() }
-    single { AppTopBarListRenderer() }
-    single { AppSearchBarRenderer() }
-    single { BottomNavigationRenderer() }
-    single { MovieCarouselRenderer() }
-    single { BannerCarouselRenderer() }
-    single { CarouselRenderer() }
-    single { FullScreenBannerRenderer() }
-    single { ChipGroupRenderer() }
-    single { ProfileRowRenderer() }
-    single { UserRowRenderer() }
-    single { PremiumBannerRenderer() }
-    single { SectionRenderer() }
-    single { FooterRenderer() }
-    single { AppMovieDetailHeaderRenderer() }
-    single { AppExpandableSectionRenderer() }
-    single { AppMainContentRenderer() }
-    single { MovieItemRenderer() }
-    single { AppSectionTitleRenderer() }
-    single { AppProfileHeaderRenderer() }
-    single { AppTextFieldRenderer() }
-    single { AppSnackbarRenderer() }
-    single { AppHtmlTextRenderer() }
-    single { AppSwitchRowRenderer() }
-    single { AppSelectionRowRenderer() }
+val appModule =
+    module {
+        single { AppLoadingRenderer() }
+        single { AppErrorRenderer() }
+        single { AppEmptyStateRenderer() }
+        single { AppFeedbackRenderer() }
+        single { AppContainerRenderer() }
+        single { AppListRenderer() }
+        single { AppTopBarRenderer() }
+        single { AppTopBarListRenderer() }
+        single { AppSearchBarRenderer() }
+        single { BottomNavigationRenderer() }
+        single { MovieCarouselRenderer() }
+        single { BannerCarouselRenderer() }
+        single { CarouselRenderer() }
+        single { FullScreenBannerRenderer() }
+        single { ChipGroupRenderer() }
+        single { ProfileRowRenderer() }
+        single { UserRowRenderer() }
+        single { PremiumBannerRenderer() }
+        single { SectionRenderer() }
+        single { FooterRenderer() }
+        single { AppMovieDetailHeaderRenderer() }
+        single { AppExpandableSectionRenderer() }
+        single { AppMainContentRenderer() }
+        single { MovieItemRenderer() }
+        single { AppSectionTitleRenderer() }
+        single { AppProfileHeaderRenderer() }
+        single { AppTextFieldRenderer() }
+        single { AppSnackbarRenderer() }
+        single { AppHtmlTextRenderer() }
+        single { AppSwitchRowRenderer() }
+        single { AppSelectionRowRenderer() }
 
-    single {
-        RenderComponentFactory(
-            appLoadingRenderer = get(),
-            appErrorRenderer = get(),
-            appEmptyStateRenderer = get(),
-            appFeedbackRenderer = get(),
-            appContainerRenderer = get(),
-            appListRenderer = get(),
-            appTopBarRenderer = get(),
-            appTopBarListRenderer = get(),
-            appSearchBarRenderer = get(),
-            bottomNavigationRenderer = get(),
-            movieCarouselRenderer = get(),
-            bannerCarouselRenderer = get(),
-            carouselRenderer = get(),
-            fullScreenBannerRenderer = get(),
-            chipGroupRenderer = get(),
-            profileRenderer = get(),
-            userRenderer = get(),
-            premiumBannerRenderer = get(),
-            sectionRenderer = get(),
-            footerRenderer = get(),
-            movieDetailHeaderRenderer = get(),
-            expandableSectionRenderer = get(),
-            mainContentRenderer = get(),
-            movieItemRenderer = get(),
-            appSectionTitleRenderer = get(),
-            appProfileHeaderRenderer = get(),
-            appTextFieldRenderer = get(),
-            appSnackbarRenderer = get(),
-            appHtmlTextRenderer = get(),
-            appSwitchRowRenderer = get(),
-            appSelectionRowRenderer = get(),
-        )
+        single {
+            RenderComponentFactory(
+                appLoadingRenderer = get(),
+                appErrorRenderer = get(),
+                appEmptyStateRenderer = get(),
+                appFeedbackRenderer = get(),
+                appContainerRenderer = get(),
+                appListRenderer = get(),
+                appTopBarRenderer = get(),
+                appTopBarListRenderer = get(),
+                appSearchBarRenderer = get(),
+                bottomNavigationRenderer = get(),
+                movieCarouselRenderer = get(),
+                bannerCarouselRenderer = get(),
+                carouselRenderer = get(),
+                fullScreenBannerRenderer = get(),
+                chipGroupRenderer = get(),
+                profileRenderer = get(),
+                userRenderer = get(),
+                premiumBannerRenderer = get(),
+                sectionRenderer = get(),
+                footerRenderer = get(),
+                movieDetailHeaderRenderer = get(),
+                expandableSectionRenderer = get(),
+                mainContentRenderer = get(),
+                movieItemRenderer = get(),
+                appSectionTitleRenderer = get(),
+                appProfileHeaderRenderer = get(),
+                appTextFieldRenderer = get(),
+                appSnackbarRenderer = get(),
+                appHtmlTextRenderer = get(),
+                appSwitchRowRenderer = get(),
+                appSelectionRowRenderer = get(),
+            )
+        }
     }
-}

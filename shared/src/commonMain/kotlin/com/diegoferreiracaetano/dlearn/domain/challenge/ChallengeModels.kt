@@ -7,33 +7,35 @@ import kotlinx.serialization.Serializable
 enum class ChallengeStatus {
     SUCCESS,
     CHALLENGE_REQUIRED,
-    ERROR
+    ERROR,
 }
 
 @Serializable
 enum class ChallengeCode {
-    CHALLENGE_REQUIRED
+    CHALLENGE_REQUIRED,
 }
 
 @Serializable
 data class ChallengeError(
     val code: ChallengeCode,
     val message: String,
-    val challengeToken: String
+    val challengeToken: String,
 )
 
 @Serializable
 data class ResolveChallengeRequest(
     val transactionId: String,
     val type: ChallengeType,
-    val answers: Map<String, String>
+    val answers: Map<String, String>,
 )
 
 @Serializable
 data class ResolveChallengeResponse(
     val validatedToken: String? = null,
     val success: Boolean = true,
-    val message: String? = null
+    val message: String? = null,
 )
 
-class ChallengeException(val error: ChallengeError) : Exception(error.message)
+class ChallengeException(
+    val error: ChallengeError,
+) : Exception(error.message)

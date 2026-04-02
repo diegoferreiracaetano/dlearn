@@ -11,7 +11,6 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.movie.MovieItem
 import com.diegoferreiracaetano.dlearn.designsystem.components.movie.WatchProvider
 import com.diegoferreiracaetano.dlearn.navigation.AppPath
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppMovieDetailHeaderComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
@@ -28,32 +27,34 @@ class AppMovieDetailHeaderRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val header = component as? AppMovieDetailHeaderComponent ?: return
         val uriHandler = LocalUriHandler.current
         val snackbarHostState = LocalSnackbarHostState.current
         val scope = rememberCoroutineScope()
 
-        val movieItem = MovieItem(
-            id = "",
-            title = header.title,
-            imageSource = AppImageSource.Url(header.imageUrl),
-            year = header.year ?: "",
-            duration = header.duration ?: "",
-            genre = header.genre ?: "",
-            rating = header.rating ?: 0.0,
-            youtubeVideoId = header.trailerId
-        )
-
-        val providers = header.providers.map {
-            WatchProvider(
-                name = it.name,
-                icon = AppImageSource.Url(it.iconUrl),
-                priceInfo = it.priceInfo,
-                watchUrl = it.appUrl
+        val movieItem =
+            MovieItem(
+                id = "",
+                title = header.title,
+                imageSource = AppImageSource.Url(header.imageUrl),
+                year = header.year ?: "",
+                duration = header.duration ?: "",
+                genre = header.genre ?: "",
+                rating = header.rating ?: 0.0,
+                youtubeVideoId = header.trailerId,
             )
-        }
+
+        val providers =
+            header.providers.map {
+                WatchProvider(
+                    name = it.name,
+                    icon = AppImageSource.Url(it.iconUrl),
+                    priceInfo = it.priceInfo,
+                    watchUrl = it.appUrl,
+                )
+            }
 
         AppMovieDetailHeader(
             movie = movieItem,
@@ -65,10 +66,10 @@ class AppMovieDetailHeaderRenderer : ComponentRenderer {
                         uriHandler = uriHandler,
                         appUrl = providerComponent?.appUrl,
                         webUrl = providerComponent?.webUrl,
-                        tmdbUrl = providerComponent?.tmdbUrl
+                        tmdbUrl = providerComponent?.tmdbUrl,
                     )
                 } catch (e: UriResolutionException) {
-                    getLogger().d(TAG_SCREEN_ERROR,e.message.orEmpty())
+                    getLogger().d(TAG_SCREEN_ERROR, e.message.orEmpty())
                     scope.launch {
                         val message = getString(Res.string.error_provider_link)
                         snackbarHostState.showSnackbar(message)
@@ -77,17 +78,17 @@ class AppMovieDetailHeaderRenderer : ComponentRenderer {
             },
             isFavorite = header.isFavorite,
             isInList = header.isInWatchlist,
-            onFavoriteClick = { 
+            onFavoriteClick = {
                 header.favoriteActionUrl?.let { url ->
                     actions.onAction(AppPath.invoke(url))
                 }
             },
-            onAddToListClick = { 
+            onAddToListClick = {
                 header.watchlistActionUrl?.let { url ->
                     actions.onAction(AppPath.invoke(url))
                 }
             },
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }

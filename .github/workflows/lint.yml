@@ -1,4 +1,4 @@
-name: Verificação de Estilo com Ktlint
+name: Verificação de Estilo com Detekt
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main, master ]
 
 jobs:
-  ktlint-check:
+  detekt-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,4 +21,4 @@ jobs:
           distribution: 'temurin'
 
       - name: Run Detekt
-        run: ./gradlew detekt
+        run: ./gradlew detektAll

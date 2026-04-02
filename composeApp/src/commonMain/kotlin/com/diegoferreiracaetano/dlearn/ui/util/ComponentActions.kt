@@ -11,5 +11,5 @@ data class ComponentActions(
     val onRetry: () -> Unit = {},
     val currentRoute: String = "",
     val onAction: (String) -> Unit = {},
-    val onQueryChange: (String) -> Unit = {}
+    val onQueryChange: (String) -> Unit = {},
 )

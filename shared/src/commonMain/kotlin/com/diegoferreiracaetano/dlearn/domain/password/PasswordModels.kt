@@ -5,11 +5,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ChangePasswordRequest(
-    val newPassword: String
+    val newPassword: String,
 )
 
 @Serializable
 data class ChangePasswordResponse(
     val message: String,
-    val status: ChallengeStatus = ChallengeStatus.SUCCESS
+    val status: ChallengeStatus = ChallengeStatus.SUCCESS,
 )

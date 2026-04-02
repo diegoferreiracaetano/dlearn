@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class AuthProvider(
     val provider: AccountProvider,
     val externalId: String,
-    val metadata: Map<String, String> = emptyMap()
+    val metadata: Map<String, String> = emptyMap(),
 )

@@ -8,13 +8,12 @@ import kotlinx.coroutines.flow.Flow
  * pois o contexto do desafio (ID e Tipo) é mantido internamente.
  */
 interface ChallengeRepository {
-    
     /**
      * Resolve o desafio atual.
      * @param answer A resposta do usuário (ex: o código "123456").
      */
     fun resolveChallenge(answer: String): Flow<ChallengeResult>
-    
+
     /**
      * Solicita o reenvio do desafio atual.
      */

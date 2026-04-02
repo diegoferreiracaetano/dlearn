@@ -17,13 +17,14 @@ fun Route.mainController() {
         get {
             val request = AppRequest(path = "/main")
 
-            orchestrator.execute(
-                request = request,
-                header = call.appHeader,
-                userId = call.userId
-            ).collect { screen ->
-                call.respond(screen)
-            }
+            orchestrator
+                .execute(
+                    request = request,
+                    header = call.appHeader,
+                    userId = call.userId,
+                ).collect { screen ->
+                    call.respond(screen)
+                }
         }
     }
 }

@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @SerialName("ChipGroupComponent")
 data class ChipGroupComponent(
     val items: List<ChipItem>,
-    val cleanUrl: String
+    val cleanUrl: String,
 ) : Component
 
 @Serializable
@@ -18,5 +18,5 @@ data class ChipItem(
     val hasDropDown: Boolean = false,
     val isFilter: Boolean = true,
     val options: List<ChipItem>? = null,
-    val actionUrl: String
+    val actionUrl: String,
 )

@@ -27,22 +27,24 @@ fun SettingsScreen(
         viewModel.loadContent(path)
     }
 
-    val actions = remember {
-        ComponentActions(
-            onBackClick = onBackClick,
-            onRetry = viewModel::retry,
-            onClose = onClose,
-            onSelectChanged = { key, value ->
-                if(key != null && value != null)
-                    viewModel.updatePreference(key, value)
-            }
-        )
-    }
+    val actions =
+        remember {
+            ComponentActions(
+                onBackClick = onBackClick,
+                onRetry = viewModel::retry,
+                onClose = onClose,
+                onSelectChanged = { key, value ->
+                    if (key != null && value != null) {
+                        viewModel.updatePreference(key, value)
+                    }
+                },
+            )
+        }
 
     SettingsScreenContent(
         uiState = uiState,
         actions = actions,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -50,10 +52,10 @@ fun SettingsScreen(
 private fun SettingsScreenContent(
     uiState: UIState<Screen>,
     actions: ComponentActions,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     uiState.Render(
         actions = actions,
-        modifier = modifier
+        modifier = modifier,
     )
 }

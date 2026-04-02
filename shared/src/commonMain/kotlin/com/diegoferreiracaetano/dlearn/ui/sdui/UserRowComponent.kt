@@ -7,5 +7,5 @@ data class UserRowComponent(
     val name: String,
     val role: String,
     val imageUrl: String? = null,
-    val actionUrl: String? = null
+    val actionUrl: String? = null,
 ) : Component

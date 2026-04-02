@@ -24,5 +24,5 @@ enum class AppIconType {
     CALENDAR_MONTH,
     SCHEDULE,
     STAR,
-    UNKNOWN;
+    UNKNOWN,
 }

@@ -15,7 +15,6 @@ object AppConstants {
     const val X_NOTIFICATIONS_ENABLED = "X-Notifications-Enabled"
 }
 
-
 object TokenConstants {
     const val CLAIM_USER_ID = "user_id"
     const val CLAIM_EMAIL = "email"
@@ -34,7 +33,7 @@ object SocialAuthConstants {
     const val CLAIM_PICTURE = "picture"
     const val CLAIM_GIVEN_NAME = "given_name"
     const val CLAIM_FAMILY_NAME = "family_name"
-    
+
     const val DEFAULT_NAME_SUFFIX = " User"
     const val JWT_SEPARATOR = "."
 }

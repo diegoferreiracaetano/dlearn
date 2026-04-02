@@ -7,5 +7,5 @@ data class UserSession(
     val userId: String,
     val accessToken: String,
     val refreshToken: String,
-    val providerSessions: List<ProviderSession> = emptyList()
+    val providerSessions: List<ProviderSession> = emptyList(),
 )

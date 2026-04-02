@@ -47,30 +47,31 @@ fun ResetPasswordScreen(
         topBar = {
             AppTopBar(
                 title = stringResource(Res.string.reset_password_title),
-                onBack = onBackClick
+                onBack = onBackClick,
             )
-        }
+        },
     ) { innerModifier ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .then(innerModifier)
-                .padding(24.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .then(innerModifier)
+                    .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.Top,
         ) {
             Text(
                 text = stringResource(Res.string.reset_password_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Text(
                 text = stringResource(Res.string.reset_password_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -81,7 +82,7 @@ fun ResetPasswordScreen(
                 placeholder = Res.string.title_email,
                 label = Res.string.title_email,
                 type = TextFieldType.EMAIL,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -89,7 +90,7 @@ fun ResetPasswordScreen(
             AppButton(
                 text = stringResource(Res.string.reset_password_action),
                 onClick = onNextClick,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }

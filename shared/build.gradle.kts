@@ -63,7 +63,7 @@ kotlin {
             implementation(libs.androidx.credentials)
             implementation(libs.androidx.credentials.play.services.auth)
             implementation(libs.googleid)
-            implementation(project.dependencies.platform(libs.android.firebase.bom))
+            api(project.dependencies.platform(libs.android.firebase.bom))
             api(libs.firebase.auth)
             api(libs.firebase.common)
         }
@@ -76,6 +76,11 @@ kotlin {
 
         wasmJsMain.dependencies {
             implementation(libs.ktor.client.wasm)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }

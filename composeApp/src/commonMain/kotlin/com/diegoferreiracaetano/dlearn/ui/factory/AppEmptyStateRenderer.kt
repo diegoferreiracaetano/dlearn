@@ -16,7 +16,7 @@ class AppEmptyStateRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val emptyStateComponent = component as? AppEmptyStateComponent ?: return
         val maxHeight = LocalContentMaxHeight.current
@@ -26,7 +26,7 @@ class AppEmptyStateRenderer : ComponentRenderer {
             description = emptyStateComponent.description,
             imageSource = emptyStateComponent.image.toImageSource(),
             onPrimary = actions.onRetry,
-            modifier = modifier.fillMaxSize().height(maxHeight)
+            modifier = modifier.fillMaxSize().height(maxHeight),
         )
     }
 }

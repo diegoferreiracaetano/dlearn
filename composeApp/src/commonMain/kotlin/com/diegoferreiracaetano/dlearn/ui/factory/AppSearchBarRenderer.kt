@@ -18,7 +18,7 @@ class AppSearchBarRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val searchComponent = component as? AppSearchBarComponent ?: return
         val focusRequester = remember { FocusRequester() }
@@ -28,10 +28,13 @@ class AppSearchBarRenderer : ComponentRenderer {
         }
 
         AppSearchBar(
-            onSearch = { query->
-                actions.onAction(AppPath(
-                    searchComponent.actionUrl, mapOf(AppQueryParam.Q to query)
-                ))
+            onSearch = { query ->
+                actions.onAction(
+                    AppPath(
+                        searchComponent.actionUrl,
+                        mapOf(AppQueryParam.Q to query),
+                    ),
+                )
             },
             onBackClick = actions.onBackClick,
             placeholder = searchComponent.placeholder,
@@ -39,9 +42,9 @@ class AppSearchBarRenderer : ComponentRenderer {
             content = {
                 RenderComponents(
                     components = searchComponent.components,
-                    actions = actions
+                    actions = actions,
                 )
-            }
+            },
         )
     }
 }

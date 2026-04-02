@@ -11,35 +11,45 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
 
 class UserDataService : UserRepository {
-
     override suspend fun findByEmail(email: String): User? {
         val normalizedEmail = email.trim().lowercase()
-        
-        val remote = dbQuery {
-            UserTable.selectAll().where { UserTable.email eq normalizedEmail }
-                .map { it.toUserRemote() }
-                .singleOrNull()
-        }
+
+        val remote =
+            dbQuery {
+                UserTable
+                    .selectAll()
+                    .where { UserTable.email eq normalizedEmail }
+                    .map { it.toUserRemote() }
+                    .singleOrNull()
+            }
 
         return remote?.toDomain()
     }
 
     override suspend fun findById(id: String): User? {
-        val remote = dbQuery {
-            UserTable.selectAll().where { UserTable.id eq id }
-                .map { it.toUserRemote() }
-                .singleOrNull()
-        }
+        val remote =
+            dbQuery {
+                UserTable
+                    .selectAll()
+                    .where { UserTable.id eq id }
+                    .map { it.toUserRemote() }
+                    .singleOrNull()
+            }
 
         return remote?.toDomain()
     }
 
-    override suspend fun findAll(): List<User> = dbQuery {
-        UserTable.selectAll()
-            .map { it.toUserRemote().toDomain() }
-    }
+    override suspend fun findAll(): List<User> =
+        dbQuery {
+            UserTable
+                .selectAll()
+                .map { it.toUserRemote().toDomain() }
+        }
 
-    override suspend fun save(user: User, password: String): User {
+    override suspend fun save(
+        user: User,
+        password: String,
+    ): User {
         dbQuery {
             UserTable.insert {
                 it[id] = user.id
@@ -53,7 +63,10 @@ class UserDataService : UserRepository {
         return user
     }
 
-    override suspend fun update(user: User, password: String?): User {
+    override suspend fun update(
+        user: User,
+        password: String?,
+    ): User {
         dbQuery {
             UserTable.update({ UserTable.id eq user.id }) {
                 it[name] = user.name.trim()
@@ -68,13 +81,19 @@ class UserDataService : UserRepository {
         return user
     }
 
-    override suspend fun authenticate(email: String, password: String): User? {
+    override suspend fun authenticate(
+        email: String,
+        password: String,
+    ): User? {
         val normalizedEmail = email.trim().lowercase()
-        val remote = dbQuery {
-            UserTable.selectAll().where { UserTable.email eq normalizedEmail }
-                .map { it.toUserRemote() }
-                .singleOrNull()
-        }
+        val remote =
+            dbQuery {
+                UserTable
+                    .selectAll()
+                    .where { UserTable.email eq normalizedEmail }
+                    .map { it.toUserRemote() }
+                    .singleOrNull()
+            }
 
         return if (remote?.password == password) {
             remote.toDomain()
@@ -83,21 +102,23 @@ class UserDataService : UserRepository {
         }
     }
 
-    private fun ResultRow.toUserRemote(): UserRemote = UserRemote(
-        id = this[UserTable.id],
-        name = this[UserTable.name],
-        email = this[UserTable.email],
-        password = this[UserTable.password],
-        imageUrl = this[UserTable.avatarUrl],
-        isPremium = this[UserTable.isPremium]
-    )
+    private fun ResultRow.toUserRemote(): UserRemote =
+        UserRemote(
+            id = this[UserTable.id],
+            name = this[UserTable.name],
+            email = this[UserTable.email],
+            password = this[UserTable.password],
+            imageUrl = this[UserTable.avatarUrl],
+            isPremium = this[UserTable.isPremium],
+        )
 
-    private fun UserRemote.toDomain(): User = User(
-        id = id,
-        name = name,
-        email = email,
-        imageUrl = imageUrl,
-        isPremium = isPremium,
-        phoneNumber = phoneNumber
-    )
+    private fun UserRemote.toDomain(): User =
+        User(
+            id = id,
+            name = name,
+            email = email,
+            imageUrl = imageUrl,
+            isPremium = isPremium,
+            phoneNumber = phoneNumber,
+        )
 }

@@ -41,7 +41,6 @@ import dlearn.composeapp.generated.resources.signup_screen_title
 import dlearn.composeapp.generated.resources.title_email
 import dlearn.composeapp.generated.resources.title_name
 import dlearn.composeapp.generated.resources.title_password
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -51,7 +50,7 @@ fun SignUpScreen(
     onBackClick: () -> Unit,
     onNavigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = koinViewModel()
+    viewModel: SignUpViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -66,14 +65,14 @@ fun SignUpScreen(
         }
     }
 
-    if(uiState is SignUpUIState.Loading) {
+    if (uiState is SignUpUIState.Loading) {
         AppLoading(modifier)
-    }else {
+    } else {
         SignUpContent(
             onBackClick = onBackClick,
             onSignUpClick = viewModel::signUp,
             snackbarHostState = snackbarHostState,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }
@@ -84,7 +83,7 @@ fun SignUpContent(
     onBackClick: () -> Unit,
     onSignUpClick: (String, String, String) -> Unit,
     snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -96,30 +95,31 @@ fun SignUpContent(
         topBar = {
             AppTopBar(
                 title = stringResource(Res.string.signup_action),
-                onBack = onBackClick
+                onBack = onBackClick,
             )
-        }
+        },
     ) { innerModifier ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .then(innerModifier)
-                .padding(24.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .then(innerModifier)
+                    .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.Top,
         ) {
             Text(
                 text = stringResource(Res.string.signup_screen_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Text(
                 text = stringResource(Res.string.signup_screen_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -129,7 +129,7 @@ fun SignUpContent(
                 onValueChange = { name = it },
                 placeholder = Res.string.title_name,
                 label = Res.string.title_name,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -140,7 +140,7 @@ fun SignUpContent(
                 placeholder = Res.string.title_email,
                 label = Res.string.title_email,
                 type = TextFieldType.EMAIL,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -151,19 +151,19 @@ fun SignUpContent(
                 placeholder = Res.string.title_password,
                 label = Res.string.title_password,
                 type = TextFieldType.PASSWORD,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = stringResource(Res.string.signup_agree_terms),
                     style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
 
@@ -172,7 +172,7 @@ fun SignUpContent(
             AppButton(
                 text = Res.string.signup_action,
                 onClick = { onSignUpClick(name, email, password) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
@@ -185,7 +185,7 @@ fun SignUpScreenPreview() {
         SignUpContent(
             onBackClick = {},
             onSignUpClick = { _, _, _ -> },
-            snackbarHostState = remember { SnackbarHostState() }
+            snackbarHostState = remember { SnackbarHostState() },
         )
     }
 }

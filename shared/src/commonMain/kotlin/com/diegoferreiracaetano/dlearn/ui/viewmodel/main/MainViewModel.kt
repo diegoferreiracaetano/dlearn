@@ -16,9 +16,8 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val mainRepository: MainRepository,
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
     val uiState: StateFlow<UIState<Screen>> = _uiState.asStateFlow()
 
@@ -33,13 +32,15 @@ class MainViewModel(
 
     fun loadMain() {
         viewModelScope.launch {
-            mainRepository.getMain().onStart {
-                _uiState.update { UIState.Loading }
-            }.catch { error ->
-                _uiState.update { UIState.Error(error) }
-            }.collect { screen ->
-                _uiState.update { UIState.Success(screen) }
-            }
+            mainRepository
+                .getMain()
+                .onStart {
+                    _uiState.update { UIState.Loading }
+                }.catch { error ->
+                    _uiState.update { UIState.Error(error) }
+                }.collect { screen ->
+                    _uiState.update { UIState.Success(screen) }
+                }
         }
     }
 

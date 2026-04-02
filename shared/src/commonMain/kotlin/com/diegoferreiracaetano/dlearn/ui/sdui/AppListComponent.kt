@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AppListComponent(
-    val components: List<Component> = emptyList()
+    val components: List<Component> = emptyList(),
 ) : Component

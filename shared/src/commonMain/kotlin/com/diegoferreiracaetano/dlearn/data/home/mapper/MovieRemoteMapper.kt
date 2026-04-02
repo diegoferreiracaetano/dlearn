@@ -5,16 +5,17 @@ import com.diegoferreiracaetano.dlearn.data.home.model.MovieRemote
 import com.diegoferreiracaetano.dlearn.domain.video.Video
 import com.diegoferreiracaetano.dlearn.domain.video.VideoType
 
-internal fun MovieRemote.toVideo() = Video(
-    id = this.id.toString(),
-    title = this.title,
-    subtitle = "",
-    description = this.overview,
-    url = "",
-    imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}${posterPath.orEmpty()}",
-    categories = emptyList(),
-    isFavorite = false,
-    rating = 0f,
-    progress = 0f,
-    type = VideoType.DEFAULT
-)
+internal fun MovieRemote.toVideo() =
+    Video(
+        id = this.id.toString(),
+        title = this.title,
+        subtitle = "",
+        description = this.overview,
+        url = "",
+        imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}${posterPath.orEmpty()}",
+        categories = emptyList(),
+        isFavorite = false,
+        rating = 0f,
+        progress = 0f,
+        type = VideoType.DEFAULT,
+    )

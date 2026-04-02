@@ -10,31 +10,32 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class SettingsOrchestrator(
-    private val builder: SettingsScreenBuilder
+    private val builder: SettingsScreenBuilder,
 ) : Orchestrator {
-
     override fun execute(
         request: AppRequest,
         header: AppHeader,
-        userId: String
-    ): Flow<Screen> = flow {
-        val path = AppPath.parse(request.path).path
-        val screen: Screen = when (path) {
-            AppNavigationRoute.SETTINGS_NOTIFICATIONS -> {
-                builder.buildNotificationScreen(header.notificationsEnabled, header.language)
-            }
+        userId: String,
+    ): Flow<Screen> =
+        flow {
+            val path = AppPath.parse(request.path).path
+            val screen: Screen =
+                when (path) {
+                    AppNavigationRoute.SETTINGS_NOTIFICATIONS -> {
+                        builder.buildNotificationScreen(header.notificationsEnabled, header.language)
+                    }
 
-            AppNavigationRoute.SETTINGS_LANGUAGE -> {
-                builder.buildLanguageScreen(header.language)
-            }
+                    AppNavigationRoute.SETTINGS_LANGUAGE -> {
+                        builder.buildLanguageScreen(header.language)
+                    }
 
-            AppNavigationRoute.SETTINGS_COUNTRY -> {
-                builder.buildCountryScreen(header.country, header.language)
-            }
+                    AppNavigationRoute.SETTINGS_COUNTRY -> {
+                        builder.buildCountryScreen(header.country, header.language)
+                    }
 
-            else -> builder.buildLanguageScreen(header.language)
+                    else -> builder.buildLanguageScreen(header.language)
+                }
+
+            emit(screen)
         }
-
-        emit(screen)
-    }
 }

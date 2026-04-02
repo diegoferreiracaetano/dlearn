@@ -4,7 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class AppTextFieldType {
-    NONE, EMAIL, PASSWORD, PHONE
+    NONE,
+    EMAIL,
+    PASSWORD,
+    PHONE,
 }
 
 @Serializable
@@ -15,5 +18,5 @@ data class AppTextFieldComponent(
     val supportingText: AppStringType? = null,
     val isError: Boolean = false,
     val fieldType: AppTextFieldType = AppTextFieldType.NONE,
-    val key: String
+    val key: String,
 ) : Component

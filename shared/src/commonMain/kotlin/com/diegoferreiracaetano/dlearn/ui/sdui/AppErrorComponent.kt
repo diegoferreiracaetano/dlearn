@@ -8,5 +8,5 @@ import kotlinx.serialization.Transient
 data class AppErrorComponent(
     val error: AppError? = null,
     @Transient
-    val throwable: Throwable? = null
+    val throwable: Throwable? = null,
 ) : Component

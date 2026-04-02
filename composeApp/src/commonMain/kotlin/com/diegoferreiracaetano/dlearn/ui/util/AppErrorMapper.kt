@@ -35,9 +35,8 @@ import dlearn.composeapp.generated.resources.error_validation
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 
-
-fun AppErrorCode.toResource(): StringResource {
-    return when (this) {
+fun AppErrorCode.toResource(): StringResource =
+    when (this) {
         AppErrorCode.UNKNOWN_ERROR -> Res.string.error_unknown
         AppErrorCode.NETWORK_ERROR -> Res.string.error_network
         AppErrorCode.SERVER_ERROR -> Res.string.error_server
@@ -57,7 +56,7 @@ fun AppErrorCode.toResource(): StringResource {
         AppErrorCode.INVALID_FORMAT -> Res.string.error_validation
         AppErrorCode.MOVIE_NOT_FOUND -> Res.string.error_not_found
         AppErrorCode.SERVICE_UNAVAILABLE -> Res.string.error_service_unavailable
-        
+
         // Social Auth Errors
         AppErrorCode.SOCIAL_AUTH_CONFIG_MISSING -> Res.string.error_social_auth_config_missing
         AppErrorCode.UNSUPPORTED_CREDENTIAL_TYPE -> Res.string.error_unsupported_credential_type
@@ -72,39 +71,40 @@ fun AppErrorCode.toResource(): StringResource {
 
         else -> Res.string.error_unknown
     }
-}
 
 @Composable
 fun AppError.toUiData(): AppErrorData {
-
     val networkManager = rememberNetworkManager()
     val isNetworkAvailable = networkManager.isNetworkAvailable()
 
     if (!isNetworkAvailable) return NoInternetError()
 
     return when (code) {
-
         // Auth
         AppErrorCode.UNAUTHORIZED,
         AppErrorCode.FORBIDDEN,
         AppErrorCode.INVALID_CREDENTIALS,
         AppErrorCode.INVALID_TOKEN,
-        AppErrorCode.EXPIRED_TOKEN -> AuthError()
+        AppErrorCode.EXPIRED_TOKEN,
+        -> AuthError()
 
         // Not found
         AppErrorCode.NOT_FOUND,
         AppErrorCode.USER_NOT_FOUND,
-        AppErrorCode.MOVIE_NOT_FOUND -> NotFoundError()
+        AppErrorCode.MOVIE_NOT_FOUND,
+        -> NotFoundError()
 
         // Challenge
         AppErrorCode.CHALLENGE_REQUIRED,
         AppErrorCode.INVALID_CHALLENGE_CODE,
-        AppErrorCode.CHALLENGE_EXPIRED -> ChallengeError()
+        AppErrorCode.CHALLENGE_EXPIRED,
+        -> ChallengeError()
 
         // Server
         AppErrorCode.SERVER_ERROR,
         AppErrorCode.SERVICE_UNAVAILABLE,
-        AppErrorCode.TIMEOUT -> ServerError()
+        AppErrorCode.TIMEOUT,
+        -> ServerError()
 
         // Network
         AppErrorCode.NETWORK_ERROR -> NoInternetError()
@@ -118,12 +118,12 @@ suspend fun Throwable.toAppMessage(): String {
     return error.message ?: getString(error.code.toResource())
 }
 
-fun Throwable.toAppError(): AppError {
-    return when (this) {
+fun Throwable.toAppError(): AppError =
+    when (this) {
         is AppException -> this.error
-        else -> AppError(
-            code = AppErrorCode.UNKNOWN_ERROR,
-            message = this.message
-        )
+        else ->
+            AppError(
+                code = AppErrorCode.UNKNOWN_ERROR,
+                message = this.message,
+            )
     }
-}

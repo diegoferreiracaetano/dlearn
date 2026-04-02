@@ -17,58 +17,61 @@ import org.koin.core.component.inject
  * Implementação Android do SocialAuthManager.
  */
 actual open class SocialAuthManager actual constructor() : KoinComponent {
-
     private val context: Context by inject()
 
-    actual open suspend fun googleSignIn(): SocialAuthResult = withContext(Dispatchers.Main) {
-        val serverClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
+    actual open suspend fun googleSignIn(): SocialAuthResult =
+        withContext(Dispatchers.Main) {
+            val serverClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
 
-        if (serverClientId.isBlank()) {
-            return@withContext SocialAuthResult.Failure(AppErrorCode.SOCIAL_AUTH_CONFIG_MISSING)
-        }
+            if (serverClientId.isBlank()) {
+                return@withContext SocialAuthResult.Failure(AppErrorCode.SOCIAL_AUTH_CONFIG_MISSING)
+            }
 
-        val credentialManager = CredentialManager.create(context)
+            val credentialManager = CredentialManager.create(context)
 
-        val googleIdOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(false)
-            .setServerClientId(serverClientId)
-            .setAutoSelectEnabled(true)
-            .build()
+            val googleIdOption =
+                GetGoogleIdOption
+                    .Builder()
+                    .setFilterByAuthorizedAccounts(false)
+                    .setServerClientId(serverClientId)
+                    .setAutoSelectEnabled(true)
+                    .build()
 
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
+            val request =
+                GetCredentialRequest
+                    .Builder()
+                    .addCredentialOption(googleIdOption)
+                    .build()
 
-        try {
-            val result = credentialManager.getCredential(context, request)
-            val credential = result.credential
+            try {
+                val result = credentialManager.getCredential(context, request)
+                val credential = result.credential
 
-            // Tenta converter para GoogleIdTokenCredential (forma direta ou via parsing de dados)
-            val googleIdTokenCredential = try {
-                if (credential is GoogleIdTokenCredential) {
-                    credential
+                // Tenta converter para GoogleIdTokenCredential (forma direta ou via parsing de dados)
+                val googleIdTokenCredential =
+                    try {
+                        if (credential is GoogleIdTokenCredential) {
+                            credential
+                        } else {
+                            GoogleIdTokenCredential.createFrom(credential.data)
+                        }
+                    } catch (e: Exception) {
+                        null
+                    }
+
+                if (googleIdTokenCredential != null) {
+                    SocialAuthResult.Success(idToken = googleIdTokenCredential.idToken)
                 } else {
-                    GoogleIdTokenCredential.createFrom(credential.data)
+                    SocialAuthResult.Failure(AppErrorCode.UNSUPPORTED_CREDENTIAL_TYPE)
                 }
+            } catch (e: GetCredentialException) {
+                SocialAuthResult.Failure(AppErrorCode.SOCIAL_AUTH_FAILED)
             } catch (e: Exception) {
-                null
+                SocialAuthResult.Failure(AppErrorCode.UNKNOWN_ERROR)
             }
-
-            if (googleIdTokenCredential != null) {
-                SocialAuthResult.Success(idToken = googleIdTokenCredential.idToken)
-            } else {
-                SocialAuthResult.Failure(AppErrorCode.UNSUPPORTED_CREDENTIAL_TYPE)
-            }
-        } catch (e: GetCredentialException) {
-            SocialAuthResult.Failure(AppErrorCode.SOCIAL_AUTH_FAILED)
-        } catch (e: Exception) {
-            SocialAuthResult.Failure(AppErrorCode.UNKNOWN_ERROR)
         }
-    }
 
-    actual open suspend fun appleSignIn(): SocialAuthResult {
-        return SocialAuthResult.Failure(AppErrorCode.UNSUPPORTED_CREDENTIAL_TYPE)
-    }
+    actual open suspend fun appleSignIn(): SocialAuthResult = SocialAuthResult.Failure(AppErrorCode.UNSUPPORTED_CREDENTIAL_TYPE)
 
     actual open suspend fun facebookSignIn(): SocialAuthResult {
         if (BuildConfig.FACEBOOK_APP_ID.isBlank()) {

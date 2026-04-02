@@ -9,5 +9,5 @@ data class User(
     val email: String,
     val imageUrl: String? = null,
     val isPremium: Boolean = false,
-    val phoneNumber: String? = null
+    val phoneNumber: String? = null,
 )

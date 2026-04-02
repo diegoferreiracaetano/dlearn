@@ -15,7 +15,7 @@ class AppTopBarRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val topBar = component as? AppTopBarComponent ?: return
 
@@ -25,7 +25,7 @@ class AppTopBarRenderer : ComponentRenderer {
             subtitle = topBar.subtitle,
             profileImageSource = topBar.imageUrl?.let { AppImageSource.Url(it) },
             onBack = actions.onBackClick,
-            onSearchClick = if (topBar.showSearch) actions.onSearchClick else null
+            onSearchClick = if (topBar.showSearch) actions.onSearchClick else null,
         )
     }
 }

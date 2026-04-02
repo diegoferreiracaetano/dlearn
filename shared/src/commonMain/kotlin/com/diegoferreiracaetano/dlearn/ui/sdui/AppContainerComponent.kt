@@ -8,5 +8,5 @@ data class AppContainerComponent(
     val searchBar: Component? = null,
     val chipGroup: Component? = null,
     val bottomBar: Component? = null,
-    val components: List<Component> = emptyList()
+    val components: List<Component> = emptyList(),
 ) : Component

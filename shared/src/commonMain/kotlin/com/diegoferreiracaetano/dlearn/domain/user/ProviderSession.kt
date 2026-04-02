@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class ProviderSession(
     val provider: AccountProvider,
     val sessionId: String,
-    val accountId: String? = null
+    val accountId: String? = null,
 )

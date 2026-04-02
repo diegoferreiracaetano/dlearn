@@ -10,12 +10,13 @@ import com.russhwolf.settings.Settings
  * Implementação única de AccountProvider usando multiplatform-settings.
  * Elimina a necessidade de implementações específicas por plataforma.
  */
-class SettingsAccountProvider(private val settings: Settings) : AccountProvider {
-    
+class SettingsAccountProvider(
+    private val settings: Settings,
+) : AccountProvider {
     override suspend fun saveAccount(
-        user: User, 
-        accessToken: String, 
-        refreshToken: String
+        user: User,
+        accessToken: String,
+        refreshToken: String,
     ) {
         settings.putString("access_token", accessToken)
         settings.putString("refresh_token", refreshToken)

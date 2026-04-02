@@ -8,13 +8,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class VerifyAccountOrchestrator(
-    private val verifyAccountScreenBuilder: VerifyAccountScreenBuilder
+    private val verifyAccountScreenBuilder: VerifyAccountScreenBuilder,
 ) : Orchestrator {
     override fun execute(
         request: AppRequest,
         header: AppHeader,
-        userId: String
-    ): Flow<Screen> = flow {
-        emit(verifyAccountScreenBuilder.build())
-    }
+        userId: String,
+    ): Flow<Screen> =
+        flow {
+            emit(verifyAccountScreenBuilder.build(header.language))
+        }
 }

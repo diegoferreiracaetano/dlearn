@@ -8,7 +8,7 @@ import com.diegoferreiracaetano.dlearn.di.platformAuthModule
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     initKoin(
-        platformModules = listOf(platformAuthModule)
+        platformModules = listOf(platformAuthModule),
     )
 
     ComposeViewport {

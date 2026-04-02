@@ -2,7 +2,9 @@ package com.diegoferreiracaetano.dlearn.util
 
 import java.util.concurrent.ConcurrentHashMap
 
-class Cache<T>(private val ttlInMillis: Long) {
+class Cache<T>(
+    private val ttlInMillis: Long,
+) {
     private val cache = ConcurrentHashMap<String, CacheEntry<T>>()
 
     fun get(key: String): T? {
@@ -16,11 +18,17 @@ class Cache<T>(private val ttlInMillis: Long) {
         }
     }
 
-    fun put(key: String, value: T) {
+    fun put(
+        key: String,
+        value: T,
+    ) {
         cache[key] = CacheEntry(value, System.currentTimeMillis() + ttlInMillis)
     }
 
-    private data class CacheEntry<T>(val value: T, val expiryTime: Long) {
+    private data class CacheEntry<T>(
+        val value: T,
+        val expiryTime: Long,
+    ) {
         fun isExpired(): Boolean = System.currentTimeMillis() > expiryTime
     }
 }

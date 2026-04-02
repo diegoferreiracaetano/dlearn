@@ -1,10 +1,10 @@
 package com.diegoferreiracaetano.dlearn
 
-import platform.UIKit.UIDevice
-import platform.Foundation.NSLocale
-import platform.Foundation.preferredLanguages
 import platform.Foundation.NSBundle
+import platform.Foundation.NSLocale
 import platform.Foundation.NSUserDefaults
+import platform.Foundation.preferredLanguages
+import platform.UIKit.UIDevice
 
 class IOSPlatform : Platform {
     override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
@@ -12,8 +12,11 @@ class IOSPlatform : Platform {
     override val appVersion: String = NSBundle.mainBundle.infoDictionary?.get("CFBundleShortVersionString") as? String ?: "1.0.0"
     override val deviceModel: String = UIDevice.currentDevice.model
 
-    override fun updateLocale(language: String, country: String) {
-        val localeTag = if (country.isNotEmpty()) "${language}-$country" else language
+    override fun updateLocale(
+        language: String,
+        country: String,
+    ) {
+        val localeTag = if (country.isNotEmpty()) "$language-$country" else language
         NSUserDefaults.standardUserDefaults.setObject(listOf(localeTag), "AppleLanguages")
         NSUserDefaults.standardUserDefaults.synchronize()
         // No iOS, a mudança de locale do sistema não é permitida programaticamente de forma global e imediata para todos os recursos,

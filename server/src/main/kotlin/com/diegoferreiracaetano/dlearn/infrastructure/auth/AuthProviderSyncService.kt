@@ -9,11 +9,11 @@ import com.diegoferreiracaetano.dlearn.infrastructure.services.FeatureToggleServ
 class AuthProviderSyncService(
     private val authServices: List<ExternalAuthService>,
     private val featureToggleService: FeatureToggleService,
-    private val authProviderRepository: AuthProviderRepository
+    private val authProviderRepository: AuthProviderRepository,
 ) {
     suspend fun discoverAndSaveProviders(
         userId: String,
-        metadata: Map<String, String>
+        metadata: Map<String, String>,
     ) {
         if (!featureToggleService.isEnabled(Feature.EXTERNAL_AUTH_SYNC)) {
             return
@@ -25,21 +25,22 @@ class AuthProviderSyncService(
             if (service.canHandle(metadata)) {
                 try {
                     val authData = service.authenticate(metadata)
-                    
+
                     if (authData.isNotEmpty()) {
                         val externalId = authData[MetadataKeys.EXTERNAL_ID].orEmpty()
-                        val providerInfo = AuthProvider(
-                            provider = service.provider,
-                            externalId = externalId,
-                            metadata = authData
-                        )
+                        val providerInfo =
+                            AuthProvider(
+                                provider = service.provider,
+                                externalId = externalId,
+                                metadata = authData,
+                            )
                         providersToSave.add(providerInfo)
                     }
                 } catch (_: Exception) {
                 }
             }
         }
-        
+
         if (providersToSave.isNotEmpty()) {
             try {
                 authProviderRepository.saveAll(userId, providersToSave)

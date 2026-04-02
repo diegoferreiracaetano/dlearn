@@ -52,7 +52,8 @@ dependencies {
     implementation(libs.sqlite.jdbc)
 
     testImplementation(libs.ktor.serverTestHost)
-   // testImplementation(libs.kotlin.testJunit)
+    testImplementation(libs.kotlin.test)
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:${libs.versions.kotlin.get()}")
     testImplementation("io.ktor:ktor-client-mock-jvm:${libs.versions.ktor.get()}")
 }
 

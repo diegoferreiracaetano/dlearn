@@ -23,13 +23,11 @@ data class TmdbMovieDetailRemote(
     val credits: TmdbCreditsRemote? = null,
     val videos: TmdbVideosResponseRemote? = null,
     @SerialName("external_ids") val externalIds: TmdbExternalIdsRemote? = null,
-    @SerialName("watch/providers") val watchProviders: TmdbWatchProvidersResponse? = null
+    @SerialName("watch/providers") val watchProviders: TmdbWatchProvidersResponse? = null,
 )
 
-fun TmdbMovieDetailRemote.toVideo(
-    mediaType: MediaType
-): Video {
-    return Video(
+fun TmdbMovieDetailRemote.toVideo(mediaType: MediaType): Video =
+    Video(
         id = id.toString(),
         title = title ?: name ?: "",
         subtitle = (releaseDate ?: firstAirDate ?: "").take(4),
@@ -38,18 +36,17 @@ fun TmdbMovieDetailRemote.toVideo(
         imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}$posterPath",
         rating = voteAverage?.toFloat(),
         mediaType = mediaType,
-        categories = genres.map { VideoCategory(id = it.id.toString(), title = it.name) }
+        categories = genres.map { VideoCategory(id = it.id.toString(), title = it.name) },
     )
-}
 
 @Serializable
 data class TmdbExternalIdsRemote(
-    @SerialName("imdb_id") val imdbId: String? = null
+    @SerialName("imdb_id") val imdbId: String? = null,
 )
 
 @Serializable
 data class TmdbCreditsRemote(
-    val cast: List<TmdbCastRemote> = emptyList()
+    val cast: List<TmdbCastRemote> = emptyList(),
 )
 
 @Serializable
@@ -57,12 +54,12 @@ data class TmdbCastRemote(
     val id: Int,
     val name: String,
     val character: String,
-    @SerialName("profile_path") val profilePath: String? = null
+    @SerialName("profile_path") val profilePath: String? = null,
 )
 
 @Serializable
 data class TmdbVideosResponseRemote(
-    val results: List<TmdbVideoRemote> = emptyList()
+    val results: List<TmdbVideoRemote> = emptyList(),
 )
 
 @Serializable
@@ -71,5 +68,5 @@ data class TmdbVideoRemote(
     val key: String,
     val name: String,
     val site: String,
-    val type: String
+    val type: String,
 )

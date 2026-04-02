@@ -13,7 +13,7 @@ data class UserRemote(
     val imageUrl: String? = null,
     val isPremium: Boolean = false,
     val phoneNumber: String? = null,
-    val authProviders: List<AuthProvider> = emptyList()
+    val authProviders: List<AuthProvider> = emptyList(),
 )
 
 fun List<UserRemote>.toDomainList() = map(UserRemote::toDomain)
@@ -25,19 +25,21 @@ fun UserRemote.toDomain() =
         email = email,
         imageUrl = imageUrl,
         isPremium = isPremium,
-        phoneNumber = phoneNumber
+        phoneNumber = phoneNumber,
     )
 
 fun List<User>.toRemoteList() = map { it.toRemote() }
 
-fun User.toRemote(password: String? = null, authProviders: List<AuthProvider> = emptyList()) =
-    UserRemote(
-        id = id,
-        name = name,
-        email = email,
-        password = password,
-        imageUrl = imageUrl,
-        isPremium = isPremium,
-        phoneNumber = phoneNumber,
-        authProviders = authProviders
-    )
+fun User.toRemote(
+    password: String? = null,
+    authProviders: List<AuthProvider> = emptyList(),
+) = UserRemote(
+    id = id,
+    name = name,
+    email = email,
+    password = password,
+    imageUrl = imageUrl,
+    isPremium = isPremium,
+    phoneNumber = phoneNumber,
+    authProviders = authProviders,
+)

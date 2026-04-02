@@ -15,15 +15,16 @@ class AppSectionTitleRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val sectionTitle = component as? AppSectionTitleComponent ?: return
-        
+
         AppSectionTitle(
             title = sectionTitle.title,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
         )
     }
 }

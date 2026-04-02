@@ -5,10 +5,12 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-val LocalSnackbarHostState = staticCompositionLocalOf<SnackbarHostState> {
-    error("No SnackbarHostState provided")
-}
+val LocalSnackbarHostState =
+    staticCompositionLocalOf<SnackbarHostState> {
+        error("No SnackbarHostState provided")
+    }
 
-val LocalContentMaxHeight = staticCompositionLocalOf<Dp> {
-    0.dp
-}
+val LocalContentMaxHeight =
+    staticCompositionLocalOf<Dp> {
+        0.dp
+    }

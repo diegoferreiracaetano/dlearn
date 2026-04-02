@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class AppEmptyStateComponent(
     val title: String,
     val description: String,
-    val image: AppImageType? = null
+    val image: AppImageType? = null,
 ) : Component

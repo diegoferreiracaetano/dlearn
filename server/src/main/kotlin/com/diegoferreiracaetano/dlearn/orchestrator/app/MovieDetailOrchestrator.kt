@@ -18,16 +18,17 @@ class MovieDetailOrchestrator(
     private val getMovieDetailUseCase: GetMovieDetailUseCase,
     private val screenBuilder: MovieDetailScreenBuilder,
     private val favoriteRepository: FavoriteRepository,
-    private val watchlistRepository: WatchlistRepository
-) : Orchestrator, KoinComponent {
-
+    private val watchlistRepository: WatchlistRepository,
+) : Orchestrator,
+    KoinComponent {
     override fun execute(
         request: AppRequest,
         header: AppHeader,
-        userId: String
+        userId: String,
     ): Flow<Screen> {
-        val movieId = request.params?.get(AppQueryParam.ID)
-            ?: throw IllegalArgumentException("MovieId missing")
+        val movieId =
+            request.params?.get(AppQueryParam.ID)
+                ?: throw IllegalArgumentException("MovieId missing")
 
         val isFavoriteAction = request.params?.containsKey(FAVORITE) == true
         val isWatchlistAction = request.params?.containsKey(WATCHLIST) == true

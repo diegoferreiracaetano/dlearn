@@ -18,25 +18,27 @@ data class TmdbItemRemote(
     @SerialName("release_date") val releaseDate: String? = null,
     @SerialName("vote_average") val voteAverage: Float? = null,
     @SerialName("genre_ids") val genreIds: List<Int>? = null,
-    @SerialName("media_type") val mediaType: String? = null
+    @SerialName("media_type") val mediaType: String? = null,
 )
 
 fun TmdbItemRemote.toVideo(
     fallbackMediaType: MediaType,
     allGenres: List<TmdbGenre> = emptyList(),
-    isFavorite: Boolean = false
+    isFavorite: Boolean = false,
 ): Video {
-    val categories = genreIds?.mapNotNull { id ->
-        allGenres.find { it.id == id }?.let { 
-            VideoCategory(id = it.id.toString(), title = it.name)
-        }
-    } ?: emptyList()
+    val categories =
+        genreIds?.mapNotNull { id ->
+            allGenres.find { it.id == id }?.let {
+                VideoCategory(id = it.id.toString(), title = it.name)
+            }
+        } ?: emptyList()
 
-    val type = when (mediaType) {
-        "movie" -> MediaType.MOVIES
-        "tv" -> MediaType.SERIES
-        else -> fallbackMediaType
-    }
+    val type =
+        when (mediaType) {
+            "movie" -> MediaType.MOVIES
+            "tv" -> MediaType.SERIES
+            else -> fallbackMediaType
+        }
 
     return Video(
         id = "${type.name}_$id",
@@ -48,6 +50,6 @@ fun TmdbItemRemote.toVideo(
         rating = voteAverage,
         mediaType = type,
         categories = categories,
-        isFavorite = isFavorite
+        isFavorite = isFavorite,
     )
 }

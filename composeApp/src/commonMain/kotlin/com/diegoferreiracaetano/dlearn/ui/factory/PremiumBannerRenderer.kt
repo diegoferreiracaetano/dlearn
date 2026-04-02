@@ -1,6 +1,5 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,15 +15,16 @@ class PremiumBannerRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val banner = component as? PremiumBannerComponent ?: return
         AppBanner(
             title = banner.title,
             description = banner.description,
             icon = banner.icon.toIcon(),
-            modifier = modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+            modifier =
+                modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
         )
     }
 }

@@ -5,15 +5,13 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 
-fun List<Component>.toAppContainerComponent(
-    topBar: AppTopBarComponent
-): Screen {
-    return Screen(
-        components = listOf(
-            AppContainerComponent(
-                topBar = topBar,
-                components = this
-            )
-        )
+fun List<Component>.toAppContainerComponent(topBar: AppTopBarComponent): Screen =
+    Screen(
+        components =
+            listOf(
+                AppContainerComponent(
+                    topBar = topBar,
+                    components = this,
+                ),
+            ),
     )
-}

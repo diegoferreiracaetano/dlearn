@@ -10,19 +10,20 @@ import kotlinx.coroutines.flow.flow
 
 class MainOrchestrator(
     private val mainScreenBuilder: MainScreenBuilder,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : Orchestrator {
     override fun execute(
         request: AppRequest,
         header: AppHeader,
-        userId: String
-    ): Flow<Screen> = flow {
-        val user = userRepository.findById(userId)
-        emit(
-            mainScreenBuilder.build(
-                lang = header.language,
-                user = user
+        userId: String,
+    ): Flow<Screen> =
+        flow {
+            val user = userRepository.findById(userId)
+            emit(
+                mainScreenBuilder.build(
+                    lang = header.language,
+                    user = user,
+                ),
             )
-        )
-    }
+        }
 }

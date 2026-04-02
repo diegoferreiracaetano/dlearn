@@ -16,14 +16,14 @@ import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.toResource
 import com.diegoferreiracaetano.dlearn.ui.util.toTextFieldType
 import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.*
+import dlearn.composeapp.generated.resources.app_name
 
 class AppTextFieldRenderer : ComponentRenderer {
     @Composable
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val textField = component as? AppTextFieldComponent ?: return
         var text by remember { mutableStateOf(textField.value) }
@@ -32,16 +32,17 @@ class AppTextFieldRenderer : ComponentRenderer {
             value = text,
             onValueChange = { newValue ->
                 text = newValue
-                actions.onQueryChange(textField.key + ":" + newValue) 
+                actions.onQueryChange(textField.key + ":" + newValue)
             },
             label = textField.label.toResource(),
             placeholder = textField.placeholder.toResource() ?: Res.string.app_name,
             supportingText = textField.supportingText.toResource(),
             isError = textField.isError,
             type = textField.fieldType.toTextFieldType(),
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
         )
     }
 }

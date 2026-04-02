@@ -6,13 +6,12 @@ import kotlinx.serialization.Serializable
 enum class AppSnackbarType {
     SUCCESS,
     ERROR,
-    WARNING
+    WARNING,
 }
 
 @Serializable
 data class AppSnackbarComponent(
     val message: String,
     val snackbarType: AppSnackbarType = AppSnackbarType.SUCCESS,
-    val durationMillis: Long = 3000L
+    val durationMillis: Long = 3000L,
 ) : Component
-

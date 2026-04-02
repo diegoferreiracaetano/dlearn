@@ -1,6 +1,8 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -16,25 +18,26 @@ class SectionRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val section = component as? SectionComponent ?: return
-        
+
         Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
         ) {
             AppSectionTitle(
-                title = section.title
+                title = section.title,
             )
-            
+
             section.items.forEach { item ->
                 AppTextRow(
                     label = item.label,
                     value = item.value,
                     leadingIcon = item.icon.toIcon(),
-                    onClick = { item.actionUrl?.let { actions.onItemClick(it) } }
+                    onClick = { item.actionUrl?.let { actions.onItemClick(it) } },
                 )
             }
         }

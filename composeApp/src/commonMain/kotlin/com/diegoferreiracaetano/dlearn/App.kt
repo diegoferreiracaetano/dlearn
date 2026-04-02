@@ -4,9 +4,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -24,11 +22,11 @@ fun App() {
     val preferencesRepository: PreferencesRepository = koinInject()
 
     // Observa mudanças globais de configuração para forçar a atualização da UI
-   // val configTick by preferencesRepository.onConfigurationChanged.collectAsState(initial = 0L)
+    // val configTick by preferencesRepository.onConfigurationChanged.collectAsState(initial = 0L)
 
     DLearnTheme {
         CompositionLocalProvider(
-            LocalSnackbarHostState provides snackbarHostState
+            LocalSnackbarHostState provides snackbarHostState,
         ) {
             val sessionManager: SessionManager = koinInject()
             LaunchedEffect(Unit) {
@@ -38,15 +36,15 @@ fun App() {
             var showLandingScreen by remember { mutableStateOf(true) }
 
             // Usamos o configTick como chave para reconstruir o grafo de navegação quando as preferências mudarem
-          //  key(configTick) {
-                if (showLandingScreen) {
-                    SplashScreen(
-                        onTimeout = { showLandingScreen = false },
-                    )
-                } else {
-                    AppNavGraph(sessionManager = sessionManager)
-                }
-        //    }
+            //  key(configTick) {
+            if (showLandingScreen) {
+                SplashScreen(
+                    onTimeout = { showLandingScreen = false },
+                )
+            } else {
+                AppNavGraph(sessionManager = sessionManager)
+            }
+            //    }
         }
     }
 }

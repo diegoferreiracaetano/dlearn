@@ -49,101 +49,104 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
-val sharedModule = module {
-    includes(authModule, viewModelModule)
+val sharedModule =
+    module {
+        includes(authModule, viewModelModule)
 
-    single { GlobalEventDispatcher() }
+        single { GlobalEventDispatcher() }
 
-    single { AppUserAgentProvider(getPlatform(), get()) }
+        single { AppUserAgentProvider(getPlatform(), get()) }
 
-    single {
-        Json {
-            ignoreUnknownKeys = true
-            prettyPrint = true
-            isLenient = true
-            encodeDefaults = true
+        single {
+            Json {
+                ignoreUnknownKeys = true
+                prettyPrint = true
+                isLenient = true
+                encodeDefaults = true
+            }
         }
-    }
 
-    single {
-        val userAgentProvider = get<AppUserAgentProvider>()
-        val preferencesRepository = get<PreferencesRepository>()
+        single {
+            val userAgentProvider = get<AppUserAgentProvider>()
+            val preferencesRepository = get<PreferencesRepository>()
 
-        HttpClient {
-            expectSuccess = true
+            HttpClient {
+                expectSuccess = true
 
-            install(ContentNegotiation) {
-                json(get<Json>())
-            }
-            install(Logging) {
-                level = LogLevel.ALL
-            }
-
-            HttpResponseValidator {
-                handleResponseExceptionWithRequest { cause, _ ->
-                    throw cause.toAppException()
+                install(ContentNegotiation) {
+                    json(get<Json>())
                 }
-            }
-
-            defaultRequest {
-                url {
-                    protocol = URLProtocol.HTTP
-                    host = "192.168.15.3"
-                    port = 8081
+                install(Logging) {
+                    level = LogLevel.ALL
                 }
-            }
 
-            install(ChallengeInterceptor) {
-                engine = get()
-                json = get()
-            }
-        }.apply {
-            val authInterceptor = AuthInterceptor(get(), this)
+                HttpResponseValidator {
+                    handleResponseExceptionWithRequest { cause, _ ->
+                        throw cause.toAppException()
+                    }
+                }
 
-            plugin(HttpSend).intercept { request ->
-                authInterceptor.intercept(request)
+                defaultRequest {
+                    url {
+                        protocol = URLProtocol.HTTP
+                        host = "192.168.15.3"
+                        port = 8081
+                    }
+                }
 
-                // Adicionando headers globais dinâmicos
-                val agent = userAgentProvider.get()
-                request.header(HttpHeaders.UserAgent, agent.toHeader())
-                request.header(HttpHeaders.AcceptLanguage, preferencesRepository.language)
-                request.header(X_COUNTRY, preferencesRepository.country)
-                request.header(X_NOTIFICATIONS_ENABLED, preferencesRepository.notificationsEnabled.toString())
+                install(ChallengeInterceptor) {
+                    engine = get()
+                    json = get()
+                }
+            }.apply {
+                val authInterceptor = AuthInterceptor(get(), this)
 
-                val call = execute(request)
-
-                if (authInterceptor.handleUnauthorized(call.response)) {
+                plugin(HttpSend).intercept { request ->
                     authInterceptor.intercept(request)
-                    execute(request)
-                } else {
-                    call
+
+                    // Adicionando headers globais dinâmicos
+                    val agent = userAgentProvider.get()
+                    request.header(HttpHeaders.UserAgent, agent.toHeader())
+                    request.header(HttpHeaders.AcceptLanguage, preferencesRepository.language)
+                    request.header(X_COUNTRY, preferencesRepository.country)
+                    request.header(X_NOTIFICATIONS_ENABLED, preferencesRepository.notificationsEnabled.toString())
+
+                    val call = execute(request)
+
+                    if (authInterceptor.handleUnauthorized(call.response)) {
+                        authInterceptor.intercept(request)
+                        execute(request)
+                    } else {
+                        call
+                    }
                 }
             }
         }
+
+        single<AccountProvider> { SettingsAccountProvider(get()) }
+
+        single { UserNetworkDataSource() }
+        single<UserRepository> { UserRepositoryRemote(get()) }
+        single { Settings() }
+        single<KeyValueStorage> { SettingsKeyValueStorage(get()) }
+        single<PreferencesRepository> { PreferencesRepositoryImpl(get(), getPlatform()) }
+
+        // Novo Gerenciador de Cache (Interface e Implementação persistente para o App)
+        single<CacheManager> { PersistentCacheManager(get(), get()) }
+
+        single<PasswordRepository> { PasswordRepositoryRemote(get()) }
+        single<HomeRepository> { HomeRepositoryRemote(get()) }
+        single<ProfileRepository> { ProfileRepositoryRemote(get()) }
+        single<MovieDetailRepository> { MovieDetailRepositoryRemote(get()) }
+
+        single<MainRepository> { MainRepositoryRemote(get()) }
+
+        single<AppRepository> { AppRepositoryRemote(get()) }
+
+        single<AuthRepository> {
+            AuthRepositoryRemote(
+                httpClient = get(),
+                sessionManager = get(),
+            )
+        }
     }
-
-    single<AccountProvider> { SettingsAccountProvider(get()) }
-
-    single { UserNetworkDataSource() }
-    single<UserRepository> { UserRepositoryRemote(get()) }
-    single { Settings() }
-    single<KeyValueStorage> { SettingsKeyValueStorage(get()) }
-    single<PreferencesRepository> { PreferencesRepositoryImpl(get(), getPlatform()) }
-
-    // Novo Gerenciador de Cache (Interface e Implementação persistente para o App)
-    single<CacheManager> { PersistentCacheManager(get(), get()) }
-
-    single<PasswordRepository> { PasswordRepositoryRemote(get()) }
-    single<HomeRepository> { HomeRepositoryRemote(get()) }
-    single<ProfileRepository> { ProfileRepositoryRemote(get()) }
-    single<MovieDetailRepository> { MovieDetailRepositoryRemote(get()) }
-
-    single<MainRepository> { MainRepositoryRemote(get()) }
-
-    single<AppRepository> { AppRepositoryRemote(get()) }
-
-    single<AuthRepository> {
-        AuthRepositoryRemote(
-            httpClient = get(), sessionManager = get())
-    }
-}

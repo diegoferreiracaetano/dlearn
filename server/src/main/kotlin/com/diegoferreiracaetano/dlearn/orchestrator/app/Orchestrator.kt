@@ -9,6 +9,6 @@ interface Orchestrator {
     fun execute(
         request: AppRequest,
         header: AppHeader,
-        userId: String
+        userId: String,
     ): Flow<Screen>
 }

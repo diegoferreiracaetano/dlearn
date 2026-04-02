@@ -13,13 +13,13 @@ import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
 class EditProfileScreenBuilder(
     private val mapper: ProfileMapper,
-    private val i18n: I18nProvider
+    private val i18n: I18nProvider,
 ) {
     fun build(
         data: User,
         lang: String,
         status: AppStringType? = null,
-        type: AppSnackbarType = AppSnackbarType.SUCCESS
+        type: AppSnackbarType = AppSnackbarType.SUCCESS,
     ): Screen {
         val components = mutableListOf<Component>()
 
@@ -27,8 +27,8 @@ class EditProfileScreenBuilder(
             components.add(
                 AppSnackbarComponent(
                     message = i18n.getString(it, lang),
-                    snackbarType = type
-                )
+                    snackbarType = type,
+                ),
             )
         }
 
@@ -36,17 +36,19 @@ class EditProfileScreenBuilder(
         components.addAll(mapper.toEditFields(data))
         components.add(mapper.toSaveButton(lang))
 
-        val topBar = AppTopBarComponent(
-            title = i18n.getString(AppStringType.NAV_PROFILE, lang)
-        )
+        val topBar =
+            AppTopBarComponent(
+                title = i18n.getString(AppStringType.NAV_PROFILE, lang),
+            )
 
         return Screen(
-            components = listOf(
-                AppContainerComponent(
-                    topBar = topBar,
-                    components = components
-                )
-            )
+            components =
+                listOf(
+                    AppContainerComponent(
+                        topBar = topBar,
+                        components = components,
+                    ),
+                ),
         )
     }
 }

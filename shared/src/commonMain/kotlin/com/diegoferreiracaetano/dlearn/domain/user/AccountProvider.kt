@@ -4,5 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class AccountProvider {
-    GOOGLE, APPLE, FACEBOOK
+    GOOGLE,
+    APPLE,
+    FACEBOOK,
 }

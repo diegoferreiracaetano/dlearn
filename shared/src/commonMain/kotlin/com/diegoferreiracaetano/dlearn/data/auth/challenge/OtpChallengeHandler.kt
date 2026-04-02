@@ -11,14 +11,15 @@ import kotlinx.coroutines.CompletableDeferred
  * Implementação do Handler de OTP que se comunica com o ChallengeCoordinator.
  */
 class OtpChallengeHandler : ChallengeHandler {
-
     private var currentDeferred: CompletableDeferred<ChallengeResult>? = null
 
-    override fun canHandle(challenge: Challenge): Boolean {
-        return challenge.challengeType == ChallengeType.OTP_SMS || challenge.challengeType == ChallengeType.OTP_EMAIL
-    }
+    override fun canHandle(challenge: Challenge): Boolean =
+        challenge.challengeType == ChallengeType.OTP_SMS || challenge.challengeType == ChallengeType.OTP_EMAIL
 
-    override suspend fun handle(challenge: Challenge, session: ChallengeSession): ChallengeResult {
+    override suspend fun handle(
+        challenge: Challenge,
+        session: ChallengeSession,
+    ): ChallengeResult {
         val deferred = CompletableDeferred<ChallengeResult>()
         currentDeferred = deferred
 

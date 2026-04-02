@@ -17,12 +17,19 @@ object ServerConstants {
         const val DISCOVER_MOVIE = "/discover/movie"
         const val DISCOVER_TV = "/discover/tv"
         const val SEARCH_MULTI = "/search/multi"
+
         fun movieDetail(id: String) = "/movie/$id"
+
         fun tvDetail(id: String) = "/tv/$id"
+
         fun accountStates(id: String) = "/movie/$id/account_states"
+
         fun tvAccountStates(id: String) = "/tv/$id/account_states"
+
         fun favorite(accountId: String) = "/account/$accountId/favorite"
+
         fun favoriteMovies(accountId: String) = "/account/$accountId/favorite/movies"
+
         fun favoriteTv(accountId: String) = "/account/$accountId/favorite/tv"
     }
 

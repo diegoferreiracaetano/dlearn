@@ -41,7 +41,7 @@ import org.koin.compose.koinInject
 fun RenderComponent(
     component: Component,
     actions: ComponentActions,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val factory: RenderComponentFactory = koinInject()
     factory.Render(component, actions, modifier)
@@ -51,7 +51,7 @@ fun RenderComponent(
 fun RenderComponents(
     components: List<Component>,
     actions: ComponentActions,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val factory: RenderComponentFactory = koinInject()
     factory.Render(components, actions, modifier)
@@ -90,12 +90,11 @@ class RenderComponentFactory(
     private val appSwitchRowRenderer: AppSwitchRowRenderer,
     private val appSelectionRowRenderer: AppSelectionRowRenderer,
 ) {
-
     @Composable
     fun Render(
         components: List<Component>,
         actions: ComponentActions,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         components.forEach {
             Render(it, actions, modifier)
@@ -106,7 +105,7 @@ class RenderComponentFactory(
     fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         when (component) {
             is AppLoadingComponent -> appLoadingRenderer.Render(component, actions, modifier)

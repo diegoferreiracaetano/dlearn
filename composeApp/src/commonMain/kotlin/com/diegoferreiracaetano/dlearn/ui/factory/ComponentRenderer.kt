@@ -10,6 +10,6 @@ interface ComponentRenderer {
     fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     )
 }

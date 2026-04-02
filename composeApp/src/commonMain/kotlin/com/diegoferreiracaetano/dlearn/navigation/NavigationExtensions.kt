@@ -4,18 +4,17 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.savedstate.read
-import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
-import com.diegoferreiracaetano.dlearn.navigation.AppPath
-import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 
 inline fun <reified T : Enum<T>> NavBackStackEntry.readEnumOrDefault(
     key: String,
     default: T,
 ): T =
     runCatching {
-        val value = this.arguments?.read { 
-            if (contains(key)) getString(key) else null 
-        }.orEmpty()
+        val value =
+            this.arguments
+                ?.read {
+                    if (contains(key)) getString(key) else null
+                }.orEmpty()
         if (value.isEmpty()) default else enumValueOf<T>(value)
     }.getOrDefault(default)
 
@@ -48,7 +47,10 @@ fun NavController.navigateToRoute(route: String) {
     }
 }
 
-fun NavController.navigateToPath(path: String, params: Map<String, String>? = null) {
+fun NavController.navigateToPath(
+    path: String,
+    params: Map<String, String>? = null,
+) {
     val isNativeRoute = graph.findNode(path) != null
     if (isNativeRoute) {
         navigate(path)
@@ -61,9 +63,11 @@ fun NavController.navigateToPath(path: String, params: Map<String, String>? = nu
 }
 
 val NavBackStackEntry.sduiPath: String
-    get() = arguments?.read { 
-        if (contains(AppNavigationRoute.ARG_PATH)) getString(AppNavigationRoute.ARG_PATH) else null 
-    }.orEmpty()
+    get() =
+        arguments
+            ?.read {
+                if (contains(AppNavigationRoute.ARG_PATH)) getString(AppNavigationRoute.ARG_PATH) else null
+            }.orEmpty()
 
 val NavBackStackEntry.sduiParams: Map<String, String>?
     get() {

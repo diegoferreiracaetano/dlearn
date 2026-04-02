@@ -13,34 +13,35 @@ class ChipGroupRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val chipGroup = component as? ChipGroupComponent ?: return
 
         AppChipGroup(
             modifier = modifier,
-            items = chipGroup.items.map { item ->
-                AppChipItem(
-                    label = item.label,
-                    onClick = {
-                        if (!item.hasDropDown) {
+            items =
+                chipGroup.items.map { item ->
+                    AppChipItem(
+                        label = item.label,
+                        onClick = {
+                            if (!item.hasDropDown) {
+                                actions.onAction(item.actionUrl)
+                            }
+                        },
+                        hasDropDown = item.hasDropDown,
+                        isFilter = item.isFilter,
+                        isSelected = item.isSelected,
+                        dropDownOptions = item.options?.map { it.label } ?: emptyList(),
+                        onOptionSelected = {
                             actions.onAction(item.actionUrl)
-                        }
-                    },
-                    hasDropDown = item.hasDropDown,
-                    isFilter = item.isFilter,
-                    isSelected = item.isSelected,
-                    dropDownOptions = item.options?.map { it.label } ?: emptyList(),
-                    onOptionSelected = {
-                        actions.onAction(item.actionUrl)
-                    }
-                )
-            },
+                        },
+                    )
+                },
             onFilterChanged = { label ->
                 if (label == null) {
                     actions.onAction(chipGroup.cleanUrl)
                 }
-            }
+            },
         )
     }
 }

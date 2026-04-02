@@ -9,17 +9,22 @@ import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 
 class AppMainContentRenderer : ComponentRenderer {
     @Composable
-    override fun Render(component: Component, actions: ComponentActions, modifier: Modifier) {
-
+    override fun Render(
+        component: Component,
+        actions: ComponentActions,
+        modifier: Modifier,
+    ) {
         when (actions.currentRoute) {
             AppNavigationRoute.HOME,
             AppNavigationRoute.PROFILE,
             AppNavigationRoute.WATCHLIST,
             AppNavigationRoute.FAVORITE,
-            AppNavigationRoute.USERS -> AppScreen(
-                actions = actions,
-                modifier = modifier
-            )
+            AppNavigationRoute.USERS,
+            ->
+                AppScreen(
+                    actions = actions,
+                    modifier = modifier,
+                )
         }
     }
 }

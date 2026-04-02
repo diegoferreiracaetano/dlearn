@@ -13,7 +13,7 @@ class FullScreenBannerRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val banner = component as? FullScreenBannerComponent ?: return
         FullScreenVideo(
@@ -23,7 +23,7 @@ class FullScreenBannerRenderer : ComponentRenderer {
             imageSource = AppImageSource.Url(banner.imageUrl),
             onItemClick = { actions.onMovieClick(banner.id) },
             onWatchClick = { actions.onItemClick(banner.id) },
-            onAddToListClick = { /* Handle add to list */ }
+            onAddToListClick = { /* Handle add to list */ },
         )
     }
 }

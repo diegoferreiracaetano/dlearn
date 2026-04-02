@@ -16,9 +16,8 @@ import kotlinx.coroutines.launch
 
 class MovieDetailViewModel(
     private val movieId: String,
-    private val repository: MovieDetailRepository
+    private val repository: MovieDetailRepository,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
     val uiState = _uiState.asStateFlow()
 
@@ -32,13 +31,13 @@ class MovieDetailViewModel(
 
     private fun fetchMovieDetail() {
         viewModelScope.launch {
-            repository.execute(
-                AppRequest(
-                    path = AppNavigationRoute.MOVIES,
-                    params = mapOf(AppQueryParam.ID to movieId)
-                )
-            )
-                .catch { e -> _uiState.value = UIState.Error(e) }
+            repository
+                .execute(
+                    AppRequest(
+                        path = AppNavigationRoute.MOVIES,
+                        params = mapOf(AppQueryParam.ID to movieId),
+                    ),
+                ).catch { e -> _uiState.value = UIState.Error(e) }
                 .collect { screen ->
                     _uiState.value = UIState.Success(screen)
                 }
@@ -47,7 +46,8 @@ class MovieDetailViewModel(
 
     fun execute(fullUrl: String) {
         viewModelScope.launch {
-            repository.execute(AppPath.parse(fullUrl))
+            repository
+                .execute(AppPath.parse(fullUrl))
                 .catch { e -> _uiState.value = UIState.Error(e) }
                 .collect { screen ->
                     _uiState.value = UIState.Success(screen)

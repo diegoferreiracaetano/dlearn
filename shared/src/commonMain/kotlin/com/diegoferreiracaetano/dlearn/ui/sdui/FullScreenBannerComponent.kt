@@ -8,5 +8,5 @@ data class FullScreenBannerComponent(
     val title: String,
     val subtitle: String? = null,
     val imageUrl: String,
-    val actionUrl: String? = null
+    val actionUrl: String? = null,
 ) : Component

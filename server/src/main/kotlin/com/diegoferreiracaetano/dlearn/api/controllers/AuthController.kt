@@ -25,12 +25,13 @@ fun Route.authController() {
         post("/login") {
             val request = call.receive<AuthRequest>()
             val language = call.request.header(AcceptLanguage) ?: "en"
-            
-            val response = loginOrchestrator.login(
-                email = request.email,
-                password = request.password,
-                language = language
-            )
+
+            val response =
+                loginOrchestrator.login(
+                    email = request.email,
+                    password = request.password,
+                    language = language,
+                )
 
             call.respond(response)
         }
@@ -42,12 +43,13 @@ fun Route.authController() {
             val accessToken = params["access_token"]
             val language = call.request.header(AcceptLanguage) ?: "en"
 
-            val response = loginOrchestrator.socialLogin(
-                provider = provider,
-                idToken = idToken,
-                accessToken = accessToken,
-                language = language
-            )
+            val response =
+                loginOrchestrator.socialLogin(
+                    provider = provider,
+                    idToken = idToken,
+                    accessToken = accessToken,
+                    language = language,
+                )
 
             call.respond(response)
         }
@@ -56,13 +58,14 @@ fun Route.authController() {
             post("/register") {
                 val request = call.receive<CreateUserRequest>()
                 val language = call.request.header(AcceptLanguage) ?: "en"
-                
-                val response = createUserOrchestrator.create(
-                    name = request.name,
-                    email = request.email,
-                    password = request.password,
-                    language = language
-                )
+
+                val response =
+                    createUserOrchestrator.create(
+                        name = request.name,
+                        email = request.email,
+                        password = request.password,
+                        language = language,
+                    )
 
                 call.respond(HttpStatusCode.Created, response)
             }

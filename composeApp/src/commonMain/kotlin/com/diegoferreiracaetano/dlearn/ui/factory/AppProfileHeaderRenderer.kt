@@ -13,10 +13,10 @@ class AppProfileHeaderRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val header = component as? AppProfileHeaderComponent ?: return
-        
+
         AppProfileHeader(
             name = header.name,
             email = header.email,
@@ -24,7 +24,7 @@ class AppProfileHeaderRenderer : ComponentRenderer {
             onImagePicked = { bytes ->
                 header.onImagePickedAction?.let { actions.onItemClick(it) }
             },
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }

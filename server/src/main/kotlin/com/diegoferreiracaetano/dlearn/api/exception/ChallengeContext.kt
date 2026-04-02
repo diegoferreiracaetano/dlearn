@@ -27,7 +27,9 @@ const val CHALLENGE_TOKEN_KEY = "ChallengeToken"
 internal val ChallengePreferenceAttrKey = AttributeKey<ChallengeType>(CHALLENGE_PREFERENCE_KEY)
 internal val ChallengeTokenAttrKey = AttributeKey<String>(CHALLENGE_TOKEN_KEY)
 
-class ChallengeException(val error: ChallengeError) : RuntimeException(error.message)
+class ChallengeException(
+    val error: ChallengeError,
+) : RuntimeException(error.message)
 
 class ChallengeConfig {
     var type: ChallengeType = ChallengeType.UNKNOWN
@@ -36,53 +38,64 @@ class ChallengeConfig {
 /**
  * Plugin de Desafio que agora utiliza o ChallengeDataService especializado.
  */
-val ChallengePlugin = createRouteScopedPlugin("ChallengePlugin", ::ChallengeConfig) {
-    val challengeDataService = application.get<ChallengeDataService>()
-    val i18nProvider = application.get<I18nProvider>()
+val ChallengePlugin =
+    createRouteScopedPlugin("ChallengePlugin", ::ChallengeConfig) {
+        val challengeDataService = application.get<ChallengeDataService>()
+        val i18nProvider = application.get<I18nProvider>()
 
-    onCall { call ->
-        val type = pluginConfig.type
-        call.attributes.put(ChallengePreferenceAttrKey, type)
-        
-        val token = call.request.header(SecurityConstants.HEADER_CHALLENGE_TOKEN)
-        val lang = call.request.acceptLanguage() ?: "en"
+        onCall { call ->
+            val type = pluginConfig.type
+            call.attributes.put(ChallengePreferenceAttrKey, type)
 
-        if (token == null || !challengeDataService.isTokenValidated(token)) {
-            val userId = try { call.userId } catch (e: Exception) { "anonymous" }
-            val transactionId = challengeDataService.generateChallenge(userId) 
-            
-            throw ChallengeException(
-                ChallengeError(
-                    code = ChallengeCode.CHALLENGE_REQUIRED,
-                    message = i18nProvider.getString(AppStringType.PASSWORD_OTP_REQUIRED, lang),
-                    challengeToken = transactionId
+            val token = call.request.header(SecurityConstants.HEADER_CHALLENGE_TOKEN)
+            val lang = call.request.acceptLanguage() ?: "en"
+
+            if (token == null || !challengeDataService.isTokenValidated(token)) {
+                val userId =
+                    try {
+                        call.userId
+                    } catch (e: Exception) {
+                        "anonymous"
+                    }
+                val transactionId = challengeDataService.generateChallenge(userId)
+
+                throw ChallengeException(
+                    ChallengeError(
+                        code = ChallengeCode.CHALLENGE_REQUIRED,
+                        message = i18nProvider.getString(AppStringType.PASSWORD_OTP_REQUIRED, lang),
+                        challengeToken = transactionId,
+                    ),
                 )
-            )
-        }
+            }
 
-        call.attributes.put(ChallengeTokenAttrKey, token)
+            call.attributes.put(ChallengeTokenAttrKey, token)
+        }
     }
-}
 
 fun Route.challengePreference(
-    type: ChallengeType, 
-    build: Route.(token: ApplicationCall.() -> String?) -> Unit
+    type: ChallengeType,
+    build: Route.(token: ApplicationCall.() -> String?) -> Unit,
 ): Route {
-    val routeWithPlugin = createChild(object : RouteSelector() {
-        override suspend fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
-            RouteSelectorEvaluation.Constant
-    })
-    
+    val routeWithPlugin =
+        createChild(
+            object : RouteSelector() {
+                override suspend fun evaluate(
+                    context: RoutingResolveContext,
+                    segmentIndex: Int,
+                ): RouteSelectorEvaluation = RouteSelectorEvaluation.Constant
+            },
+        )
+
     routeWithPlugin.install(ChallengePlugin) {
         this.type = type
     }
-    
+
     routeWithPlugin.build { challengeTokenProvider }
     return routeWithPlugin
 }
 
-private val ApplicationCall.challengeTokenProvider: String? 
+private val ApplicationCall.challengeTokenProvider: String?
     get() = attributes.getOrNull(ChallengeTokenAttrKey)
 
-val ApplicationCall.challengeToken: String? 
+val ApplicationCall.challengeToken: String?
     get() = challengeTokenProvider

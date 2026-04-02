@@ -12,15 +12,16 @@ import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.SettingsViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpViewModel
 import org.koin.dsl.module
 
-val viewModelModule = module {
-    factory { MainViewModel(get(), get()) }
-    factory { AppViewModel(get()) }
-    factory { SettingsViewModel(get(), get()) }
-    factory { (movieId: String) -> MovieDetailViewModel(movieId, get()) }
-    factory { CreateNewPasswordViewModel(get()) }
-    factory { VerifyAccountViewModel(get()) }
-    factory { LoginViewModel(get(), get(), get()) }
-    factory { SignUpViewModel(get(), get()) }
-    factory { LogoutViewModel(get()) }
-    factory { CleanCacheViewModel(get(), get()) }
-}
+val viewModelModule =
+    module {
+        factory { MainViewModel(get(), get()) }
+        factory { AppViewModel(get()) }
+        factory { SettingsViewModel(get(), get()) }
+        factory { (movieId: String) -> MovieDetailViewModel(movieId, get()) }
+        factory { CreateNewPasswordViewModel(get()) }
+        factory { VerifyAccountViewModel(get()) }
+        factory { LoginViewModel(get(), get(), get()) }
+        factory { SignUpViewModel(get(), get()) }
+        factory { LogoutViewModel(get()) }
+        factory { CleanCacheViewModel(get(), get()) }
+    }

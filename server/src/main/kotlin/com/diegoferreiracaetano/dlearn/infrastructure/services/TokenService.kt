@@ -13,46 +13,47 @@ import java.util.Date
 class TokenService(
     private val secret: String = SECRET,
     private val issuer: String = ISSUER,
-    private val audience: String = AUDIENCE
+    private val audience: String = AUDIENCE,
 ) {
     private val algorithm = Algorithm.HMAC256(secret)
 
-    fun generateAccessToken(user: User): String {
-        return JWT.create()
+    fun generateAccessToken(user: User): String =
+        JWT
+            .create()
             .withAudience(audience)
             .withIssuer(issuer)
             .withClaim(CLAIM_USER_ID, user.id)
             .withClaim(CLAIM_EMAIL, user.email)
             .withExpiresAt(Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
             .sign(algorithm)
-    }
 
-    fun generateRefreshToken(user: User): String {
-        return JWT.create()
+    fun generateRefreshToken(user: User): String =
+        JWT
+            .create()
             .withAudience(audience)
             .withIssuer(issuer)
             .withClaim(CLAIM_USER_ID, user.id)
             .withClaim(CLAIM_EMAIL, user.email)
             .withExpiresAt(Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
             .sign(algorithm)
-    }
 
-    fun verifyToken(token: String): Map<String, String?>? {
-        return try {
-            val verifier = JWT.require(algorithm)
-                .withAudience(audience)
-                .withIssuer(issuer)
-                .build()
+    fun verifyToken(token: String): Map<String, String?>? =
+        try {
+            val verifier =
+                JWT
+                    .require(algorithm)
+                    .withAudience(audience)
+                    .withIssuer(issuer)
+                    .build()
             val decoded = verifier.verify(token)
 
             mapOf(
                 CLAIM_USER_ID to decoded.getClaim(CLAIM_USER_ID).asString(),
-                CLAIM_EMAIL to decoded.getClaim(CLAIM_EMAIL).asString()
+                CLAIM_EMAIL to decoded.getClaim(CLAIM_EMAIL).asString(),
             )
         } catch (e: Exception) {
             null
         }
-    }
 
     companion object {
         private const val ACCESS_TOKEN_EXPIRATION = 15 * 60 * 1000 // 15 minutes

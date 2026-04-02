@@ -7,5 +7,5 @@ data class AppSelectionRowComponent(
     val title: String,
     val preferenceKey: String,
     val value: String,
-    val isSelected: Boolean = false
+    val isSelected: Boolean = false,
 ) : Component

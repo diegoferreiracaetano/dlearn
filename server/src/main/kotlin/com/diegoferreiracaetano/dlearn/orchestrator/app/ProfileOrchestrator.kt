@@ -18,17 +18,16 @@ import kotlinx.coroutines.flow.flow
 class ProfileOrchestrator(
     private val userRepository: UserRepository,
     private val screenBuilder: ProfileScreenBuilder,
-    private val editScreenBuilder: EditProfileScreenBuilder
+    private val editScreenBuilder: EditProfileScreenBuilder,
 ) : Orchestrator {
-
     override fun execute(
         request: AppRequest,
         header: AppHeader,
-        userId: String
+        userId: String,
     ): Flow<Screen> {
         val path = AppPath.parse(request.path).path
         val language = header.language
-        
+
         return when (path) {
             AppNavigationRoute.PROFILE -> getProfileData(userId, header.userAgent.appVersion, language, header.country)
             AppNavigationRoute.PROFILE_EDIT -> getEditProfileData(userId, language)
@@ -37,44 +36,57 @@ class ProfileOrchestrator(
         }
     }
 
-    private fun getProfileData(userId: String, appVersion: String, lang: String, country: String?): Flow<Screen> {
-        val cacheKey = "profile_${userId}_${appVersion}_${lang}_${country}"
+    private fun getProfileData(
+        userId: String,
+        appVersion: String,
+        lang: String,
+        country: String?,
+    ): Flow<Screen> {
+        val cacheKey = "profile_${userId}_${appVersion}_${lang}_$country"
         return flow {
             val user = userRepository.findById(userId) ?: throw Exception("User not found")
             val screen = screenBuilder.build(user, lang, country)
             emit(screen)
         }.toCache(
             key = cacheKey,
-            strategy = CacheStrategy.CACHE_FIRST
+            strategy = CacheStrategy.CACHE_FIRST,
         )
     }
 
-    private fun getEditProfileData(userId: String, lang: String): Flow<Screen> = flow {
-        val user = userRepository.findById(userId) ?: throw Exception("User not found")
-        emit(editScreenBuilder.build(user, lang))
-    }
-
-    private fun updateProfile(userId: String, lang: String): Flow<Screen> = flow {
-        try {
+    private fun getEditProfileData(
+        userId: String,
+        lang: String,
+    ): Flow<Screen> =
+        flow {
             val user = userRepository.findById(userId) ?: throw Exception("User not found")
-            emit(
-                editScreenBuilder.build(
-                    data = user,
-                    lang = lang,
-                    status = AppStringType.UPDATE_PROFILE_SUCCESS,
-                    type = AppSnackbarType.SUCCESS
-                )
-            )
-        } catch (e: Exception) {
-            val user = userRepository.findById(userId) ?: throw Exception("User not found")
-            emit(
-                editScreenBuilder.build(
-                    data = user,
-                    lang = lang,
-                    status = AppStringType.UPDATE_PROFILE_ERROR,
-                    type = AppSnackbarType.ERROR
-                )
-            )
+            emit(editScreenBuilder.build(user, lang))
         }
-    }
+
+    private fun updateProfile(
+        userId: String,
+        lang: String,
+    ): Flow<Screen> =
+        flow {
+            try {
+                val user = userRepository.findById(userId) ?: throw Exception("User not found")
+                emit(
+                    editScreenBuilder.build(
+                        data = user,
+                        lang = lang,
+                        status = AppStringType.UPDATE_PROFILE_SUCCESS,
+                        type = AppSnackbarType.SUCCESS,
+                    ),
+                )
+            } catch (e: Exception) {
+                val user = userRepository.findById(userId) ?: throw Exception("User not found")
+                emit(
+                    editScreenBuilder.build(
+                        data = user,
+                        lang = lang,
+                        status = AppStringType.UPDATE_PROFILE_ERROR,
+                        type = AppSnackbarType.ERROR,
+                    ),
+                )
+            }
+        }
 }

@@ -5,13 +5,18 @@ import com.diegoferreiracaetano.dlearn.domain.video.Video
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.navigation.AppPath
 import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.MovieItemComponent
+import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import java.util.Locale
 
-class VideoMapper {
-    fun toMovieItem(video: Video): MovieItemComponent {
-        return MovieItemComponent(
+class VideoMapper(private val i18n: I18nProvider) {
+    fun toMovieItem(
+        video: Video,
+        lang: String,
+    ): MovieItemComponent =
+        MovieItemComponent(
             id = video.id,
             title = video.title,
             subtitle = video.subtitle,
@@ -21,12 +26,17 @@ class VideoMapper {
             duration = null,
             contentRating = "L",
             genre = video.categories.firstOrNull()?.title,
-            movieType = if (video.mediaType == MediaType.MOVIES) "Filme" else "Série",
-            actionUrl = AppPath(AppNavigationRoute.MOVIES, mapOf(AppQueryParam.ID to video.id))
+            movieType =
+                if (video.mediaType == MediaType.MOVIES) {
+                    i18n.getString(AppStringType.FILTER_MOVIES, lang)
+                } else {
+                    i18n.getString(AppStringType.FILTER_SERIES, lang)
+                },
+            actionUrl = AppPath(AppNavigationRoute.MOVIES, mapOf(AppQueryParam.ID to video.id)),
         )
-    }
 
-    fun toMovieItemComponents(videos: List<Video>): List<Component> {
-        return videos.map { toMovieItem(it) as Component }
-    }
+    fun toMovieItemComponents(
+        videos: List<Video>,
+        lang: String,
+    ): List<Component> = videos.map { toMovieItem(it, lang) as Component }
 }

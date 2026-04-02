@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.navigation
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavHostController
-import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.designsystem.components.alert.SnackbarType
 import com.diegoferreiracaetano.dlearn.designsystem.components.alert.showAppSnackBar
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
@@ -16,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 class GlobalEventHandler(
     private val navController: NavHostController,
     private val snackbarHostState: SnackbarHostState,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
 ) {
     fun handle(event: GlobalEvent) {
         when (event) {
@@ -28,9 +27,10 @@ class GlobalEventHandler(
 
     private fun handleChallenge(event: GlobalEvent.Challenge) {
         // Verificamos se há algum desafio pendente na sessão que requer ação do usuário
-        val hasOtpChallenge = event.session.challenge.let {
-            it.challengeType == ChallengeType.OTP_SMS || it.challengeType == ChallengeType.OTP_EMAIL
-        }
+        val hasOtpChallenge =
+            event.session.challenge.let {
+                it.challengeType == ChallengeType.OTP_SMS || it.challengeType == ChallengeType.OTP_EMAIL
+            }
 
         if (hasOtpChallenge) {
             // Abre o desafio como um DIALOG por cima da tela atual
@@ -46,14 +46,15 @@ class GlobalEventHandler(
         snackbarHostState.showAppSnackBar(
             scope = scope,
             message = event.text,
-            type = event.type.toSnackbarType()
+            type = event.type.toSnackbarType(),
         )
     }
 
-    private fun GlobalEvent.MessageType.toSnackbarType(): SnackbarType = when (this) {
-        GlobalEvent.MessageType.SUCCESS -> SnackbarType.SUCCESS
-        GlobalEvent.MessageType.ERROR -> SnackbarType.ERROR
-        GlobalEvent.MessageType.WARNING -> SnackbarType.WARNING
-        GlobalEvent.MessageType.INFO -> SnackbarType.SUCCESS // Fallback para SUCCESS já que o Design System não tem INFO
-    }
+    private fun GlobalEvent.MessageType.toSnackbarType(): SnackbarType =
+        when (this) {
+            GlobalEvent.MessageType.SUCCESS -> SnackbarType.SUCCESS
+            GlobalEvent.MessageType.ERROR -> SnackbarType.ERROR
+            GlobalEvent.MessageType.WARNING -> SnackbarType.WARNING
+            GlobalEvent.MessageType.INFO -> SnackbarType.SUCCESS // Fallback para SUCCESS já que o Design System não tem INFO
+        }
 }

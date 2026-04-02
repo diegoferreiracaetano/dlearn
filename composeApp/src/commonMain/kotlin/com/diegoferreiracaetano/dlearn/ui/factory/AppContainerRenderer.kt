@@ -22,13 +22,13 @@ class AppContainerRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val container = component as? AppContainerComponent ?: return
         val snackbarHostState = remember { SnackbarHostState() }
 
         CompositionLocalProvider(
-            LocalSnackbarHostState provides snackbarHostState
+            LocalSnackbarHostState provides snackbarHostState,
         ) {
             AppContainer(
                 modifier = modifier.fillMaxSize(),
@@ -52,20 +52,19 @@ class AppContainerRenderer : ComponentRenderer {
                     container.bottomBar?.let { bottomBar ->
                         RenderComponent(component = bottomBar, actions = actions, modifier = modifier)
                     }
-                }
+                },
             ) { baseModifier ->
 
                 BoxWithConstraints(
                     modifier = baseModifier.fillMaxSize(),
                 ) {
-
                     CompositionLocalProvider(
-                        LocalContentMaxHeight provides maxHeight
+                        LocalContentMaxHeight provides maxHeight,
                     ) {
                         RenderComponent(
                             component = AppListComponent(components = container.components),
                             actions = actions,
-                            modifier = modifier
+                            modifier = modifier,
                         )
                     }
                 }

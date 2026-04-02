@@ -8,5 +8,8 @@ interface ChallengeHandler {
     fun canHandle(challenge: Challenge): Boolean
 
     /** Processa o desafio e retorna o resultado. */
-    suspend fun handle(challenge: Challenge, session: ChallengeSession): ChallengeResult
+    suspend fun handle(
+        challenge: Challenge,
+        session: ChallengeSession,
+    ): ChallengeResult
 }

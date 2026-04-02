@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TmdbGenresResponse(
-    val genres: List<TmdbGenre>
+    val genres: List<TmdbGenre>,
 )

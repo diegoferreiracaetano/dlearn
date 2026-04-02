@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AppSectionTitleComponent(
-    val title: String
+    val title: String,
 ) : Component

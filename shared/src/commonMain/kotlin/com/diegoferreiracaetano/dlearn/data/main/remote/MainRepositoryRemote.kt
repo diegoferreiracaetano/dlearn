@@ -10,10 +10,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class MainRepositoryRemote(
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
 ) : MainRepository {
-    override fun getMain(): Flow<Screen> = flow {
-        val response = httpClient.get("v1/main").body<Screen>()
-        emit(response)
-    }.toCache(key = "main_screen_cache")
+    override fun getMain(): Flow<Screen> =
+        flow {
+            val response = httpClient.get("v1/main").body<Screen>()
+            emit(response)
+        }.toCache(key = "main_screen_cache")
 }

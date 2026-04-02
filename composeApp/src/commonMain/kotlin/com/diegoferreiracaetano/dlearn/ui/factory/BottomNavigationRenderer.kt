@@ -17,30 +17,32 @@ class BottomNavigationRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val bottomNav = component as? BottomNavigationComponent ?: return
 
-        val mappedItems = bottomNav.items.map { item ->
-            val icon = item.icon.toIcon() ?: Icons.Default.QuestionMark
-            AppNavigationTab(
-                route = item.actionUrl,
-                label = item.label,
-                selectedIcon = icon,
-                unselectedIcon = icon
-            )
-        }
+        val mappedItems =
+            bottomNav.items.map { item ->
+                val icon = item.icon.toIcon() ?: Icons.Default.QuestionMark
+                AppNavigationTab(
+                    route = item.actionUrl,
+                    label = item.label,
+                    selectedIcon = icon,
+                    unselectedIcon = icon,
+                )
+            }
 
-        val nav = AppBottomNavigation(
-            selectedRoute = actions.currentRoute,
-            items = mappedItems,
-            onTabSelected = actions.onTabSelected
-        )
+        val nav =
+            AppBottomNavigation(
+                selectedRoute = actions.currentRoute,
+                items = mappedItems,
+                onTabSelected = actions.onTabSelected,
+            )
 
         AppBottomNavigationBar(
             items = nav.items,
             selectedRoute = nav.selectedRoute,
-            onTabSelected = nav.onTabSelected
+            onTabSelected = nav.onTabSelected,
         )
     }
 }

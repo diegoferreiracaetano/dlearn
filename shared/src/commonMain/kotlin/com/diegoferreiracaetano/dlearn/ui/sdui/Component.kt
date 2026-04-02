@@ -2,7 +2,6 @@
 
 package com.diegoferreiracaetano.dlearn.ui.sdui
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonClassDiscriminator
 

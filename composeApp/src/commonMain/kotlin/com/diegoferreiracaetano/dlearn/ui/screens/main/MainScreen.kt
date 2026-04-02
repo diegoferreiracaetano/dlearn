@@ -5,8 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
@@ -31,75 +31,80 @@ fun MainScreen(
     onSearchClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = koinInject(),
-    currentRoute: String = AppNavigationRoute.HOME
+    currentRoute: String = AppNavigationRoute.HOME,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val actions = remember(currentRoute, onTabSelected, onClose) {
-        ComponentActions(
-            currentRoute = currentRoute,
-            onItemClick = onItemClick,
-            onSearchClick = onSearchClick,
-            onMovieClick = onMovieClick,
-            onTabSelected = onTabSelected,
-            onClose = onClose,
-            onRetry = viewModel::retry
-        )
-    }
+    val actions =
+        remember(currentRoute, onTabSelected, onClose) {
+            ComponentActions(
+                currentRoute = currentRoute,
+                onItemClick = onItemClick,
+                onSearchClick = onSearchClick,
+                onMovieClick = onMovieClick,
+                onTabSelected = onTabSelected,
+                onClose = onClose,
+                onRetry = viewModel::retry,
+            )
+        }
     MainContent(
         uiState = uiState,
         actions = actions,
-        modifier = modifier
+        modifier = modifier,
     )
-
 }
 
 @Composable
 fun MainContent(
     uiState: UIState<Screen>,
     actions: ComponentActions,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     uiState.Render(
         actions = actions,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
 @Preview
 @Composable
 fun MainScreenPreview() {
-    val bottomNavItems = listOf(
-        BottomNavItem(AppNavigationRoute.HOME, AppNavigationRoute.HOME, AppIconType.HOME),
-        BottomNavItem(AppNavigationRoute.WATCHLIST, AppNavigationRoute.WATCHLIST, AppIconType.WATCHLIST),
-        BottomNavItem(AppNavigationRoute.FAVORITE, AppNavigationRoute.FAVORITE, AppIconType.FAVORITE),
-        BottomNavItem(AppNavigationRoute.PROFILE, AppNavigationRoute.PROFILE, AppIconType.PERSON)
-    )
+    val bottomNavItems =
+        listOf(
+            BottomNavItem(AppNavigationRoute.HOME, AppNavigationRoute.HOME, AppIconType.HOME),
+            BottomNavItem(AppNavigationRoute.WATCHLIST, AppNavigationRoute.WATCHLIST, AppIconType.WATCHLIST),
+            BottomNavItem(AppNavigationRoute.FAVORITE, AppNavigationRoute.FAVORITE, AppIconType.FAVORITE),
+            BottomNavItem(AppNavigationRoute.PROFILE, AppNavigationRoute.PROFILE, AppIconType.PERSON),
+        )
 
     val selectedRoute = AppNavigationRoute.HOME
 
-    val components = listOf(
-        AppContainerComponent(
-            topBar = AppTopBarListComponent(
-                listOf(
-                    AppTopBarItem(
-                        AppTopBarComponent(title = "DLearn", showSearch = true),
-                        selectedRoute)
-                ),
-                selectedActionUrl =selectedRoute
+    val components =
+        listOf(
+            AppContainerComponent(
+                topBar =
+                    AppTopBarListComponent(
+                        listOf(
+                            AppTopBarItem(
+                                AppTopBarComponent(title = "DLearn", showSearch = true),
+                                selectedRoute,
+                            ),
+                        ),
+                        selectedActionUrl = selectedRoute,
+                    ),
+                bottomBar =
+                    BottomNavigationComponent(
+                        items = bottomNavItems,
+                        selectedActionUrl = selectedRoute,
+                    ),
+                components = listOf(),
             ),
-            bottomBar = BottomNavigationComponent(
-                items = bottomNavItems,
-                selectedActionUrl = selectedRoute
-            ),
-            components = listOf()
         )
-    )
 
     DLearnTheme {
         MainContent(
             uiState = UIState.Success(Screen(components = components)),
-            actions = ComponentActions()
+            actions = ComponentActions(),
         )
     }
 }

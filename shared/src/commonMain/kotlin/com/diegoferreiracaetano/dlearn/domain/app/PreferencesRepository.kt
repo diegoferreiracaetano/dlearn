@@ -6,9 +6,13 @@ interface PreferencesRepository {
     var language: String
     var country: String
     var notificationsEnabled: Boolean
-    
-    fun updatePreference(key: String, value: String)
+
+    fun updatePreference(
+        key: String,
+        value: String,
+    )
 
     val onConfigurationChanged: Flow<Any>
+
     fun clear()
 }

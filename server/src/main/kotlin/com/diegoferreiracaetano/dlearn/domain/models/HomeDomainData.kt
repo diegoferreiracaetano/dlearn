@@ -6,5 +6,5 @@ data class HomeDomainData(
     val banner: Video?,
     val top10: List<Video>,
     val popular: List<Video>,
-    val categories: Map<String, List<Video>>
+    val categories: Map<String, List<Video>>,
 )

@@ -13,16 +13,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class AppRepositoryRemote(
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
 ) : AppRepository {
-
-    override fun execute(request: AppRequest): Flow<Screen> {
-        return flow {
-            val response = httpClient.post("/v1/app") {
-                contentType(ContentType.Application.Json)
-                setBody(request)
-            }.body<Screen>()
+    override fun execute(request: AppRequest): Flow<Screen> =
+        flow {
+            val response =
+                httpClient
+                    .post("/v1/app") {
+                        contentType(ContentType.Application.Json)
+                        setBody(request)
+                    }.body<Screen>()
             emit(response)
         }
-    }
 }

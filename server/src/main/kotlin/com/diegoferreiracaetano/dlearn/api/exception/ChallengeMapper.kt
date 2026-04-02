@@ -9,22 +9,25 @@ import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
  * Centraliza a lógica de tradução para o contrato do Challenge Engine.
  */
 class ChallengeMapper {
-    fun toChallengeSession(cause: Throwable, preferredType: ChallengeType? = null): ChallengeSession? {
-        return when (cause) {
+    fun toChallengeSession(
+        cause: Throwable,
+        preferredType: ChallengeType? = null,
+    ): ChallengeSession? =
+        when (cause) {
             is ChallengeException -> {
                 // Se houver uma preferência enviada pelo filtro da rota, usamos ela.
                 // Caso contrário, usamos o padrão (OTP_EMAIL).
                 val type = preferredType ?: ChallengeType.OTP_EMAIL
-                
+
                 ChallengeSession(
                     transactionId = cause.error.challengeToken,
-                    challenge = Challenge(
-                        challengeType = type,
-                        data = mapOf("message" to cause.error.message)
-                    )
+                    challenge =
+                        Challenge(
+                            challengeType = type,
+                            data = mapOf("message" to cause.error.message),
+                        ),
                 )
             }
             else -> null
         }
-    }
 }

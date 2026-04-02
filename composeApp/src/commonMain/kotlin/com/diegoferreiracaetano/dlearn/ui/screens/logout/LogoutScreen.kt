@@ -14,18 +14,16 @@ import dlearn.composeapp.generated.resources.question
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-
 @Composable
 fun LogoutScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    vireModel: LogoutViewModel = koinInject()
+    vireModel: LogoutViewModel = koinInject(),
 ) {
-
     LogoutContent(
         onBackClick = onBackClick,
         onConfirmClick = vireModel::logout,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -44,6 +42,6 @@ fun LogoutContent(
         title = stringResource(Res.string.logout_title),
         description = stringResource(Res.string.logout_description),
         imageSource = AppImageSource.Resource(Res.drawable.question),
-        modifier = modifier
+        modifier = modifier,
     )
 }

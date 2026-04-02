@@ -12,7 +12,7 @@ class AppSelectionRowRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val selectionRow = component as? AppSelectionRowComponent ?: return
 
@@ -22,7 +22,7 @@ class AppSelectionRowRenderer : ComponentRenderer {
             onClick = {
                 actions.onSelectChanged(selectionRow.preferenceKey, selectionRow.value)
             },
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }

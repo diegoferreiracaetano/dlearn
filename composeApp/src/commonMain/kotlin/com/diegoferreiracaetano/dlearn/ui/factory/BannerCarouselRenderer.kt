@@ -14,7 +14,7 @@ class BannerCarouselRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val carousel = component as? BannerCarouselComponent ?: return
         val items = carousel.items.map { it.toMovieItem() }
@@ -28,9 +28,9 @@ class BannerCarouselRenderer : ComponentRenderer {
                     title = item.title,
                     subtitle = item.genre,
                     imageSource = item.imageSource,
-                    onClick = { actions.onMovieClick(item.id) }
+                    onClick = { actions.onMovieClick(item.id) },
                 )
-            }
+            },
         )
     }
 }

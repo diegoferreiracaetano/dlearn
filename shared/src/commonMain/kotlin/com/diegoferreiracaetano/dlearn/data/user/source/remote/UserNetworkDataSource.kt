@@ -14,7 +14,7 @@ class UserNetworkDataSource {
                 email = "diego@gmail.com",
                 password = "teste",
                 imageUrl = "https://avatars.githubusercontent.com/u/1023?v=4",
-                isPremium = true
+                isPremium = true,
             ),
             UserRemote(
                 id = "2",

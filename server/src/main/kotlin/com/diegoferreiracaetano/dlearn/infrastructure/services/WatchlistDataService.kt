@@ -11,14 +11,14 @@ import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.selectAll
 
 class WatchlistDataService : WatchlistRepository {
-
     private fun parseMovieId(movieId: String): Pair<Int, MediaType> {
         val parts = movieId.split("_")
-        val mediaType = if (parts.size == 2) {
-            runCatching { MediaType.valueOf(parts[0]) }.getOrElse { MediaType.MOVIES }
-        } else {
-            MediaType.MOVIES
-        }
+        val mediaType =
+            if (parts.size == 2) {
+                runCatching { MediaType.valueOf(parts[0]) }.getOrElse { MediaType.MOVIES }
+            } else {
+                MediaType.MOVIES
+            }
         val tmdbId = parts.last().toIntOrNull() ?: 0
         return tmdbId to mediaType
     }
@@ -26,7 +26,7 @@ class WatchlistDataService : WatchlistRepository {
     override suspend fun toggleWatchlist(
         userId: String,
         mediaId: String,
-        isInWatchlist: Boolean
+        isInWatchlist: Boolean,
     ) {
         val (id, type) = parseMovieId(mediaId)
         dbQuery {
@@ -38,30 +38,37 @@ class WatchlistDataService : WatchlistRepository {
                 }
             } else {
                 WatchlistTable.deleteWhere {
-                    (WatchlistTable.userId eq userId) and 
-                    (WatchlistTable.mediaId eq id) and 
-                    (WatchlistTable.mediaType eq type.name)
+                    (WatchlistTable.userId eq userId) and
+                        (WatchlistTable.mediaId eq id) and
+                        (WatchlistTable.mediaType eq type.name)
                 }
             }
         }
     }
 
-    override suspend fun isInWatchlist(userId: String, mediaId: String): Boolean {
+    override suspend fun isInWatchlist(
+        userId: String,
+        mediaId: String,
+    ): Boolean {
         val (id, type) = parseMovieId(mediaId)
         return dbQuery {
-            WatchlistTable.selectAll().where {
-                (WatchlistTable.userId eq userId) and 
-                (WatchlistTable.mediaId eq id) and 
-                (WatchlistTable.mediaType eq type.name)
-            }.count() > 0
+            WatchlistTable
+                .selectAll()
+                .where {
+                    (WatchlistTable.userId eq userId) and
+                        (WatchlistTable.mediaId eq id) and
+                        (WatchlistTable.mediaType eq type.name)
+                }.count() > 0
         }
     }
 
-    override suspend fun getWatchlist(userId: String): List<String> = dbQuery {
-        WatchlistTable.selectAll()
-            .where { WatchlistTable.userId eq userId }
-            .map { 
-                "${it[WatchlistTable.mediaType]}_${it[WatchlistTable.mediaId]}"
-            }
-    }
+    override suspend fun getWatchlist(userId: String): List<String> =
+        dbQuery {
+            WatchlistTable
+                .selectAll()
+                .where { WatchlistTable.userId eq userId }
+                .map {
+                    "${it[WatchlistTable.mediaType]}_${it[WatchlistTable.mediaId]}"
+                }
+        }
 }

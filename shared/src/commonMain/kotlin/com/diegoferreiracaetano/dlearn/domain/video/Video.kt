@@ -17,17 +17,17 @@ data class Video(
     val progress: Float = 0f,
     val type: VideoType = VideoType.DEFAULT,
     val mediaType: MediaType = MediaType.MOVIES,
-    val category: HomeCategory? = null
+    val category: HomeCategory? = null,
 )
 
 @Serializable
 enum class VideoType {
     BANNER,
-    DEFAULT
+    DEFAULT,
 }
 
 @Serializable
 enum class MediaType {
     MOVIES,
-    SERIES
+    SERIES,
 }

@@ -16,7 +16,7 @@ class AppFeedbackRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val feedbackComponent = component as? AppFeedbackComponent ?: return
         val maxHeight = LocalContentMaxHeight.current
@@ -29,7 +29,7 @@ class AppFeedbackRenderer : ComponentRenderer {
             onPrimary = actions.onRetry,
             secondaryText = feedbackComponent.secondaryText,
             onSecondary = actions.onClose,
-            modifier = modifier.fillMaxSize().height(maxHeight)
+            modifier = modifier.fillMaxSize().height(maxHeight),
         )
     }
 }

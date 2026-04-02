@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class TmdbAccountStatesRemote(
     val id: Int,
     val favorite: Boolean,
-    val watchlist: Boolean
+    val watchlist: Boolean,
 )

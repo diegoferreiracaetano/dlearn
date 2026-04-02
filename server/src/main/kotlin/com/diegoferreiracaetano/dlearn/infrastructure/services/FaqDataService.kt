@@ -14,8 +14,9 @@ data class FaqItem(
 class FaqDataService {
     private val faqData: Map<String, Map<String, FaqItem>> by lazy {
         try {
-            val inputStream: InputStream = this.javaClass.classLoader.getResourceAsStream("faq_content.json")
-                ?: throw IllegalStateException("faq_content.json not found")
+            val inputStream: InputStream =
+                this.javaClass.classLoader.getResourceAsStream("faq_content.json")
+                    ?: throw IllegalStateException("faq_content.json not found")
             val jsonString = inputStream.bufferedReader().use { it.readText() }
             jsonString.fromJson<Map<String, Map<String, FaqItem>>>()
         } catch (e: Exception) {
@@ -24,15 +25,19 @@ class FaqDataService {
         }
     }
 
-    fun fetchFaqContent(reference: String, lang: String,): FaqItem? {
+    fun fetchFaqContent(
+        reference: String,
+        lang: String,
+    ): FaqItem? {
         val langCode = normalizeLanguage(lang)
-        
+
         return faqData[langCode]?.get(reference)
             ?: faqData["en"]?.get(reference) // Fallback apenas para inglês se não achar a chave no idioma solicitado
     }
 
-    private fun normalizeLanguage(language: String): String {
-        return language.split(",")
+    private fun normalizeLanguage(language: String): String =
+        language
+            .split(",")
             .firstOrNull()
             ?.split(";")
             ?.firstOrNull()
@@ -40,5 +45,4 @@ class FaqDataService {
             ?.firstOrNull()
             ?.trim()
             ?.lowercase() ?: "en"
-    }
 }

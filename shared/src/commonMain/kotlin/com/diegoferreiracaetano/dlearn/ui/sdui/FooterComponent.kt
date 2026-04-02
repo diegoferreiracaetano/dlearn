@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class FooterComponent(
     val label: String,
     val actionUrl: String? = null,
-    val closeUrl: String? = null
+    val closeUrl: String? = null,
 ) : Component

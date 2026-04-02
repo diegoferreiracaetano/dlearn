@@ -33,32 +33,36 @@ class AppOrchestrator(
     private val mainOrchestrator: MainOrchestrator,
     private val verifyAccountOrchestrator: VerifyAccountOrchestrator,
     private val settingsOrchestrator: SettingsOrchestrator,
-    private val userListOrchestrator: UserListOrchestrator
+    private val userListOrchestrator: UserListOrchestrator,
 ) : Orchestrator {
     override fun execute(
         request: AppRequest,
         header: AppHeader,
-        userId: String
+        userId: String,
     ): Flow<Screen> {
         val path = request.path
 
         return when (path) {
             HOME -> homeOrchestrator.execute(request, header, userId)
             FAVORITE,
-            MOVIE_FAVORITE -> favoriteOrchestrator.execute(request, header, userId)
-            WATCHLIST, 
-            MOVIE_WATCHLIST -> watchlistOrchestrator.execute(request, header, userId)
+            MOVIE_FAVORITE,
+            -> favoriteOrchestrator.execute(request, header, userId)
+            WATCHLIST,
+            MOVIE_WATCHLIST,
+            -> watchlistOrchestrator.execute(request, header, userId)
             PROFILE,
-            PROFILE_EDIT, 
-            PROFILE_UPDATE -> profileOrchestrator.execute(request, header, userId)
+            PROFILE_EDIT,
+            PROFILE_UPDATE,
+            -> profileOrchestrator.execute(request, header, userId)
             FAQ -> faqOrchestrator.execute(request, header, userId)
             MOVIES -> movieDetailOrchestrator.execute(request, header, userId)
             SEARCH -> searchOrchestrator.execute(request, header, userId)
             WELCOME -> mainOrchestrator.execute(request, header, userId)
             VERIFY_ACCOUNT -> verifyAccountOrchestrator.execute(request, header, userId)
-            SETTINGS_NOTIFICATIONS, 
-            SETTINGS_LANGUAGE, 
-            SETTINGS_COUNTRY -> settingsOrchestrator.execute(request, header, userId)
+            SETTINGS_NOTIFICATIONS,
+            SETTINGS_LANGUAGE,
+            SETTINGS_COUNTRY,
+            -> settingsOrchestrator.execute(request, header, userId)
             USERS -> userListOrchestrator.execute(request, header, userId)
             else -> throw IllegalArgumentException("Invalid path: $path")
         }

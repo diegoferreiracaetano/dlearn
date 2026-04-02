@@ -11,7 +11,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -25,10 +32,15 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppCon
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
-import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel
-import dlearn.composeapp.generated.resources.*
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState
+import dlearn.composeapp.generated.resources.Res
+import dlearn.composeapp.generated.resources.create_password_action
+import dlearn.composeapp.generated.resources.create_password_confirm
+import dlearn.composeapp.generated.resources.create_password_subtitle
+import dlearn.composeapp.generated.resources.create_password_title
+import dlearn.composeapp.generated.resources.title_password
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -38,12 +50,12 @@ fun CreateNewPasswordScreen(
     onBackClick: () -> Unit,
     onSuccess: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CreateNewPasswordViewModel = koinInject()
+    viewModel: CreateNewPasswordViewModel = koinInject(),
 ) {
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    
+
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -53,7 +65,7 @@ fun CreateNewPasswordScreen(
                 snackbarHostState.showAppSnackBar(
                     scope = scope,
                     message = state.message,
-                    type = SnackbarType.SUCCESS
+                    type = SnackbarType.SUCCESS,
                 )
                 onSuccess()
             }
@@ -61,7 +73,7 @@ fun CreateNewPasswordScreen(
                 snackbarHostState.showAppSnackBar(
                     scope = scope,
                     message = state.message,
-                    type = SnackbarType.ERROR
+                    type = SnackbarType.ERROR,
                 )
             }
             else -> {}
@@ -76,34 +88,35 @@ fun CreateNewPasswordScreen(
             topBar = {
                 AppTopBar(
                     title = stringResource(Res.string.create_password_title),
-                    onBack = onBackClick
+                    onBack = onBackClick,
                 )
-            }
+            },
         ) { innerModifier ->
             if (uiState is com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Loading) {
                 AppLoading(modifier = Modifier.fillMaxSize())
             }
 
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .then(innerModifier)
-                    .padding(24.dp),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .then(innerModifier)
+                        .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
+                verticalArrangement = Arrangement.Top,
             ) {
                 Text(
                     text = stringResource(Res.string.create_password_title),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 Text(
                     text = stringResource(Res.string.create_password_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -114,7 +127,7 @@ fun CreateNewPasswordScreen(
                     placeholder = Res.string.title_password,
                     label = Res.string.title_password,
                     type = TextFieldType.PASSWORD,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -125,7 +138,7 @@ fun CreateNewPasswordScreen(
                     placeholder = Res.string.create_password_confirm,
                     label = Res.string.create_password_confirm,
                     type = TextFieldType.PASSWORD,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -136,7 +149,7 @@ fun CreateNewPasswordScreen(
                     onClick = {
                         viewModel.changePassword(password)
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }

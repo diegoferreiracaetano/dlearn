@@ -20,13 +20,14 @@ fun Route.appController() {
             val request = call.receive<AppRequest>()
             val header = call.appHeader
 
-            orchestrator.execute(
-                request = request,
-                header = header,
-                userId = call.userId
-            ).collect { screen ->
-                call.respond(screen)
-            }
+            orchestrator
+                .execute(
+                    request = request,
+                    header = header,
+                    userId = call.userId,
+                ).collect { screen ->
+                    call.respond(screen)
+                }
         }
     }
 }

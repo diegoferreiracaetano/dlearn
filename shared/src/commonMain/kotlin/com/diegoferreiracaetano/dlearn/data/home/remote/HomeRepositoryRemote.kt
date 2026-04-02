@@ -10,13 +10,16 @@ import io.ktor.client.request.parameter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class HomeRepositoryRemote(private val httpClient: HttpClient) : HomeRepository {
-    override fun getHome(
-        type: HomeFilterType
-    ): Flow<Screen> = flow {
-        val response = httpClient.get("v1/home") {
-            parameter("type", type.name)
-        }.body<Screen>()
-        emit(response)
-    }
+class HomeRepositoryRemote(
+    private val httpClient: HttpClient,
+) : HomeRepository {
+    override fun getHome(type: HomeFilterType): Flow<Screen> =
+        flow {
+            val response =
+                httpClient
+                    .get("v1/home") {
+                        parameter("type", type.name)
+                    }.body<Screen>()
+            emit(response)
+        }
 }

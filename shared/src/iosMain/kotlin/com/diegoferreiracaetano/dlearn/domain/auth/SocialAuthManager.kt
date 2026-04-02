@@ -5,22 +5,15 @@ package com.diegoferreiracaetano.dlearn.domain.auth
  * Utiliza um delegate que é definido pelo Swift.
  */
 actual open class SocialAuthManager actual constructor() {
-    
     companion object {
         var delegate: SocialAuthManagerDelegate? = null
     }
 
-    actual open suspend fun googleSignIn(): SocialAuthResult {
-        return delegate?.googleSignIn() ?: SocialAuthResult.Cancelled
-    }
+    actual open suspend fun googleSignIn(): SocialAuthResult = delegate?.googleSignIn() ?: SocialAuthResult.Cancelled
 
-    actual open suspend fun appleSignIn(): SocialAuthResult {
-        return delegate?.appleSignIn() ?: SocialAuthResult.Cancelled
-    }
+    actual open suspend fun appleSignIn(): SocialAuthResult = delegate?.appleSignIn() ?: SocialAuthResult.Cancelled
 
-    actual open suspend fun facebookSignIn(): SocialAuthResult {
-        return delegate?.facebookSignIn() ?: SocialAuthResult.Cancelled
-    }
+    actual open suspend fun facebookSignIn(): SocialAuthResult = delegate?.facebookSignIn() ?: SocialAuthResult.Cancelled
 
     actual open suspend fun signOut() {
         delegate?.signOut()
@@ -32,7 +25,10 @@ actual open class SocialAuthManager actual constructor() {
  */
 interface SocialAuthManagerDelegate {
     suspend fun googleSignIn(): SocialAuthResult
+
     suspend fun appleSignIn(): SocialAuthResult
+
     suspend fun facebookSignIn(): SocialAuthResult
+
     suspend fun signOut()
 }

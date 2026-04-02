@@ -10,12 +10,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Suppress("UNCHECKED_CAST")
 class SettingsKeyValueStorage(
-    private val settings: Settings
+    private val settings: Settings,
 ) : KeyValueStorage {
     private val flowSettings: FlowSettings = (settings as ObservableSettings).toFlowSettings()
 
-    override fun <T : Any> get(key: String, defaultValue: T): T {
-        return when (defaultValue) {
+    override fun <T : Any> get(
+        key: String,
+        defaultValue: T,
+    ): T =
+        when (defaultValue) {
             is String -> settings.getString(key, defaultValue) as T
             is Boolean -> settings.getBoolean(key, defaultValue) as T
             is Int -> settings.getInt(key, defaultValue) as T
@@ -24,10 +27,12 @@ class SettingsKeyValueStorage(
             is Double -> settings.getDouble(key, defaultValue) as T
             else -> throw IllegalArgumentException("Unsupported type")
         }
-    }
 
-    override fun <T : Any> getFlow(key: String, defaultValue: T): Flow<T> {
-        return when (defaultValue) {
+    override fun <T : Any> getFlow(
+        key: String,
+        defaultValue: T,
+    ): Flow<T> =
+        when (defaultValue) {
             is String -> flowSettings.getStringFlow(key, defaultValue) as Flow<T>
             is Boolean -> flowSettings.getBooleanFlow(key, defaultValue) as Flow<T>
             is Int -> flowSettings.getIntFlow(key, defaultValue) as Flow<T>
@@ -36,9 +41,11 @@ class SettingsKeyValueStorage(
             is Double -> flowSettings.getDoubleFlow(key, defaultValue) as Flow<T>
             else -> throw IllegalArgumentException("Unsupported type")
         }
-    }
 
-    override fun <T : Any> put(key: String, value: T) {
+    override fun <T : Any> put(
+        key: String,
+        value: T,
+    ) {
         when (value) {
             is String -> settings.putString(key, value)
             is Boolean -> settings.putBoolean(key, value)

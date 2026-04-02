@@ -9,7 +9,7 @@ data class WatchProviderComponent(
     val priceInfo: String,
     val appUrl: String? = null,
     val webUrl: String? = null,
-    val tmdbUrl: String? = null
+    val tmdbUrl: String? = null,
 )
 
 @Serializable
@@ -27,5 +27,5 @@ data class AppMovieDetailHeaderComponent(
     val watchlistActionUrl: String? = null,
     val isFavorite: Boolean = false,
     val isInWatchlist: Boolean = false,
-    val providers: List<WatchProviderComponent> = emptyList()
+    val providers: List<WatchProviderComponent> = emptyList(),
 ) : Component

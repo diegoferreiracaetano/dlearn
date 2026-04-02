@@ -20,7 +20,25 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.MovieItemComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import dlearn.composeapp.generated.resources.Res
-import dlearn.composeapp.generated.resources.*
+import dlearn.composeapp.generated.resources.cancel
+import dlearn.composeapp.generated.resources.clear_cache_cancel
+import dlearn.composeapp.generated.resources.clear_cache_confirm
+import dlearn.composeapp.generated.resources.clear_cache_description
+import dlearn.composeapp.generated.resources.clear_cache_title
+import dlearn.composeapp.generated.resources.confirm
+import dlearn.composeapp.generated.resources.edit_profile_title
+import dlearn.composeapp.generated.resources.field_email
+import dlearn.composeapp.generated.resources.field_full_name
+import dlearn.composeapp.generated.resources.field_password
+import dlearn.composeapp.generated.resources.field_phone_number
+import dlearn.composeapp.generated.resources.home_title
+import dlearn.composeapp.generated.resources.nav_favorites
+import dlearn.composeapp.generated.resources.nav_home
+import dlearn.composeapp.generated.resources.nav_profile
+import dlearn.composeapp.generated.resources.nav_search
+import dlearn.composeapp.generated.resources.nav_watchlist
+import dlearn.composeapp.generated.resources.profile_title
+import dlearn.composeapp.generated.resources.save_changes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -41,44 +59,46 @@ import org.jetbrains.compose.resources.stringResource
 data class UiState<out T>(
     val success: T? = null,
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
 )
 
 @Composable
 fun Screen.Render(
     actions: ComponentActions,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     RenderComponents(
         components = this.components,
         actions = actions,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
 @Composable
 fun UIState<Screen>.Render(
     actions: ComponentActions,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     when (this) {
-        is UIState.Loading -> RenderComponent(
-            component = AppLoadingComponent,
-            actions = actions,
-            modifier = modifier
-        )
+        is UIState.Loading ->
+            RenderComponent(
+                component = AppLoadingComponent,
+                actions = actions,
+                modifier = modifier,
+            )
 
-        is UIState.Error -> RenderComponent(
-            component = AppErrorComponent(throwable.toAppError()),
-            actions = actions,
-            modifier = modifier
-        )
+        is UIState.Error ->
+            RenderComponent(
+                component = AppErrorComponent(throwable.toAppError()),
+                actions = actions,
+                modifier = modifier,
+            )
 
         is UIState.Success -> {
             RenderComponents(
                 components = data.components,
                 actions = actions,
-                modifier = modifier
+                modifier = modifier,
             )
         }
     }
@@ -86,7 +106,7 @@ fun UIState<Screen>.Render(
 
 fun <T> Flow<T>.collectIn(
     scope: CoroutineScope,
-    uiState: MutableStateFlow<UIState<T>>
+    uiState: MutableStateFlow<UIState<T>>,
 ) {
     scope.launch {
         this@collectIn
@@ -100,45 +120,39 @@ fun <T> Flow<T>.collectIn(
 fun <T, R> Flow<T?>.asUiState(
     scope: CoroutineScope,
     initialState: UiState<R> = UiState(isLoading = false),
-    transform: (T) -> Flow<R>
-): StateFlow<UiState<R>> {
-    return this
+    transform: (T) -> Flow<R>,
+): StateFlow<UiState<R>> =
+    this
         .filterNotNull()
         .flatMapMerge { trigger ->
             transform(trigger)
                 .map { result ->
                     UiState(success = result)
-                }
-                .onStart { emit(UiState(isLoading = true)) }
+                }.onStart { emit(UiState(isLoading = true)) }
                 .catch { e ->
                     emit(UiState(error = e.message ?: "Ocorreu um erro desconhecido"))
                 }
-        }
-        .stateIn(
+        }.stateIn(
             scope = scope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = initialState
+            initialValue = initialState,
         )
-}
 
 fun <T, R> ViewModel.produceUiState(
     trigger: Flow<T?>,
     initialState: UiState<R> = UiState(),
-    transform: (T) -> Flow<R>
-): StateFlow<UiState<R>> {
-    return trigger.asUiState(
+    transform: (T) -> Flow<R>,
+): StateFlow<UiState<R>> =
+    trigger.asUiState(
         scope = this.viewModelScope,
         initialState = initialState,
-        transform = transform
+        transform = transform,
     )
-}
 
-fun Color.contrastTextColor(): Color {
-    return if (this.luminance() > 0.5f) Color.Black else Color.White
-}
+fun Color.contrastTextColor(): Color = if (this.luminance() > 0.5f) Color.Black else Color.White
 
-fun MovieItemComponent.toMovieItem(): MovieItem {
-    return MovieItem(
+fun MovieItemComponent.toMovieItem(): MovieItem =
+    MovieItem(
         id = this.id,
         title = this.title,
         imageSource = AppImageSource.Url(this.imageUrl),
@@ -149,12 +163,11 @@ fun MovieItemComponent.toMovieItem(): MovieItem {
         genre = this.genre ?: this.subtitle.orEmpty(),
         type = this.movieType.orEmpty(),
         isPremium = this.isPremium,
-        rank = this.rank
+        rank = this.rank,
     )
-}
 
-fun AppStringType?.toResource(): StringResource? {
-    return when (this) {
+fun AppStringType?.toResource(): StringResource? =
+    when (this) {
         AppStringType.PROFILE_TITLE -> Res.string.profile_title
         AppStringType.HOME_TITLE -> Res.string.home_title
         AppStringType.NAV_HOME -> Res.string.nav_home
@@ -176,17 +189,13 @@ fun AppStringType?.toResource(): StringResource? {
         AppStringType.CANCEL -> Res.string.cancel
         else -> null
     }
-}
 
 @Composable
-fun AppStringType?.toStringResource(): String {
-    return this.toResource()?.let { stringResource(it) } ?: ""
-}
+fun AppStringType?.toStringResource(): String = this.toResource()?.let { stringResource(it) } ?: ""
 
-fun AppTextFieldType.toTextFieldType(): TextFieldType {
-    return when (this) {
+fun AppTextFieldType.toTextFieldType(): TextFieldType =
+    when (this) {
         AppTextFieldType.EMAIL -> TextFieldType.EMAIL
         AppTextFieldType.PASSWORD -> TextFieldType.PASSWORD
         else -> TextFieldType.NONE
     }
-}

@@ -11,21 +11,22 @@ import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeRepository
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import org.koin.dsl.module
 
-val authModule = module {
-    single { SessionManager(get()) }
-    single { SocialAuthManager() }
-    
-    // Use Cases
-    factory { SocialSignInUseCase(get(), get()) }
-    
-    // Challenge Engine & Coordinator
-    single { ChallengeCoordinator(get()) }
-    single { ChallengeEngine(get(), getAll()) }
-    
-    // Handlers de Desafio
-    single { OtpChallengeHandler() }
-    single<ChallengeHandler> { get<OtpChallengeHandler>() }
+val authModule =
+    module {
+        single { SessionManager(get()) }
+        single { SocialAuthManager() }
 
-    // Repository
-    single<ChallengeRepository> { ChallengeRepositoryRemote(get(), get(), get()) }
-}
+        // Use Cases
+        factory { SocialSignInUseCase(get(), get()) }
+
+        // Challenge Engine & Coordinator
+        single { ChallengeCoordinator(get()) }
+        single { ChallengeEngine(get(), getAll()) }
+
+        // Handlers de Desafio
+        single { OtpChallengeHandler() }
+        single<ChallengeHandler> { get<OtpChallengeHandler>() }
+
+        // Repository
+        single<ChallengeRepository> { ChallengeRepositoryRemote(get(), get(), get()) }
+    }

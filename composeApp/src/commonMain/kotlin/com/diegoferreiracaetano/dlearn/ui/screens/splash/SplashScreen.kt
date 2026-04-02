@@ -61,7 +61,7 @@ fun SplashScreen(
                 contentDescription = null,
                 modifier =
                     Modifier
-                        .heightIn(max = 90.dp)
+                        .heightIn(max = 90.dp),
             )
 
             Text(

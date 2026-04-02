@@ -22,7 +22,7 @@ class SessionManager(
     suspend fun login(
         user: User,
         accessToken: String,
-        refreshToken: String
+        refreshToken: String,
     ) {
         accountProvider.saveAccount(user, accessToken, refreshToken)
         _isLoggedIn.value = true
@@ -33,9 +33,11 @@ class SessionManager(
         _isLoggedIn.value = false
     }
 
-    suspend fun user(): User = accountProvider.getUser()
-        ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND, "User not logged in"))
+    suspend fun user(): User =
+        accountProvider.getUser()
+            ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND, "User not logged in"))
 
     suspend fun token(): String? = accountProvider.getAccessToken()
+
     suspend fun refreshToken(): String? = accountProvider.getRefreshToken()
 }

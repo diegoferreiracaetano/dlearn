@@ -15,16 +15,16 @@ class UserRowRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val userRow = component as? UserRowComponent ?: return
-        
+
         AppUserRow(
             name = userRow.name,
             role = userRow.role,
             imageSource = userRow.imageUrl?.let { AppImageSource.Url(it) },
             onClick = userRow.actionUrl?.let { url -> { actions.onItemClick(url) } },
-            modifier = modifier.padding(horizontal = 4.dp, vertical = 8.dp)
+            modifier = modifier.padding(horizontal = 4.dp, vertical = 8.dp),
         )
     }
 }

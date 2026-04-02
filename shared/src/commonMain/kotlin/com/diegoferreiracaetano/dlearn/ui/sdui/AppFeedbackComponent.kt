@@ -8,5 +8,5 @@ data class AppFeedbackComponent(
     val description: String,
     val imageSource: String? = null,
     val primaryText: String? = null,
-    val secondaryText: String? = null
+    val secondaryText: String? = null,
 ) : Component

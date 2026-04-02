@@ -13,17 +13,17 @@ import kotlinx.coroutines.flow.flow
 
 class HomeOrchestrator(
     private val getHomeDataUseCase: GetHomeDataUseCase,
-    private val screenBuilder: HomeScreenBuilder
+    private val screenBuilder: HomeScreenBuilder,
 ) : Orchestrator {
-
     override fun execute(
         request: AppRequest,
         header: AppHeader,
-        userId: String
+        userId: String,
     ): Flow<Screen> {
-        val type = request.params?.get("type")?.let {
-            runCatching { HomeFilterType.valueOf(it) }.getOrNull()
-        } ?: HomeFilterType.ALL
+        val type =
+            request.params?.get("type")?.let {
+                runCatching { HomeFilterType.valueOf(it) }.getOrNull()
+            } ?: HomeFilterType.ALL
 
         val language = header.language
         val cacheKey = "home_${header.userAgent.appVersion}_${language}_${type}_$userId"
@@ -34,7 +34,7 @@ class HomeOrchestrator(
             emit(screen)
         }.toCache(
             key = cacheKey,
-            strategy = CacheStrategy.CACHE_FIRST
+            strategy = CacheStrategy.CACHE_FIRST,
         )
     }
 }

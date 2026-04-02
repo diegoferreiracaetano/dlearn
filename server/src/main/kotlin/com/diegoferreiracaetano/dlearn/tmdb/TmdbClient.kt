@@ -1,14 +1,17 @@
 package com.diegoferreiracaetano.dlearn.tmdb
 
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
-import com.diegoferreiracaetano.dlearn.domain.repository.FavoriteRepository
 import com.diegoferreiracaetano.dlearn.domain.repository.MovieClient
-import com.diegoferreiracaetano.dlearn.domain.repository.WatchlistRepository
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.domain.video.Video
 import com.diegoferreiracaetano.dlearn.infrastructure.mappers.TmdbMapper
 import com.diegoferreiracaetano.dlearn.infrastructure.util.ServerConstants.TmdbEndpoints
-import com.diegoferreiracaetano.dlearn.model.*
+import com.diegoferreiracaetano.dlearn.model.TmdbGenre
+import com.diegoferreiracaetano.dlearn.model.TmdbGenresResponse
+import com.diegoferreiracaetano.dlearn.model.TmdbItemRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbListResponse
+import com.diegoferreiracaetano.dlearn.model.TmdbMovieDetailRemote
+import com.diegoferreiracaetano.dlearn.model.toVideo
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_API_KEY
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_BASE_URL
 import io.ktor.client.HttpClient
@@ -16,100 +19,138 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 internal class TmdbClient(
     private val client: HttpClient,
-    private val tmdbMapper: TmdbMapper
-) : MovieClient, KoinComponent {
+    private val tmdbMapper: TmdbMapper,
+) : MovieClient,
+    KoinComponent {
     private val apiKey = THE_MOVIE_DB_API_KEY
     private val baseUrl = THE_MOVIE_DB_BASE_URL
 
     private suspend inline fun <reified T> get(
         path: String,
         language: String,
-        params: Map<String, Any> = emptyMap()
-    ): T {
-        return client.get("$baseUrl$path") {
-            parameter("api_key", apiKey)
-            parameter("language", language)
-            params.forEach { (key, value) ->
-                parameter(key, value)
-            }
-        }.body()
-    }
+        params: Map<String, Any> = emptyMap(),
+    ): T =
+        client
+            .get("$baseUrl$path") {
+                parameter("api_key", apiKey)
+                parameter("language", language)
+                params.forEach { (key, value) ->
+                    parameter(key, value)
+                }
+            }.body()
 
     private fun parseMovieId(movieId: String): Pair<String, MediaType> {
         val parts = movieId.split("_")
-        val mediaType = if (parts.size == 2) {
-            runCatching { MediaType.valueOf(parts[0]) }.getOrElse { MediaType.MOVIES }
-        } else {
-            MediaType.MOVIES
-        }
+        val mediaType =
+            if (parts.size == 2) {
+                runCatching { MediaType.valueOf(parts[0]) }.getOrElse { MediaType.MOVIES }
+            } else {
+                MediaType.MOVIES
+            }
         val tmdbId = parts.last()
         return tmdbId to mediaType
     }
 
     override suspend fun getPopularMovies(language: String): List<Video> {
         val genres = getMovieGenres(language)
-        return get<TmdbListResponse<TmdbItemRemote>>(TmdbEndpoints.MOVIE_POPULAR, language).results
+        return get<TmdbListResponse<TmdbItemRemote>>(TmdbEndpoints.MOVIE_POPULAR, language)
+            .results
             .map { it.toVideo(MediaType.MOVIES, genres) }
     }
 
     override suspend fun getPopularSeries(language: String): List<Video> {
         val genres = getTvGenres(language)
-        return get<TmdbListResponse<TmdbItemRemote>>(TmdbEndpoints.TV_POPULAR, language).results
+        return get<TmdbListResponse<TmdbItemRemote>>(TmdbEndpoints.TV_POPULAR, language)
+            .results
             .map { it.toVideo(MediaType.SERIES, genres) }
     }
 
     override suspend fun getTopRatedMovies(language: String): List<Video> {
         val genres = getMovieGenres(language)
-        return get<TmdbListResponse<TmdbItemRemote>>(TmdbEndpoints.MOVIE_TOP_RATED, language).results
+        return get<TmdbListResponse<TmdbItemRemote>>(TmdbEndpoints.MOVIE_TOP_RATED, language)
+            .results
             .map { it.toVideo(MediaType.MOVIES, genres) }
     }
 
     override suspend fun getTopRatedSeries(language: String): List<Video> {
         val genres = getTvGenres(language)
-        return get<TmdbListResponse<TmdbItemRemote>>(TmdbEndpoints.TV_TOP_RATED, language).results
+        return get<TmdbListResponse<TmdbItemRemote>>(TmdbEndpoints.TV_TOP_RATED, language)
+            .results
             .map { it.toVideo(MediaType.SERIES, genres) }
     }
 
-    override suspend fun getMovieGenres(language: String): List<TmdbGenre> {
-        return get<TmdbGenresResponse>(TmdbEndpoints.MOVIE_GENRES, language).genres
-    }
+    override suspend fun getMovieGenres(language: String): List<TmdbGenre> =
+        get<TmdbGenresResponse>(TmdbEndpoints.MOVIE_GENRES, language).genres
 
-    override suspend fun getTvGenres(language: String): List<TmdbGenre> {
-        return get<TmdbGenresResponse>(TmdbEndpoints.TV_GENRES, language).genres
-    }
+    override suspend fun getTvGenres(language: String): List<TmdbGenre> = get<TmdbGenresResponse>(TmdbEndpoints.TV_GENRES, language).genres
 
-    override suspend fun getMoviesByGenre(genreId: Int, language: String): List<Video> {
+    override suspend fun getMoviesByGenre(
+        genreId: Int,
+        language: String,
+    ): List<Video> {
         val genres = getMovieGenres(language)
-        return get<TmdbListResponse<TmdbItemRemote>>(TmdbEndpoints.DISCOVER_MOVIE, language, mapOf("with_genres" to genreId)).results
+        return get<TmdbListResponse<TmdbItemRemote>>(
+            TmdbEndpoints.DISCOVER_MOVIE,
+            language,
+            mapOf("with_genres" to genreId),
+        ).results
             .map { it.toVideo(MediaType.MOVIES, genres) }
     }
 
-    override suspend fun getTvByGenre(genreId: Int, language: String): List<Video> {
+    override suspend fun getTvByGenre(
+        genreId: Int,
+        language: String,
+    ): List<Video> {
         val genres = getTvGenres(language)
-        return get<TmdbListResponse<TmdbItemRemote>>(TmdbEndpoints.DISCOVER_TV, language, mapOf("with_genres" to genreId)).results
+        return get<TmdbListResponse<TmdbItemRemote>>(
+            TmdbEndpoints.DISCOVER_TV,
+            language,
+            mapOf("with_genres" to genreId),
+        ).results
             .map { it.toVideo(MediaType.SERIES, genres) }
     }
 
-    override suspend fun getMovieDetail(movieId: String, language: String): MovieDetailDomainData {
+    override suspend fun getMovieDetail(
+        movieId: String,
+        language: String,
+    ): MovieDetailDomainData {
         val (tmdbId, mediaType) = parseMovieId(movieId)
-        val path = if (mediaType == MediaType.MOVIES) TmdbEndpoints.movieDetail(tmdbId) else TmdbEndpoints.tvDetail(tmdbId)
-        val response = get<TmdbMovieDetailRemote>(path, language, mapOf("append_to_response" to "credits,videos,watch/providers,external_ids"))
-        
+        val path =
+            if (mediaType == MediaType.MOVIES) {
+                TmdbEndpoints.movieDetail(
+                    tmdbId,
+                )
+            } else {
+                TmdbEndpoints.tvDetail(tmdbId)
+            }
+        val response =
+            get<TmdbMovieDetailRemote>(
+                path,
+                language,
+                mapOf("append_to_response" to "credits,videos,watch/providers,external_ids"),
+            )
+
         // No checkout do detalhe, já podemos injetar se é favorito ou não consultando o banco local
-        // Mas para manter a pureza, o orchestrator ou usecase pode fazer isso. 
+        // Mas para manter a pureza, o orchestrator ou usecase pode fazer isso.
         // No entanto, como você quer que o client já venha "limpo", o TmdbClient pode resolver isso.
-        
+
         return tmdbMapper.toMovieDetail(response)
     }
 
-    override suspend fun searchMulti(query: String, language: String): List<Video> {
+    override suspend fun searchMulti(
+        query: String,
+        language: String,
+    ): List<Video> {
         val mGenres = getMovieGenres(language)
         val tGenres = getTvGenres(language)
-        return get<TmdbListResponse<TmdbItemRemote>>(TmdbEndpoints.SEARCH_MULTI, language, mapOf("query" to query)).results
+        return get<TmdbListResponse<TmdbItemRemote>>(
+            TmdbEndpoints.SEARCH_MULTI,
+            language,
+            mapOf("query" to query),
+        ).results
             .map { item ->
                 val isMovie = item.title != null
                 val type = if (isMovie) MediaType.MOVIES else MediaType.SERIES

@@ -17,9 +17,8 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val appRepository: AppRepository,
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
     val uiState: StateFlow<UIState<Screen>> = _uiState.asStateFlow()
 
@@ -46,19 +45,24 @@ class SettingsViewModel(
         }
     }
 
-    fun updatePreference(key: String, value: String) {
+    fun updatePreference(
+        key: String,
+        value: String,
+    ) {
         preferencesRepository.updatePreference(key, value)
     }
 
     private fun execute(path: String) {
         viewModelScope.launch {
-            appRepository.execute(AppPath.parse(path)).onStart {
-                _uiState.update { UIState.Loading }
-            }.catch { error ->
-                _uiState.update { UIState.Error(error) }
-            }.collect { screen ->
-                _uiState.update { UIState.Success(screen) }
-            }
+            appRepository
+                .execute(AppPath.parse(path))
+                .onStart {
+                    _uiState.update { UIState.Loading }
+                }.catch { error ->
+                    _uiState.update { UIState.Error(error) }
+                }.collect { screen ->
+                    _uiState.update { UIState.Success(screen) }
+                }
         }
     }
 }

@@ -20,37 +20,45 @@ class WatchlistOrchestrator(
     private val watchlistScreenBuilder: WatchlistScreenBuilder,
     private val watchlistRepository: WatchlistRepository,
     private val videoMapper: VideoMapper,
-    private val movieClient: MovieClient
-) : Orchestrator, KoinComponent {
-
+    private val movieClient: MovieClient,
+) : Orchestrator,
+    KoinComponent {
     override fun execute(
-        request: AppRequest, 
+        request: AppRequest,
         header: AppHeader,
-        userId: String
-    ): Flow<Screen> = flow {
-        val movieId = request.params?.get(AppQueryParam.ID)
-        val isToggleAction = request.params?.containsKey(WATCHLIST) == true
+        userId: String,
+    ): Flow<Screen> =
+        flow {
+            val movieId = request.params?.get(AppQueryParam.ID)
+            val isToggleAction = request.params?.containsKey(WATCHLIST) == true
 
-        if (movieId != null && isToggleAction) {
-            val active = request.params?.get(WATCHLIST)?.toBoolean() ?: false
-            watchlistRepository.toggleWatchlist(userId, movieId, active)
+            if (movieId != null && isToggleAction) {
+                val active = request.params?.get(WATCHLIST)?.toBoolean() ?: false
+                watchlistRepository.toggleWatchlist(userId, movieId, active)
+            }
+
+            emit(getWatchlistScreen(userId, header.language))
         }
 
-        emit(getWatchlistScreen(userId, header.language))
-    }
-
-    private suspend fun getWatchlistScreen(userId: String, language: String): Screen {
+    private suspend fun getWatchlistScreen(
+        userId: String,
+        language: String,
+    ): Screen {
         val watchlistIds = watchlistRepository.getWatchlist(userId)
-        
-        val videos = coroutineScope {
-            watchlistIds.map { id ->
-                async {
-                    runCatching {
-                        movieClient.getMovieDetail(id, language)
-                    }.getOrNull()
-                }
-            }.awaitAll().filterNotNull().map { it.toVideo() }
-        }
+
+        val videos =
+            coroutineScope {
+                watchlistIds
+                    .map { id ->
+                        async {
+                            runCatching {
+                                movieClient.getMovieDetail(id, language)
+                            }.getOrNull()
+                        }
+                    }.awaitAll()
+                    .filterNotNull()
+                    .map { it.toVideo() }
+            }
 
         val items = videoMapper.toMovieItemComponents(videos)
         return watchlistScreenBuilder.build(language, items)

@@ -18,9 +18,10 @@ val ApplicationCall.userId: String
     get() = jwtPrincipal?.payload?.getClaim(TokenConstants.CLAIM_USER_ID)?.asString() ?: "anonymous"
 
 val ApplicationCall.appHeader: AppHeader
-    get() = AppHeader(
-        paramUserAgent = request.header(UserAgent),
-        paramLanguage = request.header(AcceptLanguage),
-        paramCountry = request.header(X_COUNTRY),
-        notificationsEnabled = request.header(X_NOTIFICATIONS_ENABLED)?.toBoolean() ?: true
-    )
+    get() =
+        AppHeader(
+            paramUserAgent = request.header(UserAgent),
+            paramLanguage = request.header(AcceptLanguage),
+            paramCountry = request.header(X_COUNTRY),
+            notificationsEnabled = request.header(X_NOTIFICATIONS_ENABLED)?.toBoolean() ?: true,
+        )

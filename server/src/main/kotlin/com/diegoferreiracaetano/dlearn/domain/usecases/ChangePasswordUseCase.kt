@@ -4,8 +4,12 @@ import com.diegoferreiracaetano.dlearn.domain.models.ChangePasswordRequest
 import com.diegoferreiracaetano.dlearn.domain.models.ChangePasswordResponse
 import com.diegoferreiracaetano.dlearn.infrastructure.services.PasswordDataService
 
-class ChangePasswordUseCase(private val passwordDataService: PasswordDataService) {
-    suspend fun execute(request: ChangePasswordRequest, userId: String, challengeToken: String? = null): ChangePasswordResponse {
-        return passwordDataService.changePassword(request, userId, challengeToken)
-    }
+class ChangePasswordUseCase(
+    private val passwordDataService: PasswordDataService,
+) {
+    suspend fun execute(
+        request: ChangePasswordRequest,
+        userId: String,
+        challengeToken: String? = null,
+    ): ChangePasswordResponse = passwordDataService.changePassword(request, userId, challengeToken)
 }

@@ -16,7 +16,7 @@ class FooterRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val footer = component as? FooterComponent ?: return
 
@@ -27,10 +27,11 @@ class FooterRenderer : ComponentRenderer {
                     ?: footer.actionUrl?.let { actions.onItemClick(it) }
             },
             type = ButtonType.PRIMARY,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp)
-                .padding(16.dp)
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp)
+                    .padding(16.dp),
         )
     }
 }

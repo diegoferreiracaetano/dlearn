@@ -7,14 +7,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class PasswordOrchestrator(
-    private val changePasswordUseCase: ChangePasswordUseCase
+    private val changePasswordUseCase: ChangePasswordUseCase,
 ) {
     fun changePassword(
         request: ChangePasswordRequest,
         userId: String,
-        challengeToken: String?
-    ): Flow<ChangePasswordResponse> = flow {
-        val response = changePasswordUseCase.execute(request, userId, challengeToken)
-        emit(response)
-    }
+        challengeToken: String?,
+    ): Flow<ChangePasswordResponse> =
+        flow {
+            val response = changePasswordUseCase.execute(request, userId, challengeToken)
+            emit(response)
+        }
 }

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SectionComponent(
     val title: String,
-    val items: List<SectionItem>
+    val items: List<SectionItem>,
 ) : Component
 
 @Serializable
@@ -14,5 +14,5 @@ data class SectionItem(
     val label: String,
     val value: String? = null,
     val icon: AppIconType? = null,
-    val actionUrl: String? = null
+    val actionUrl: String? = null,
 )

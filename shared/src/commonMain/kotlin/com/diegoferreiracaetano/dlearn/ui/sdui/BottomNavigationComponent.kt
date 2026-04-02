@@ -5,12 +5,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class BottomNavigationComponent(
     val items: List<BottomNavItem>,
-    val selectedActionUrl: String? = null
+    val selectedActionUrl: String? = null,
 ) : Component
 
 @Serializable
 data class BottomNavItem(
     val label: String,
     val actionUrl: String,
-    val icon: AppIconType? = null
+    val icon: AppIconType? = null,
 )

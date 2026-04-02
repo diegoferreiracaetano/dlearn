@@ -7,5 +7,5 @@ data class AppTopBarComponent(
     val title: String,
     val subtitle: String? = null,
     val imageUrl: String? = null,
-    val showSearch: Boolean = false
+    val showSearch: Boolean = false,
 ) : Component

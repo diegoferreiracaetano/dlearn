@@ -6,9 +6,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
-import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
-import com.diegoferreiracaetano.dlearn.navigation.AppPath
-import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppExpandableSectionComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppMovieDetailHeaderComponent
@@ -35,20 +32,21 @@ fun MovieDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val actions = remember(onBackClick, onMovieClick, onItemClick, viewModel) {
-        ComponentActions(
-            onMovieClick = onMovieClick,
-            onItemClick = onItemClick,
-            onBackClick = onBackClick,
-            onRetry = viewModel::retry,
-            onAction = viewModel::execute
-        )
-    }
+    val actions =
+        remember(onBackClick, onMovieClick, onItemClick, viewModel) {
+            ComponentActions(
+                onMovieClick = onMovieClick,
+                onItemClick = onItemClick,
+                onBackClick = onBackClick,
+                onRetry = viewModel::retry,
+                onAction = viewModel::execute,
+            )
+        }
 
     MovieDetailContent(
         uiState = uiState,
         actions = actions,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -56,7 +54,7 @@ fun MovieDetailScreen(
 fun MovieDetailContent(
     uiState: UIState<Screen>,
     actions: ComponentActions,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     uiState.Render(actions, modifier)
 }
@@ -64,51 +62,55 @@ fun MovieDetailContent(
 @Preview
 @Composable
 fun MovieDetailContentPreview() {
-    val components = listOf(
-        AppContainerComponent(
-            topBar = AppTopBarComponent(
-                title = "Interstellar",
-                showSearch = false
-            ),
-            components = listOf(
-                AppMovieDetailHeaderComponent(
-                    title = "Interstellar",
-                    imageUrl = "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
-                    year = "2014",
-                    duration = "169 min",
-                    genre = "Sci-Fi",
-                    rating = 8.6,
-                    trailerId = "zSWdZVtXT7E",
-                    downloadActionUrl = "download/157336", // Mantido como exemplo local para preview
-                    shareActionUrl = "share/157336"     // Mantido como exemplo local para preview
-                ),
-                AppExpandableSectionComponent(
-                    title = "Storyline",
-                    text = "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival. The crew of the Endurance must travel to three potential planets to find a new home for mankind."
-                ),
-                CarouselComponent(
-                    title = "Cast & Crew",
-                    items = listOf(
-                        UserRowComponent(
-                            name = "Matthew McConaughey",
-                            role = "Cooper",
-                            imageUrl = "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+    val components =
+        listOf(
+            AppContainerComponent(
+                topBar =
+                    AppTopBarComponent(
+                        title = "Interstellar",
+                        showSearch = false,
+                    ),
+                components =
+                    listOf(
+                        AppMovieDetailHeaderComponent(
+                            title = "Interstellar",
+                            imageUrl = "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+                            year = "2014",
+                            duration = "169 min",
+                            genre = "Sci-Fi",
+                            rating = 8.6,
+                            trailerId = "zSWdZVtXT7E",
+                            downloadActionUrl = "download/157336", // Mantido como exemplo local para preview
+                            shareActionUrl = "share/157336", // Mantido como exemplo local para preview
                         ),
-                        UserRowComponent(
-                            name = "Anne Hathaway",
-                            role = "Brand",
-                            imageUrl = "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                        )
-                    )
-                )
-            )
+                        AppExpandableSectionComponent(
+                            title = "Storyline",
+                            text = "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival. The crew of the Endurance must travel to three potential planets to find a new home for mankind.",
+                        ),
+                        CarouselComponent(
+                            title = "Cast & Crew",
+                            items =
+                                listOf(
+                                    UserRowComponent(
+                                        name = "Matthew McConaughey",
+                                        role = "Cooper",
+                                        imageUrl = "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+                                    ),
+                                    UserRowComponent(
+                                        name = "Anne Hathaway",
+                                        role = "Brand",
+                                        imageUrl = "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+                                    ),
+                                ),
+                        ),
+                    ),
+            ),
         )
-    )
 
     DLearnTheme(darkTheme = true) {
         MovieDetailContent(
             uiState = UIState.Success(Screen(components = components)),
-            actions = ComponentActions()
+            actions = ComponentActions(),
         )
     }
 }

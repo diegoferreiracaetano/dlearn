@@ -6,13 +6,11 @@ import kotlinx.serialization.Serializable
 enum class HomeFilterType {
     ALL,
     MOVIES,
-    SERIES
-
-
+    SERIES,
 }
 
 @Serializable
 data class HomeCategory(
     val id: Int,
-    val name: String
+    val name: String,
 )

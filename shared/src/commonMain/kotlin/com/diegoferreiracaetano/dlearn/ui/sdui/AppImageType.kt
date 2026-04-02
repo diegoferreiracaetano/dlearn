@@ -9,5 +9,5 @@ enum class AppImageType {
     FAVORITE,
     EMPTY_STATE,
     DELETE,
-    UNKNOWN;
+    UNKNOWN,
 }

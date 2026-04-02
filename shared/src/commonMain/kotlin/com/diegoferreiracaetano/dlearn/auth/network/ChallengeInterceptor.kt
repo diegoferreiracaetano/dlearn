@@ -12,10 +12,8 @@ import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.client.request.takeFrom
 import io.ktor.client.statement.HttpReceivePipeline
-import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.OutgoingContent
 import io.ktor.http.contentType
 import io.ktor.util.AttributeKey
@@ -26,7 +24,7 @@ import kotlinx.serialization.json.Json
  */
 class ChallengeInterceptor(
     private val engine: ChallengeEngine,
-    private val json: Json
+    private val json: Json,
 ) {
     class Config {
         lateinit var engine: ChallengeEngine
@@ -41,24 +39,29 @@ class ChallengeInterceptor(
             return ChallengeInterceptor(config.engine, config.json)
         }
 
-        override fun install(plugin: ChallengeInterceptor, scope: HttpClient) {
+        override fun install(
+            plugin: ChallengeInterceptor,
+            scope: HttpClient,
+        ) {
             scope.receivePipeline.intercept(HttpReceivePipeline.After) { response ->
                 if (response.status.value == 428) {
                     val savedResponse = response.call.save().response
-                    
-                    val responseBody = try {
-                        savedResponse.bodyAsText()
-                    } catch (e: Exception) {
-                        proceedWith(savedResponse)
-                        return@intercept
-                    }
-                    
-                    val session = try {
-                        plugin.json.decodeFromString<ChallengeSession>(responseBody)
-                    } catch (e: Exception) {
-                        proceedWith(savedResponse)
-                        return@intercept
-                    }
+
+                    val responseBody =
+                        try {
+                            savedResponse.bodyAsText()
+                        } catch (e: Exception) {
+                            proceedWith(savedResponse)
+                            return@intercept
+                        }
+
+                    val session =
+                        try {
+                            plugin.json.decodeFromString<ChallengeSession>(responseBody)
+                        } catch (e: Exception) {
+                            proceedWith(savedResponse)
+                            return@intercept
+                        }
 
                     println("DEBUG ChallengeInterceptor: resolve")
 
@@ -66,21 +69,22 @@ class ChallengeInterceptor(
 
                     if (result is ChallengeResult.Success) {
                         val validatedToken = result.data["validatedToken"] ?: ""
-                        
+
                         val originalRequest = savedResponse.call.request
-                        val retryCall = scope.request {
-                            takeFrom(originalRequest)
-                            
-                            val originalContent = originalRequest.content
-                            if (originalContent !is OutgoingContent.NoContent) {
-                                setBody(originalContent)
+                        val retryCall =
+                            scope.request {
+                                takeFrom(originalRequest)
+
+                                val originalContent = originalRequest.content
+                                if (originalContent !is OutgoingContent.NoContent) {
+                                    setBody(originalContent)
+                                }
+
+                                contentType(ContentType.Application.Json)
+                                header(SecurityConstants.HEADER_CHALLENGE_TOKEN, validatedToken)
+                                header(SecurityConstants.HEADER_TRANSACTION_ID, session.transactionId)
                             }
-                            
-                            contentType(ContentType.Application.Json)
-                            header(SecurityConstants.HEADER_CHALLENGE_TOKEN, validatedToken)
-                            header(SecurityConstants.HEADER_TRANSACTION_ID, session.transactionId)
-                        }
-                        
+
                         proceedWith(retryCall)
                     } else {
                         throw ChallengeCancelledException()

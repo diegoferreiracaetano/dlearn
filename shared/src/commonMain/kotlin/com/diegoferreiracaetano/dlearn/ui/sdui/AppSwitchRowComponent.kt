@@ -8,5 +8,5 @@ data class AppSwitchRowComponent(
     val subtitle: String? = null,
     val icon: AppIconType? = null,
     val preferenceKey: String,
-    val isChecked: Boolean = false
+    val isChecked: Boolean = false,
 ) : Component

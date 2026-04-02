@@ -13,7 +13,7 @@ class ProfileRowRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val profileRow = component as? ProfileRowComponent ?: return
         AppProfileRow(
@@ -21,7 +21,7 @@ class ProfileRowRenderer : ComponentRenderer {
             email = profileRow.email,
             imageSource = profileRow.imageUrl?.let { AppImageSource.Url(it) },
             onEditClick = { profileRow.editActionUrl?.let { actions.onItemClick(it) } },
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }

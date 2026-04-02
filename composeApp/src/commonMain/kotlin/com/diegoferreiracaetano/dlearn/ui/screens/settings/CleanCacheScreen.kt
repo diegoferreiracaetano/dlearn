@@ -18,13 +18,12 @@ import org.koin.compose.koinInject
 fun CleanCacheScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CleanCacheViewModel = koinInject()
+    viewModel: CleanCacheViewModel = koinInject(),
 ) {
-
     CleanCacheContent(
         onBackClick = onBackClick,
         onConfirmClick = viewModel::confirmClearCache,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -32,7 +31,7 @@ fun CleanCacheScreen(
 private fun CleanCacheContent(
     onBackClick: () -> Unit,
     onConfirmClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AppDialog(
         onDismissRequest = { onBackClick() },
@@ -45,6 +44,6 @@ private fun CleanCacheContent(
         title = stringResource(Res.string.clear_cache_title),
         description = stringResource(Res.string.clear_cache_description),
         imageSource = AppImageSource.Resource(Res.drawable.question),
-        modifier = modifier
+        modifier = modifier,
     )
 }

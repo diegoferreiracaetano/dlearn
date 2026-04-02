@@ -8,12 +8,21 @@ class JVMPlatform : Platform {
     override val appVersion: String = "1.0.0"
     override val deviceModel: String = System.getProperty("os.name") + " " + System.getProperty("os.version")
 
-    override fun updateLocale(language: String, country: String) {
-        val locale = when {
-            language.contains("-") -> Locale.forLanguageTag(language)
-            country.isNotEmpty() -> Locale.Builder().setLanguage(language).setRegion(country).build()
-            else -> Locale.Builder().setLanguage(language).build()
-        }
+    override fun updateLocale(
+        language: String,
+        country: String,
+    ) {
+        val locale =
+            when {
+                language.contains("-") -> Locale.forLanguageTag(language)
+                country.isNotEmpty() ->
+                    Locale
+                        .Builder()
+                        .setLanguage(language)
+                        .setRegion(country)
+                        .build()
+                else -> Locale.Builder().setLanguage(language).build()
+            }
         Locale.setDefault(locale)
     }
 }

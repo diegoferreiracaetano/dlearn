@@ -8,16 +8,15 @@ import dlearn.composeapp.generated.resources.search
 import dlearn.composeapp.generated.resources.watchlist
 
 fun AppImageType?.toImageSource(): AppImageSource? {
-    val resource = when (this) {
-        AppImageType.SEARCH -> Res.drawable.search
-        AppImageType.EMPTY_STATE -> Res.drawable.search
-        AppImageType.WATCHLIST -> Res.drawable.watchlist
-        AppImageType.FAVORITE -> Res.drawable.favorite
-        else -> null
-    }
+    val resource =
+        when (this) {
+            AppImageType.SEARCH -> Res.drawable.search
+            AppImageType.EMPTY_STATE -> Res.drawable.search
+            AppImageType.WATCHLIST -> Res.drawable.watchlist
+            AppImageType.FAVORITE -> Res.drawable.favorite
+            else -> null
+        }
     return resource?.let { AppImageSource.Resource(it) }
 }
 
-fun String?.toImageSource(): AppImageSource? {
-    return this?.let { AppImageSource.Url(it) }
-}
+fun String?.toImageSource(): AppImageSource? = this?.let { AppImageSource.Url(it) }

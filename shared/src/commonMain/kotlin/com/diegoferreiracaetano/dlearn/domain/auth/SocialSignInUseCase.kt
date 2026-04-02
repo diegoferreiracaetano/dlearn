@@ -9,32 +9,34 @@ import kotlinx.coroutines.flow.flow
 
 class SocialSignInUseCase(
     private val socialAuthManager: SocialAuthManager,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) : UseCase<AccountProvider, Flow<Unit>> {
+    override fun invoke(params: AccountProvider): Flow<Unit> =
+        flow {
+            val result =
+                when (params) {
+                    AccountProvider.GOOGLE -> socialAuthManager.googleSignIn()
+                    AccountProvider.APPLE -> socialAuthManager.appleSignIn()
+                    AccountProvider.FACEBOOK -> socialAuthManager.facebookSignIn()
+                }
 
-    override fun invoke(params: AccountProvider): Flow<Unit> = flow {
-        val result = when (params) {
-            AccountProvider.GOOGLE -> socialAuthManager.googleSignIn()
-            AccountProvider.APPLE -> socialAuthManager.appleSignIn()
-            AccountProvider.FACEBOOK -> socialAuthManager.facebookSignIn()
-        }
-
-        when (result) {
-            is SocialAuthResult.Success -> {
-                authRepository.socialLogin(
-                    provider = params.name.lowercase(),
-                    idToken = result.idToken,
-                    accessToken = result.accessToken
-                ).collect {
-                    emit(Unit)
+            when (result) {
+                is SocialAuthResult.Success -> {
+                    authRepository
+                        .socialLogin(
+                            provider = params.name.lowercase(),
+                            idToken = result.idToken,
+                            accessToken = result.accessToken,
+                        ).collect {
+                            emit(Unit)
+                        }
+                }
+                is SocialAuthResult.Failure -> {
+                    throw AppException(AppError(code = result.error))
+                }
+                is SocialAuthResult.Cancelled -> {
+                    // Silencioso ou emitir evento de cancelamento se necessário
                 }
             }
-            is SocialAuthResult.Failure -> {
-                throw AppException(AppError(code = result.error))
-            }
-            is SocialAuthResult.Cancelled -> {
-                // Silencioso ou emitir evento de cancelamento se necessário
-            }
         }
-    }
 }

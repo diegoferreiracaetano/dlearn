@@ -11,62 +11,70 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 
-class SearchScreenBuilder(private val i18n: I18nProvider) {
-    fun buildMain(lang: String, popularItems: List<Component> = emptyList()): Screen {
+class SearchScreenBuilder(
+    private val i18n: I18nProvider,
+) {
+    fun buildMain(
+        lang: String,
+        popularItems: List<Component> = emptyList(),
+    ): Screen {
         val placeholder = i18n.getString(AppStringType.SEARCH_PLACEHOLDER, lang)
         val sectionTitle = i18n.getString(AppStringType.SECTION_POPULAR, lang)
-        
+
         val searchBarComponents = mutableListOf<Component>()
-        
+
         if (popularItems.isNotEmpty()) {
             searchBarComponents.add(AppSectionTitleComponent(title = sectionTitle) as Component)
             searchBarComponents.add(AppListComponent(components = popularItems) as Component)
         }
 
         return Screen(
-            components = listOf(
-                AppSearchBarComponent(
-                    actionUrl = AppNavigationRoute.SEARCH,
-                    query = "",
-                    placeholder = placeholder,
-                    components = searchBarComponents
-                ) as Component
-            )
+            components =
+                listOf(
+                    AppSearchBarComponent(
+                        actionUrl = AppNavigationRoute.SEARCH,
+                        query = "",
+                        placeholder = placeholder,
+                        components = searchBarComponents,
+                    ) as Component,
+                ),
         )
     }
 
     fun buildContent(
         query: String,
         results: List<Component>,
-        lang: String
+        lang: String,
     ): Screen {
         val placeholder = i18n.getString(AppStringType.SEARCH_PLACEHOLDER, lang)
-        
-        val contentComponents = if (results.isEmpty()) {
-            val emptyTitle = i18n.getString(AppStringType.SEARCH_EMPTY_TITLE, lang)
-            val emptyDescriptionBase = i18n.getString(AppStringType.SEARCH_EMPTY_DESCRIPTION, lang)
-            val fullDescription = "$emptyDescriptionBase \"$query\""
 
-            listOf(
-                AppEmptyStateComponent(
-                    title = emptyTitle,
-                    description = fullDescription,
-                    image = AppImageType.SEARCH
-                ) as Component
-            )
-        } else {
-            listOf(AppListComponent(components = results))
-        }
+        val contentComponents =
+            if (results.isEmpty()) {
+                val emptyTitle = i18n.getString(AppStringType.SEARCH_EMPTY_TITLE, lang)
+                val emptyDescriptionBase = i18n.getString(AppStringType.SEARCH_EMPTY_DESCRIPTION, lang)
+                val fullDescription = "$emptyDescriptionBase \"$query\""
+
+                listOf(
+                    AppEmptyStateComponent(
+                        title = emptyTitle,
+                        description = fullDescription,
+                        image = AppImageType.SEARCH,
+                    ) as Component,
+                )
+            } else {
+                listOf(AppListComponent(components = results))
+            }
 
         return Screen(
-            components = listOf(
-                AppSearchBarComponent(
-                    actionUrl = AppNavigationRoute.SEARCH,
-                    query = query,
-                    placeholder = placeholder,
-                    components = contentComponents
-                )
-            )
+            components =
+                listOf(
+                    AppSearchBarComponent(
+                        actionUrl = AppNavigationRoute.SEARCH,
+                        query = query,
+                        placeholder = placeholder,
+                        components = contentComponents,
+                    ),
+                ),
         )
     }
 }

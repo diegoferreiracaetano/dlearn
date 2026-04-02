@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.asSharedFlow
  * Mantém o estado interno do desafio atual para que a UI não precise lidar com IDs.
  */
 class ChallengeCoordinator(
-    private val globalEventDispatcher: GlobalEventDispatcher
+    private val globalEventDispatcher: GlobalEventDispatcher,
 ) {
     private val _challenges = MutableSharedFlow<ChallengeSession>(extraBufferCapacity = 1)
     val challenges = _challenges.asSharedFlow()
@@ -26,13 +26,16 @@ class ChallengeCoordinator(
      * @param session A sessão completa recebida do servidor.
      * @param challenge O desafio específico que está sendo processado no momento.
      */
-    suspend fun emit(session: ChallengeSession, challenge: Challenge) {
+    suspend fun emit(
+        session: ChallengeSession,
+        challenge: Challenge,
+    ) {
         _currentSession = session
         _activeChallenge = challenge
-        
+
         // Emite no flow específico (usado pelos handlers)
         _challenges.emit(session)
-        
+
         // Dispara o evento global capturado pelo AppNavGraph/UI Root
         globalEventDispatcher.emit(GlobalEvent.Challenge(session))
     }

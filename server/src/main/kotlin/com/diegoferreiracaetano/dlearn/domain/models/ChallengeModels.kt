@@ -6,17 +6,17 @@ import kotlinx.serialization.Serializable
 enum class ChallengeStatus {
     SUCCESS,
     CHALLENGE_REQUIRED,
-    ERROR
+    ERROR,
 }
 
 @Serializable
 enum class ChallengeCode {
-    CHALLENGE_REQUIRED
+    CHALLENGE_REQUIRED,
 }
 
 @Serializable
 data class ChallengeError(
     val code: ChallengeCode,
     val message: String,
-    val challengeToken: String
+    val challengeToken: String,
 )

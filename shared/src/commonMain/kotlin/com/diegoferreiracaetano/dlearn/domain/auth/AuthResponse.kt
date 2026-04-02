@@ -8,5 +8,5 @@ data class AuthResponse(
     val user: User? = null,
     val accessToken: String? = null,
     val refreshToken: String? = null,
-    val challengeRequired: Boolean = false
+    val challengeRequired: Boolean = false,
 )

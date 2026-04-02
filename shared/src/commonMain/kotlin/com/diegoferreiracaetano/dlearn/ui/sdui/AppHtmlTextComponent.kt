@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AppHtmlTextComponent(
-    val html: String
+    val html: String,
 ) : Component

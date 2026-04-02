@@ -10,5 +10,5 @@ data class UserRemote(
     val password: String? = null,
     val imageUrl: String? = null,
     val isPremium: Boolean = false,
-    val phoneNumber: String? = null
+    val phoneNumber: String? = null,
 )

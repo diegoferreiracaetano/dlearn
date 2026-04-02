@@ -12,46 +12,44 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class VerifyAccountViewModel(
-    private val challengeRepository: ChallengeRepository
+    private val challengeRepository: ChallengeRepository,
 ) : ViewModel() {
-
-    private val _uiState = MutableStateFlow<VerifyAccountUiState>(
-        VerifyAccountUiState.Idle)
+    private val _uiState =
+        MutableStateFlow<VerifyAccountUiState>(
+            VerifyAccountUiState.Idle,
+        )
     val uiState = _uiState.asStateFlow()
 
     fun verifyOtp(otpCode: String) {
         viewModelScope.launch {
-            challengeRepository.resolveChallenge(
-                answer = otpCode
-            )
-            .onStart {
-                _uiState.value = VerifyAccountUiState.Loading
-            }
-            .catch { error ->
-                _uiState.value = VerifyAccountUiState.Error(error)
-            }
-            .collect { result ->
-                _uiState.value = result.toUiState()
-            }
+            challengeRepository
+                .resolveChallenge(
+                    answer = otpCode,
+                ).onStart {
+                    _uiState.value = VerifyAccountUiState.Loading
+                }.catch { error ->
+                    _uiState.value = VerifyAccountUiState.Error(error)
+                }.collect { result ->
+                    _uiState.value = result.toUiState()
+                }
         }
     }
 
     fun resendOtp() {
         viewModelScope.launch {
-            challengeRepository.resendChallenge()
-            .onStart {
-                _uiState.value = VerifyAccountUiState.Loading
-            }
-            .catch { error ->
-                _uiState.value = VerifyAccountUiState.Error(error)
-            }
-            .collect { success ->
-                if (success) {
-                    _uiState.value = VerifyAccountUiState.Idle
-                } else {
-                    _uiState.value = VerifyAccountUiState.Error(Throwable("Failed to resend OTP"))
+            challengeRepository
+                .resendChallenge()
+                .onStart {
+                    _uiState.value = VerifyAccountUiState.Loading
+                }.catch { error ->
+                    _uiState.value = VerifyAccountUiState.Error(error)
+                }.collect { success ->
+                    if (success) {
+                        _uiState.value = VerifyAccountUiState.Idle
+                    } else {
+                        _uiState.value = VerifyAccountUiState.Error(Throwable("Failed to resend OTP"))
+                    }
                 }
-            }
         }
     }
 

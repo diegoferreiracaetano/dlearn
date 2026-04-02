@@ -21,14 +21,14 @@ import org.koin.ktor.ext.inject
 @Serializable
 data class ResolveChallengeBody(
     val type: String,
-    val answers: String
+    val answers: String,
 )
 
 @Serializable
 data class ChallengeResponse(
     val success: Boolean,
     val message: String,
-    val validatedToken: String? = null
+    val validatedToken: String? = null,
 )
 
 /**
@@ -39,22 +39,24 @@ fun Route.challengeController() {
     val service by inject<ChallengeDataService>()
 
     route("/v1/auth/challenge") {
-
         post("/resolve") {
-            val transactionId = call.request.header(SecurityConstants.HEADER_TRANSACTION_ID)
-                ?: throw AppException(AppError(AppErrorCode.TRANSACTION_ID_REQUIRED))
-            
+            val transactionId =
+                call.request.header(SecurityConstants.HEADER_TRANSACTION_ID)
+                    ?: throw AppException(AppError(AppErrorCode.TRANSACTION_ID_REQUIRED))
+
             val body = call.receive<ResolveChallengeBody>()
 
-            val type = ChallengeType.entries.find { it.name == body.type }
-                ?: throw AppException(AppError(AppErrorCode.INVALID_CHALLENGE_CODE))
+            val type =
+                ChallengeType.entries.find { it.name == body.type }
+                    ?: throw AppException(AppError(AppErrorCode.INVALID_CHALLENGE_CODE))
 
             // O backend agora recebe 'answers' como String (ex: o código OTP direto)
-            val validatedToken = service.resolveChallenge(
-                transactionId = transactionId,
-                type = type,
-                answers = mapOf(Constants.OTP_KEY to body.answers)
-            )
+            val validatedToken =
+                service.resolveChallenge(
+                    transactionId = transactionId,
+                    type = type,
+                    answers = mapOf(Constants.OTP_KEY to body.answers),
+                )
 
             if (validatedToken != null) {
                 call.respond(
@@ -62,8 +64,8 @@ fun Route.challengeController() {
                     ChallengeResponse(
                         success = true,
                         message = "Desafio resolvido",
-                        validatedToken = validatedToken
-                    )
+                        validatedToken = validatedToken,
+                    ),
                 )
             } else {
                 throw AppException(AppError(AppErrorCode.INVALID_CHALLENGE_CODE))
@@ -71,8 +73,9 @@ fun Route.challengeController() {
         }
 
         post("/resend") {
-            val transactionId = call.request.header(SecurityConstants.HEADER_TRANSACTION_ID)
-                ?: throw AppException(AppError(AppErrorCode.TRANSACTION_ID_REQUIRED))
+            val transactionId =
+                call.request.header(SecurityConstants.HEADER_TRANSACTION_ID)
+                    ?: throw AppException(AppError(AppErrorCode.TRANSACTION_ID_REQUIRED))
 
             val success = service.resendChallenge(transactionId)
             call.respond(HttpStatusCode.OK, mapOf("success" to success))

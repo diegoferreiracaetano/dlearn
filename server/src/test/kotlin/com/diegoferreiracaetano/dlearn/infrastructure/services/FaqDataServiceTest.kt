@@ -1,6 +1,6 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.services
 
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull

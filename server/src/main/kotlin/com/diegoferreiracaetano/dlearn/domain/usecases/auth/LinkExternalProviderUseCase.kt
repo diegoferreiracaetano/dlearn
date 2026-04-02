@@ -8,23 +8,26 @@ import kotlinx.coroutines.launch
 
 class LinkExternalProviderUseCase(
     private val authProviderSyncService: AuthProviderSyncService,
-    private val authProviderRepository: AuthProviderRepository
+    private val authProviderRepository: AuthProviderRepository,
 ) {
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    fun execute(userId: String, metadata: Map<String, String> = emptyMap()) {
+    fun execute(
+        userId: String,
+        metadata: Map<String, String> = emptyMap(),
+    ) {
         scope.launch {
             try {
                 // Carrega metadados existentes para não perder credenciais (ex: TMDB username/password)
                 // no momento do refresh de token.
                 val existingProviders = authProviderRepository.findByUserId(userId)
                 val combinedMetadata = mutableMapOf<String, String>()
-                
+
                 // Mescla metadados de todos os provedores existentes
                 existingProviders.forEach { provider ->
                     combinedMetadata.putAll(provider.metadata)
                 }
-                
+
                 // Sobrescreve com o metadata passado (caso venha da requisição de login/register)
                 combinedMetadata.putAll(metadata)
 

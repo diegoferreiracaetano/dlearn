@@ -1,11 +1,13 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.app
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
-import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppImageType
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -35,23 +37,24 @@ fun AppScreen(
         viewModel.fetch(path, params)
     }
 
-    val actions = remember(
-        onMovieClick,
-        onItemClick,
-        onTabSelected,
-        onBackClick,
-        onClose
-    ) {
-        ComponentActions(
-            onMovieClick = onMovieClick,
-            onItemClick = onItemClick,
-            onTabSelected = onTabSelected,
-            onBackClick = onBackClick,
-            onRetry = viewModel::retry,
-            onAction = viewModel::fetch,
-            onClose = onClose,
-        )
-    }
+    val actions =
+        remember(
+            onMovieClick,
+            onItemClick,
+            onTabSelected,
+            onBackClick,
+            onClose,
+        ) {
+            ComponentActions(
+                onMovieClick = onMovieClick,
+                onItemClick = onItemClick,
+                onTabSelected = onTabSelected,
+                onBackClick = onBackClick,
+                onRetry = viewModel::retry,
+                onAction = viewModel::fetch,
+                onClose = onClose,
+            )
+        }
 
     AppContent(uiState, actions, modifier)
 }
@@ -71,7 +74,7 @@ fun AppScreen(
         onTabSelected = actions.onTabSelected,
         onMovieClick = actions.onMovieClick,
         onItemClick = actions.onItemClick,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -79,40 +82,42 @@ fun AppScreen(
 fun AppContent(
     uiState: UIState<Screen>,
     actions: ComponentActions,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-   uiState.Render(
-       actions = actions,
-       modifier = modifier
-   )
+    uiState.Render(
+        actions = actions,
+        modifier = modifier,
+    )
 }
 
 @OptIn(ExperimentalResourceApi::class)
 @Preview
 @Composable
 fun AppScreenWatchlistPreview() {
-    val watchlistEmptyMock = Screen(
-        components = listOf(
-            AppEmptyStateComponent(
-                title = "WATCHLIST_EMPTY_TITLE",
-                description = "WATCHLIST_EMPTY_DESCRIPTION",
-                image = AppImageType.WATCHLIST
-            )
+    val watchlistEmptyMock =
+        Screen(
+            components =
+                listOf(
+                    AppEmptyStateComponent(
+                        title = "WATCHLIST_EMPTY_TITLE",
+                        description = "WATCHLIST_EMPTY_DESCRIPTION",
+                        image = AppImageType.WATCHLIST,
+                    ),
+                ),
         )
-    )
 
     val uiState = UIState.Success(watchlistEmptyMock)
-
 
     DLearnTheme(
         darkTheme = false,
     ) {
         AppContent(
             uiState = uiState,
-            actions = ComponentActions(
-                onRetry = {}
-            ),
-            modifier = Modifier.fillMaxSize()
+            actions =
+                ComponentActions(
+                    onRetry = {},
+                ),
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }

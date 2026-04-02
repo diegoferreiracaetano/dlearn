@@ -16,29 +16,31 @@ class AppTopBarListRenderer : ComponentRenderer {
     override fun Render(
         component: Component,
         actions: ComponentActions,
-        modifier: Modifier
+        modifier: Modifier,
     ) {
         val topBarList = component as? AppTopBarListComponent ?: return
 
-        if (topBarList.items.isEmpty())
+        if (topBarList.items.isEmpty()) {
             return
-        else {
-            val configs = topBarList.items.map { item ->
-                TopBarConfig(
-                    route = item.actionUrl,
-                    title = item.topBar.title,
-                    subtitle = item.topBar.subtitle,
-                    profileImageSource = item.topBar.imageUrl?.let {
-                        AppImageSource.Url(it)
-                    },
-                    onSearchClick = if (item.topBar.showSearch) actions.onSearchClick else null
-                )
-            }
+        } else {
+            val configs =
+                topBarList.items.map { item ->
+                    TopBarConfig(
+                        route = item.actionUrl,
+                        title = item.topBar.title,
+                        subtitle = item.topBar.subtitle,
+                        profileImageSource =
+                            item.topBar.imageUrl?.let {
+                                AppImageSource.Url(it)
+                            },
+                        onSearchClick = if (item.topBar.showSearch) actions.onSearchClick else null,
+                    )
+                }
 
             AppTopBar(
                 configs = configs,
                 selectedRoute = actions.currentRoute,
-                modifier = modifier
+                modifier = modifier,
             )
         }
     }

@@ -29,9 +29,9 @@ data class TmdbMovieDetailRemote(
 fun TmdbMovieDetailRemote.toVideo(mediaType: MediaType): Video =
     Video(
         id = id.toString(),
-        title = title ?: name ?: "",
-        subtitle = (releaseDate ?: firstAirDate ?: "").take(4),
-        description = overview ?: "",
+        title = title ?: name.orEmpty(),
+        subtitle = (releaseDate ?: firstAirDate.orEmpty()).take(TmdbConstants.YEAR_CHAR_COUNT),
+        description = overview.orEmpty(),
         url = "",
         imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}$posterPath",
         rating = voteAverage?.toFloat(),

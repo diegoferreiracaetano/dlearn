@@ -8,6 +8,7 @@ import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
 import com.diegoferreiracaetano.dlearn.domain.error.AppException
 import com.diegoferreiracaetano.dlearn.infrastructure.services.ChallengeDataService
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call
 import io.ktor.server.request.header
 import io.ktor.server.request.receive
@@ -40,44 +41,59 @@ fun Route.challengeController() {
 
     route("/v1/auth/challenge") {
         post("/resolve") {
-            val transactionId =
-                call.request.header(SecurityConstants.HEADER_TRANSACTION_ID)
-                    ?: throw AppException(AppError(AppErrorCode.TRANSACTION_ID_REQUIRED))
-
-            val body = call.receive<ResolveChallengeBody>()
-
-            val type =
-                ChallengeType.entries.find { it.name == body.type }
-                    ?: throw AppException(AppError(AppErrorCode.INVALID_CHALLENGE_CODE))
-
-            val validatedToken =
-                service.resolveChallenge(
-                    transactionId = transactionId,
-                    type = type,
-                    answers = mapOf(Constants.OTP_KEY to body.answers),
-                )
-
-            if (validatedToken != null) {
-                call.respond(
-                    HttpStatusCode.OK,
-                    ChallengeResponse(
-                        success = true,
-                        message = "Desafio resolvido",
-                        validatedToken = validatedToken,
-                    ),
-                )
-            } else {
-                throw AppException(AppError(AppErrorCode.INVALID_CHALLENGE_CODE))
-            }
+            handleResolveChallenge(call, service)
         }
 
         post("/resend") {
-            val transactionId =
-                call.request.header(SecurityConstants.HEADER_TRANSACTION_ID)
-                    ?: throw AppException(AppError(AppErrorCode.TRANSACTION_ID_REQUIRED))
-
-            val success = service.resendChallenge(transactionId)
-            call.respond(HttpStatusCode.OK, mapOf("success" to success))
+            handleResendChallenge(call, service)
         }
     }
+}
+
+private suspend fun handleResolveChallenge(
+    call: ApplicationCall,
+    service: ChallengeDataService,
+) {
+    val transactionId = getTransactionId(call)
+    val body = call.receive<ResolveChallengeBody>()
+
+    val type = ChallengeType.entries.find { it.name == body.type }
+        ?: throw AppException(AppError(AppErrorCode.INVALID_CHALLENGE_CODE))
+
+    val validatedToken = service.resolveChallenge(
+        transactionId = transactionId,
+        type = type,
+        answers = mapOf(Constants.OTP_KEY to body.answers),
+    )
+
+    if (validatedToken != null) {
+        respondWithSuccess(call, validatedToken)
+    } else {
+        throw AppException(AppError(AppErrorCode.INVALID_CHALLENGE_CODE))
+    }
+}
+
+private fun getTransactionId(call: ApplicationCall): String {
+    return call.request.header(SecurityConstants.HEADER_TRANSACTION_ID)
+        ?: throw AppException(AppError(AppErrorCode.TRANSACTION_ID_REQUIRED))
+}
+
+private suspend fun respondWithSuccess(call: ApplicationCall, validatedToken: String) {
+    call.respond(
+        HttpStatusCode.OK,
+        ChallengeResponse(
+            success = true,
+            message = "Desafio resolvido",
+            validatedToken = validatedToken,
+        ),
+    )
+}
+
+private suspend fun handleResendChallenge(
+    call: ApplicationCall,
+    service: ChallengeDataService,
+) {
+    val transactionId = getTransactionId(call)
+    val success = service.resendChallenge(transactionId)
+    call.respond(HttpStatusCode.OK, mapOf("success" to success))
 }

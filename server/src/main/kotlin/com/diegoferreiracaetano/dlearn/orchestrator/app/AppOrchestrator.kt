@@ -23,17 +23,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlinx.coroutines.flow.Flow
 
 class AppOrchestrator(
-    private val homeOrchestrator: HomeOrchestrator,
-    private val favoriteOrchestrator: FavoriteOrchestrator,
-    private val watchlistOrchestrator: WatchlistOrchestrator,
-    private val profileOrchestrator: ProfileOrchestrator,
-    private val faqOrchestrator: FaqOrchestrator,
-    private val searchOrchestrator: SearchOrchestrator,
-    private val movieDetailOrchestrator: MovieDetailOrchestrator,
-    private val mainOrchestrator: MainOrchestrator,
-    private val verifyAccountOrchestrator: VerifyAccountOrchestrator,
-    private val settingsOrchestrator: SettingsOrchestrator,
-    private val userListOrchestrator: UserListOrchestrator,
+    private val orchestrators: Map<String, Orchestrator>,
 ) : Orchestrator {
     override fun execute(
         request: AppRequest,
@@ -42,29 +32,22 @@ class AppOrchestrator(
     ): Flow<Screen> {
         val path = request.path
 
-        return when (path) {
-            HOME -> homeOrchestrator.execute(request, header, userId)
-            FAVORITE,
-            MOVIE_FAVORITE,
-            -> favoriteOrchestrator.execute(request, header, userId)
-            WATCHLIST,
-            MOVIE_WATCHLIST,
-            -> watchlistOrchestrator.execute(request, header, userId)
-            PROFILE,
-            PROFILE_EDIT,
-            PROFILE_UPDATE,
-            -> profileOrchestrator.execute(request, header, userId)
-            FAQ -> faqOrchestrator.execute(request, header, userId)
-            MOVIES -> movieDetailOrchestrator.execute(request, header, userId)
-            SEARCH -> searchOrchestrator.execute(request, header, userId)
-            WELCOME -> mainOrchestrator.execute(request, header, userId)
-            VERIFY_ACCOUNT -> verifyAccountOrchestrator.execute(request, header, userId)
-            SETTINGS_NOTIFICATIONS,
-            SETTINGS_LANGUAGE,
-            SETTINGS_COUNTRY,
-            -> settingsOrchestrator.execute(request, header, userId)
-            USERS -> userListOrchestrator.execute(request, header, userId)
-            else -> throw IllegalArgumentException("Invalid path: $path")
-        }
+        val orchestrator =
+            when (path) {
+                HOME -> orchestrators[HOME]
+                FAVORITE, MOVIE_FAVORITE -> orchestrators[FAVORITE]
+                WATCHLIST, MOVIE_WATCHLIST -> orchestrators[WATCHLIST]
+                PROFILE, PROFILE_EDIT, PROFILE_UPDATE -> orchestrators[PROFILE]
+                FAQ -> orchestrators[FAQ]
+                MOVIES -> orchestrators[MOVIES]
+                SEARCH -> orchestrators[SEARCH]
+                WELCOME -> orchestrators[WELCOME]
+                VERIFY_ACCOUNT -> orchestrators[VERIFY_ACCOUNT]
+                SETTINGS_NOTIFICATIONS, SETTINGS_LANGUAGE, SETTINGS_COUNTRY -> orchestrators[SETTINGS_NOTIFICATIONS]
+                USERS -> orchestrators[USERS]
+                else -> null
+            } ?: throw IllegalArgumentException("Invalid path: $path")
+
+        return orchestrator.execute(request, header, userId)
     }
 }

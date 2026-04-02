@@ -51,9 +51,7 @@ subprojects {
             else -> file("${rootDir}/config/detekt/baseline-${project.name}.xml")
         }
         
-        if (baselineFile.exists()) {
-            baseline.set(baselineFile)
-        }
+        baseline.set(baselineFile)
 
         reports {
             html.required = true

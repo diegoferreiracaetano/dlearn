@@ -7,6 +7,14 @@ object ServerConstants {
         const val EXPIRATION_MINUTES = 10
     }
 
+    object Database {
+        const val UUID_LENGTH = 36
+        const val DEFAULT_VARCHAR_LENGTH = 128
+        const val URL_LENGTH = 255
+        const val PROVIDER_LENGTH = 50
+        const val MEDIA_TYPE_LENGTH = 20
+    }
+
     object TmdbEndpoints {
         const val MOVIE_POPULAR = "/movie/popular"
         const val TV_POPULAR = "/tv/popular"

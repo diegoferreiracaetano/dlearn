@@ -31,14 +31,14 @@ class SearchScreenBuilder(
 
         return Screen(
             components =
-                listOf(
-                    AppSearchBarComponent(
-                        actionUrl = AppNavigationRoute.SEARCH,
-                        query = Constants.EMPTY_STRING,
-                        placeholder = placeholder,
-                        components = searchBarComponents,
-                    ) as Component,
-                ),
+            listOf(
+                AppSearchBarComponent(
+                    actionUrl = AppNavigationRoute.SEARCH,
+                    query = Constants.EMPTY_STRING,
+                    placeholder = placeholder,
+                    components = searchBarComponents,
+                ) as Component,
+            ),
         )
     }
 
@@ -67,14 +67,14 @@ class SearchScreenBuilder(
 
         return Screen(
             components =
-                listOf(
-                    AppSearchBarComponent(
-                        actionUrl = AppNavigationRoute.SEARCH,
-                        query = query,
-                        placeholder = placeholder,
-                        components = contentComponents,
-                    ),
+            listOf(
+                AppSearchBarComponent(
+                    actionUrl = AppNavigationRoute.SEARCH,
+                    query = query,
+                    placeholder = placeholder,
+                    components = contentComponents,
                 ),
+            ),
         )
     }
 }

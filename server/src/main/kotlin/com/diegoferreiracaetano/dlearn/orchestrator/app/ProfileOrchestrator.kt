@@ -2,6 +2,9 @@ package com.diegoferreiracaetano.dlearn.orchestrator.app
 
 import com.diegoferreiracaetano.dlearn.data.cache.CacheStrategy
 import com.diegoferreiracaetano.dlearn.data.cache.toCache
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
+import com.diegoferreiracaetano.dlearn.domain.error.AppException
 import com.diegoferreiracaetano.dlearn.domain.repository.UserRepository
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.navigation.AppPath
@@ -44,7 +47,7 @@ class ProfileOrchestrator(
     ): Flow<Screen> {
         val cacheKey = "profile_${userId}_${appVersion}_${lang}_$country"
         return flow {
-            val user = userRepository.findById(userId) ?: throw Exception("User not found")
+            val user = userRepository.findById(userId) ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND))
             val screen = screenBuilder.build(user, lang, country)
             emit(screen)
         }.toCache(
@@ -58,7 +61,7 @@ class ProfileOrchestrator(
         lang: String,
     ): Flow<Screen> =
         flow {
-            val user = userRepository.findById(userId) ?: throw Exception("User not found")
+            val user = userRepository.findById(userId) ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND))
             emit(editScreenBuilder.build(user, lang))
         }
 
@@ -68,7 +71,7 @@ class ProfileOrchestrator(
     ): Flow<Screen> =
         flow {
             try {
-                val user = userRepository.findById(userId) ?: throw Exception("User not found")
+                val user = userRepository.findById(userId) ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND))
                 emit(
                     editScreenBuilder.build(
                         data = user,
@@ -78,7 +81,8 @@ class ProfileOrchestrator(
                     ),
                 )
             } catch (e: Exception) {
-                val user = userRepository.findById(userId) ?: throw Exception("User not found")
+                val user = userRepository.findById(userId)
+                    ?: throw AppException(AppError(AppErrorCode.USER_NOT_FOUND), cause = e)
                 emit(
                     editScreenBuilder.build(
                         data = user,

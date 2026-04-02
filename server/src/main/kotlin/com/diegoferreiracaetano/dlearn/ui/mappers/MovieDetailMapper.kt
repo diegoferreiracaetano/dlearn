@@ -34,36 +34,36 @@ class MovieDetailMapper(
             isFavorite = data.isFavorite,
             isInWatchlist = data.isInWatchlist,
             favoriteActionUrl =
-                AppPath(
-                    path = AppNavigationRoute.MOVIES,
-                    params =
-                        mapOf(
-                            AppQueryParam.ID to data.id,
-                            AppQueryParam.MEDIA_TYPE to data.mediaType.name,
-                            FAVORITE to (!data.isFavorite).toString(),
-                        ),
+            AppPath(
+                path = AppNavigationRoute.MOVIES,
+                params =
+                mapOf(
+                    AppQueryParam.ID to data.id,
+                    AppQueryParam.MEDIA_TYPE to data.mediaType.name,
+                    FAVORITE to (!data.isFavorite).toString(),
                 ),
+            ),
             watchlistActionUrl =
-                AppPath(
-                    path = AppNavigationRoute.MOVIES,
-                    params =
-                        mapOf(
-                            AppQueryParam.ID to data.id,
-                            AppQueryParam.MEDIA_TYPE to data.mediaType.name,
-                            WATCHLIST to (!data.isInWatchlist).toString(),
-                        ),
+            AppPath(
+                path = AppNavigationRoute.MOVIES,
+                params =
+                mapOf(
+                    AppQueryParam.ID to data.id,
+                    AppQueryParam.MEDIA_TYPE to data.mediaType.name,
+                    WATCHLIST to (!data.isInWatchlist).toString(),
                 ),
+            ),
             providers =
-                data.providers.map {
-                    WatchProviderComponent(
-                        name = it.name,
-                        iconUrl = it.iconUrl,
-                        priceInfo = i18n.getString(AppStringType.DETAIL_WATCH_NOW, lang),
-                        appUrl = it.appUrl,
-                        webUrl = it.webUrl,
-                        tmdbUrl = it.tmdbUrl,
-                    )
-                },
+            data.providers.map {
+                WatchProviderComponent(
+                    name = it.name,
+                    iconUrl = it.iconUrl,
+                    priceInfo = i18n.getString(AppStringType.DETAIL_WATCH_NOW, lang),
+                    appUrl = it.appUrl,
+                    webUrl = it.webUrl,
+                    tmdbUrl = it.tmdbUrl,
+                )
+            },
         )
 
     fun toStoryLine(
@@ -82,13 +82,13 @@ class MovieDetailMapper(
         CarouselComponent(
             title = i18n.getString(AppStringType.DETAIL_CAST_CREW, lang),
             items =
-                data.cast.map {
-                    UserRowComponent(
-                        name = it.name,
-                        role = it.role,
-                        imageUrl = it.imageUrl ?: Constants.EMPTY_STRING,
-                    )
-                },
+            data.cast.map {
+                UserRowComponent(
+                    name = it.name,
+                    role = it.role,
+                    imageUrl = it.imageUrl ?: Constants.EMPTY_STRING,
+                )
+            },
         )
 
     fun toEpisodesSection(

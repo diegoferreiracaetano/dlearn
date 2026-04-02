@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.db
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -17,5 +18,8 @@ object DatabaseFactory {
         }
     }
 
-    suspend fun <T> dbQuery(block: suspend () -> T): T = newSuspendedTransaction(Dispatchers.IO) { block() }
+    suspend fun <T> dbQuery(
+        dispatcher: CoroutineDispatcher = Dispatchers.IO,
+        block: suspend () -> T,
+    ): T = newSuspendedTransaction(dispatcher) { block() }
 }

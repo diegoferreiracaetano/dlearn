@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.domain.usecases.auth
 
 import com.diegoferreiracaetano.dlearn.domain.repository.AuthProviderRepository
 import com.diegoferreiracaetano.dlearn.infrastructure.auth.AuthProviderSyncService
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -9,8 +10,9 @@ import kotlinx.coroutines.launch
 class LinkExternalProviderUseCase(
     private val authProviderSyncService: AuthProviderSyncService,
     private val authProviderRepository: AuthProviderRepository,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = CoroutineScope(ioDispatcher)
 
     fun execute(
         userId: String,

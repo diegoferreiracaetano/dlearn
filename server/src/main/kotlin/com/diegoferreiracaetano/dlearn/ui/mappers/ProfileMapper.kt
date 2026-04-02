@@ -148,34 +148,34 @@ class ProfileMapper(
         return SectionComponent(
             title = i18n.getString(AppStringType.SECTION_GENERAL, currentLang),
             items =
-                listOf(
-                    SectionItem(
-                        id = ProfileConstants.ID_NOTIFICATION,
-                        label = i18n.getString(AppStringType.ITEM_NOTIFICATION, currentLang),
-                        icon = AppIconType.NOTIFICATIONS,
-                        actionUrl = AppNavigationRoute.SETTINGS_NOTIFICATIONS,
-                    ),
-                    SectionItem(
-                        id = ProfileConstants.ID_LANGUAGE,
-                        label = i18n.getString(AppStringType.ITEM_LANGUAGE, currentLang),
-                        value = languageDisplayName,
-                        icon = AppIconType.LANGUAGE,
-                        actionUrl = AppNavigationRoute.SETTINGS_LANGUAGE,
-                    ),
-                    SectionItem(
-                        id = ProfileConstants.ID_COUNTRY,
-                        label = i18n.getString(AppStringType.ITEM_COUNTRY, currentLang),
-                        value = countryDisplayName,
-                        icon = AppIconType.PUBLIC,
-                        actionUrl = AppNavigationRoute.SETTINGS_COUNTRY,
-                    ),
-                    SectionItem(
-                        id = ProfileConstants.ID_CLEAR_CACHE,
-                        label = i18n.getString(AppStringType.ITEM_CLEAR_CACHE, currentLang),
-                        icon = AppIconType.DELETE,
-                        actionUrl = AppNavigationRoute.SETTINGS_CLEAR_CACHE,
-                    ),
+            listOf(
+                SectionItem(
+                    id = ProfileConstants.ID_NOTIFICATION,
+                    label = i18n.getString(AppStringType.ITEM_NOTIFICATION, currentLang),
+                    icon = AppIconType.NOTIFICATIONS,
+                    actionUrl = AppNavigationRoute.SETTINGS_NOTIFICATIONS,
                 ),
+                SectionItem(
+                    id = ProfileConstants.ID_LANGUAGE,
+                    label = i18n.getString(AppStringType.ITEM_LANGUAGE, currentLang),
+                    value = languageDisplayName,
+                    icon = AppIconType.LANGUAGE,
+                    actionUrl = AppNavigationRoute.SETTINGS_LANGUAGE,
+                ),
+                SectionItem(
+                    id = ProfileConstants.ID_COUNTRY,
+                    label = i18n.getString(AppStringType.ITEM_COUNTRY, currentLang),
+                    value = countryDisplayName,
+                    icon = AppIconType.PUBLIC,
+                    actionUrl = AppNavigationRoute.SETTINGS_COUNTRY,
+                ),
+                SectionItem(
+                    id = ProfileConstants.ID_CLEAR_CACHE,
+                    label = i18n.getString(AppStringType.ITEM_CLEAR_CACHE, currentLang),
+                    icon = AppIconType.DELETE,
+                    actionUrl = AppNavigationRoute.SETTINGS_CLEAR_CACHE,
+                ),
+            ),
         )
     }
 
@@ -183,38 +183,38 @@ class ProfileMapper(
         SectionComponent(
             title = i18n.getString(AppStringType.SECTION_MORE, lang),
             items =
-                listOf(
-                    SectionItem(
-                        id = ProfileConstants.ID_LEGAL,
-                        label = i18n.getString(AppStringType.ITEM_LEGAL, lang),
-                        icon = AppIconType.POLICY,
-                        actionUrl =
-                            AppPath(
-                                path = AppNavigationRoute.FAQ,
-                                params = mapOf(AppQueryParam.REF to AppNavigationRoute.FAQ_PRIVACY_POLICY),
-                            ),
-                    ),
-                    SectionItem(
-                        id = ProfileConstants.ID_HELP,
-                        label = i18n.getString(AppStringType.ITEM_HELP, lang),
-                        icon = AppIconType.HELP,
-                        actionUrl =
-                            AppPath(
-                                path = AppNavigationRoute.FAQ,
-                                params = mapOf(AppQueryParam.REF to AppNavigationRoute.FAQ_HELP_FEEDBACK),
-                            ),
-                    ),
-                    SectionItem(
-                        id = ProfileConstants.ID_ABOUT,
-                        label = i18n.getString(AppStringType.ITEM_ABOUT, lang),
-                        icon = AppIconType.INFO,
-                        actionUrl =
-                            AppPath(
-                                path = AppNavigationRoute.FAQ,
-                                params = mapOf(AppQueryParam.REF to AppNavigationRoute.FAQ_ABOUT_US),
-                            ),
+            listOf(
+                SectionItem(
+                    id = ProfileConstants.ID_LEGAL,
+                    label = i18n.getString(AppStringType.ITEM_LEGAL, lang),
+                    icon = AppIconType.POLICY,
+                    actionUrl =
+                    AppPath(
+                        path = AppNavigationRoute.FAQ,
+                        params = mapOf(AppQueryParam.REF to AppNavigationRoute.FAQ_PRIVACY_POLICY),
                     ),
                 ),
+                SectionItem(
+                    id = ProfileConstants.ID_HELP,
+                    label = i18n.getString(AppStringType.ITEM_HELP, lang),
+                    icon = AppIconType.HELP,
+                    actionUrl =
+                    AppPath(
+                        path = AppNavigationRoute.FAQ,
+                        params = mapOf(AppQueryParam.REF to AppNavigationRoute.FAQ_HELP_FEEDBACK),
+                    ),
+                ),
+                SectionItem(
+                    id = ProfileConstants.ID_ABOUT,
+                    label = i18n.getString(AppStringType.ITEM_ABOUT, lang),
+                    icon = AppIconType.INFO,
+                    actionUrl =
+                    AppPath(
+                        path = AppNavigationRoute.FAQ,
+                        params = mapOf(AppQueryParam.REF to AppNavigationRoute.FAQ_ABOUT_US),
+                    ),
+                ),
+            ),
         )
 
     fun toFooter(lang: String): FooterComponent =

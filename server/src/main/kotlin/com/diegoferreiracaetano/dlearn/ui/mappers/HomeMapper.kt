@@ -33,9 +33,9 @@ class HomeMapper(private val i18n: I18nProvider) {
         MovieCarouselComponent(
             title = title,
             items =
-                videos.mapIndexed { index, video ->
-                    video.toMovieItemComponent(lang, rank = if (showRank) index + 1 else null)
-                },
+            videos.mapIndexed { index, video ->
+                video.toMovieItemComponent(lang, rank = if (showRank) index + 1 else null)
+            },
         )
 
     fun toBannerCarousel(
@@ -46,9 +46,9 @@ class HomeMapper(private val i18n: I18nProvider) {
         BannerCarouselComponent(
             title = title,
             items =
-                videos.map { video ->
-                    video.toMovieItemComponent(lang)
-                },
+            videos.map { video ->
+                video.toMovieItemComponent(lang)
+            },
         )
 
     private fun Video.toMovieItemComponent(
@@ -66,11 +66,11 @@ class HomeMapper(private val i18n: I18nProvider) {
             contentRating = UIConstants.DEFAULT_CONTENT_RATING,
             genre = categories.firstOrNull()?.title,
             movieType =
-                if (mediaType == MediaType.MOVIES) {
-                    i18n.getString(AppStringType.FILTER_MOVIES, lang)
-                } else {
-                    i18n.getString(AppStringType.FILTER_SERIES, lang)
-                },
+            if (mediaType == MediaType.MOVIES) {
+                i18n.getString(AppStringType.FILTER_MOVIES, lang)
+            } else {
+                i18n.getString(AppStringType.FILTER_SERIES, lang)
+            },
             isPremium = false,
             isFavorite = isFavorite,
             rank = rank,

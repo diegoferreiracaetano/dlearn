@@ -149,6 +149,9 @@ formatting:
     active: true
   Indentation:
     active: true
+    excludes:
+      - '**/build/**'
+      - '**/generated/**'
   MaximumLineLength:
     active: true
     maxLineLength: 120

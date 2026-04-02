@@ -18,7 +18,7 @@ class TmdbMapper(
         isFavorite: Boolean = false,
         isInWatchlist: Boolean = false,
     ): MovieDetailDomainData {
-        val movieTitle = response.title ?: response.name ?: ""
+        val movieTitle = response.title ?: response.name.orEmpty()
         val countryProviders = response.watchProviders?.results?.get(TmdbConstants.DEFAULT_REGION)
         val imdbId = response.externalIds?.imdbId
 
@@ -28,40 +28,44 @@ class TmdbMapper(
             id = "${mediaType.name}_${response.id}",
             title = movieTitle,
             imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}${response.posterPath}",
-            year = (response.releaseDate ?: response.firstAirDate ?: "").take(4),
-            duration = response.runtime?.toString() ?: "",
-            genre = response.genres.firstOrNull()?.name ?: "",
+            year = (response.releaseDate ?: response.firstAirDate.orEmpty()).take(TmdbConstants.YEAR_CHAR_COUNT),
+            duration = response.runtime?.toString().orEmpty(),
+            genre = response.genres.firstOrNull()?.name.orEmpty(),
             rating = String.format(Locale.US, "%.1f", response.voteAverage ?: 0.0),
-            storyLine = response.overview ?: "",
+            storyLine = response.overview.orEmpty(),
             cast =
-                response.credits
-                    ?.cast
-                    ?.take(10)
-                    ?.map { toCastMember(it) } ?: emptyList(),
+            response.credits
+                ?.cast
+                ?.take(TmdbConstants.MAX_CAST_SIZE)
+                ?.map { toCastMember(it) }.orEmpty(),
             seasons = emptyList(),
-            trailerId =
-                response.videos
-                    ?.results
-                    ?.filter {
-                        it.site == TmdbConstants.SITE_YOUTUBE &&
-                            (it.type == TmdbConstants.TYPE_TRAILER || it.type == TmdbConstants.TYPE_TEASER)
-                    }?.firstOrNull()
-                    ?.key,
+            trailerId = getTrailerId(response),
             isFavorite = isFavorite,
             isInWatchlist = isInWatchlist,
             providers =
-                countryProviders?.flatrate?.map { provider ->
-                    toWatchProvider(provider, movieTitle, imdbId, countryProviders.link)
-                } ?: emptyList(),
+            countryProviders?.flatrate?.map { provider ->
+                toWatchProvider(provider, movieTitle, imdbId, countryProviders.link)
+            }.orEmpty(),
             mediaType = mediaType,
         )
     }
+
+    private fun getTrailerId(response: TmdbMovieDetailRemote): String? =
+        response.videos
+            ?.results
+            ?.filter {
+                it.site == TmdbConstants.SITE_YOUTUBE &&
+                    (it.type == TmdbConstants.TYPE_TRAILER || it.type == TmdbConstants.TYPE_TEASER)
+            }?.firstOrNull()
+            ?.key
 
     private fun toCastMember(cast: TmdbCastRemote) =
         CastMemberDomainData(
             name = cast.name,
             role = cast.character,
-            imageUrl = cast.profilePath?.let { path -> "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W185}$path" },
+            imageUrl = cast.profilePath?.let { path ->
+                "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W185}$path"
+            },
         )
 
     private fun toWatchProvider(
@@ -73,7 +77,7 @@ class TmdbMapper(
         val urls = urlMapper.buildUrls(provider.providerId, title, imdbId, fallbackUrl)
         return WatchProviderDomainData(
             id = provider.providerId,
-            name = provider.providerName ?: "",
+            name = provider.providerName.orEmpty(),
             iconUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W185}${provider.logoPath}",
             priceInfo = "",
             appUrl = urls.appUrl,

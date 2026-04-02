@@ -30,11 +30,11 @@ class UserListScreenBuilder(private val i18n: I18nProvider) {
                 UserRowComponent(
                     name = user.name,
                     role =
-                        if (user.isPremium) {
-                            i18n.getString(AppStringType.USER_ROLE_PREMIUM, lang)
-                        } else {
-                            i18n.getString(AppStringType.USER_ROLE_FREE, lang)
-                        },
+                    if (user.isPremium) {
+                        i18n.getString(AppStringType.USER_ROLE_PREMIUM, lang)
+                    } else {
+                        i18n.getString(AppStringType.USER_ROLE_FREE, lang)
+                    },
                     imageUrl = user.imageUrl,
                     actionUrl = AppPath(AppNavigationRoute.PROFILE, mapOf(AppQueryParam.USER_ID to user.id)),
                 )

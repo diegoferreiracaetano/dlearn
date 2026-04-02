@@ -20,12 +20,13 @@ class ChallengeMapper {
                 ChallengeSession(
                     transactionId = cause.error.challengeToken,
                     challenge =
-                        Challenge(
-                            challengeType = type,
-                            data = mapOf("message" to cause.error.message),
-                        ),
+                    Challenge(
+                        challengeType = type,
+                        data = mapOf("message" to cause.error.message),
+                    ),
                 )
             }
+
             else -> null
         }
 }

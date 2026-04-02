@@ -18,12 +18,15 @@ import io.ktor.server.routing.RouteSelectorEvaluation
 import io.ktor.server.routing.RoutingResolveContext
 import io.ktor.util.AttributeKey
 import org.koin.ktor.ext.get
+import org.slf4j.LoggerFactory
 
 const val CHALLENGE_PREFERENCE_KEY = "ChallengePreference"
 const val CHALLENGE_TOKEN_KEY = "ChallengeToken"
 
 internal val ChallengePreferenceAttrKey = AttributeKey<ChallengeType>(CHALLENGE_PREFERENCE_KEY)
 internal val ChallengeTokenAttrKey = AttributeKey<String>(CHALLENGE_TOKEN_KEY)
+
+private val logger = LoggerFactory.getLogger("ChallengePlugin")
 
 class ChallengeException(
     val error: ChallengeError,
@@ -53,6 +56,7 @@ val ChallengePlugin =
                     try {
                         call.userId
                     } catch (e: Exception) {
+                        logger.warn("Could not retrieve userId in ChallengePlugin: ${e.message}")
                         "anonymous"
                     }
                 val transactionId = challengeDataService.generateChallenge(userId)

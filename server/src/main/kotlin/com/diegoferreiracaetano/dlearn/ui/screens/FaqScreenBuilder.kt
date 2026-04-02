@@ -24,12 +24,12 @@ class FaqScreenBuilder {
 
         return Screen(
             components =
-                listOf(
-                    AppContainerComponent(
-                        topBar = topbar,
-                        components = components,
-                    ),
+            listOf(
+                AppContainerComponent(
+                    topBar = topbar,
+                    components = components,
                 ),
+            ),
         )
     }
 }

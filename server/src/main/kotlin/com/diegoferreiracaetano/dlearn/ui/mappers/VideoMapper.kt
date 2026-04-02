@@ -28,11 +28,11 @@ class VideoMapper(private val i18n: I18nProvider) {
             contentRating = UIConstants.DEFAULT_CONTENT_RATING,
             genre = video.categories.firstOrNull()?.title,
             movieType =
-                if (video.mediaType == MediaType.MOVIES) {
-                    i18n.getString(AppStringType.FILTER_MOVIES, lang)
-                } else {
-                    i18n.getString(AppStringType.FILTER_SERIES, lang)
-                },
+            if (video.mediaType == MediaType.MOVIES) {
+                i18n.getString(AppStringType.FILTER_MOVIES, lang)
+            } else {
+                i18n.getString(AppStringType.FILTER_SERIES, lang)
+            },
             actionUrl = AppPath(AppNavigationRoute.MOVIES, mapOf(AppQueryParam.ID to video.id)),
         )
 

@@ -43,12 +43,12 @@ class EditProfileScreenBuilder(
 
         return Screen(
             components =
-                listOf(
-                    AppContainerComponent(
-                        topBar = topBar,
-                        components = components,
-                    ),
+            listOf(
+                AppContainerComponent(
+                    topBar = topBar,
+                    components = components,
                 ),
+            ),
         )
     }
 }

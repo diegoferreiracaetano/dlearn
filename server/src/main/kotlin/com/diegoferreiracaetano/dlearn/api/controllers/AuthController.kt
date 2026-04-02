@@ -38,20 +38,23 @@ fun Route.authController() {
 
         post("/social-login") {
             val params = call.receive<Map<String, String?>>()
-            val provider = params["provider"] ?: return@post call.respond(HttpStatusCode.BadRequest)
-            val idToken = params["id_token"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+            val provider = params["provider"]
+            val idToken = params["id_token"]
             val accessToken = params["access_token"]
             val language = call.request.header(AcceptLanguage) ?: "en"
 
-            val response =
-                loginOrchestrator.socialLogin(
-                    provider = provider,
-                    idToken = idToken,
-                    accessToken = accessToken,
-                    language = language,
-                )
-
-            call.respond(response)
+            if (provider == null || idToken == null) {
+                call.respond(HttpStatusCode.BadRequest)
+            } else {
+                val response =
+                    loginOrchestrator.socialLogin(
+                        provider = provider,
+                        idToken = idToken,
+                        accessToken = accessToken,
+                        language = language,
+                    )
+                call.respond(response)
+            }
         }
 
         challengePreference(OTP_EMAIL) {

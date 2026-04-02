@@ -8,6 +8,7 @@ import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.AUDIENCE
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.ISSUER
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.SECRET
+import org.slf4j.LoggerFactory
 import java.util.Date
 
 class TokenService(
@@ -15,6 +16,7 @@ class TokenService(
     private val issuer: String = ISSUER,
     private val audience: String = AUDIENCE,
 ) {
+    private val logger = LoggerFactory.getLogger(TokenService::class.java)
     private val algorithm = Algorithm.HMAC256(secret)
 
     fun generateAccessToken(user: User): String =
@@ -52,6 +54,7 @@ class TokenService(
                 CLAIM_EMAIL to decoded.getClaim(CLAIM_EMAIL).asString(),
             )
         } catch (e: Exception) {
+            logger.error("Token verification failed: ${e.message}", e)
             null
         }
 

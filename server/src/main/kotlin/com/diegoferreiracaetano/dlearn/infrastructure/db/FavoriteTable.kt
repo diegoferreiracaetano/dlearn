@@ -1,12 +1,13 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.db
 
+import com.diegoferreiracaetano.dlearn.infrastructure.util.ServerConstants
 import org.jetbrains.exposed.sql.Table
 
 object FavoriteTable : Table("favorites") {
     val id = integer("id").autoIncrement()
-    val userId = varchar("user_id", 36).references(UserTable.id)
+    val userId = varchar("user_id", ServerConstants.Database.UUID_LENGTH).references(UserTable.id)
     val mediaId = integer("media_id")
-    val mediaType = varchar("media_type", 20)
+    val mediaType = varchar("media_type", ServerConstants.Database.MEDIA_TYPE_LENGTH)
 
     override val primaryKey = PrimaryKey(id)
 
@@ -17,9 +18,9 @@ object FavoriteTable : Table("favorites") {
 
 object WatchlistTable : Table("watchlist") {
     val id = integer("id").autoIncrement()
-    val userId = varchar("user_id", 36).references(UserTable.id)
+    val userId = varchar("user_id", ServerConstants.Database.UUID_LENGTH).references(UserTable.id)
     val mediaId = integer("media_id")
-    val mediaType = varchar("media_type", 20)
+    val mediaType = varchar("media_type", ServerConstants.Database.MEDIA_TYPE_LENGTH)
 
     override val primaryKey = PrimaryKey(id)
 

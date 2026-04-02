@@ -30,12 +30,12 @@ internal class TmdbClient(
     private val apiKey = THE_MOVIE_DB_API_KEY
     private val baseUrl = THE_MOVIE_DB_BASE_URL
 
-    private suspend inline fun <reified T> get(
+    private suspend inline fun <reified T : Any> get(
         path: String,
         language: String,
         params: Map<String, Any> = emptyMap(),
-    ): T =
-        client
+    ): T {
+        return client
             .get("$baseUrl$path") {
                 parameter(TmdbConstants.PARAM_API_KEY, apiKey)
                 parameter(TmdbConstants.PARAM_LANGUAGE, language)
@@ -43,6 +43,7 @@ internal class TmdbClient(
                     parameter(key, value)
                 }
             }.body()
+    }
 
     private fun parseMovieId(movieId: String): Pair<String, MediaType> {
         val parts = movieId.split(Constants.UNDERSCORE)
@@ -87,7 +88,8 @@ internal class TmdbClient(
     override suspend fun getMovieGenres(language: String): List<TmdbGenre> =
         get<TmdbGenresResponse>(TmdbEndpoints.MOVIE_GENRES, language).genres
 
-    override suspend fun getTvGenres(language: String): List<TmdbGenre> = get<TmdbGenresResponse>(TmdbEndpoints.TV_GENRES, language).genres
+    override suspend fun getTvGenres(language: String): List<TmdbGenre> =
+        get<TmdbGenresResponse>(TmdbEndpoints.TV_GENRES, language).genres
 
     override suspend fun getMoviesByGenre(
         genreId: Int,

@@ -32,67 +32,67 @@ class MainScreenBuilder(
             AppTopBarListComponent(
                 selectedActionUrl = selectedActionUrl,
                 items =
-                    listOf(
-                        AppTopBarItem(
-                            actionUrl = AppNavigationRoute.HOME,
-                            topBar =
-                                AppTopBarComponent(
-                                    title = topBarTitle,
-                                    subtitle = topBarSubtitle,
-                                    imageUrl = topBarImageUrl,
-                                    showSearch = true,
-                                ),
-                        ),
-                        AppTopBarItem(
-                            actionUrl = AppNavigationRoute.WATCHLIST,
-                            topBar =
-                                AppTopBarComponent(
-                                    title = i18n.getString(AppStringType.NAV_WATCHLIST, lang),
-                                ),
-                        ),
-                        AppTopBarItem(
-                            actionUrl = AppNavigationRoute.FAVORITE,
-                            topBar =
-                                AppTopBarComponent(
-                                    title = i18n.getString(AppStringType.NAV_FAVORITES, lang),
-                                ),
-                        ),
-                        AppTopBarItem(
-                            actionUrl = AppNavigationRoute.PROFILE,
-                            topBar =
-                                AppTopBarComponent(
-                                    title = i18n.getString(AppStringType.NAV_PROFILE, lang),
-                                ),
+                listOf(
+                    AppTopBarItem(
+                        actionUrl = AppNavigationRoute.HOME,
+                        topBar =
+                        AppTopBarComponent(
+                            title = topBarTitle,
+                            subtitle = topBarSubtitle,
+                            imageUrl = topBarImageUrl,
+                            showSearch = true,
                         ),
                     ),
+                    AppTopBarItem(
+                        actionUrl = AppNavigationRoute.WATCHLIST,
+                        topBar =
+                        AppTopBarComponent(
+                            title = i18n.getString(AppStringType.NAV_WATCHLIST, lang),
+                        ),
+                    ),
+                    AppTopBarItem(
+                        actionUrl = AppNavigationRoute.FAVORITE,
+                        topBar =
+                        AppTopBarComponent(
+                            title = i18n.getString(AppStringType.NAV_FAVORITES, lang),
+                        ),
+                    ),
+                    AppTopBarItem(
+                        actionUrl = AppNavigationRoute.PROFILE,
+                        topBar =
+                        AppTopBarComponent(
+                            title = i18n.getString(AppStringType.NAV_PROFILE, lang),
+                        ),
+                    ),
+                ),
             )
 
         val bottomBar =
             BottomNavigationComponent(
                 selectedActionUrl = selectedActionUrl,
                 items =
-                    listOf(
-                        BottomNavItem(
-                            label = i18n.getString(AppStringType.NAV_HOME, lang),
-                            actionUrl = AppNavigationRoute.HOME,
-                            icon = AppIconType.HOME,
-                        ),
-                        BottomNavItem(
-                            label = i18n.getString(AppStringType.NAV_WATCHLIST, lang),
-                            actionUrl = AppNavigationRoute.WATCHLIST,
-                            icon = AppIconType.WATCHLIST,
-                        ),
-                        BottomNavItem(
-                            label = i18n.getString(AppStringType.NAV_FAVORITES, lang),
-                            actionUrl = AppNavigationRoute.FAVORITE,
-                            icon = AppIconType.FAVORITE,
-                        ),
-                        BottomNavItem(
-                            label = i18n.getString(AppStringType.NAV_PROFILE, lang),
-                            actionUrl = AppNavigationRoute.PROFILE,
-                            icon = AppIconType.PERSON,
-                        ),
+                listOf(
+                    BottomNavItem(
+                        label = i18n.getString(AppStringType.NAV_HOME, lang),
+                        actionUrl = AppNavigationRoute.HOME,
+                        icon = AppIconType.HOME,
                     ),
+                    BottomNavItem(
+                        label = i18n.getString(AppStringType.NAV_WATCHLIST, lang),
+                        actionUrl = AppNavigationRoute.WATCHLIST,
+                        icon = AppIconType.WATCHLIST,
+                    ),
+                    BottomNavItem(
+                        label = i18n.getString(AppStringType.NAV_FAVORITES, lang),
+                        actionUrl = AppNavigationRoute.FAVORITE,
+                        icon = AppIconType.FAVORITE,
+                    ),
+                    BottomNavItem(
+                        label = i18n.getString(AppStringType.NAV_PROFILE, lang),
+                        actionUrl = AppNavigationRoute.PROFILE,
+                        icon = AppIconType.PERSON,
+                    ),
+                ),
             )
 
         val container =

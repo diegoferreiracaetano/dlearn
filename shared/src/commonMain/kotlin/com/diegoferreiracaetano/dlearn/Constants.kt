@@ -17,6 +17,8 @@ object Constants {
     const val DOT = "."
     const val SLASH = "/"
     const val COLON = ":"
+
+    const val HTTP_STATUS_PRECONDITION_REQUIRED = 428
 }
 
 object AppConstants {
@@ -127,6 +129,9 @@ object TmdbConstants {
 
     const val TYPE_MOVIE = "movie"
     const val TYPE_TV = "tv"
+
+    const val YEAR_CHAR_COUNT = 4
+    const val MAX_CAST_SIZE = 10
 }
 
 object FrameworkConstants {

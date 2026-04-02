@@ -69,7 +69,7 @@ class WatchProviderUrlMapper {
         return WatchProviderUrls(
             appUrl = providerUrl?.first,
             webUrl = providerUrl?.second,
-            tmdbUrl = tmdbFallbackUrl ?: "",
+            tmdbUrl = tmdbFallbackUrl.orEmpty(),
         )
     }
 }

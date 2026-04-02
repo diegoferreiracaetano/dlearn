@@ -30,6 +30,7 @@ import com.diegoferreiracaetano.dlearn.infrastructure.services.SearchDataService
 import com.diegoferreiracaetano.dlearn.infrastructure.services.TokenService
 import com.diegoferreiracaetano.dlearn.infrastructure.services.UserDataService
 import com.diegoferreiracaetano.dlearn.infrastructure.services.WatchlistDataService
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.orchestrator.app.AppOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.app.FaqOrchestrator
 import com.diegoferreiracaetano.dlearn.orchestrator.app.FavoriteOrchestrator
@@ -156,18 +157,20 @@ val serverModule =
         single { UserListOrchestrator(get(), get()) }
 
         single<Orchestrator> {
-            AppOrchestrator(
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-            )
+            val orchestrators =
+                mapOf<String, Orchestrator>(
+                    AppNavigationRoute.HOME to get<HomeOrchestrator>(),
+                    AppNavigationRoute.FAVORITE to get<FavoriteOrchestrator>(),
+                    AppNavigationRoute.WATCHLIST to get<WatchlistOrchestrator>(),
+                    AppNavigationRoute.PROFILE to get<ProfileOrchestrator>(),
+                    AppNavigationRoute.FAQ to get<FaqOrchestrator>(),
+                    AppNavigationRoute.MOVIES to get<MovieDetailOrchestrator>(),
+                    AppNavigationRoute.SEARCH to get<SearchOrchestrator>(),
+                    AppNavigationRoute.WELCOME to get<MainOrchestrator>(),
+                    AppNavigationRoute.VERIFY_ACCOUNT to get<VerifyAccountOrchestrator>(),
+                    AppNavigationRoute.SETTINGS_NOTIFICATIONS to get<SettingsOrchestrator>(),
+                    AppNavigationRoute.USERS to get<UserListOrchestrator>(),
+                )
+            AppOrchestrator(orchestrators)
         }
     }

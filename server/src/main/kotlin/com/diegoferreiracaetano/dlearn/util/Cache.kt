@@ -5,10 +5,10 @@ import java.util.concurrent.ConcurrentHashMap
 class Cache<T>(
     private val ttlInMillis: Long,
 ) {
-    private val cache = ConcurrentHashMap<String, CacheEntry<T>>()
+    private val storage = ConcurrentHashMap<String, CacheEntry<T>>()
 
     fun get(key: String): T? {
-        val entry = cache[key]
+        val entry = storage[key]
         return if (entry != null && !entry.isExpired()) {
             println("Cache HIT for key: $key")
             entry.value
@@ -22,7 +22,7 @@ class Cache<T>(
         key: String,
         value: T,
     ) {
-        cache[key] = CacheEntry(value, System.currentTimeMillis() + ttlInMillis)
+        storage[key] = CacheEntry(value, System.currentTimeMillis() + ttlInMillis)
     }
 
     private data class CacheEntry<T>(

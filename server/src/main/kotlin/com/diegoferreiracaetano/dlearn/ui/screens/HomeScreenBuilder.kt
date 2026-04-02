@@ -27,33 +27,33 @@ class HomeScreenBuilder(
         components.add(
             ChipGroupComponent(
                 cleanUrl =
-                    AppPath(
-                        path = AppNavigationRoute.HOME,
-                        params = mapOf(AppQueryParam.TYPE to HomeFilterType.ALL.name),
-                    ),
+                AppPath(
+                    path = AppNavigationRoute.HOME,
+                    params = mapOf(AppQueryParam.TYPE to HomeFilterType.ALL.name),
+                ),
                 items =
-                    listOf(
-                        ChipItem(
-                            id = HomeFilterType.SERIES.name,
-                            label = i18n.getString(AppStringType.FILTER_SERIES, lang),
-                            isSelected = type == HomeFilterType.SERIES,
-                            actionUrl =
-                                AppPath(
-                                    path = AppNavigationRoute.HOME,
-                                    params = mapOf(AppQueryParam.TYPE to HomeFilterType.SERIES.name),
-                                ),
-                        ),
-                        ChipItem(
-                            id = HomeFilterType.MOVIES.name,
-                            label = i18n.getString(AppStringType.FILTER_MOVIES, lang),
-                            isSelected = type == HomeFilterType.MOVIES,
-                            actionUrl =
-                                AppPath(
-                                    path = AppNavigationRoute.HOME,
-                                    params = mapOf(AppQueryParam.TYPE to HomeFilterType.MOVIES.name),
-                                ),
+                listOf(
+                    ChipItem(
+                        id = HomeFilterType.SERIES.name,
+                        label = i18n.getString(AppStringType.FILTER_SERIES, lang),
+                        isSelected = type == HomeFilterType.SERIES,
+                        actionUrl =
+                        AppPath(
+                            path = AppNavigationRoute.HOME,
+                            params = mapOf(AppQueryParam.TYPE to HomeFilterType.SERIES.name),
                         ),
                     ),
+                    ChipItem(
+                        id = HomeFilterType.MOVIES.name,
+                        label = i18n.getString(AppStringType.FILTER_MOVIES, lang),
+                        isSelected = type == HomeFilterType.MOVIES,
+                        actionUrl =
+                        AppPath(
+                            path = AppNavigationRoute.HOME,
+                            params = mapOf(AppQueryParam.TYPE to HomeFilterType.MOVIES.name),
+                        ),
+                    ),
+                ),
             ),
         )
         data.banner?.let {
@@ -61,13 +61,26 @@ class HomeScreenBuilder(
         }
 
         if (data.top10.isNotEmpty()) {
+            val title = i18n.getString(AppStringType.SECTION_TOP_10, lang)
             components.add(
-                mapper.toCarousel(i18n.getString(AppStringType.SECTION_TOP_10, lang), data.top10, lang, showRank = true),
+                mapper.toCarousel(
+                    title = title,
+                    videos = data.top10,
+                    lang = lang,
+                    showRank = true,
+                ),
             )
         }
 
         if (data.popular.isNotEmpty()) {
-            components.add(mapper.toBannerCarousel(i18n.getString(AppStringType.SECTION_POPULAR, lang), data.popular, lang))
+            val title = i18n.getString(AppStringType.SECTION_POPULAR, lang)
+            components.add(
+                mapper.toBannerCarousel(
+                    title = title,
+                    videos = data.popular,
+                    lang = lang,
+                ),
+            )
         }
 
         data.categories.forEach { (categoryName, videos) ->

@@ -26,7 +26,8 @@ class HomeDataService(
 
             val movieGenresDeferred =
                 async { runCatching { movieClient.getMovieGenres(language) }.getOrElse { emptyList() } }
-            val tvGenresDeferred = async { runCatching { movieClient.getTvGenres(language) }.getOrElse { emptyList() } }
+            val tvGenresDeferred =
+                async { runCatching { movieClient.getTvGenres(language) }.getOrElse { emptyList() } }
 
             val mGenres = movieGenresDeferred.await()
             val tGenres = tvGenresDeferred.await()
@@ -101,9 +102,9 @@ class HomeDataService(
             HomeDomainData(
                 banner = popularMovies.firstOrNull() ?: popularSeries.firstOrNull(),
                 top10 =
-                    (topRatedMovies + topRatedSeries).sortedByDescending { it.rating ?: 0f }.take(
-                        HomeConfig.MAX_TOP_10,
-                    ),
+                (topRatedMovies + topRatedSeries).sortedByDescending { it.rating ?: 0f }.take(
+                    HomeConfig.MAX_TOP_10,
+                ),
                 popular = (popularMovies + popularSeries).shuffled().take(HomeConfig.MAX_POPULAR),
                 categories = categoryVideosMap,
             )

@@ -6,7 +6,6 @@ import com.diegoferreiracaetano.dlearn.api.configureRouting
 import com.diegoferreiracaetano.dlearn.api.exception.configureStatusPages
 import com.diegoferreiracaetano.dlearn.di.serverModule
 import com.diegoferreiracaetano.dlearn.infrastructure.db.DatabaseFactory
-import com.diegoferreiracaetano.dlearn.infrastructure.services.TokenService
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.AUDIENCE
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.ISSUER
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.SECRET
@@ -42,7 +41,6 @@ fun Application.module() {
         modules(serverModule)
     }
 
-    val tokenService by inject<TokenService>()
     val i18n by inject<I18nProvider>()
 
     install(ContentNegotiation) {

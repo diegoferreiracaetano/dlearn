@@ -1,5 +1,8 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
+import com.diegoferreiracaetano.dlearn.Constants
+import com.diegoferreiracaetano.dlearn.Constants.EMPTY_STRING
+import com.diegoferreiracaetano.dlearn.UIConstants
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppFeedbackComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppSectionTitleComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
@@ -17,10 +20,10 @@ class VerifyAccountScreenBuilder(private val i18n: I18nProvider) {
                         title = i18n.getString(AppStringType.VERIFY_ACCOUNT_TITLE, lang),
                     ),
                     AppTextFieldComponent(
-                        value = "",
+                        value = EMPTY_STRING,
                         placeholder = AppStringType.FIELD_PASSWORD,
                         label = AppStringType.FIELD_PASSWORD,
-                        key = "otp_code",
+                        key = Constants.OTP_CODE_KEY,
                         fieldType = AppTextFieldType.NONE,
                     ),
                     AppFeedbackComponent(

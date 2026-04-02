@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.mappers
 
+import com.diegoferreiracaetano.dlearn.Constants
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.FAVORITE
@@ -85,7 +86,7 @@ class MovieDetailMapper(
                     UserRowComponent(
                         name = it.name,
                         role = it.role,
-                        imageUrl = it.imageUrl ?: "",
+                        imageUrl = it.imageUrl ?: Constants.EMPTY_STRING,
                     )
                 },
         )

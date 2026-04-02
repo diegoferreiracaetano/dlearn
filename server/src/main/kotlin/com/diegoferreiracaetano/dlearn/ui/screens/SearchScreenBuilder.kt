@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
+import com.diegoferreiracaetano.dlearn.Constants
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppImageType
@@ -33,7 +34,7 @@ class SearchScreenBuilder(
                 listOf(
                     AppSearchBarComponent(
                         actionUrl = AppNavigationRoute.SEARCH,
-                        query = "",
+                        query = Constants.EMPTY_STRING,
                         placeholder = placeholder,
                         components = searchBarComponents,
                     ) as Component,
@@ -51,13 +52,12 @@ class SearchScreenBuilder(
         val contentComponents =
             if (results.isEmpty()) {
                 val emptyTitle = i18n.getString(AppStringType.SEARCH_EMPTY_TITLE, lang)
-                val emptyDescriptionBase = i18n.getString(AppStringType.SEARCH_EMPTY_DESCRIPTION, lang)
-                val fullDescription = "$emptyDescriptionBase \"$query\""
+                val emptyDescription = i18n.getString(AppStringType.SEARCH_EMPTY_DESCRIPTION, lang, query)
 
                 listOf(
                     AppEmptyStateComponent(
                         title = emptyTitle,
-                        description = fullDescription,
+                        description = emptyDescription,
                         image = AppImageType.SEARCH,
                     ) as Component,
                 )

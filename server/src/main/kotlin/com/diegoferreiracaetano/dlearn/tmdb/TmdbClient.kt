@@ -1,5 +1,7 @@
 package com.diegoferreiracaetano.dlearn.tmdb
 
+import com.diegoferreiracaetano.dlearn.Constants
+import com.diegoferreiracaetano.dlearn.TmdbConstants
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
 import com.diegoferreiracaetano.dlearn.domain.repository.MovieClient
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
@@ -35,15 +37,15 @@ internal class TmdbClient(
     ): T =
         client
             .get("$baseUrl$path") {
-                parameter("api_key", apiKey)
-                parameter("language", language)
+                parameter(TmdbConstants.PARAM_API_KEY, apiKey)
+                parameter(TmdbConstants.PARAM_LANGUAGE, language)
                 params.forEach { (key, value) ->
                     parameter(key, value)
                 }
             }.body()
 
     private fun parseMovieId(movieId: String): Pair<String, MediaType> {
-        val parts = movieId.split("_")
+        val parts = movieId.split(Constants.UNDERSCORE)
         val mediaType =
             if (parts.size == 2) {
                 runCatching { MediaType.valueOf(parts[0]) }.getOrElse { MediaType.MOVIES }
@@ -95,7 +97,7 @@ internal class TmdbClient(
         return get<TmdbListResponse<TmdbItemRemote>>(
             TmdbEndpoints.DISCOVER_MOVIE,
             language,
-            mapOf("with_genres" to genreId),
+            mapOf(TmdbConstants.PARAM_WITH_GENRES to genreId),
         ).results
             .map { it.toVideo(MediaType.MOVIES, genres) }
     }
@@ -108,7 +110,7 @@ internal class TmdbClient(
         return get<TmdbListResponse<TmdbItemRemote>>(
             TmdbEndpoints.DISCOVER_TV,
             language,
-            mapOf("with_genres" to genreId),
+            mapOf(TmdbConstants.PARAM_WITH_GENRES to genreId),
         ).results
             .map { it.toVideo(MediaType.SERIES, genres) }
     }
@@ -130,7 +132,7 @@ internal class TmdbClient(
             get<TmdbMovieDetailRemote>(
                 path,
                 language,
-                mapOf("append_to_response" to "credits,videos,watch/providers,external_ids"),
+                mapOf(TmdbConstants.PARAM_APPEND_TO_RESPONSE to TmdbConstants.APPEND_DETAILS),
             )
 
         return tmdbMapper.toMovieDetail(response)
@@ -145,7 +147,7 @@ internal class TmdbClient(
         return get<TmdbListResponse<TmdbItemRemote>>(
             TmdbEndpoints.SEARCH_MULTI,
             language,
-            mapOf("query" to query),
+            mapOf(TmdbConstants.PARAM_QUERY to query),
         ).results
             .map { item ->
                 val isMovie = item.title != null

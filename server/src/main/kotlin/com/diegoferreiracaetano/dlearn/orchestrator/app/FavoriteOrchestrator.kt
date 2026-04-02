@@ -60,7 +60,7 @@ class FavoriteOrchestrator(
                     .map { it.toVideo() }
             }
 
-        val items = videoMapper.toMovieItemComponents(videos)
+        val items = videoMapper.toMovieItemComponents(videos, language)
         return favoriteScreenBuilder.build(language, items)
     }
 }

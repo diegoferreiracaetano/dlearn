@@ -106,7 +106,7 @@ val serverModule =
         single { HomeDataService(get(), get()) }
         single { MovieDetailDataService(get()) }
         single { SearchDataService(get()) }
-        single { FaqDataService() }
+        single { FaqDataService(get()) }
         single { TokenService() }
         single { ChallengeDataService() }
         single { PasswordDataService(get(), get()) }

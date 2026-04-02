@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.mappers
 
+import com.diegoferreiracaetano.dlearn.UIConstants
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.domain.video.Video
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
@@ -59,10 +60,10 @@ class HomeMapper(private val i18n: I18nProvider) {
             title = title,
             subtitle = subtitle,
             imageUrl = imageUrl,
-            rating = rating?.let { String.format(Locale.US, "%.1f", it) },
+            rating = rating?.let { String.format(Locale.US, UIConstants.RATING_FORMAT, it) },
             year = subtitle,
             duration = null,
-            contentRating = "L",
+            contentRating = UIConstants.DEFAULT_CONTENT_RATING,
             genre = categories.firstOrNull()?.title,
             movieType =
                 if (mediaType == MediaType.MOVIES) {

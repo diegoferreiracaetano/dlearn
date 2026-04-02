@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.mappers
 
+import com.diegoferreiracaetano.dlearn.UIConstants
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.domain.video.Video
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
@@ -21,10 +22,10 @@ class VideoMapper(private val i18n: I18nProvider) {
             title = video.title,
             subtitle = video.subtitle,
             imageUrl = video.imageUrl,
-            rating = video.rating?.let { String.format(Locale.US, "%.1f", it) },
+            rating = video.rating?.let { String.format(Locale.US, UIConstants.RATING_FORMAT, it) },
             year = video.subtitle,
             duration = null,
-            contentRating = "L",
+            contentRating = UIConstants.DEFAULT_CONTENT_RATING,
             genre = video.categories.firstOrNull()?.title,
             movieType =
                 if (video.mediaType == MediaType.MOVIES) {

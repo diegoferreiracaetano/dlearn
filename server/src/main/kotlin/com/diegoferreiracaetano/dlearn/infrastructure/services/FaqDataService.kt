@@ -1,9 +1,8 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.services
 
-import com.diegoferreiracaetano.dlearn.util.fromJson
-import com.diegoferreiracaetano.dlearn.util.getLogger
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
+import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import kotlinx.serialization.Serializable
-import java.io.InputStream
 
 @Serializable
 data class FaqItem(
@@ -11,38 +10,25 @@ data class FaqItem(
     val content: String,
 )
 
-class FaqDataService {
-    private val faqData: Map<String, Map<String, FaqItem>> by lazy {
-        try {
-            val inputStream: InputStream =
-                this.javaClass.classLoader.getResourceAsStream("faq_content.json")
-                    ?: throw IllegalStateException("faq_content.json not found")
-            val jsonString = inputStream.bufferedReader().use { it.readText() }
-            jsonString.fromJson<Map<String, Map<String, FaqItem>>>()
-        } catch (e: Exception) {
-            getLogger().d("FaqDataService", "Error loading faq_content.json: ${e.message}")
-            emptyMap()
-        }
-    }
-
+class FaqDataService(
+    private val i18n: I18nProvider,
+) {
     fun fetchFaqContent(
         reference: String,
         lang: String,
     ): FaqItem? {
-        val langCode = normalizeLanguage(lang)
+        val (titleKey, contentKey) =
+            when (reference) {
+                "privacy-policy" -> AppStringType.LEGAL_PRIVACY_TITLE to AppStringType.LEGAL_PRIVACY_CONTENT
+                "terms-of-service" -> AppStringType.LEGAL_TERMS_TITLE to AppStringType.LEGAL_TERMS_CONTENT
+                "about-us" -> AppStringType.ABOUT_US_TITLE to AppStringType.ABOUT_US_CONTENT
+                "help-feedback" -> AppStringType.HELP_FEEDBACK_TITLE to AppStringType.HELP_FEEDBACK_CONTENT
+                else -> return null
+            }
 
-        return faqData[langCode]?.get(reference)
-            ?: faqData["en"]?.get(reference)
+        return FaqItem(
+            title = i18n.getString(titleKey, lang),
+            content = i18n.getString(contentKey, lang),
+        )
     }
-
-    private fun normalizeLanguage(language: String): String =
-        language
-            .split(",")
-            .firstOrNull()
-            ?.split(";")
-            ?.firstOrNull()
-            ?.split("-")
-            ?.firstOrNull()
-            ?.trim()
-            ?.lowercase() ?: "en"
 }

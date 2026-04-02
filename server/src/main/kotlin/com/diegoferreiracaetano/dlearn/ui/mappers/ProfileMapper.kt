@@ -1,5 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.mappers
 
+import com.diegoferreiracaetano.dlearn.LocaleConstants
+import com.diegoferreiracaetano.dlearn.ProfileConstants
 import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.infrastructure.services.Feature
 import com.diegoferreiracaetano.dlearn.infrastructure.services.FeatureToggleService
@@ -36,28 +38,28 @@ class ProfileMapper(
             name = data.name,
             email = data.email,
             imageUrl = data.imageUrl,
-            onImagePickedAction = "/v1/profile/image",
+            onImagePickedAction = ProfileConstants.ACTION_IMAGE_PICKER,
         )
 
     fun toEditFields(data: User): List<Component> =
         listOf(
             AppTextFieldComponent(
-                key = "full_name",
+                key = ProfileConstants.KEY_FULL_NAME,
                 value = data.name,
                 label = AppStringType.FIELD_FULL_NAME,
                 placeholder = AppStringType.FIELD_FULL_NAME,
                 fieldType = AppTextFieldType.NONE,
             ),
             AppTextFieldComponent(
-                key = "email",
+                key = ProfileConstants.KEY_EMAIL,
                 value = data.email,
                 label = AppStringType.FIELD_EMAIL,
                 placeholder = AppStringType.FIELD_EMAIL,
                 fieldType = AppTextFieldType.EMAIL,
             ),
             AppTextFieldComponent(
-                key = "phone",
-                value = data.phoneNumber ?: "",
+                key = ProfileConstants.KEY_PHONE,
+                value = data.phoneNumber.orEmpty(),
                 label = AppStringType.FIELD_PHONE_NUMBER,
                 placeholder = AppStringType.FIELD_PHONE_NUMBER,
                 fieldType = AppTextFieldType.PHONE,
@@ -88,7 +90,7 @@ class ProfileMapper(
         if (featureToggleService.isEnabled(Feature.MEMBER_SECTION)) {
             items.add(
                 SectionItem(
-                    id = "member",
+                    id = ProfileConstants.ID_MEMBER,
                     label = i18n.getString(AppStringType.ITEM_MEMBER, lang),
                     icon = AppIconType.PERSON,
                     actionUrl = AppNavigationRoute.MEMBER,
@@ -98,7 +100,7 @@ class ProfileMapper(
 
         items.add(
             SectionItem(
-                id = "password",
+                id = ProfileConstants.ID_PASSWORD,
                 label = i18n.getString(AppStringType.ITEM_PASSWORD, lang),
                 icon = AppIconType.LOCK,
                 actionUrl = AppNavigationRoute.PROFILE_CHANGE_PASSWORD,
@@ -116,10 +118,10 @@ class ProfileMapper(
         currentCountry: String?,
     ): SectionComponent {
         val languageType =
-            when (currentLang.lowercase().replace("-", "_")) {
-                "pt_br" -> AppStringType.LANGUAGE_PT_BR
-                "en_us" -> AppStringType.LANGUAGE_EN_US
-                "es_es" -> AppStringType.LANGUAGE_ES_ES
+            when (currentLang.trim()) {
+                LocaleConstants.LANG_PT_BR -> AppStringType.LANGUAGE_PT_BR
+                LocaleConstants.LANG_EN_US -> AppStringType.LANGUAGE_EN_US
+                LocaleConstants.LANG_ES_ES -> AppStringType.LANGUAGE_ES_ES
                 else -> AppStringType.UNKNOWN
             }
         val languageDisplayName =
@@ -130,17 +132,17 @@ class ProfileMapper(
             }
 
         val countryType =
-            when (currentCountry?.lowercase()) {
-                "br" -> AppStringType.COUNTRY_BR
-                "us" -> AppStringType.COUNTRY_US
-                "es" -> AppStringType.COUNTRY_ES
+            when (currentCountry?.trim()?.uppercase()) {
+                LocaleConstants.COUNTRY_BR -> AppStringType.COUNTRY_BR
+                LocaleConstants.COUNTRY_US -> AppStringType.COUNTRY_US
+                LocaleConstants.COUNTRY_ES -> AppStringType.COUNTRY_ES
                 else -> AppStringType.UNKNOWN
             }
         val countryDisplayName =
             if (countryType != AppStringType.UNKNOWN) {
                 i18n.getString(countryType, currentLang)
             } else {
-                currentCountry ?: ""
+                currentCountry.orEmpty()
             }
 
         return SectionComponent(
@@ -148,27 +150,27 @@ class ProfileMapper(
             items =
                 listOf(
                     SectionItem(
-                        id = "notification",
+                        id = ProfileConstants.ID_NOTIFICATION,
                         label = i18n.getString(AppStringType.ITEM_NOTIFICATION, currentLang),
                         icon = AppIconType.NOTIFICATIONS,
                         actionUrl = AppNavigationRoute.SETTINGS_NOTIFICATIONS,
                     ),
                     SectionItem(
-                        id = "language",
+                        id = ProfileConstants.ID_LANGUAGE,
                         label = i18n.getString(AppStringType.ITEM_LANGUAGE, currentLang),
                         value = languageDisplayName,
                         icon = AppIconType.LANGUAGE,
                         actionUrl = AppNavigationRoute.SETTINGS_LANGUAGE,
                     ),
                     SectionItem(
-                        id = "country",
+                        id = ProfileConstants.ID_COUNTRY,
                         label = i18n.getString(AppStringType.ITEM_COUNTRY, currentLang),
                         value = countryDisplayName,
                         icon = AppIconType.PUBLIC,
                         actionUrl = AppNavigationRoute.SETTINGS_COUNTRY,
                     ),
                     SectionItem(
-                        id = "clear_cache",
+                        id = ProfileConstants.ID_CLEAR_CACHE,
                         label = i18n.getString(AppStringType.ITEM_CLEAR_CACHE, currentLang),
                         icon = AppIconType.DELETE,
                         actionUrl = AppNavigationRoute.SETTINGS_CLEAR_CACHE,
@@ -183,7 +185,7 @@ class ProfileMapper(
             items =
                 listOf(
                     SectionItem(
-                        id = "legal",
+                        id = ProfileConstants.ID_LEGAL,
                         label = i18n.getString(AppStringType.ITEM_LEGAL, lang),
                         icon = AppIconType.POLICY,
                         actionUrl =
@@ -193,7 +195,7 @@ class ProfileMapper(
                             ),
                     ),
                     SectionItem(
-                        id = "help",
+                        id = ProfileConstants.ID_HELP,
                         label = i18n.getString(AppStringType.ITEM_HELP, lang),
                         icon = AppIconType.HELP,
                         actionUrl =
@@ -203,7 +205,7 @@ class ProfileMapper(
                             ),
                     ),
                     SectionItem(
-                        id = "about",
+                        id = ProfileConstants.ID_ABOUT,
                         label = i18n.getString(AppStringType.ITEM_ABOUT, lang),
                         icon = AppIconType.INFO,
                         actionUrl =

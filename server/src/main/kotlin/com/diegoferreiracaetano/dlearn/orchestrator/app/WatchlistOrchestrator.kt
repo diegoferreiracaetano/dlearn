@@ -60,7 +60,7 @@ class WatchlistOrchestrator(
                     .map { it.toVideo() }
             }
 
-        val items = videoMapper.toMovieItemComponents(videos)
+        val items = videoMapper.toMovieItemComponents(videos, language)
         return watchlistScreenBuilder.build(language, items)
     }
 }

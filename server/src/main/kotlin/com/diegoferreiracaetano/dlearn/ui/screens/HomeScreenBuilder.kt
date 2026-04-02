@@ -62,17 +62,17 @@ class HomeScreenBuilder(
 
         if (data.top10.isNotEmpty()) {
             components.add(
-                mapper.toCarousel(i18n.getString(AppStringType.SECTION_TOP_10, lang), data.top10, showRank = true),
+                mapper.toCarousel(i18n.getString(AppStringType.SECTION_TOP_10, lang), data.top10, lang, showRank = true),
             )
         }
 
         if (data.popular.isNotEmpty()) {
-            components.add(mapper.toBannerCarousel(i18n.getString(AppStringType.SECTION_POPULAR, lang), data.popular))
+            components.add(mapper.toBannerCarousel(i18n.getString(AppStringType.SECTION_POPULAR, lang), data.popular, lang))
         }
 
         data.categories.forEach { (categoryName, videos) ->
             if (videos.isNotEmpty()) {
-                components.add(mapper.toCarousel(categoryName, videos))
+                components.add(mapper.toCarousel(categoryName, videos, lang))
             }
         }
 

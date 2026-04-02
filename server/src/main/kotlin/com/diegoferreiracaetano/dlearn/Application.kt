@@ -10,8 +10,11 @@ import com.diegoferreiracaetano.dlearn.infrastructure.services.TokenService
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.AUDIENCE
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.ISSUER
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.SECRET
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
+import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import io.ktor.http.CacheControl
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.CachingOptions
 import io.ktor.serialization.kotlinx.json.json
@@ -40,6 +43,7 @@ fun Application.module() {
     }
 
     val tokenService by inject<TokenService>()
+    val i18n by inject<I18nProvider>()
 
     install(ContentNegotiation) {
         json(
@@ -53,8 +57,8 @@ fun Application.module() {
     }
 
     install(Authentication) {
-        jwt("auth-jwt") {
-            realm = "dlearn"
+        jwt(TokenConstants.AUTH_JWT_NAME) {
+            realm = TokenConstants.REALM_DLEARN
             verifier(
                 JWT
                     .require(Algorithm.HMAC256(SECRET))
@@ -70,7 +74,11 @@ fun Application.module() {
                 }
             }
             challenge { _, _ ->
-                call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
+                val lang = call.request.headers[HttpHeaders.AcceptLanguage] ?: LocaleConstants.LANG_PT_BR
+                call.respond(
+                    HttpStatusCode.Unauthorized,
+                    i18n.getString(AppStringType.ERROR_INVALID_SESSION, lang),
+                )
             }
         }
     }

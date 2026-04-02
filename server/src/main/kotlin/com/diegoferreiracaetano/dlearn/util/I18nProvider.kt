@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.util
 
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
+import java.text.MessageFormat
 import java.util.Locale
 import java.util.ResourceBundle
 
@@ -8,7 +9,15 @@ open class I18nProvider {
     open fun getString(
         key: AppStringType,
         language: String,
-    ): String = getRawString(key.name.lowercase(), language) ?: key.name
+        vararg args: Any,
+    ): String {
+        val raw = getRawString(key.name.lowercase(), language) ?: key.name
+        return if (args.isNotEmpty()) {
+            MessageFormat.format(raw, *args)
+        } else {
+            raw
+        }
+    }
 
     private fun getRawString(
         key: String,

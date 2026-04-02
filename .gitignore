@@ -25,3 +25,4 @@ gradle.properties
 # Firebase configuration files
 google-services.json
 GoogleService-Info.plist
+/server/dlearn.db

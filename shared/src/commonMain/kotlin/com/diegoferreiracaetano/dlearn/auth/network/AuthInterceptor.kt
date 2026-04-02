@@ -70,7 +70,7 @@ class AuthInterceptor(
                         sessionManager.logout()
                         false
                     }
-                } catch (e: Exception) {
+                } catch (@Suppress("SwallowedException") e: Exception) {
                     sessionManager.logout()
                     false
                 }

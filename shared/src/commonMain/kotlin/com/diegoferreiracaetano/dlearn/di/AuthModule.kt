@@ -16,7 +16,6 @@ val authModule =
         single { SessionManager(get()) }
         single { SocialAuthManager() }
 
-
         factory { SocialSignInUseCase(get(), get()) }
 
         single { ChallengeCoordinator(get()) }

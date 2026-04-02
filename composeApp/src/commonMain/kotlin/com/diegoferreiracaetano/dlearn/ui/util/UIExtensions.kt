@@ -55,6 +55,8 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
+private const val SHARING_STARTED_TIMEOUT_MS = 5000L
+private const val LUMINANCE_THRESHOLD = 0.5f
 @Immutable
 data class UiState<out T>(
     val success: T? = null,
@@ -134,7 +136,7 @@ fun <T, R> Flow<T?>.asUiState(
                 }
         }.stateIn(
             scope = scope,
-            started = SharingStarted.WhileSubscribed(5000L),
+            started = SharingStarted.WhileSubscribed(SHARING_STARTED_TIMEOUT_MS),
             initialValue = initialState,
         )
 
@@ -149,7 +151,7 @@ fun <T, R> ViewModel.produceUiState(
         transform = transform,
     )
 
-fun Color.contrastTextColor(): Color = if (this.luminance() > 0.5f) Color.Black else Color.White
+fun Color.contrastTextColor(): Color = if (this.luminance() > LUMINANCE_THRESHOLD) Color.Black else Color.White
 
 fun MovieItemComponent.toMovieItem(): MovieItem =
     MovieItem(
@@ -166,6 +168,7 @@ fun MovieItemComponent.toMovieItem(): MovieItem =
         rank = this.rank,
     )
 
+@Suppress("CyclomaticComplexMethod")
 fun AppStringType?.toResource(): StringResource? =
     when (this) {
         AppStringType.PROFILE_TITLE -> Res.string.profile_title

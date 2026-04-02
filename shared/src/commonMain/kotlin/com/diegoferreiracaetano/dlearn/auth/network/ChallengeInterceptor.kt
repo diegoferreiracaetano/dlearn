@@ -32,6 +32,8 @@ class ChallengeInterceptor(
     }
 
     companion object Plugin : HttpClientPlugin<Config, ChallengeInterceptor> {
+        private const val HTTP_STATUS_PRECONDITION_REQUIRED = 428
+
         override val key: AttributeKey<ChallengeInterceptor> = AttributeKey("ChallengeInterceptor")
 
         override fun prepare(block: Config.() -> Unit): ChallengeInterceptor {
@@ -44,13 +46,13 @@ class ChallengeInterceptor(
             scope: HttpClient,
         ) {
             scope.receivePipeline.intercept(HttpReceivePipeline.After) { response ->
-                if (response.status.value == 428) {
+                if (response.status.value == HTTP_STATUS_PRECONDITION_REQUIRED) {
                     val savedResponse = response.call.save().response
 
                     val responseBody =
                         try {
                             savedResponse.bodyAsText()
-                        } catch (e: Exception) {
+                        } catch (@Suppress("SwallowedException") e: Exception) {
                             proceedWith(savedResponse)
                             return@intercept
                         }
@@ -58,7 +60,7 @@ class ChallengeInterceptor(
                     val session =
                         try {
                             plugin.json.decodeFromString<ChallengeSession>(responseBody)
-                        } catch (e: Exception) {
+                        } catch (@Suppress("SwallowedException") e: Exception) {
                             proceedWith(savedResponse)
                             return@intercept
                         }

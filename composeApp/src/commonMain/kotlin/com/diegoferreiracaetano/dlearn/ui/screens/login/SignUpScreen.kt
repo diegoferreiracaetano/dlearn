@@ -100,11 +100,10 @@ fun SignUpContent(
         },
     ) { innerModifier ->
         Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .then(innerModifier)
-                    .padding(24.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .then(innerModifier)
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
         ) {

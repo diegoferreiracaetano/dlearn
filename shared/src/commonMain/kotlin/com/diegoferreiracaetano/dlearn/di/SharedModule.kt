@@ -49,6 +49,8 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
+private const val SERVER_PORT = 8081
+
 val sharedModule =
     module {
         includes(authModule, viewModelModule)
@@ -90,7 +92,7 @@ val sharedModule =
                     url {
                         protocol = URLProtocol.HTTP
                         host = "192.168.15.3"
-                        port = 8081
+                        port = SERVER_PORT
                     }
                 }
 
@@ -103,7 +105,6 @@ val sharedModule =
 
                 plugin(HttpSend).intercept { request ->
                     authInterceptor.intercept(request)
-
 
                     val agent = userAgentProvider.get()
                     request.header(HttpHeaders.UserAgent, agent.toHeader())

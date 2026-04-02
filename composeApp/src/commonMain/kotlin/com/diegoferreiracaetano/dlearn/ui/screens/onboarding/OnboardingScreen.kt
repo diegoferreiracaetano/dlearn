@@ -83,11 +83,10 @@ fun OnboardingScreen(
                     Spacer(modifier = Modifier.weight(1f))
                     AppImage(
                         source = Resource(pages[pageIndex].image),
-                        modifier =
-                            Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth()
-                                .weight(2.5f),
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth()
+                            .weight(2.5f),
                     )
                     Spacer(modifier = Modifier.weight(2f))
                 }

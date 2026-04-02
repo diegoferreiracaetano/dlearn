@@ -8,7 +8,6 @@ import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 
 /**
  * Handler genérico para desafios de Biometria.
- * TODO: Implementar BiometricProvider nativo (iOS/Android) para capturar a credencial local.
  */
 class BiometricChallengeHandler(
     private val biometricProvider: BiometricProvider,

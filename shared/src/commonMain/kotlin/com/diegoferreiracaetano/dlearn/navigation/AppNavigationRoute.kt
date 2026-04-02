@@ -41,12 +41,12 @@ object AppNavigationRoute {
     const val SETTINGS_COUNTRY = "settings/country"
     const val SETTINGS_CLEAR_CACHE = "settings/clear_cache"
 
-
     const val APP_PREFIX = "app"
     const val ARG_PATH = "path"
     const val ARG_PARAMS = "params"
     const val ARG_ID = "id"
 
-    const val SDUI_APP_ROUTE = "$APP_PREFIX?$ARG_PATH={$ARG_PATH}&$ARG_PARAMS={$ARG_PARAMS}&${AppQueryParam.REF}={${AppQueryParam.REF}}"
+    const val SDUI_APP_ROUTE =
+        "$APP_PREFIX?$ARG_PATH={$ARG_PATH}&$ARG_PARAMS={$ARG_PARAMS}&${AppQueryParam.REF}={${AppQueryParam.REF}}"
     const val MOVIE_DETAIL_ROUTE = "$MOVIES/{$ARG_ID}"
 }

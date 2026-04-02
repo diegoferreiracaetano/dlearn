@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.services
 
+import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -7,7 +8,7 @@ import kotlin.test.assertNull
 
 class FaqDataServiceTest {
 
-    private val service = FaqDataService()
+    private val service = FaqDataService(I18nProvider())
 
     @Test
     fun `should fetch privacy-policy in English correctly`() {

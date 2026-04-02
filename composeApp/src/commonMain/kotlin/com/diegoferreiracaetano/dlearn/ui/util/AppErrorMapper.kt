@@ -35,6 +35,7 @@ import dlearn.composeapp.generated.resources.error_validation
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 
+@Suppress("CyclomaticComplexMethod")
 fun AppErrorCode.toResource(): StringResource =
     when (this) {
         AppErrorCode.UNKNOWN_ERROR -> Res.string.error_unknown

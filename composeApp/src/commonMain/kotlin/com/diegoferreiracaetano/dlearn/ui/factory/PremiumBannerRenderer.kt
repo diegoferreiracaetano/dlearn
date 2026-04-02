@@ -22,9 +22,7 @@ class PremiumBannerRenderer : ComponentRenderer {
             title = banner.title,
             description = banner.description,
             icon = banner.icon.toIcon(),
-            modifier =
-                modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
     }
 }

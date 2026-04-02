@@ -18,7 +18,7 @@ data class AppUserAgent(
                 val deviceName = header.substringAfter("(", "").substringBeforeLast(")", "Unknown").substringBefore(";")
                 val (appName, appVersion) = if (appPart.contains("/")) appPart.split("/") else listOf(appPart, "1.0.0")
                 AppUserAgent(appName, appVersion, deviceName.trim())
-            } catch (e: Exception) {
+            } catch (@Suppress("SwallowedException") e: Exception) {
                 AppUserAgent("DLearn", "1.0.0", "Unknown")
             }
         }

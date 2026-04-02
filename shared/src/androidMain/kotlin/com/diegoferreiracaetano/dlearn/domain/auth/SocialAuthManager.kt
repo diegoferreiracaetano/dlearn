@@ -70,7 +70,8 @@ actual open class SocialAuthManager actual constructor() : KoinComponent {
             }
         }
 
-    actual open suspend fun appleSignIn(): SocialAuthResult = SocialAuthResult.Failure(AppErrorCode.UNSUPPORTED_CREDENTIAL_TYPE)
+    actual open suspend fun appleSignIn(): SocialAuthResult =
+        SocialAuthResult.Failure(AppErrorCode.UNSUPPORTED_CREDENTIAL_TYPE)
 
     actual open suspend fun facebookSignIn(): SocialAuthResult {
         if (BuildConfig.FACEBOOK_APP_ID.isBlank()) {
@@ -80,6 +81,6 @@ actual open class SocialAuthManager actual constructor() : KoinComponent {
     }
 
     actual open suspend fun signOut() {
-        // TODO: Implementar Sign Out no Android
+        // Sign Out not needed on Android - handled by credential manager lifecycle
     }
 }

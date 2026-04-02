@@ -41,10 +41,9 @@ fun SplashScreen(
 
     @OptIn(ExperimentalResourceApi::class)
     Box(
-        modifier =
-            modifier
-                .background(MaterialTheme.colorScheme.primary)
-                .fillMaxSize(),
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.primary)
+            .fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
         LaunchedEffect(Unit) {
@@ -59,9 +58,8 @@ fun SplashScreen(
             Image(
                 painter = painterResource(Res.drawable.dlearn_logo),
                 contentDescription = null,
-                modifier =
-                    Modifier
-                        .heightIn(max = 90.dp),
+                modifier = Modifier
+                    .heightIn(max = 90.dp),
             )
 
             Text(
@@ -82,7 +80,7 @@ fun SplashScreen(
 
 @Preview
 @Composable
-private fun SplashScreenPreview() {
+fun SplashScreenPreview() {
     DLearnTheme {
         SplashScreen({ })
     }

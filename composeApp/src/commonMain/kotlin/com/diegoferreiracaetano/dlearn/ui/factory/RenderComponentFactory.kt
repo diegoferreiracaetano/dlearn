@@ -57,6 +57,7 @@ fun RenderComponents(
     factory.Render(components, actions, modifier)
 }
 
+@Suppress("LongParameterList")
 class RenderComponentFactory(
     private val appLoadingRenderer: AppLoadingRenderer,
     private val appErrorRenderer: AppErrorRenderer,
@@ -107,6 +108,18 @@ class RenderComponentFactory(
         actions: ComponentActions,
         modifier: Modifier = Modifier,
     ) {
+        if (!renderBasicComponent(component, actions, modifier)) {
+            renderMediaComponent(component, actions, modifier)
+        }
+    }
+
+    @Composable
+    @Suppress("CyclomaticComplexMethod")
+    private fun renderBasicComponent(
+        component: Component,
+        actions: ComponentActions,
+        modifier: Modifier,
+    ): Boolean {
         when (component) {
             is AppLoadingComponent -> appLoadingRenderer.Render(component, actions, modifier)
             is AppErrorComponent -> appErrorRenderer.Render(component, actions, modifier)
@@ -118,6 +131,26 @@ class RenderComponentFactory(
             is AppTopBarListComponent -> appTopBarListRenderer.Render(component, actions, modifier)
             is AppSearchBarComponent -> appSearchBarRenderer.Render(component, actions, modifier)
             is BottomNavigationComponent -> bottomNavigationRenderer.Render(component, actions, modifier)
+            is AppSectionTitleComponent -> appSectionTitleRenderer.Render(component, actions, modifier)
+            is AppProfileHeaderComponent -> appProfileHeaderRenderer.Render(component, actions, modifier)
+            is AppTextFieldComponent -> appTextFieldRenderer.Render(component, actions, modifier)
+            is AppSnackbarComponent -> appSnackbarRenderer.Render(component, actions, modifier)
+            is AppHtmlTextComponent -> appHtmlTextRenderer.Render(component, actions, modifier)
+            is AppSwitchRowComponent -> appSwitchRowRenderer.Render(component, actions, modifier)
+            is AppSelectionRowComponent -> appSelectionRowRenderer.Render(component, actions, modifier)
+            else -> return false
+        }
+        return true
+    }
+
+    @Composable
+    @Suppress("CyclomaticComplexMethod")
+    private fun renderMediaComponent(
+        component: Component,
+        actions: ComponentActions,
+        modifier: Modifier,
+    ) {
+        when (component) {
             is MovieCarouselComponent -> movieCarouselRenderer.Render(component, actions, modifier)
             is BannerCarouselComponent -> bannerCarouselRenderer.Render(component, actions, modifier)
             is CarouselComponent -> carouselRenderer.Render(component, actions, modifier)
@@ -132,13 +165,7 @@ class RenderComponentFactory(
             is AppExpandableSectionComponent -> expandableSectionRenderer.Render(component, actions, modifier)
             is AppMainContentComponent -> mainContentRenderer.Render(component, actions, modifier)
             is MovieItemComponent -> movieItemRenderer.Render(component, actions, modifier)
-            is AppSectionTitleComponent -> appSectionTitleRenderer.Render(component, actions, modifier)
-            is AppProfileHeaderComponent -> appProfileHeaderRenderer.Render(component, actions, modifier)
-            is AppTextFieldComponent -> appTextFieldRenderer.Render(component, actions, modifier)
-            is AppSnackbarComponent -> appSnackbarRenderer.Render(component, actions, modifier)
-            is AppHtmlTextComponent -> appHtmlTextRenderer.Render(component, actions, modifier)
-            is AppSwitchRowComponent -> appSwitchRowRenderer.Render(component, actions, modifier)
-            is AppSelectionRowComponent -> appSelectionRowRenderer.Render(component, actions, modifier)
+            else -> Unit
         }
     }
 }

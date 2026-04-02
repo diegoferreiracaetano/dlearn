@@ -102,11 +102,10 @@ fun WelcomeContent(
         snackBarHostState = snackbarHostState,
     ) { innerModifier ->
         Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .then(innerModifier)
-                    .padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .then(innerModifier)
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {

@@ -82,21 +82,19 @@ fun MainScreenPreview() {
     val components =
         listOf(
             AppContainerComponent(
-                topBar =
-                    AppTopBarListComponent(
-                        listOf(
-                            AppTopBarItem(
-                                AppTopBarComponent(title = "DLearn", showSearch = true),
-                                selectedRoute,
-                            ),
+                topBar = AppTopBarListComponent(
+                    listOf(
+                        AppTopBarItem(
+                            AppTopBarComponent(title = "DLearn", showSearch = true),
+                            selectedRoute,
                         ),
-                        selectedActionUrl = selectedRoute,
                     ),
-                bottomBar =
-                    BottomNavigationComponent(
-                        items = bottomNavItems,
-                        selectedActionUrl = selectedRoute,
-                    ),
+                    selectedActionUrl = selectedRoute,
+                ),
+                bottomBar = BottomNavigationComponent(
+                    items = bottomNavItems,
+                    selectedActionUrl = selectedRoute,
+                ),
                 components = listOf(),
             ),
         )

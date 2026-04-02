@@ -92,16 +92,15 @@ fun CreateNewPasswordScreen(
                 )
             },
         ) { innerModifier ->
-            if (uiState is com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState.Loading) {
+            if (uiState is CreateNewPasswordUiState.Loading) {
                 AppLoading(modifier = Modifier.fillMaxSize())
             }
 
             Column(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .then(innerModifier)
-                        .padding(24.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(innerModifier)
+                    .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
             ) {

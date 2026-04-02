@@ -13,6 +13,8 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
 
+private const val HTTP_STATUS_CHALLENGE_REQUIRED = 428
+
 suspend fun Throwable.toAppException(): AppException =
     when (this) {
         is AppException -> this
@@ -21,11 +23,10 @@ suspend fun Throwable.toAppException(): AppException =
             val fallbackMessage = runCatching { response.bodyAsText() }.getOrNull() ?: message
 
             AppException(
-                error =
-                    appError ?: AppError(
-                        code = response.status.toAppErrorCode(),
-                        message = fallbackMessage,
-                    ),
+                error = appError ?: AppError(
+                    code = response.status.toAppErrorCode(),
+                    message = fallbackMessage,
+                ),
                 cause = this,
             )
         }
@@ -34,11 +35,10 @@ suspend fun Throwable.toAppException(): AppException =
             val fallbackMessage = runCatching { response.bodyAsText() }.getOrNull() ?: message
 
             AppException(
-                error =
-                    appError ?: AppError(
-                        code = response.status.toAppErrorCode(),
-                        message = fallbackMessage,
-                    ),
+                error = appError ?: AppError(
+                    code = response.status.toAppErrorCode(),
+                    message = fallbackMessage,
+                ),
                 cause = this,
             )
         }
@@ -86,6 +86,6 @@ private fun HttpStatusCode.toAppErrorCode(): AppErrorCode =
         HttpStatusCode.InternalServerError.value -> AppErrorCode.SERVER_ERROR
         HttpStatusCode.ServiceUnavailable.value -> AppErrorCode.SERVICE_UNAVAILABLE
         HttpStatusCode.GatewayTimeout.value -> AppErrorCode.TIMEOUT
-        428 -> AppErrorCode.CHALLENGE_REQUIRED
+        HTTP_STATUS_CHALLENGE_REQUIRED -> AppErrorCode.CHALLENGE_REQUIRED
         else -> AppErrorCode.UNKNOWN_ERROR
     }

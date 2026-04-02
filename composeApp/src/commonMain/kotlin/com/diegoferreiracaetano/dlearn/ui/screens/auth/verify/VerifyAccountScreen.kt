@@ -72,11 +72,10 @@ fun VerifyAccountScreen(
         },
     ) { innerModifier ->
         Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .then(innerModifier)
-                    .padding(24.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .then(innerModifier)
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
         ) {
@@ -136,12 +135,11 @@ fun VerifyAccountScreen(
                     Text(
                         text = stringResource(Res.string.otp_resend_now),
                         fontWeight = FontWeight.Bold,
-                        color =
-                            if (uiState is VerifyAccountUiState.Loading) {
-                                MaterialTheme.colorScheme.onSurfaceVariant
-                            } else {
-                                MaterialTheme.colorScheme.primary
-                            },
+                        color = if (uiState is VerifyAccountUiState.Loading) {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        } else {
+                            MaterialTheme.colorScheme.primary
+                        },
                     )
                 }
             }

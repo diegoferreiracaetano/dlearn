@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
 
+@Suppress("CyclomaticComplexMethod")
 fun AppIconType?.toIcon(): ImageVector? =
     when (this) {
         AppIconType.PERSON -> Icons.Default.Person

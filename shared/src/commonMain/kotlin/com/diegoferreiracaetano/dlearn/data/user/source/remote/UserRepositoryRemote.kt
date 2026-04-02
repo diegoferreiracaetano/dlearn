@@ -9,6 +9,10 @@ import kotlinx.coroutines.flow.flow
 class UserRepositoryRemote(
     private val dataSource: UserNetworkDataSource,
 ) : UserRepository {
+    companion object {
+        private const val MOCK_DELAY_MS = 2000L
+    }
+
     private var code: String? = null
 
     override fun users() =
@@ -40,12 +44,12 @@ class UserRepositoryRemote(
         }
 
     override suspend fun sendCode(email: String) {
-        delay(2000)
+        delay(MOCK_DELAY_MS)
         code = email + "123456"
     }
 
     override suspend fun getCode(): String? {
-        delay(2000)
+        delay(MOCK_DELAY_MS)
         return code
     }
 }

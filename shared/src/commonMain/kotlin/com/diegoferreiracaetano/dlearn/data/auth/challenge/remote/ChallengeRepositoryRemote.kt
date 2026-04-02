@@ -46,10 +46,17 @@ class ChallengeRepositoryRemote(
     private val coordinator: ChallengeCoordinator,
     private val otpHandler: OtpChallengeHandler,
 ) : ChallengeRepository {
+    companion object {
+        private const val HTTP_SUCCESS_RANGE_START = 200
+        private const val HTTP_SUCCESS_RANGE_END = 299
+    }
+
     override fun resolveChallenge(answer: String): Flow<ChallengeResult> =
         flow {
-            val session = coordinator.currentSession ?: throw Exception("Nenhuma sessão de desafio ativa")
-            val challenge = coordinator.activeChallenge ?: throw Exception("Desafio ativo não encontrado")
+            val session = coordinator.currentSession
+                ?: error("Nenhuma sessão de desafio ativa")
+            val challenge = coordinator.activeChallenge
+                ?: error("Desafio ativo não encontrado")
 
             try {
                 val response =
@@ -64,18 +71,20 @@ class ChallengeRepositoryRemote(
                         )
                     }
 
-                if (response.status.value in 200..299) {
+                if (response.status.value in HTTP_SUCCESS_RANGE_START..HTTP_SUCCESS_RANGE_END) {
                     val body = response.body<ChallengeBackendResponse>()
                     val validatedToken = body.validatedToken ?: ""
 
-                    if (challenge.challengeType == ChallengeType.OTP_EMAIL || challenge.challengeType == ChallengeType.OTP_SMS) {
+                    if (challenge.challengeType == ChallengeType.OTP_EMAIL ||
+                        challenge.challengeType == ChallengeType.OTP_SMS
+                    ) {
                         otpHandler.onChallengeResolved(validatedToken)
                     }
 
-                    coordinator.clear() // Limpa contexto após sucesso
+                    coordinator.clear()
                     emit(ChallengeResult.Success(mapOf("validatedToken" to validatedToken)))
                 } else {
-                    emit(ChallengeResult.Failure(Exception("Erro ao validar desafio: ${response.status}")))
+                    emit(ChallengeResult.Failure(IllegalStateException("Erro ao validar desafio: ${response.status}")))
                 }
             } catch (e: ClientRequestException) {
                 val message =
@@ -110,8 +119,8 @@ class ChallengeRepositoryRemote(
                         header(SecurityConstants.HEADER_TRANSACTION_ID, session.transactionId)
                         setBody(ResendChallengeRequest(type = challenge.challengeType.name))
                     }
-                emit(response.status.value in 200..299)
-            } catch (e: Exception) {
+                emit(response.status.value in HTTP_SUCCESS_RANGE_START..HTTP_SUCCESS_RANGE_END)
+            } catch (@Suppress("SwallowedException") e: Exception) {
                 emit(false)
             }
         }

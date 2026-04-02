@@ -14,10 +14,10 @@ class ChallengeEngine(
         val challenge = session.challenge
 
         val handler =
-            handlers.find {
-                it.canHandle(challenge)
-            }
-                ?: return ChallengeResult.Failure(Exception("Nenhum handler encontrado para o desafio: ${challenge.challengeType}"))
+            handlers.find { it.canHandle(challenge) }
+                ?: return ChallengeResult.Failure(
+                    IllegalStateException("Nenhum handler encontrado para o desafio: ${challenge.challengeType}"),
+                )
 
         // O coordinator armazena a sessão e o desafio ativo para uso posterior pelo repositório
         return coordinator.run {

@@ -47,7 +47,6 @@ actual open class SocialAuthManager actual constructor() : KoinComponent {
                 val result = credentialManager.getCredential(context, request)
                 val credential = result.credential
 
-                // Tenta converter para GoogleIdTokenCredential (forma direta ou via parsing de dados)
                 val googleIdTokenCredential =
                     try {
                         if (credential is GoogleIdTokenCredential) {

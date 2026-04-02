@@ -34,9 +34,7 @@ class SocialSignInUseCase(
                 is SocialAuthResult.Failure -> {
                     throw AppException(AppError(code = result.error))
                 }
-                is SocialAuthResult.Cancelled -> {
-                    // Silencioso ou emitir evento de cancelamento se necessário
-                }
+                is SocialAuthResult.Cancelled -> {}
             }
         }
 }

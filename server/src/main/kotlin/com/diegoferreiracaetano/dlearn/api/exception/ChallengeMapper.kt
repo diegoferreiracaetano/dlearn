@@ -15,8 +15,6 @@ class ChallengeMapper {
     ): ChallengeSession? =
         when (cause) {
             is ChallengeException -> {
-                // Se houver uma preferência enviada pelo filtro da rota, usamos ela.
-                // Caso contrário, usamos o padrão (OTP_EMAIL).
                 val type = preferredType ?: ChallengeType.OTP_EMAIL
 
                 ChallengeSession(

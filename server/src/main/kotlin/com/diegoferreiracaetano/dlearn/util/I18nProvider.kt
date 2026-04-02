@@ -16,10 +16,6 @@ open class I18nProvider {
     ): String? {
         val locale = language.toLocale()
 
-        // Tentamos resolver na ordem:
-        // 1. Locale exato (ex: pt_BR)
-        // 2. Idioma base (ex: pt)
-        // 3. Root (strings.properties - que é nosso inglês)
         return resolveString(key, locale)
             ?: resolveString(key, Locale(locale.language))
             ?: resolveString(key, Locale.ROOT)
@@ -30,7 +26,6 @@ open class I18nProvider {
         locale: Locale,
     ): String? =
         runCatching {
-            // O segredo está no Control.NoFallbackControl para não pegar o locale da máquina
             val bundle =
                 ResourceBundle.getBundle(
                     "strings",

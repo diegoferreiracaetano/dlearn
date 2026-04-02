@@ -33,10 +33,8 @@ class ChallengeCoordinator(
         _currentSession = session
         _activeChallenge = challenge
 
-        // Emite no flow específico (usado pelos handlers)
         _challenges.emit(session)
 
-        // Dispara o evento global capturado pelo AppNavGraph/UI Root
         globalEventDispatcher.emit(GlobalEvent.Challenge(session))
     }
 

@@ -38,7 +38,6 @@ class AuthRepositoryRemote(
         password: String,
     ): Flow<AuthResponse> =
         flow {
-            // Força logout antes de registrar para não carregar tokens antigos
             sessionManager.logout()
 
             val response =

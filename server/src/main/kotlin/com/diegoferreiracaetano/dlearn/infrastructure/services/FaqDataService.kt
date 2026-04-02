@@ -32,7 +32,7 @@ class FaqDataService {
         val langCode = normalizeLanguage(lang)
 
         return faqData[langCode]?.get(reference)
-            ?: faqData["en"]?.get(reference) // Fallback apenas para inglês se não achar a chave no idioma solicitado
+            ?: faqData["en"]?.get(reference)
     }
 
     private fun normalizeLanguage(language: String): String =

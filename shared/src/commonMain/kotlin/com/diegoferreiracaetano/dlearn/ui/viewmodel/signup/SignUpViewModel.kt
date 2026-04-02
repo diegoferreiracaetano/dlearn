@@ -25,7 +25,6 @@ class SignUpViewModel(
         viewModelScope.launch {
             _state.value = SignUpUIState.Loading
 
-            // Garante que qualquer sessão anterior (ex: admin) seja limpa antes do novo cadastro
             sessionManager.logout()
 
             authRepository

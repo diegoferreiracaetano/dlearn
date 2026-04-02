@@ -12,7 +12,7 @@ class ChallengeDataService {
     )
 
     private val pendingChallenges = ConcurrentHashMap<String, ChallengeEntry>()
-    private val validatedTokens = ConcurrentHashMap<String, String>() // token -> userId
+    private val validatedTokens = ConcurrentHashMap<String, String>()
 
     fun isTokenValidated(token: String): Boolean = validatedTokens.containsKey(token)
 

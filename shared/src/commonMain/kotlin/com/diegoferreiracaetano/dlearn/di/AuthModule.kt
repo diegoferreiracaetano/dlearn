@@ -16,17 +16,14 @@ val authModule =
         single { SessionManager(get()) }
         single { SocialAuthManager() }
 
-        // Use Cases
+
         factory { SocialSignInUseCase(get(), get()) }
 
-        // Challenge Engine & Coordinator
         single { ChallengeCoordinator(get()) }
         single { ChallengeEngine(get(), getAll()) }
 
-        // Handlers de Desafio
         single { OtpChallengeHandler() }
         single<ChallengeHandler> { get<OtpChallengeHandler>() }
 
-        // Repository
         single<ChallengeRepository> { ChallengeRepositoryRemote(get(), get(), get()) }
     }

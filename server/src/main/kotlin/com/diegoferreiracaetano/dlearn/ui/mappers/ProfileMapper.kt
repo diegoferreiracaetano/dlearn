@@ -115,7 +115,6 @@ class ProfileMapper(
         currentLang: String,
         currentCountry: String?,
     ): SectionComponent {
-        // Busca o nome traduzido do idioma (ex: language_pt_br)
         val languageType =
             when (currentLang.lowercase().replace("-", "_")) {
                 "pt_br" -> AppStringType.LANGUAGE_PT_BR
@@ -130,7 +129,6 @@ class ProfileMapper(
                 currentLang
             }
 
-        // Busca o nome traduzido do país (ex: country_br)
         val countryType =
             when (currentCountry?.lowercase()) {
                 "br" -> AppStringType.COUNTRY_BR

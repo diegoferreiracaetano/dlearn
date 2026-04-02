@@ -35,7 +35,6 @@ class OtpChallengeHandler : ChallengeHandler {
      * @param token O validatedToken retornado pelo endpoint /resolve do backend.
      */
     fun onChallengeResolved(token: String) {
-        // A chave "validatedToken" deve bater com o esperado pelo ChallengeInterceptor
         currentDeferred?.complete(ChallengeResult.Success(mapOf("validatedToken" to token)))
     }
 

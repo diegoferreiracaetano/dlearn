@@ -22,7 +22,6 @@ class TmdbMapper(
         val countryProviders = response.watchProviders?.results?.get(TmdbConstants.DEFAULT_REGION)
         val imdbId = response.externalIds?.imdbId
 
-        // Se response.title não é nulo, é um Filme. Se response.name não é nulo e title é nulo, é uma Série.
         val mediaType = if (response.title != null) MediaType.MOVIES else MediaType.SERIES
 
         return MovieDetailDomainData(

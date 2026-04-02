@@ -55,7 +55,6 @@ fun NavController.navigateToPath(
     if (isNativeRoute) {
         navigate(path)
     } else {
-        // Usa o novo AppPath para construir a rota SDUI padrão
         val url = AppPath(path, params)
         val route = AppPath.invoke(AppNavigationRoute.APP_PREFIX, mapOf(AppNavigationRoute.ARG_PATH to url))
         navigate(route)
@@ -73,7 +72,6 @@ val NavBackStackEntry.sduiParams: Map<String, String>?
     get() {
         val paramsMap = mutableMapOf<String, String>()
 
-        // 1. Tenta extrair params do argumento legacy (se houver)
         val paramsString = readOrDefault(AppNavigationRoute.ARG_PARAMS, "")
         if (paramsString.isNotEmpty()) {
             paramsString.split(",").forEach {
@@ -84,11 +82,9 @@ val NavBackStackEntry.sduiParams: Map<String, String>?
             }
         }
 
-        // 2. Se o path tiver query params, o AppPath(path) vai extrair
         val request = AppPath.parse(sduiPath)
         request.params?.let { paramsMap.putAll(it) }
 
-        // 3. Tenta extrair FAQ_REF_ARG individualmente
         val ref = readOrDefault(AppQueryParam.REF, "")
         if (ref.isNotEmpty()) {
             paramsMap[AppQueryParam.REF] = ref

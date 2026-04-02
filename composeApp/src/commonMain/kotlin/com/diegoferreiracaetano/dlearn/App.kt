@@ -19,10 +19,6 @@ import org.koin.compose.koinInject
 @Composable
 fun App() {
     val snackbarHostState = remember { SnackbarHostState() }
-    val preferencesRepository: PreferencesRepository = koinInject()
-
-    // Observa mudanças globais de configuração para forçar a atualização da UI
-    // val configTick by preferencesRepository.onConfigurationChanged.collectAsState(initial = 0L)
 
     DLearnTheme {
         CompositionLocalProvider(
@@ -35,8 +31,6 @@ fun App() {
 
             var showLandingScreen by remember { mutableStateOf(true) }
 
-            // Usamos o configTick como chave para reconstruir o grafo de navegação quando as preferências mudarem
-            //  key(configTick) {
             if (showLandingScreen) {
                 SplashScreen(
                     onTimeout = { showLandingScreen = false },
@@ -44,7 +38,6 @@ fun App() {
             } else {
                 AppNavGraph(sessionManager = sessionManager)
             }
-            //    }
         }
     }
 }

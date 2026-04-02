@@ -13,7 +13,7 @@ class InMemoryFeatureToggleService : FeatureToggleService {
     private val toggles =
         mapOf(
             Feature.EXTERNAL_AUTH_SYNC to true,
-            Feature.MEMBER_SECTION to false, // Definido como desativado conforme solicitado
+            Feature.MEMBER_SECTION to false,
         )
 
     override fun isEnabled(feature: Feature): Boolean = toggles[feature] ?: false

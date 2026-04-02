@@ -133,10 +133,6 @@ internal class TmdbClient(
                 mapOf("append_to_response" to "credits,videos,watch/providers,external_ids"),
             )
 
-        // No checkout do detalhe, já podemos injetar se é favorito ou não consultando o banco local
-        // Mas para manter a pureza, o orchestrator ou usecase pode fazer isso.
-        // No entanto, como você quer que o client já venha "limpo", o TmdbClient pode resolver isso.
-
         return tmdbMapper.toMovieDetail(response)
     }
 

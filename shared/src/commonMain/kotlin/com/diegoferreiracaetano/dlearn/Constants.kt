@@ -15,6 +15,22 @@ object AppConstants {
     const val X_NOTIFICATIONS_ENABLED = "X-Notifications-Enabled"
 }
 
+object PreferenceConstants {
+    const val PREF_NOTIFICATIONS = "pref_notifications"
+    const val PREF_LANGUAGE = "pref_language"
+    const val PREF_COUNTRY = "pref_country"
+}
+
+object LocaleConstants {
+    const val LANG_PT_BR = "pt-BR"
+    const val LANG_EN_US = "en-US"
+    const val LANG_ES_ES = "es-ES"
+
+    const val COUNTRY_BR = "BR"
+    const val COUNTRY_US = "US"
+    const val COUNTRY_ES = "ES"
+}
+
 object TokenConstants {
     const val CLAIM_USER_ID = "user_id"
     const val CLAIM_EMAIL = "email"

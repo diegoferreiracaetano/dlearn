@@ -46,7 +46,6 @@ class MovieDetailOrchestrator(
                 watchlistRepository.toggleWatchlist(userId, movieId, active)
             }
 
-            // Busca os dados (agora com o estado de favorito/watchlist atualizado no nosso banco)
             val domainData = getMovieDetailUseCase.execute(movieId, language, userId)
             emit(screenBuilder.build(domainData, language))
         }

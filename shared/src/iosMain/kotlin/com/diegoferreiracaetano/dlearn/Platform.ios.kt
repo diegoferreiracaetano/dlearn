@@ -19,8 +19,6 @@ class IOSPlatform : Platform {
         val localeTag = if (country.isNotEmpty()) "$language-$country" else language
         NSUserDefaults.standardUserDefaults.setObject(listOf(localeTag), "AppleLanguages")
         NSUserDefaults.standardUserDefaults.synchronize()
-        // No iOS, a mudança de locale do sistema não é permitida programaticamente de forma global e imediata para todos os recursos,
-        // mas setar AppleLanguages ajuda na persistência para a próxima inicialização e para algumas APIs de formatação.
     }
 }
 

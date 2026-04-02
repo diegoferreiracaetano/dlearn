@@ -37,7 +37,6 @@ class AuthProviderDataService : AuthProviderRepository {
         dbQuery {
             providers.forEach { provider ->
                 try {
-                    // Limpa duplicatas para o mesmo provedor e usuário antes de inserir (Simulando Upsert)
                     AuthProviderTable.deleteWhere {
                         (AuthProviderTable.userId eq userId) and (AuthProviderTable.provider eq provider.provider.name)
                     }

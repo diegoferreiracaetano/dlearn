@@ -75,7 +75,6 @@ import kotlin.time.Duration.Companion.minutes
 
 val serverModule =
     module {
-        // 1. Infraestrutura Base
         single {
             HttpClient(CIO) {
                 install(ContentNegotiation) {
@@ -94,19 +93,16 @@ val serverModule =
         single { I18nProvider() }
         single<FeatureToggleService> { InMemoryFeatureToggleService() }
 
-        // 2. Clientes de Terceiros e Mapeadores de Infra
         single<MovieClient> { TmdbClient(get(), get()) }
         single { TmdbMapper(get()) }
         single { WatchProviderUrlMapper() }
-        single { VideoMapper() }
+        single { VideoMapper(get()) }
 
-        // 3. Repositórios (Data Sources)
         single<AuthProviderRepository> { AuthProviderDataService() }
         single<UserRepository> { UserDataService() }
         single<FavoriteRepository> { FavoriteDataService() }
         single<WatchlistRepository> { WatchlistDataService() }
 
-        // 4. Serviços de Domínio e Lógica de Negócio
         single { HomeDataService(get(), get()) }
         single { MovieDetailDataService(get()) }
         single { SearchDataService(get()) }
@@ -115,26 +111,22 @@ val serverModule =
         single { ChallengeDataService() }
         single { PasswordDataService(get(), get()) }
 
-        // External Auth Services
         single { AuthProviderSyncService(getAll<ExternalAuthService>(), get(), get()) }
 
         single { ChallengeMapper() }
 
-        // 5. Casos de Uso
         single { GetHomeDataUseCase(get()) }
         single { GetMovieDetailUseCase(get()) }
         single { GetSearchDataUseCase(get()) }
         single { ChangePasswordUseCase(get()) }
         single { LinkExternalProviderUseCase(get(), get()) }
 
-        // 6. Mapeadores de UI (SDUI)
-        single { HomeMapper() }
+        single { HomeMapper(get()) }
         single { MovieDetailMapper(get()) }
         single { ProfileMapper(get(), get()) }
         single { SettingsMapper(get()) }
-        single { VideoMapper() }
+        single { VideoMapper(get()) }
 
-        // 7. Screen Builders (BFF)
         single { HomeScreenBuilder(get(), get()) }
         single { MovieDetailScreenBuilder(get()) }
         single { WatchlistScreenBuilder(get()) }
@@ -145,10 +137,9 @@ val serverModule =
         single { SettingsScreenBuilder(get(), get()) }
         single { SearchScreenBuilder(get()) }
         single { FaqScreenBuilder() }
-        single { VerifyAccountScreenBuilder() }
-        single { UserListScreenBuilder() }
+        single { VerifyAccountScreenBuilder(get()) }
+        single { UserListScreenBuilder(get()) }
 
-        // 8. Orchestrators (Gateways de Tela)
         single { HomeOrchestrator(get(), get()) }
         single { MovieDetailOrchestrator(get(), get(), get(), get()) }
         single { LoginOrchestrator(get(), get(), get(), get()) }
@@ -164,7 +155,6 @@ val serverModule =
         single { SettingsOrchestrator(get()) }
         single { UserListOrchestrator(get(), get()) }
 
-        // 9. AppOrchestrator (Main Gateway)
         single<Orchestrator> {
             AppOrchestrator(
                 get(),

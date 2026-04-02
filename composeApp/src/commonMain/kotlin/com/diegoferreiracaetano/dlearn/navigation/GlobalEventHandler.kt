@@ -26,14 +26,12 @@ class GlobalEventHandler(
     }
 
     private fun handleChallenge(event: GlobalEvent.Challenge) {
-        // Verificamos se há algum desafio pendente na sessão que requer ação do usuário
         val hasOtpChallenge =
             event.session.challenge.let {
                 it.challengeType == ChallengeType.OTP_SMS || it.challengeType == ChallengeType.OTP_EMAIL
             }
 
         if (hasOtpChallenge) {
-            // Abre o desafio como um DIALOG por cima da tela atual
             navController.navigate(AppNavigationRoute.VERIFY_ACCOUNT)
         }
     }
@@ -55,6 +53,6 @@ class GlobalEventHandler(
             GlobalEvent.MessageType.SUCCESS -> SnackbarType.SUCCESS
             GlobalEvent.MessageType.ERROR -> SnackbarType.ERROR
             GlobalEvent.MessageType.WARNING -> SnackbarType.WARNING
-            GlobalEvent.MessageType.INFO -> SnackbarType.SUCCESS // Fallback para SUCCESS já que o Design System não tem INFO
+            GlobalEvent.MessageType.INFO -> SnackbarType.SUCCESS
         }
 }

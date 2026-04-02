@@ -40,7 +40,6 @@ class AuthInterceptor(
 
         if (response.status == HttpStatusCode.Unauthorized) {
             return mutex.withLock {
-                // Check if the token was already refreshed by another thread
                 val currentToken = sessionManager.token()
                 val requestToken = response.request.headers[HttpHeaders.Authorization]?.removePrefix("Bearer ")
 

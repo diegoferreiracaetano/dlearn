@@ -20,10 +20,8 @@ class BiometricChallengeHandler(
         session: ChallengeSession,
     ): ChallengeResult =
         try {
-            // Chama a interface que será implementada via Expect/Actual ou Injeção Nativa
             val result = biometricProvider.authenticate()
             if (result is BiometricResult.Success) {
-                // Padronizado para "validatedToken" para que o Interceptor possa repetir a requisição original
                 ChallengeResult.Success(mapOf("validatedToken" to result.token))
             } else {
                 ChallengeResult.Cancelled

@@ -19,11 +19,9 @@ import io.ktor.server.routing.RoutingResolveContext
 import io.ktor.util.AttributeKey
 import org.koin.ktor.ext.get
 
-// Nomes das chaves para busca segura
 const val CHALLENGE_PREFERENCE_KEY = "ChallengePreference"
 const val CHALLENGE_TOKEN_KEY = "ChallengeToken"
 
-// Constantes para uso interno do Plugin
 internal val ChallengePreferenceAttrKey = AttributeKey<ChallengeType>(CHALLENGE_PREFERENCE_KEY)
 internal val ChallengeTokenAttrKey = AttributeKey<String>(CHALLENGE_TOKEN_KEY)
 

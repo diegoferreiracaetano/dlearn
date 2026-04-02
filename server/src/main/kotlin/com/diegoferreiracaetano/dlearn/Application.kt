@@ -77,7 +77,6 @@ fun Application.module() {
 
     install(CachingHeaders) {
         options { _, outgoingContent ->
-            // Não aplica cache para erros (status >= 400)
             if (outgoingContent.status != null && outgoingContent.status!!.value >= 400) return@options null
 
             when (outgoingContent.contentType?.withoutParameters()) {
@@ -87,9 +86,7 @@ fun Application.module() {
         }
     }
 
-    // StatusPages deve vir após a maioria dos plugins que alteram a resposta
     configureStatusPages()
 
-    // Configura as rotas isoladamente
     configureRouting()
 }

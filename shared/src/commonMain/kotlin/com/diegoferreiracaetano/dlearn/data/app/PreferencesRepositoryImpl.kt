@@ -17,7 +17,6 @@ class PreferencesRepositoryImpl(
     override val onConfigurationChanged: StateFlow<Long> = _onConfigurationChanged.asStateFlow()
 
     init {
-        // Garante que o locale salvo nas preferências seja aplicado ao iniciar o repositório
         updatePlatformLocale()
     }
 

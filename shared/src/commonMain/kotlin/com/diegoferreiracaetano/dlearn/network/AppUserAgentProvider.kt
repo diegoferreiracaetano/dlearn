@@ -14,7 +14,6 @@ class AppUserAgentProvider(
             deviceName = platform.name,
         )
 
-    // Métodos auxiliares para pegar os dados de localização que agora vão no Body/Header do Request
     fun getLanguage(): String = preferencesRepository.language
 
     fun getCountry(): String = preferencesRepository.country

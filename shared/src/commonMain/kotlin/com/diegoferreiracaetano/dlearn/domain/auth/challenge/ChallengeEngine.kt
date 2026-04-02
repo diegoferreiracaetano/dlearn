@@ -13,7 +13,6 @@ class ChallengeEngine(
     suspend fun resolve(session: ChallengeSession): ChallengeResult {
         val challenge = session.challenge
 
-        // Encontra um handler capaz de lidar com o desafio enviado pelo servidor
         val handler =
             handlers.find {
                 it.canHandle(challenge)

@@ -8,8 +8,8 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
 enum class CacheStrategy {
-    NETWORK_FIRST, // Tenta a fonte, usa cache apenas em caso de erro (Ideal para Mobile Offline)
-    CACHE_FIRST, // Usa cache se existir, senão busca na fonte e salva (Ideal para Server Performance)
+    NETWORK_FIRST,
+    CACHE_FIRST
 }
 
 @PublishedApi
@@ -42,8 +42,6 @@ inline fun <reified T> Flow<T>.toCache(
                     actualManager.put(cacheKey, data, serializer)
                 }.collect { emit(it) }
         } catch (e: Exception) {
-            // Se for CACHE_FIRST e chegou aqui, o cache já foi testado e falhou.
-            // No NETWORK_FIRST, tentamos o cache agora como fallback.
             if (strategy == CacheStrategy.NETWORK_FIRST) {
                 val cachedObj = actualManager.get(cacheKey, serializer)
                 if (cachedObj != null) {

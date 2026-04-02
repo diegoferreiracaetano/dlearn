@@ -104,7 +104,7 @@ val sharedModule =
                 plugin(HttpSend).intercept { request ->
                     authInterceptor.intercept(request)
 
-                    // Adicionando headers globais dinâmicos
+
                     val agent = userAgentProvider.get()
                     request.header(HttpHeaders.UserAgent, agent.toHeader())
                     request.header(HttpHeaders.AcceptLanguage, preferencesRepository.language)
@@ -131,7 +131,6 @@ val sharedModule =
         single<KeyValueStorage> { SettingsKeyValueStorage(get()) }
         single<PreferencesRepository> { PreferencesRepositoryImpl(get(), getPlatform()) }
 
-        // Novo Gerenciador de Cache (Interface e Implementação persistente para o App)
         single<CacheManager> { PersistentCacheManager(get(), get()) }
 
         single<PasswordRepository> { PasswordRepositoryRemote(get()) }

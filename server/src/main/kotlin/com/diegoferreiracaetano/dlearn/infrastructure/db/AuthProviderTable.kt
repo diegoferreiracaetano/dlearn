@@ -7,7 +7,7 @@ object AuthProviderTable : Table("auth_providers") {
     val userId = varchar("user_id", 36).references(UserTable.id)
     val provider = varchar("provider", 50)
     val externalId = varchar("external_id", 255)
-    val metadata = text("metadata").nullable() // JSON string
+    val metadata = text("metadata").nullable()
 
     override val primaryKey = PrimaryKey(id)
 

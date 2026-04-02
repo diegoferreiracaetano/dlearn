@@ -14,17 +14,24 @@ object Constants {
     const val UNDERSCORE = "_"
     const val COMMA = ","
     const val SEMICOLON = ";"
+    const val DOT = "."
+    const val SLASH = "/"
+    const val COLON = ":"
 }
 
 object AppConstants {
+    const val APP_NAME = "DLearn"
+    const val APP_VERSION = "1.0.0"
     const val AVATAR_PLACEHOLDER = "https://avatars.githubusercontent.com/u/1023?v=4"
     const val X_COUNTRY = "X-Country"
     const val X_NOTIFICATIONS_ENABLED = "X-Notifications-Enabled"
+    const val UNKNOWN = "Unknown"
 }
 
 object UIConstants {
     const val DEFAULT_CONTENT_RATING = "L"
     const val RATING_FORMAT = "%.1f"
+    const val TYPE_DISCRIMINATOR = "type"
 }
 
 object PreferenceConstants {
@@ -68,6 +75,17 @@ object TokenConstants {
     const val CLAIM_EMAIL = "email"
     const val AUTH_JWT_NAME = "auth-jwt"
     const val REALM_DLEARN = "dlearn"
+    const val BEARER_PREFIX = "Bearer "
+    const val ACCESS_TOKEN_KEY = "access_token"
+    const val REFRESH_TOKEN_KEY = "refresh_token"
+    const val USER_DATA_KEY = "user_data"
+}
+
+object ApiEndpoints {
+    const val V1_HOME = "v1/home"
+    const val V1_APP = "/v1/app"
+    const val V1_AUTH_REFRESH = "/v1/auth/refresh"
+    const val V1_PASSWORD_CHANGE = "v1/password/change"
 }
 
 object MetadataKeys {
@@ -103,6 +121,7 @@ object TmdbConstants {
     const val PARAM_WITH_GENRES = "with_genres"
     const val PARAM_APPEND_TO_RESPONSE = "append_to_response"
     const val PARAM_QUERY = "query"
+    const val PARAM_TYPE = "type"
 
     const val APPEND_DETAILS = "credits,videos,watch/providers,external_ids"
 

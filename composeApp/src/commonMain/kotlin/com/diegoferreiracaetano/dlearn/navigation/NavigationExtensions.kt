@@ -4,6 +4,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.savedstate.read
+import com.diegoferreiracaetano.dlearn.Constants
 
 inline fun <reified T : Enum<T>> NavBackStackEntry.readEnumOrDefault(
     key: String,
@@ -72,10 +73,10 @@ val NavBackStackEntry.sduiParams: Map<String, String>?
     get() {
         val paramsMap = mutableMapOf<String, String>()
 
-        val paramsString = readOrDefault(AppNavigationRoute.ARG_PARAMS, "")
+        val paramsString = readOrDefault(AppNavigationRoute.ARG_PARAMS, Constants.EMPTY_STRING)
         if (paramsString.isNotEmpty()) {
-            paramsString.split(",").forEach {
-                val parts = it.split(":")
+            paramsString.split(Constants.COMMA).forEach {
+                val parts = it.split(Constants.COLON)
                 if (parts.size >= 2) {
                     paramsMap[parts[0]] = parts[1]
                 }
@@ -85,7 +86,7 @@ val NavBackStackEntry.sduiParams: Map<String, String>?
         val request = AppPath.parse(sduiPath)
         request.params?.let { paramsMap.putAll(it) }
 
-        val ref = readOrDefault(AppQueryParam.REF, "")
+        val ref = readOrDefault(AppQueryParam.REF, Constants.EMPTY_STRING)
         if (ref.isNotEmpty()) {
             paramsMap[AppQueryParam.REF] = ref
         }

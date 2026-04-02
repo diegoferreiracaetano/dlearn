@@ -9,26 +9,16 @@ actual open class SocialAuthManager actual constructor() {
         var delegate: SocialAuthManagerDelegate? = null
     }
 
-    actual open suspend fun googleSignIn(): SocialAuthResult = delegate?.googleSignIn() ?: SocialAuthResult.Cancelled
+    actual open suspend fun googleSignIn(): SocialAuthResult =
+        delegate?.googleSignIn() ?: SocialAuthResult.Cancelled
 
-    actual open suspend fun appleSignIn(): SocialAuthResult = delegate?.appleSignIn() ?: SocialAuthResult.Cancelled
+    actual open suspend fun appleSignIn(): SocialAuthResult =
+        delegate?.appleSignIn() ?: SocialAuthResult.Cancelled
 
-    actual open suspend fun facebookSignIn(): SocialAuthResult = delegate?.facebookSignIn() ?: SocialAuthResult.Cancelled
+    actual open suspend fun facebookSignIn(): SocialAuthResult =
+        delegate?.facebookSignIn() ?: SocialAuthResult.Cancelled
 
     actual open suspend fun signOut() {
         delegate?.signOut()
     }
-}
-
-/**
- * Interface que o Swift deve implementar para fornecer as funcionalidades reais.
- */
-interface SocialAuthManagerDelegate {
-    suspend fun googleSignIn(): SocialAuthResult
-
-    suspend fun appleSignIn(): SocialAuthResult
-
-    suspend fun facebookSignIn(): SocialAuthResult
-
-    suspend fun signOut()
 }

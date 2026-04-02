@@ -17,9 +17,10 @@ import org.junit.Test
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
+import org.koin.test.KoinTest
 import kotlin.test.assertEquals
 
-class HomeOrchestratorTest {
+class HomeOrchestratorTest : KoinTest {
 
     private lateinit var subject: HomeOrchestrator
     private val getHomeDataUseCase = mockk<GetHomeDataUseCase>(relaxed = true)
@@ -32,6 +33,7 @@ class HomeOrchestratorTest {
 
     @Before
     fun setup() {
+        stopKoin()
         startKoin {
             modules(module {
                 single { cacheManager }

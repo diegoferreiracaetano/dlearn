@@ -58,6 +58,7 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.h2)
     testImplementation(libs.ktor.client.mock)
+    testImplementation("io.insert-koin:koin-test:${libs.versions.koin.get()}")
 }
 
 buildConfig {

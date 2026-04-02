@@ -1,7 +1,6 @@
 import ComposeApp
 import FirebaseCore
 import GoogleSignIn
-import SwiftUI
 
 class SwiftSocialAuthProvider: NSObject, SocialAuthManagerDelegate {
 

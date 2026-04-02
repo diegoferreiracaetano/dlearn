@@ -57,6 +57,7 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.h2)
+    testImplementation(libs.ktor.client.mock)
 }
 
 buildConfig {

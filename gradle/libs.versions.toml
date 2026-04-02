@@ -29,11 +29,14 @@ designsystem = "1.0.30"
 datastore = "1.1.2"
 exposed = "0.59.0"
 sqlite-jdbc = "3.49.1.0"
+h2 = "2.3.232"
 firebase-gitlive = "2.4.0"
 google-services = "4.4.4"
 firebase-bom = "34.11.0"
 androidx-credentials = "1.3.0"
 googleid = "1.1.1"
+mockk = "1.13.12"
+kover = "0.9.8"
 
 [libraries]
 firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebase-gitlive" }
@@ -50,7 +53,7 @@ designsystem = { module = "com.diegoferreiracaetano.dlearn:designsystem", versio
 image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "imageLoader" }
 koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koinKtor" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlin-testJunit = { module = "org.jetbrains.kotlin-test:kotlin-test-junit", version.ref = "kotlin" }
+kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesCore" }
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -96,6 +99,8 @@ exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "e
 exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
 sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "sqlite-jdbc" }
+h2 = { module = "com.h2database:h2", version.ref = "h2" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -110,3 +115,4 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 googleServices = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

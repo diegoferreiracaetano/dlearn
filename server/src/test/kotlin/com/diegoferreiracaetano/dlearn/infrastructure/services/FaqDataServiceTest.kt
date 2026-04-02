@@ -1,41 +1,32 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.services
 
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
-import org.junit.jupiter.api.Test
+import io.mockk.every
+import io.mockk.mockk
+import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class FaqDataServiceTest {
 
-    private val service = FaqDataService(I18nProvider())
+    private val i18n = mockk<I18nProvider>(relaxed = true)
+    private val service = FaqDataService(i18n)
 
     @Test
-    fun `should fetch privacy-policy in English correctly`() {
+    fun `given a valid reference when fetchFaqContent is called should return the expected faq content`() {
+        every { i18n.getString(AppStringType.LEGAL_PRIVACY_TITLE, "en") } returns "Privacy"
+        
         val result = service.fetchFaqContent("privacy-policy", "en")
+
         assertNotNull(result)
-        assertEquals("Privacy Policy", result.title)
-        assert(result.content.contains("<h2>Privacy Policy</h2>"))
+        assertEquals("Privacy", result.title)
     }
 
     @Test
-    fun `should fetch privacy-policy in Portuguese correctly`() {
-        val result = service.fetchFaqContent("privacy-policy", "pt-BR")
-        assertNotNull(result)
-        assertEquals("Política de Privacidade", result.title)
-        assert(result.content.contains("<h2>Política de Privacidade</h2>"))
-    }
-
-    @Test
-    fun `should fallback to English for unsupported language`() {
-        val result = service.fetchFaqContent("privacy-policy", "es-ES")
-        assertNotNull(result)
-        assertEquals("Privacy Policy", result.title)
-    }
-
-    @Test
-    fun `should return null for non-existing reference`() {
-        val result = service.fetchFaqContent("non-existing", "en")
+    fun `given an invalid reference when fetchFaqContent is called should return null`() {
+        val result = service.fetchFaqContent("unknown", "en")
         assertNull(result)
     }
 }

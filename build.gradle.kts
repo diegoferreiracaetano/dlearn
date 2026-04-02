@@ -9,12 +9,14 @@ plugins {
     alias(libs.plugins.kotlinSerialization) apply false
     alias(libs.plugins.buildconfig) apply false
     alias(libs.plugins.googleServices) apply false
+    alias(libs.plugins.kover)
 }
 
 val detektVersion = libs.versions.detekt.get()
 
 subprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
+    apply(plugin = "org.jetbrains.kotlinx.kover")
 
     dependencies {
         "detektPlugins"("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")

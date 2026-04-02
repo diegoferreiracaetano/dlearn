@@ -6,8 +6,10 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -15,18 +17,27 @@ import kotlin.test.assertNull
 class UserDataServiceTest {
 
     private lateinit var userDataService: UserDataService
+    private lateinit var db: Database
+    private val dbName = "test_user_${UUID.randomUUID().toString().replace("-", "")}"
 
     @Before
     fun setup() {
-        Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;", driver = "org.h2.Driver")
-        transaction {
+        db = Database.connect("jdbc:h2:mem:$dbName;DB_CLOSE_DELAY=-1;", driver = "org.h2.Driver")
+        transaction(db) {
             SchemaUtils.create(UserTable)
         }
         userDataService = UserDataService()
     }
+    
+    @After
+    fun tearDown() {
+        transaction(db) {
+            SchemaUtils.drop(UserTable)
+        }
+    }
 
     @Test
-    fun `salvar e buscar por email deve funcionar corretamente`() = runBlocking {
+    fun `given a user saved when findByEmail should return the user`() = runBlocking {
         val user = User(id = "1", name = "Test", email = "test@test.com")
         userDataService.save(user, "password123")
 
@@ -37,7 +48,7 @@ class UserDataServiceTest {
     }
 
     @Test
-    fun `autenticar deve retornar usuario em caso de sucesso`() = runBlocking {
+    fun `given a valid email and password when authenticate should return the user`() = runBlocking {
         val user = User(id = "2", name = "Auth", email = "auth@test.com")
         userDataService.save(user, "secret")
 
@@ -47,7 +58,7 @@ class UserDataServiceTest {
     }
 
     @Test
-    fun `autenticar deve retornar null com senha errada`() = runBlocking {
+    fun `given a valid email but wrong password when authenticate should return null`() = runBlocking {
         val user = User(id = "3", name = "Wrong", email = "wrong@test.com")
         userDataService.save(user, "right")
 

@@ -1,5 +1,7 @@
 package com.diegoferreiracaetano.dlearn.data.home.remote
 
+import com.diegoferreiracaetano.dlearn.ApiEndpoints
+import com.diegoferreiracaetano.dlearn.TmdbConstants
 import com.diegoferreiracaetano.dlearn.domain.home.HomeFilterType
 import com.diegoferreiracaetano.dlearn.domain.home.HomeRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -17,8 +19,8 @@ class HomeRepositoryRemote(
         flow {
             val response =
                 httpClient
-                    .get("v1/home") {
-                        parameter("type", type.name)
+                    .get(ApiEndpoints.V1_HOME) {
+                        parameter(TmdbConstants.PARAM_TYPE, type.name)
                     }.body<Screen>()
             emit(response)
         }

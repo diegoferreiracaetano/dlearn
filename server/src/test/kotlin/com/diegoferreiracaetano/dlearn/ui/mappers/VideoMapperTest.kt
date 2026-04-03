@@ -54,4 +54,40 @@ class VideoMapperTest {
         assertEquals(2, result.size)
         assertNotNull(result.first())
     }
+
+    @Test
+    fun `given a SERIES video when toMovieItem is called should use SERIES label`() {
+        val seriesVideo = Video(
+            id = "2",
+            title = "Series",
+            subtitle = "2023",
+            description = "D",
+            url = "url",
+            imageUrl = "img",
+            mediaType = MediaType.SERIES
+        )
+        every { i18n.getString(AppStringType.FILTER_SERIES, "en") } returns "Series"
+
+        val result = mapper.toMovieItem(seriesVideo, "en")
+
+        assertEquals("Series", result.movieType)
+    }
+
+    @Test
+    fun `given a video with null rating when toMovieItem is called should return null rating`() {
+        val videoNoRating = Video(
+            id = "3",
+            title = "NoRating",
+            subtitle = "2022",
+            description = "D",
+            url = "url",
+            imageUrl = "img",
+            rating = null,
+            mediaType = MediaType.MOVIES
+        )
+
+        val result = mapper.toMovieItem(videoNoRating, "en")
+
+        assertEquals(null, result.rating)
+    }
 }

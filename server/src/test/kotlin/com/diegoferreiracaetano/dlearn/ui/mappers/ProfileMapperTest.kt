@@ -12,6 +12,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class ProfileMapperTest {
 
@@ -24,7 +25,7 @@ class ProfileMapperTest {
         name = "Diego",
         email = "diego@test.com",
         imageUrl = "url",
-        isPremium = true
+        isPremium = true,
     )
 
     @Test
@@ -68,6 +69,13 @@ class ProfileMapperTest {
     }
 
     @Test
+    fun `given the member section feature is disabled when toAccountSection is called should only include password item`() {
+        every { featureToggleService.isEnabled(Feature.MEMBER_SECTION) } returns false
+        val result = mapper.toAccountSection("pt")
+        assertEquals(1, result.items.size)
+    }
+
+    @Test
     fun `given a specific language and country when toGeneralSection is called should map correctly the display names`() {
         every { i18n.getString(AppStringType.LANGUAGE_PT_BR, LocaleConstants.LANG_PT_BR) } returns "Português"
         every { i18n.getString(AppStringType.COUNTRY_BR, LocaleConstants.LANG_PT_BR) } returns "Brasil"
@@ -76,5 +84,65 @@ class ProfileMapperTest {
 
         assertEquals("Português", result.items.find { it.id == "language" }?.value)
         assertEquals("Brasil", result.items.find { it.id == "country" }?.value)
+    }
+
+    @Test
+    fun `given an unknown language when toGeneralSection is called should use raw lang value`() {
+        val result = mapper.toGeneralSection("xx", null)
+
+        assertEquals("xx", result.items.find { it.id == "language" }?.value)
+    }
+
+    @Test
+    fun `given a null country when toGeneralSection is called should return empty country value`() {
+        val result = mapper.toGeneralSection("en", null)
+
+        assertEquals("", result.items.find { it.id == "country" }?.value)
+    }
+
+    @Test
+    fun `given a language when toMoreSection is called should return section with 3 items`() {
+        val result = mapper.toMoreSection("en")
+        assertEquals(3, result.items.size)
+    }
+
+    @Test
+    fun `given a language when toSaveButton is called should return footer with save action`() {
+        val result = mapper.toSaveButton("en")
+        assertNotNull(result)
+    }
+
+    @Test
+    fun `given a language when toFooter is called should return footer with logout label`() {
+        every { i18n.getString(AppStringType.LOGOUT, "en") } returns "Logout"
+        val result = mapper.toFooter("en")
+        assertEquals("Logout", result.label)
+    }
+
+    @Test
+    fun `given an en-US language when toGeneralSection is called should map language display name`() {
+        every { i18n.getString(AppStringType.LANGUAGE_EN_US, LocaleConstants.LANG_EN_US) } returns "English"
+        every { i18n.getString(AppStringType.COUNTRY_US, LocaleConstants.LANG_EN_US) } returns "USA"
+
+        val result = mapper.toGeneralSection(LocaleConstants.LANG_EN_US, LocaleConstants.COUNTRY_US)
+
+        assertEquals("English", result.items.find { it.id == "language" }?.value)
+    }
+
+    @Test
+    fun `given toGeneralSection when called should return section with 4 items`() {
+        val result = mapper.toGeneralSection("en", "US")
+        assertEquals(4, result.items.size)
+    }
+
+    @Test
+    fun `given an es-ES language when toGeneralSection is called should map language and country display names for Spanish`() {
+        every { i18n.getString(AppStringType.LANGUAGE_ES_ES, LocaleConstants.LANG_ES_ES) } returns "Español"
+        every { i18n.getString(AppStringType.COUNTRY_ES, LocaleConstants.LANG_ES_ES) } returns "España"
+
+        val result = mapper.toGeneralSection(LocaleConstants.LANG_ES_ES, LocaleConstants.COUNTRY_ES)
+
+        assertEquals("Español", result.items.find { it.id == "language" }?.value)
+        assertEquals("España", result.items.find { it.id == "country" }?.value)
     }
 }

@@ -1,11 +1,21 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.mappers
 
+import com.diegoferreiracaetano.dlearn.TmdbConstants
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
+import com.diegoferreiracaetano.dlearn.model.TmdbCastRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbCreditsRemote
 import com.diegoferreiracaetano.dlearn.model.TmdbMovieDetailRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbVideoRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbVideosResponseRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbWatchProvidersResponse
+import com.diegoferreiracaetano.dlearn.model.WatchProviderRemote
+import com.diegoferreiracaetano.dlearn.model.WatchProvidersCountry
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class TmdbMapperTest {
 
@@ -43,11 +53,118 @@ class TmdbMapperTest {
             overview = "Overview",
             genres = emptyList()
         )
-        
+
         val result = mapper.toMovieDetail(response)
 
         assertEquals("SERIES_2", result.id)
         assertEquals("Breaking Bad", result.title)
         assertEquals(MediaType.SERIES, result.mediaType)
+    }
+
+    @Test
+    fun `given a TMDB response with cast when toMovieDetail should map cast members with image url`() {
+        val cast = TmdbCastRemote(id = 1, name = "Actor", character = "Role", profilePath = "/actor.jpg")
+        val response = TmdbMovieDetailRemote(
+            id = 3,
+            title = "Movie",
+            genres = emptyList(),
+            credits = TmdbCreditsRemote(cast = listOf(cast))
+        )
+
+        val result = mapper.toMovieDetail(response)
+
+        assertEquals(1, result.cast.size)
+        assertEquals("Actor", result.cast[0].name)
+        assertEquals("Role", result.cast[0].role)
+        assertNotNull(result.cast[0].imageUrl)
+    }
+
+    @Test
+    fun `given a TMDB response with cast and null profilePath when toMovieDetail should map cast member with null imageUrl`() {
+        val cast = TmdbCastRemote(id = 2, name = "Actor2", character = "Role2", profilePath = null)
+        val response = TmdbMovieDetailRemote(
+            id = 4,
+            title = "Movie",
+            genres = emptyList(),
+            credits = TmdbCreditsRemote(cast = listOf(cast))
+        )
+
+        val result = mapper.toMovieDetail(response)
+
+        assertEquals(1, result.cast.size)
+        assertNull(result.cast[0].imageUrl)
+    }
+
+    @Test
+    fun `given a TMDB response with a YouTube trailer when toMovieDetail should extract trailer id`() {
+        val video = TmdbVideoRemote(id = "v1", key = "trailer-key", name = "Trailer", site = TmdbConstants.SITE_YOUTUBE, type = TmdbConstants.TYPE_TRAILER)
+        val response = TmdbMovieDetailRemote(
+            id = 5,
+            title = "Movie",
+            genres = emptyList(),
+            videos = TmdbVideosResponseRemote(results = listOf(video))
+        )
+
+        val result = mapper.toMovieDetail(response)
+
+        assertEquals("trailer-key", result.trailerId)
+    }
+
+    @Test
+    fun `given a TMDB response with a YouTube teaser when toMovieDetail should extract teaser id`() {
+        val video = TmdbVideoRemote(id = "v2", key = "teaser-key", name = "Teaser", site = TmdbConstants.SITE_YOUTUBE, type = TmdbConstants.TYPE_TEASER)
+        val response = TmdbMovieDetailRemote(
+            id = 6,
+            title = "Movie",
+            genres = emptyList(),
+            videos = TmdbVideosResponseRemote(results = listOf(video))
+        )
+
+        val result = mapper.toMovieDetail(response)
+
+        assertEquals("teaser-key", result.trailerId)
+    }
+
+    @Test
+    fun `given a TMDB response with a non-YouTube video when toMovieDetail should return null trailerId`() {
+        val video = TmdbVideoRemote(id = "v3", key = "vimeo-key", name = "Clip", site = "Vimeo", type = TmdbConstants.TYPE_TRAILER)
+        val response = TmdbMovieDetailRemote(
+            id = 7,
+            title = "Movie",
+            genres = emptyList(),
+            videos = TmdbVideosResponseRemote(results = listOf(video))
+        )
+
+        val result = mapper.toMovieDetail(response)
+
+        assertNull(result.trailerId)
+    }
+
+    @Test
+    fun `given a TMDB response with watch providers when toMovieDetail should map providers`() {
+        val provider = WatchProviderRemote(providerId = 8, providerName = "Netflix", logoPath = "/logo.jpg")
+        val countryData = WatchProvidersCountry(link = "http://link", flatrate = listOf(provider))
+        val response = TmdbMovieDetailRemote(
+            id = 8,
+            title = "Movie",
+            genres = emptyList(),
+            watchProviders = TmdbWatchProvidersResponse(results = mapOf(TmdbConstants.DEFAULT_REGION to countryData))
+        )
+        every { urlMapper.buildUrls(any(), any(), any(), any()) } returns mockk(relaxed = true)
+
+        val result = mapper.toMovieDetail(response)
+
+        assertEquals(1, result.providers.size)
+        assertEquals("Netflix", result.providers[0].name)
+    }
+
+    @Test
+    fun `given a TMDB response with isFavorite and isInWatchlist flags when toMovieDetail should pass them through`() {
+        val response = TmdbMovieDetailRemote(id = 9, title = "Movie", genres = emptyList())
+
+        val result = mapper.toMovieDetail(response, isFavorite = true, isInWatchlist = true)
+
+        assertEquals(true, result.isFavorite)
+        assertEquals(true, result.isInWatchlist)
     }
 }

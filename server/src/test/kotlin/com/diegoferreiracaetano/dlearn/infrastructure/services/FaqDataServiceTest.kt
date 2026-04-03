@@ -25,6 +25,36 @@ class FaqDataServiceTest {
     }
 
     @Test
+    fun `given a terms-of-service reference when fetchFaqContent is called should return content`() {
+        every { i18n.getString(AppStringType.LEGAL_TERMS_TITLE, "en") } returns "Terms"
+
+        val result = service.fetchFaqContent("terms-of-service", "en")
+
+        assertNotNull(result)
+        assertEquals("Terms", result.title)
+    }
+
+    @Test
+    fun `given an about-us reference when fetchFaqContent is called should return content`() {
+        every { i18n.getString(AppStringType.ABOUT_US_TITLE, "en") } returns "About"
+
+        val result = service.fetchFaqContent("about-us", "en")
+
+        assertNotNull(result)
+        assertEquals("About", result.title)
+    }
+
+    @Test
+    fun `given a help-feedback reference when fetchFaqContent is called should return content`() {
+        every { i18n.getString(AppStringType.HELP_FEEDBACK_TITLE, "en") } returns "Help"
+
+        val result = service.fetchFaqContent("help-feedback", "en")
+
+        assertNotNull(result)
+        assertEquals("Help", result.title)
+    }
+
+    @Test
     fun `given an invalid reference when fetchFaqContent is called should return null`() {
         val result = service.fetchFaqContent("unknown", "en")
         assertNull(result)

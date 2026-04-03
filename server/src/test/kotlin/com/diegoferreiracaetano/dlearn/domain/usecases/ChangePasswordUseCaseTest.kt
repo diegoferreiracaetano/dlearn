@@ -24,4 +24,15 @@ class ChangePasswordUseCaseTest {
 
         assertEquals(expectedResponse, result)
     }
+
+    @Test
+    fun `given a null challenge token when execute is called should delegate to service with null token`() = runTest {
+        val request = mockk<ChangePasswordRequest>()
+        val expectedResponse = mockk<ChangePasswordResponse>()
+        coEvery { passwordDataService.changePassword(request, "user1", null) } returns expectedResponse
+
+        val result = useCase.execute(request, "user1", null)
+
+        assertEquals(expectedResponse, result)
+    }
 }

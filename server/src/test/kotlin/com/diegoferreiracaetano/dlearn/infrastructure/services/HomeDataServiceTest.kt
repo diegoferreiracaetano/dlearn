@@ -41,4 +41,37 @@ class HomeDataServiceTest {
         assertEquals("MOVIES_1", result.banner?.id)
         assertTrue(result.banner?.isFavorite == true)
     }
+
+    @Test
+    fun `given SERIES filter type when fetchHomeData is called should return data with series and skip movies`() = runTest {
+        val seriesVideo = video.copy(id = "SERIES_1", mediaType = MediaType.SERIES)
+        coEvery { movieClient.getPopularSeries("en") } returns listOf(seriesVideo)
+        coEvery { movieClient.getTopRatedSeries("en") } returns listOf(seriesVideo)
+
+        val result = service.fetchHomeData("en", HomeFilterType.SERIES, "user2")
+
+        assertNotNull(result)
+        assertEquals("SERIES_1", result.banner?.id)
+    }
+
+    @Test
+    fun `given ALL filter type when fetchHomeData is called should return combined movies and series data`() = runTest {
+        coEvery { movieClient.getPopularMovies("en") } returns listOf(video)
+        coEvery { movieClient.getPopularSeries("en") } returns listOf(video.copy(id = "SERIES_2"))
+
+        val result = service.fetchHomeData("en", HomeFilterType.ALL, "user3")
+
+        assertNotNull(result)
+    }
+
+    @Test
+    fun `given favorites repository throws when fetchHomeData is called should handle error gracefully and return empty favorites`() = runTest {
+        coEvery { favoriteRepository.getFavorites(any()) } throws RuntimeException("DB error")
+        coEvery { movieClient.getPopularMovies("en") } returns listOf(video)
+
+        val result = service.fetchHomeData("en", HomeFilterType.MOVIES, "user4")
+
+        assertNotNull(result)
+        assertEquals(false, result.banner?.isFavorite)
+    }
 }

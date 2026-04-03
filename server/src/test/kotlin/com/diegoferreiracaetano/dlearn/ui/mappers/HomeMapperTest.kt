@@ -52,4 +52,23 @@ class HomeMapperTest {
         assertEquals("Featured", result.title)
         assertEquals(1, result.items.size)
     }
+
+    @Test
+    fun `given a SERIES video when toCarousel is called should use SERIES label`() {
+        val seriesVideo = video.copy(mediaType = MediaType.SERIES)
+        every { i18n.getString(AppStringType.FILTER_SERIES, "en") } returns "Series"
+
+        val result = mapper.toCarousel("Shows", listOf(seriesVideo), "en", showRank = false)
+
+        assertEquals("Series", result.items.first().movieType)
+    }
+
+    @Test
+    fun `given a video with null rating when toCarousel is called should return null rating in item`() {
+        val videoNoRating = video.copy(rating = null)
+
+        val result = mapper.toCarousel("Top", listOf(videoNoRating), "en")
+
+        assertEquals(null, result.items.first().rating)
+    }
 }

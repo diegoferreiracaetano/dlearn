@@ -52,4 +52,39 @@ class PasswordDataServiceTest {
 
         assertEquals("Password changed successfully", result.message)
     }
+
+    @Test
+    fun `given an invalid challenge token when changePassword is called should throw INVALID_TOKEN exception`() = runTest {
+        val request = ChangePasswordRequest("new")
+        every { challengeDataService.isTokenValidated("bad-token") } returns false
+
+        val exception = assertFailsWith<AppException> {
+            service.changePassword(request, "anonymous", "bad-token")
+        }
+        assertEquals(AppErrorCode.INVALID_TOKEN, exception.error.code)
+    }
+
+    @Test
+    fun `given a validated token but getUserIdByToken returns null when changePassword should throw USER_NOT_FOUND`() = runTest {
+        val request = ChangePasswordRequest("new")
+        every { challengeDataService.isTokenValidated("token") } returns true
+        every { challengeDataService.getUserIdByToken("token") } returns null
+
+        val exception = assertFailsWith<AppException> {
+            service.changePassword(request, "anonymous", "token")
+        }
+        assertEquals(AppErrorCode.USER_NOT_FOUND, exception.error.code)
+    }
+
+    @Test
+    fun `given a userId where findById returns null but findByEmail returns user when changePassword should succeed`() = runTest {
+        val request = ChangePasswordRequest("new")
+        val user = User("3", "U", "u@t.com")
+        coEvery { userRepository.findById("user@example.com") } returns null
+        coEvery { userRepository.findByEmail("user@example.com") } returns user
+
+        val result = service.changePassword(request, "user@example.com", null)
+
+        assertEquals("Password changed successfully", result.message)
+    }
 }

@@ -22,4 +22,22 @@ class I18nProviderTest {
         val result = provider.getString(AppStringType.UNKNOWN, "en", "arg1")
         assertNotNull(result)
     }
+
+    @Test
+    fun `given a blank language when getString is called should fall back to root locale`() {
+        val result = provider.getString(AppStringType.SAVE_CHANGES, "")
+        assertNotNull(result)
+    }
+
+    @Test
+    fun `given a locale with 3 parts when getString is called should use root locale fallback`() {
+        val result = provider.getString(AppStringType.SAVE_CHANGES, "en_US_Extra")
+        assertNotNull(result)
+    }
+
+    @Test
+    fun `given an accept-language header with comma and quality values when getString should use the first language`() {
+        val result = provider.getString(AppStringType.SAVE_CHANGES, "pt-BR,pt;q=0.9,en;q=0.8")
+        assertNotNull(result)
+    }
 }

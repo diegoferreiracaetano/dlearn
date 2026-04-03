@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.screens
 
+import com.diegoferreiracaetano.dlearn.AppConstants
 import com.diegoferreiracaetano.dlearn.domain.user.User
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarListComponent
@@ -82,5 +83,18 @@ class MainScreenBuilderTest {
         val topBarList = container.topBar as AppTopBarListComponent
 
         assertEquals(4, topBarList.items.size)
+    }
+
+    @Test
+    fun `given a user with null imageUrl when build is called should use avatar placeholder as image url`() {
+        val user = User(id = "1", name = "Diego", email = "diego@test.com", imageUrl = null)
+
+        val screen = builder.build("en", user = user)
+
+        val container = screen.components.first() as AppContainerComponent
+        val topBarList = container.topBar as AppTopBarListComponent
+        val firstItem = topBarList.items.first()
+
+        assertEquals(AppConstants.AVATAR_PLACEHOLDER, firstItem.topBar.imageUrl)
     }
 }

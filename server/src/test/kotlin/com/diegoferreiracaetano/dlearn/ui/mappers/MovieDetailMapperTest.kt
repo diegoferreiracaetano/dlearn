@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.mappers
 
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
+import com.diegoferreiracaetano.dlearn.domain.models.SeasonDomainData
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
@@ -70,5 +71,27 @@ class MovieDetailMapperTest {
     fun `given movie detail data with no seasons when toEpisodesSection is called should return null`() {
         val result = mapper.toEpisodesSection(data, "en")
         assertNull(result)
+    }
+
+    @Test
+    fun `given movie detail data with seasons when toEpisodesSection is called should return a section component`() {
+        every { i18n.getString(AppStringType.DETAIL_EPISODE, "en") } returns "Episodes"
+        val dataWithSeasons = data.copy(seasons = listOf(SeasonDomainData(number = 1, episodeCount = 10)))
+
+        val result = mapper.toEpisodesSection(dataWithSeasons, "en")
+
+        assertNotNull(result)
+        assertEquals("Episodes", result.title)
+    }
+
+    @Test
+    fun `given a movie detail domain data when toVideo is called should convert to Video correctly`() {
+        val result = data.toVideo()
+
+        assertEquals(data.id, result.id)
+        assertEquals(data.title, result.title)
+        assertEquals(data.year, result.subtitle)
+        assertEquals(data.isFavorite, result.isFavorite)
+        assertEquals(data.mediaType, result.mediaType)
     }
 }

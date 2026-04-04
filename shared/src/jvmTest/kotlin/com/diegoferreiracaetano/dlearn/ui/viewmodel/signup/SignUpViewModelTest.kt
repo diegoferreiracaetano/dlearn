@@ -9,7 +9,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -74,5 +73,13 @@ class SignUpViewModelTest {
         val state = viewModel.state.value
         assertTrue(state is SignUpUIState.Error)
         assertEquals(exception, state.error)
+    }
+
+    @Test
+    fun `SignUpUIState components test`() {
+        assertEquals(SignUpUIState.Idle, SignUpUIState.Idle)
+        assertEquals(SignUpUIState.Loading, SignUpUIState.Loading)
+        val success = SignUpUIState.Success(true)
+        assertTrue(success.isLoggedIn)
     }
 }

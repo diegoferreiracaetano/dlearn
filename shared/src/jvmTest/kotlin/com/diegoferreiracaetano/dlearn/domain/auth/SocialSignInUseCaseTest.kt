@@ -32,6 +32,28 @@ class SocialSignInUseCaseTest {
     }
 
     @Test
+    fun `invoke with apple success should call socialLogin`() = runTest {
+        val successResult = SocialAuthResult.Success(idToken = "id", accessToken = "access")
+        coEvery { socialAuthManager.appleSignIn() } returns successResult
+        every { authRepository.socialLogin("apple", "id", "access") } returns flowOf(mockk())
+
+        val result = useCase.invoke(AccountProvider.APPLE).toList()
+
+        assertEquals(1, result.size)
+    }
+
+    @Test
+    fun `invoke with facebook success should call socialLogin`() = runTest {
+        val successResult = SocialAuthResult.Success(idToken = "id", accessToken = "access")
+        coEvery { socialAuthManager.facebookSignIn() } returns successResult
+        every { authRepository.socialLogin("facebook", "id", "access") } returns flowOf(mockk())
+
+        val result = useCase.invoke(AccountProvider.FACEBOOK).toList()
+
+        assertEquals(1, result.size)
+    }
+
+    @Test
     fun `invoke with failure should throw AppException`() = runTest {
         val failureResult = SocialAuthResult.Failure(error = AppErrorCode.SOCIAL_AUTH_FAILED)
         coEvery { socialAuthManager.googleSignIn() } returns failureResult

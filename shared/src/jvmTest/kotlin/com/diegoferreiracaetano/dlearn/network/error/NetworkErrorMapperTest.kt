@@ -105,4 +105,31 @@ class NetworkErrorMapperTest {
         val result = exception.toAppException()
         assertEquals(AppErrorCode.UNKNOWN_ERROR, result.error.code)
     }
+
+    @Test
+    fun `toAppErrorCode should map special status codes`() = runTest {
+        val call = mockk<HttpClientCall>(relaxed = true)
+        val response = mockk<HttpResponse>(relaxed = true)
+        every { response.call } returns call
+        every { call.response } returns response
+        
+        val statusCodes = mapOf(
+            HttpStatusCode.Unauthorized to AppErrorCode.UNAUTHORIZED,
+            HttpStatusCode.Forbidden to AppErrorCode.FORBIDDEN,
+            HttpStatusCode.NotFound to AppErrorCode.NOT_FOUND,
+            HttpStatusCode.RequestTimeout to AppErrorCode.TIMEOUT,
+            HttpStatusCode.Conflict to AppErrorCode.BAD_REQUEST,
+            HttpStatusCode.UnprocessableEntity to AppErrorCode.VALIDATION_FAILED,
+            HttpStatusCode.ServiceUnavailable to AppErrorCode.SERVICE_UNAVAILABLE,
+            HttpStatusCode.GatewayTimeout to AppErrorCode.TIMEOUT,
+            HttpStatusCode(428, "Precondition Required") to AppErrorCode.CHALLENGE_REQUIRED
+        )
+
+        statusCodes.forEach { (status, expected) ->
+            every { response.status } returns status
+            val exception = ClientRequestException(response, "")
+            val result = exception.toAppException()
+            assertEquals(expected, result.error.code, "Failed for $status")
+        }
+    }
 }

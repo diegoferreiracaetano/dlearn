@@ -40,10 +40,13 @@ inline fun <reified T> Flow<T>.toCache(
         val networkError = try {
             this@toCache
                 .onEach { data ->
-                    actualManager.put(cacheKey, data, serializer)
-                }.collect { 
+                    try {
+                        actualManager.put(cacheKey, data, serializer)
+                    } catch (_: Exception) {
+                    }
+                }.collect {
                     networkSucceeded = true
-                    emit(it) 
+                    emit(it)
                 }
             null
         } catch (e: Exception) {

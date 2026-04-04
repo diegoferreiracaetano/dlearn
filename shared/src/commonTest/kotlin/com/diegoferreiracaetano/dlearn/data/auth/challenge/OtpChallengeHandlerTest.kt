@@ -56,4 +56,14 @@ class OtpChallengeHandlerTest {
         val result = deferred.await()
         assertTrue(result is ChallengeResult.Cancelled)
     }
+
+    @Test
+    fun `when onChallengeResolved is called without pending handle should not throw`() {
+        handler.onChallengeResolved("token")
+    }
+
+    @Test
+    fun `when onChallengeCancelled is called without pending handle should not throw`() {
+        handler.onChallengeCancelled()
+    }
 }

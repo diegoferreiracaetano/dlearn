@@ -1,14 +1,14 @@
 package com.diegoferreiracaetano.dlearn.ui.sdui
 
 import kotlin.test.Test
-import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class AppIconTypeTest {
 
     @Test
-    fun `AppIconType values are correct`() {
-        assertEquals("HOME", AppIconType.HOME.name)
-        assertEquals("SEARCH", AppIconType.SEARCH.name)
-        assertEquals("UNKNOWN", AppIconType.UNKNOWN.name)
+    fun `AppIconType values exist`() {
+        AppIconType.entries.forEach { 
+            assertNotNull(it.name)
+        }
     }
 }

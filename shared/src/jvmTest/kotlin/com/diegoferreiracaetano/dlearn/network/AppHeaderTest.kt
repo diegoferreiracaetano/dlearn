@@ -49,4 +49,10 @@ class AppHeaderTest {
         val appHeader = AppHeader()
         assertTrue(appHeader.notificationsEnabled)
     }
+
+    @Test
+    fun `AppHeader works with empty string language`() {
+        val appHeader = AppHeader(paramLanguage = "")
+        assertEquals("", appHeader.language)
+    }
 }

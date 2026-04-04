@@ -84,4 +84,20 @@ class MovieDetailViewModelTest {
 
         coVerify(exactly = 2) { repository.execute(any()) }
     }
+
+    @Test
+    fun `when execute with full url fails should update state to Error`() = runTest {
+        viewModel = MovieDetailViewModel(movieId, repository)
+        advanceUntilIdle()
+
+        val exception = RuntimeException("fail")
+        coEvery { repository.execute(any()) } returns flow { throw exception }
+        
+        viewModel.execute("/fail")
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertTrue(state is UIState.Error)
+        assertEquals(exception, state.throwable)
+    }
 }

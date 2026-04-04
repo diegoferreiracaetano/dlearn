@@ -30,6 +30,15 @@ class PersistentCacheManagerTest {
     }
 
     @Test
+    fun `when put fails should not throw exception`() {
+        val data = TestData("test")
+        val key = "key"
+        every { keyValueStorage.put(key, any<String>()) } throws RuntimeException()
+        
+        cacheManager.put(key, data, TestData.serializer())
+    }
+
+    @Test
     fun `when get is called and key exists should decode and return value`() {
         val data = TestData("test")
         val key = "key"

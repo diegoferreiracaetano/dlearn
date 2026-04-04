@@ -12,7 +12,7 @@ internal fun MovieRemote.toVideo() =
         subtitle = "",
         description = this.overview,
         url = "",
-        imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}${posterPath.orEmpty()}",
+        imageUrl = if (posterPath != null) "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}$posterPath" else "",
         categories = emptyList(),
         isFavorite = false,
         rating = 0f,

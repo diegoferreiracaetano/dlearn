@@ -40,4 +40,9 @@ class AppExceptionTest {
         
         assertEquals(details, error.details)
     }
+
+    @Test
+    fun `AppErrorCode names should be accessible`() {
+        assertEquals("NETWORK_ERROR", AppErrorCode.NETWORK_ERROR.name)
+    }
 }

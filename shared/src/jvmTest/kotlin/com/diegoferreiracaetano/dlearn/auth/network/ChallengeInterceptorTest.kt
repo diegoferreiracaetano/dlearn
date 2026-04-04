@@ -97,4 +97,41 @@ class ChallengeInterceptorTest {
             client.get("/test")
         }
     }
+
+    @Test
+    fun `when response is 428 but body is invalid should proceed with original response`() = runTest {
+        val mockEngine = MockEngine { 
+            respond(
+                content = "invalid json",
+                status = HttpStatusCode.fromValue(428)
+            )
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ChallengeInterceptor) {
+                this.engine = this@ChallengeInterceptorTest.engine
+                this.json = this@ChallengeInterceptorTest.json
+            }
+        }
+
+        val response = client.get("/test")
+        assertEquals(428, response.status.value)
+    }
+
+    @Test
+    fun `when response is not 428 should proceed normally`() = runTest {
+        val mockEngine = MockEngine { 
+            respond("OK", HttpStatusCode.OK)
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ChallengeInterceptor) {
+                this.engine = this@ChallengeInterceptorTest.engine
+                this.json = this@ChallengeInterceptorTest.json
+            }
+        }
+
+        val response = client.get("/test")
+        assertEquals(HttpStatusCode.OK, response.status)
+    }
 }

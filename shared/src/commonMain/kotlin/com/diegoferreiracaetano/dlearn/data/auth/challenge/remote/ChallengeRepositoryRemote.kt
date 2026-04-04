@@ -8,7 +8,7 @@ import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeResult
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ResponseException
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -88,7 +88,7 @@ class ChallengeRepositoryRemote(
                 } else {
                     emit(ChallengeResult.Failure(IllegalStateException("Erro ao validar desafio: ${response.status}")))
                 }
-            } catch (e: ClientRequestException) {
+            } catch (e: ResponseException) {
                 val message =
                     try {
                         val errorBody = e.response.body<ChallengeBackendResponse>()
@@ -103,7 +103,7 @@ class ChallengeRepositoryRemote(
 
                 emit(
                     ChallengeResult.Failure(
-                        Throwable(message),
+                        Throwable(message ?: "Erro ao validar desafio: ${e.response.status}"),
                     ),
                 )
             }

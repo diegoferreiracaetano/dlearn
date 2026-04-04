@@ -10,6 +10,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -92,6 +93,31 @@ class LoginViewModelTest {
         advanceUntilIdle()
         
         assertEquals(LoginUIState.Success(true), viewModel.state.value)
+    }
+
+    @Test
+    fun `given a provider when signInWith is called and fails should update state to Error`() = runTest {
+        val provider = AccountProvider.GOOGLE
+        val exception = RuntimeException("Error")
+        coEvery { socialSignInUseCase(provider) } returns flow { throw exception }
+
+        viewModel.signInWith(provider)
+        advanceUntilIdle()
+        
+        val state = viewModel.state.value
+        assertTrue(state is LoginUIState.Error)
+        assertEquals(exception, state.throwable)
+    }
+
+    @Test
+    fun `given a provider when signInWith is cancelled should return to Idle`() = runTest {
+        val provider = AccountProvider.GOOGLE
+        coEvery { socialSignInUseCase(provider) } returns emptyFlow()
+
+        viewModel.signInWith(provider)
+        advanceUntilIdle()
+        
+        assertEquals(LoginUIState.Idle, viewModel.state.value)
     }
 
     @Test

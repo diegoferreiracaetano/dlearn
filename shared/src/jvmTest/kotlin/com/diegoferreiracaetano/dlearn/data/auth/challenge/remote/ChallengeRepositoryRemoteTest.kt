@@ -24,6 +24,8 @@ import kotlinx.serialization.json.Json
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class ChallengeRepositoryRemoteTest {
@@ -82,6 +84,48 @@ class ChallengeRepositoryRemoteTest {
     }
 
     @Test
+    fun `resolveChallenge should throw when session is null`() = runTest {
+        every { coordinator.currentSession } returns null
+        val repository = ChallengeRepositoryRemote(createClient(""), coordinator, otpHandler)
+
+        assertFailsWith<IllegalStateException> {
+            repository.resolveChallenge("123").first()
+        }
+    }
+
+    @Test
+    fun `resolveChallenge should throw when challenge is null`() = runTest {
+        every { coordinator.activeChallenge } returns null
+        val repository = ChallengeRepositoryRemote(createClient(""), coordinator, otpHandler)
+
+        assertFailsWith<IllegalStateException> {
+            repository.resolveChallenge("123").first()
+        }
+    }
+
+    @Test
+    fun `resolveChallenge should handle ClientRequestException with body`() = runTest {
+        val httpClient = createClient("""{"success":false, "message":"error message"}""", status = HttpStatusCode.BadRequest)
+        val repository = ChallengeRepositoryRemote(httpClient, coordinator, otpHandler)
+
+        val result = repository.resolveChallenge("123456").first()
+
+        assertTrue(result is ChallengeResult.Failure)
+        assertTrue(result.error.message?.contains("error message") == true || result.error.message?.contains("400") == true)
+    }
+
+    @Test
+    fun `resolveChallenge should handle ClientRequestException with plain text`() = runTest {
+        val httpClient = createClient("plain error", status = HttpStatusCode.BadRequest)
+        val repository = ChallengeRepositoryRemote(httpClient, coordinator, otpHandler)
+
+        val result = repository.resolveChallenge("123456").first()
+
+        assertTrue(result is ChallengeResult.Failure)
+        assertTrue(result.error.message?.contains("plain error") == true || result.error.message?.contains("400") == true)
+    }
+
+    @Test
     fun `resendChallenge should return true when server returns OK`() = runTest {
         val httpClient = createClient("""{"success":true}""")
         val repository = ChallengeRepositoryRemote(httpClient, coordinator, otpHandler)
@@ -89,6 +133,26 @@ class ChallengeRepositoryRemoteTest {
         val result = repository.resendChallenge().first()
 
         assertTrue(result)
+    }
+
+    @Test
+    fun `resendChallenge should return false when server returns error`() = runTest {
+        val httpClient = createClient("", status = HttpStatusCode.InternalServerError)
+        val repository = ChallengeRepositoryRemote(httpClient, coordinator, otpHandler)
+
+        val result = repository.resendChallenge().first()
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `resendChallenge should return false when session is missing`() = runTest {
+        every { coordinator.currentSession } returns null
+        val repository = ChallengeRepositoryRemote(createClient(""), coordinator, otpHandler)
+
+        val result = repository.resendChallenge().first()
+
+        assertFalse(result)
     }
 
     @Test

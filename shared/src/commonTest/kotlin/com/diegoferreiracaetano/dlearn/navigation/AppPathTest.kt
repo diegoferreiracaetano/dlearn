@@ -66,4 +66,20 @@ class AppPathTest {
         val result = AppPath(path = "home", params = mapOf("filter" to "all"))
         assertEquals("home?filter=all", result)
     }
+
+    @Test
+    fun `given a query string with empty key or value when build is called should filter them`() {
+        val request = AppRequest(path = "test", params = mapOf("" to "val", "key" to ""))
+        val result = AppPath.build(request)
+        assertEquals("test", result)
+    }
+
+    @Test
+    fun `given a query with malformed pairs when parse is called should ignore them`() {
+        val fullPath = "test?key=val&malformed"
+        val result = AppPath.parse(fullPath)
+        assertEquals("test", result.path)
+        assertEquals("val", result.params?.get("key"))
+        assertEquals(1, result.params?.size)
+    }
 }

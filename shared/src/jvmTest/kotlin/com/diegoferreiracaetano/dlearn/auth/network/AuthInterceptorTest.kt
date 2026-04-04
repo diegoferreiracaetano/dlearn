@@ -108,6 +108,25 @@ class AuthInterceptorTest {
     }
 
     @Test
+    fun `when handleUnauthorized is called and current token already changed should return true`() = runTest {
+        val oldToken = "old_token"
+        val newToken = "new_token"
+        coEvery { sessionManager.token() } returns newToken
+        
+        val engine = MockEngine { respond("", status = HttpStatusCode.Unauthorized) }
+        val client = HttpClient(engine)
+        val interceptor = AuthInterceptor(sessionManager, client)
+        
+        val response = client.request {
+            header(HttpHeaders.Authorization, "Bearer $oldToken")
+        }
+
+        val result = interceptor.handleUnauthorized(response)
+
+        assertTrue(result)
+    }
+
+    @Test
     fun `when handleUnauthorized is called and refresh fails should logout and return false`() = runTest {
         val oldToken = "old_token"
         coEvery { sessionManager.token() } returns oldToken
@@ -131,5 +150,33 @@ class AuthInterceptorTest {
 
         assertFalse(result)
         coVerify { sessionManager.logout() }
+    }
+
+    @Test
+    fun `when handleUnauthorized is called with NONE mode should return false`() = runTest {
+        val engine = MockEngine { respond("", status = HttpStatusCode.Unauthorized) }
+        val client = HttpClient(engine)
+        val interceptor = AuthInterceptor(sessionManager, client)
+        
+        val response = client.request {
+            attributes.put(AuthModeKey, AuthMode.NONE)
+        }
+
+        val result = interceptor.handleUnauthorized(response)
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `when handleUnauthorized is called with non-unauthorized status should return false`() = runTest {
+        val engine = MockEngine { respond("", status = HttpStatusCode.BadRequest) }
+        val client = HttpClient(engine)
+        val interceptor = AuthInterceptor(sessionManager, client)
+        
+        val response = client.request { }
+
+        val result = interceptor.handleUnauthorized(response)
+
+        assertFalse(result)
     }
 }

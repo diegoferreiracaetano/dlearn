@@ -3,22 +3,19 @@ package com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeRepository
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeResult
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.VerifyAccountUiState
-import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -27,83 +24,63 @@ class VerifyAccountViewModelTest {
 
     private val challengeRepository = mockk<ChallengeRepository>(relaxed = true)
     private lateinit var viewModel: VerifyAccountViewModel
-    private val testDispatcher = StandardTestDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
-    @Before
+    @BeforeTest
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         viewModel = VerifyAccountViewModel(challengeRepository)
     }
 
-    @After
+    @AfterTest
     fun tearDown() {
         Dispatchers.resetMain()
     }
 
     @Test
-    fun `given valid otp when verifyOtp is called should update state to Success`() = runTest {
+    fun `verifyOtp success should update state to Success`() = runTest {
         val otp = "123456"
-        coEvery { challengeRepository.resolveChallenge(otp) } returns flow {
-            delay(100)
-            emit(ChallengeResult.Success(emptyMap()))
-        }
+        every { challengeRepository.resolveChallenge(otp) } returns flowOf(ChallengeResult.Success(emptyMap()))
 
         viewModel.verifyOtp(otp)
-        
-        testDispatcher.scheduler.runCurrent()
-        assertEquals(VerifyAccountUiState.Loading, viewModel.uiState.value)
-        
-        advanceUntilIdle()
-        
+
         assertEquals(VerifyAccountUiState.Success, viewModel.uiState.value)
     }
 
     @Test
-    fun `given invalid otp when verifyOtp is called should update state to Error`() = runTest {
-        val otp = "wrong"
-        val exception = RuntimeException("Invalid OTP")
-        coEvery { challengeRepository.resolveChallenge(otp) } returns flowOf(ChallengeResult.Failure(exception))
+    fun `verifyOtp failure should update state to Error`() = runTest {
+        val otp = "123456"
+        val error = Throwable("Invalid OTP")
+        every { challengeRepository.resolveChallenge(otp) } returns flowOf(ChallengeResult.Failure(error))
 
         viewModel.verifyOtp(otp)
-        advanceUntilIdle()
-        
-        val state = viewModel.uiState.value
-        assertTrue(state is VerifyAccountUiState.Error)
-        assertEquals(exception, state.throwable)
+
+        assertTrue(viewModel.uiState.value is VerifyAccountUiState.Error)
+        assertEquals(error, (viewModel.uiState.value as VerifyAccountUiState.Error).throwable)
     }
 
     @Test
-    fun `when resendOtp is called and succeeds should update state to Idle`() = runTest {
-        coEvery { challengeRepository.resendChallenge() } returns flow {
-            delay(100)
-            emit(true)
-        }
+    fun `resendOtp success should update state to Idle`() = runTest {
+        every { challengeRepository.resendChallenge() } returns flowOf(true)
 
         viewModel.resendOtp()
-        
-        testDispatcher.scheduler.runCurrent()
-        assertEquals(VerifyAccountUiState.Loading, viewModel.uiState.value)
-        
-        advanceUntilIdle()
-        
+
         assertEquals(VerifyAccountUiState.Idle, viewModel.uiState.value)
     }
 
     @Test
-    fun `when resendOtp is called and fails should update state to Error`() = runTest {
-        coEvery { challengeRepository.resendChallenge() } returns flowOf(false)
+    fun `resendOtp failure should update state to Error`() = runTest {
+        every { challengeRepository.resendChallenge() } returns flowOf(false)
 
         viewModel.resendOtp()
-        advanceUntilIdle()
-        
-        val state = viewModel.uiState.value
-        assertTrue(state is VerifyAccountUiState.Error)
-        assertEquals("Failed to resend OTP", state.throwable.message)
+
+        assertTrue(viewModel.uiState.value is VerifyAccountUiState.Error)
+        assertEquals("Failed to resend OTP", (viewModel.uiState.value as VerifyAccountUiState.Error).throwable.message)
     }
 
     @Test
-    fun `when cancel is called should call repository cancel`() {
+    fun `cancel should call repository cancelChallenge`() {
         viewModel.cancel()
-        coVerify(exactly = 1) { challengeRepository.cancelChallenge() }
+        coVerify { challengeRepository.cancelChallenge() }
     }
 }

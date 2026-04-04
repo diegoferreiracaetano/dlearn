@@ -59,6 +59,14 @@ class SettingsAccountProviderTest {
     }
 
     @Test
+    fun `when getUser is called and settings is empty should return null`() = runTest {
+        every { settings.getStringOrNull("user_data") } returns null
+
+        val result = provider.getUser()
+        assertNull(result)
+    }
+
+    @Test
     fun `when clearAccount is called should remove all keys`() = runTest {
         provider.clearAccount()
 

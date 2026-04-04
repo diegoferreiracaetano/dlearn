@@ -12,6 +12,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -22,6 +23,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SettingsViewModelTest {
@@ -54,6 +56,35 @@ class SettingsViewModelTest {
         advanceUntilIdle()
 
         assertEquals(UIState.Success(screen), viewModel.uiState.value)
+    }
+
+    @Test
+    fun `when loadContent fails should update state to Error`() = runTest {
+        val path = "/settings"
+        val exception = RuntimeException("error")
+        coEvery { appRepository.execute(any()) } returns flow { throw exception }
+
+        viewModel.loadContent(path)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertTrue(state is UIState.Error)
+        assertEquals(exception, state.throwable)
+    }
+
+    @Test
+    fun `when retry is called should reload content`() = runTest {
+        val path = "/settings"
+        val screen = Screen(components = emptyList())
+        coEvery { appRepository.execute(any()) } returns flowOf(screen)
+
+        viewModel.loadContent(path)
+        advanceUntilIdle()
+
+        viewModel.retry()
+        advanceUntilIdle()
+
+        coVerify(exactly = 2) { appRepository.execute(any()) }
     }
 
     @Test

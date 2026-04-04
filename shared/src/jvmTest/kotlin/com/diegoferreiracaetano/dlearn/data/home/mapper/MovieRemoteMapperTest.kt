@@ -24,4 +24,20 @@ class MovieRemoteMapperTest {
         assertEquals("Test Overview", video.description)
         assertTrue(video.imageUrl.contains("/path.jpg"))
     }
+
+    @Test
+    fun `toVideo should handle null posterPath`() {
+        val movieRemote = MovieRemote(
+            id = 1,
+            title = "Test Movie",
+            overview = "Test Overview",
+            posterPath = null,
+            backdropPath = null
+        )
+
+        val video = movieRemote.toVideo()
+
+        assertEquals("1", video.id)
+        assertEquals("", video.imageUrl)
+    }
 }

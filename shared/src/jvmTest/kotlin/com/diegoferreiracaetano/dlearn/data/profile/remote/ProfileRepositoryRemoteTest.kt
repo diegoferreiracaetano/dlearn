@@ -48,4 +48,15 @@ class ProfileRepositoryRemoteTest {
 
         assertEquals(screen, result)
     }
+
+    @Test
+    fun `when getProfile is called with null language should still return screen`() = runTest {
+        val screen = Screen(components = emptyList())
+        val client = createClient(json.encodeToString(Screen.serializer(), screen))
+        val repository = ProfileRepositoryRemote(client)
+
+        val result = repository.getProfile(null).first()
+
+        assertEquals(screen, result)
+    }
 }

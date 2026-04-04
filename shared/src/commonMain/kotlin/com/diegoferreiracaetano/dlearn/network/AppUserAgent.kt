@@ -14,6 +14,9 @@ data class AppUserAgent(
         fun fromHeader(header: String?): AppUserAgent {
             if (header.isNullOrBlank()) return AppUserAgent("DLearn", "1.0.0", "Unknown")
             return try {
+                if (!header.contains(" ") && !header.contains("/") && !header.contains("(")) {
+                    return AppUserAgent(header, "1.0.0", "Unknown")
+                }
                 val appPart = header.substringBefore(" ")
                 val deviceName = header.substringAfter("(", "").substringBeforeLast(")", "Unknown")
                     .substringBefore(";")

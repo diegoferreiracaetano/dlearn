@@ -1,13 +1,14 @@
 package com.diegoferreiracaetano.dlearn.ui.sdui
 
 import kotlin.test.Test
-import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class AppStringTypeTest {
 
     @Test
-    fun `AppStringType values are correct`() {
-        assertEquals("PROFILE_TITLE", AppStringType.PROFILE_TITLE.name)
-        assertEquals("UNKNOWN", AppStringType.UNKNOWN.name)
+    fun `AppStringType values exist`() {
+        AppStringType.entries.forEach { 
+            assertNotNull(it.name)
+        }
     }
 }

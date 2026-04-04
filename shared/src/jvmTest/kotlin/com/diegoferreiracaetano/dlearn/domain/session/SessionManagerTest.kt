@@ -1,6 +1,8 @@
 package com.diegoferreiracaetano.dlearn.domain.session
 
 import com.diegoferreiracaetano.dlearn.domain.auth.AccountProvider
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
+import com.diegoferreiracaetano.dlearn.domain.error.AppException
 import com.diegoferreiracaetano.dlearn.domain.user.User
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -9,6 +11,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class SessionManagerTest {
@@ -54,11 +57,30 @@ class SessionManagerTest {
     }
 
     @Test
+    fun `when user is called and no user exists should throw AppException`() = runTest {
+        coEvery { accountProvider.getUser() } returns null
+
+        val exception = assertFailsWith<AppException> {
+            sessionManager.user()
+        }
+        assertEquals(AppErrorCode.USER_NOT_FOUND, exception.error.code)
+    }
+
+    @Test
     fun `when token is called should return token from provider`() = runTest {
         val token = "token"
         coEvery { accountProvider.getAccessToken() } returns token
 
         val result = sessionManager.token()
         assertEquals(token, result)
+    }
+
+    @Test
+    fun `when refreshToken is called should return refresh token from provider`() = runTest {
+        val refreshToken = "refresh"
+        coEvery { accountProvider.getRefreshToken() } returns refreshToken
+
+        val result = sessionManager.refreshToken()
+        assertEquals(refreshToken, result)
     }
 }

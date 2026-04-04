@@ -64,7 +64,7 @@ class AppViewModelTest {
 
         val state = viewModel.uiState.value
         assertTrue(state is UIState.Error)
-        assertEquals(exception, (state as UIState.Error).throwable)
+        assertEquals(exception, state.throwable)
     }
 
     @Test

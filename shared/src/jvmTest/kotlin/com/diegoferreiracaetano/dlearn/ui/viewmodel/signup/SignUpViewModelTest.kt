@@ -73,6 +73,6 @@ class SignUpViewModelTest {
         
         val state = viewModel.state.value
         assertTrue(state is SignUpUIState.Error)
-        assertEquals(exception, (state as SignUpUIState.Error).error)
+        assertEquals(exception, state.error)
     }
 }

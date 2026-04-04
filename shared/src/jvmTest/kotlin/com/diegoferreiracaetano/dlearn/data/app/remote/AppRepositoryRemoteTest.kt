@@ -13,34 +13,40 @@ import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class AppRepositoryRemoteTest {
 
-    private val json = Json { ignoreUnknownKeys = true }
+    private val json = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+    }
 
-    @Test
-    fun `execute should return Screen from server`() = runTest {
-        val expectedScreen = Screen(components = emptyList())
+    private fun createClient(response: String): HttpClient {
         val mockEngine = MockEngine { _ ->
             respond(
-                content = json.encodeToString(expectedScreen),
+                content = response,
                 status = HttpStatusCode.OK,
                 headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             )
         }
-        val httpClient = HttpClient(mockEngine) {
+        return HttpClient(mockEngine) {
             install(ContentNegotiation) {
                 json(json)
             }
         }
-        val repository = AppRepositoryRemote(httpClient)
+    }
 
-        val result = repository.execute(AppRequest(path = "/test")).first()
+    @Test
+    fun `when execute is called should return screen from api`() = runTest {
+        val screen = Screen(components = emptyList())
+        val client = createClient(json.encodeToString(Screen.serializer(), screen))
+        val repository = AppRepositoryRemote(client)
 
-        assertEquals(expectedScreen, result)
+        val result = repository.execute(AppRequest(path = "test")).first()
+
+        assertEquals(screen, result)
     }
 }

@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.data.main.remote
 
+import com.diegoferreiracaetano.dlearn.data.cache.CacheManager
 import com.diegoferreiracaetano.dlearn.data.cache.toCache
 import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
@@ -11,10 +12,11 @@ import kotlinx.coroutines.flow.flow
 
 class MainRepositoryRemote(
     private val httpClient: HttpClient,
+    private val cacheManager: CacheManager? = null,
 ) : MainRepository {
     override fun getMain(): Flow<Screen> =
         flow {
             val response = httpClient.get("v1/main").body<Screen>()
             emit(response)
-        }.toCache(key = "main_screen_cache")
+        }.toCache(key = "main_screen_cache", manager = cacheManager)
 }

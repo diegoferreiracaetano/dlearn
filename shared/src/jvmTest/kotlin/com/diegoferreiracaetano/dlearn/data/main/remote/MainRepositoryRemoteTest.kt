@@ -1,6 +1,6 @@
-package com.diegoferreiracaetano.dlearn.data.movie.remote
+package com.diegoferreiracaetano.dlearn.data.main.remote
 
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
+import com.diegoferreiracaetano.dlearn.data.cache.CacheManager
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -11,18 +11,21 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
+import io.mockk.mockk
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class MovieDetailRepositoryRemoteTest {
+class MainRepositoryRemoteTest {
 
     private val json = Json {
         ignoreUnknownKeys = true
         isLenient = true
     }
+
+    private val cacheManager = mockk<CacheManager>(relaxed = true)
 
     private fun createClient(response: String): HttpClient {
         val mockEngine = MockEngine { _ ->
@@ -40,12 +43,12 @@ class MovieDetailRepositoryRemoteTest {
     }
 
     @Test
-    fun `when execute is called should return screen from api`() = runTest {
+    fun `when getMain is called should return screen from api`() = runTest {
         val screen = Screen(components = emptyList())
         val client = createClient(json.encodeToString(Screen.serializer(), screen))
-        val repository = MovieDetailRepositoryRemote(client)
+        val repository = MainRepositoryRemote(client, cacheManager)
 
-        val result = repository.execute(AppRequest(path = "movie/1")).first()
+        val result = repository.getMain().first()
 
         assertEquals(screen, result)
     }

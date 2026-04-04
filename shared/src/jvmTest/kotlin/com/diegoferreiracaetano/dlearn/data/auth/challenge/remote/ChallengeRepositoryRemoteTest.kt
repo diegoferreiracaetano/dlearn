@@ -20,7 +20,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.Before
 import org.junit.Test
@@ -67,7 +66,7 @@ class ChallengeRepositoryRemoteTest {
         val result = repository.resolveChallenge("123456").first()
 
         assertTrue(result is ChallengeResult.Success)
-        assertEquals("token123", (result as ChallengeResult.Success).data["validatedToken"])
+        assertEquals("token123", result.data["validatedToken"])
         verify { otpHandler.onChallengeResolved("token123") }
         verify { coordinator.clear() }
     }

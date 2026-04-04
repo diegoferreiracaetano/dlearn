@@ -5,48 +5,56 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
+import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class SettingsSessionStorageTest {
 
     private val settings = mockk<Settings>(relaxed = true)
-    private val subject = SettingsSessionStorage(settings)
+    private val sessionStorage = SettingsSessionStorage(settings)
 
     @Test
-    fun `given a token when saveToken is called should store it in settings`() = runTest {
-        subject.saveToken("token123")
-        verify { settings.putString("auth_token", "token123") }
+    fun `when saveToken is called should put string in settings`() = runTest {
+        val token = "test_token"
+        sessionStorage.saveToken(token)
+        verify { settings.putString("auth_token", token) }
     }
 
     @Test
-    fun `given a token exists when getToken is called should return it`() {
-        every { settings.getStringOrNull("auth_token") } returns "token123"
-        assertEquals("token123", subject.getToken())
+    fun `when getToken is called should return from settings`() {
+        val token = "test_token"
+        every { settings.getStringOrNull("auth_token") } returns token
+        assertEquals(token, sessionStorage.getToken())
     }
 
     @Test
-    fun `given a token exists when hasSession is called should return true`() {
+    fun `when hasSession is called should check key in settings`() {
         every { settings.hasKey("auth_token") } returns true
-        assertTrue(subject.hasSession())
+        assertTrue(sessionStorage.hasSession())
+        
+        every { settings.hasKey("auth_token") } returns false
+        assertFalse(sessionStorage.hasSession())
     }
 
     @Test
-    fun `given a user json when saveUser is called should store it`() = runTest {
-        subject.saveUser("{}")
-        verify { settings.putString("user", "{}") }
+    fun `when saveUser is called should put user json in settings`() = runTest {
+        val userJson = "{\"id\":\"1\"}"
+        sessionStorage.saveUser(userJson)
+        verify { settings.putString("user", userJson) }
     }
 
     @Test
-    fun `given a user exists when getUser is called should return it`() {
-        every { settings.getStringOrNull("user") } returns "{}"
-        assertEquals("{}", subject.getUser())
+    fun `when getUser is called should return from settings`() {
+        val userJson = "{\"id\":\"1\"}"
+        every { settings.getStringOrNull("user") } returns userJson
+        assertEquals(userJson, sessionStorage.getUser())
     }
 
     @Test
-    fun `when clear is called should remove auth token`() = runTest {
-        subject.clear()
+    fun `when clear is called should remove auth_token from settings`() = runTest {
+        sessionStorage.clear()
         verify { settings.remove("auth_token") }
     }
 }

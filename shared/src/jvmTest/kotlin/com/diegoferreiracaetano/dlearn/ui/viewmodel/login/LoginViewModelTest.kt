@@ -77,7 +77,7 @@ class LoginViewModelTest {
         
         val state = viewModel.state.value
         assertTrue(state is LoginUIState.Error)
-        assertEquals(exception, (state as LoginUIState.Error).throwable)
+        assertEquals(exception, state.throwable)
     }
 
     @Test

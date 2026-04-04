@@ -1,6 +1,5 @@
-package com.diegoferreiracaetano.dlearn.data.movie.remote
+package com.diegoferreiracaetano.dlearn.data.profile.remote
 
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -17,7 +16,7 @@ import kotlinx.serialization.json.Json
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class MovieDetailRepositoryRemoteTest {
+class ProfileRepositoryRemoteTest {
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -40,12 +39,12 @@ class MovieDetailRepositoryRemoteTest {
     }
 
     @Test
-    fun `when execute is called should return screen from api`() = runTest {
+    fun `when getProfile is called should return screen from api`() = runTest {
         val screen = Screen(components = emptyList())
         val client = createClient(json.encodeToString(Screen.serializer(), screen))
-        val repository = MovieDetailRepositoryRemote(client)
+        val repository = ProfileRepositoryRemote(client)
 
-        val result = repository.execute(AppRequest(path = "movie/1")).first()
+        val result = repository.getProfile("en").first()
 
         assertEquals(screen, result)
     }

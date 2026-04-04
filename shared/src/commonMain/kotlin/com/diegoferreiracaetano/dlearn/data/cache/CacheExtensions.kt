@@ -36,21 +36,32 @@ inline fun <reified T> Flow<T>.toCache(
             }
         }
 
-        try {
+        var networkSucceeded = false
+        val networkError = try {
             this@toCache
                 .onEach { data ->
                     actualManager.put(cacheKey, data, serializer)
-                }.collect { emit(it) }
+                }.collect { 
+                    networkSucceeded = true
+                    emit(it) 
+                }
+            null
         } catch (e: Exception) {
+            e
+        }
+
+        if (networkError != null && !networkSucceeded) {
             if (strategy == CacheStrategy.NETWORK_FIRST) {
                 val cachedObj = actualManager.get(cacheKey, serializer)
                 if (cachedObj != null) {
                     emit(cachedObj)
                 } else {
-                    throw e
+                    throw networkError
                 }
             } else {
-                throw e
+                throw networkError
             }
+        } else if (networkError != null) {
+            throw networkError
         }
     }

@@ -10,7 +10,7 @@ import kotlinx.coroutines.CompletableDeferred
 /**
  * Implementação do Handler de OTP que se comunica com o ChallengeCoordinator.
  */
-class OtpChallengeHandler : ChallengeHandler {
+open class OtpChallengeHandler : ChallengeHandler {
     private var currentDeferred: CompletableDeferred<ChallengeResult>? = null
 
     override fun canHandle(challenge: Challenge): Boolean =
@@ -34,14 +34,14 @@ class OtpChallengeHandler : ChallengeHandler {
      * Chamado quando o OTP é validado com sucesso pela UI/UseCase.
      * @param token O validatedToken retornado pelo endpoint /resolve do backend.
      */
-    fun onChallengeResolved(token: String) {
+    open fun onChallengeResolved(token: String) {
         currentDeferred?.complete(ChallengeResult.Success(mapOf("validatedToken" to token)))
     }
 
     /**
      * Chamado se o usuário cancelar o fluxo.
      */
-    fun onChallengeCancelled() {
+    open fun onChallengeCancelled() {
         currentDeferred?.complete(ChallengeResult.Cancelled)
     }
 }

@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import dlearn.composeapp.generated.resources.Res
 import dlearn.composeapp.generated.resources.app_name
 import dlearn.composeapp.generated.resources.app_subtitle
@@ -26,6 +27,7 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private const val SPLASH_WAIT_TIME = 2000L
 
@@ -36,7 +38,19 @@ fun SplashScreen(
 ) {
     val currentOnTimeout by rememberUpdatedState(onTimeout)
 
-    @OptIn(ExperimentalResourceApi::class)
+    LaunchedEffect(Unit) {
+        delay(SPLASH_WAIT_TIME)
+        currentOnTimeout()
+    }
+
+    SplashContent(modifier = modifier)
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun SplashContent(
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier =
         modifier
@@ -44,11 +58,6 @@ fun SplashScreen(
             .fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        LaunchedEffect(Unit) {
-            delay(SPLASH_WAIT_TIME)
-            currentOnTimeout()
-        }
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -74,5 +83,13 @@ fun SplashScreen(
                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun SplashScreenPreview() {
+    DLearnTheme {
+        SplashContent()
     }
 }

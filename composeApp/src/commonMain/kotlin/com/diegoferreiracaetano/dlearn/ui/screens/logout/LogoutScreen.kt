@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.diegoferreiracaetano.dlearn.designsystem.components.alert.AppDialog
 import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
+import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.logout.LogoutViewModel
 import dlearn.composeapp.generated.resources.Res
 import dlearn.composeapp.generated.resources.cancel
@@ -12,17 +13,18 @@ import dlearn.composeapp.generated.resources.logout_description
 import dlearn.composeapp.generated.resources.logout_title
 import dlearn.composeapp.generated.resources.question
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LogoutScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    vireModel: LogoutViewModel = koinInject(),
+    viewModel: LogoutViewModel = koinViewModel(),
 ) {
     LogoutContent(
         onBackClick = onBackClick,
-        onConfirmClick = vireModel::logout,
+        onConfirmClick = viewModel::logout,
         modifier = modifier,
     )
 }
@@ -44,4 +46,15 @@ fun LogoutContent(
         imageSource = AppImageSource.Resource(Res.drawable.question),
         modifier = modifier,
     )
+}
+
+@Preview
+@Composable
+fun LogoutScreenPreview() {
+    DLearnTheme {
+        LogoutContent(
+            onBackClick = {},
+            onConfirmClick = {},
+        )
+    }
 }

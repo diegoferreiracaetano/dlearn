@@ -66,12 +66,29 @@ fun SignUpScreen(
         }
     }
 
+    SignUpScreenContent(
+        uiState = uiState,
+        onBackClick = onBackClick,
+        onSignUpClick = viewModel::signUp,
+        snackbarHostState = snackbarHostState,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun SignUpScreenContent(
+    uiState: SignUpUIState,
+    onBackClick: () -> Unit,
+    onSignUpClick: (String, String, String) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier,
+) {
     if (uiState is SignUpUIState.Loading) {
         AppLoading(modifier)
     } else {
         SignUpContent(
             onBackClick = onBackClick,
-            onSignUpClick = viewModel::signUp,
+            onSignUpClick = onSignUpClick,
             snackbarHostState = snackbarHostState,
             modifier = modifier,
         )
@@ -181,9 +198,23 @@ fun SignUpContent(
 
 @Preview
 @Composable
-fun SignUpScreenPreview() {
+fun SignUpScreenIdlePreview() {
     DLearnTheme {
-        SignUpContent(
+        SignUpScreenContent(
+            uiState = SignUpUIState.Idle,
+            onBackClick = {},
+            onSignUpClick = { _, _, _ -> },
+            snackbarHostState = remember { SnackbarHostState() },
+        )
+    }
+}
+
+@Preview
+@Composable
+fun SignUpScreenLoadingPreview() {
+    DLearnTheme {
+        SignUpScreenContent(
+            uiState = SignUpUIState.Loading,
             onBackClick = {},
             onSignUpClick = { _, _, _ -> },
             snackbarHostState = remember { SnackbarHostState() },

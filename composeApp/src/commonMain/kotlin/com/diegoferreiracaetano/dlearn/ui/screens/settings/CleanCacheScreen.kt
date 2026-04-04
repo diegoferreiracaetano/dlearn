@@ -12,13 +12,13 @@ import dlearn.composeapp.generated.resources.clear_cache_description
 import dlearn.composeapp.generated.resources.clear_cache_title
 import dlearn.composeapp.generated.resources.question
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CleanCacheScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CleanCacheViewModel = koinInject(),
+    viewModel: CleanCacheViewModel = koinViewModel(),
 ) {
     CleanCacheContent(
         onBackClick = onBackClick,

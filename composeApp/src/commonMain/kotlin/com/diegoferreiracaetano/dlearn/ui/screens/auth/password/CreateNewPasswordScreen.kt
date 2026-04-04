@@ -32,6 +32,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppCon
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
+import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState
@@ -42,20 +43,17 @@ import dlearn.composeapp.generated.resources.create_password_subtitle
 import dlearn.composeapp.generated.resources.create_password_title
 import dlearn.composeapp.generated.resources.title_password
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateNewPasswordScreen(
     onBackClick: () -> Unit,
     onSuccess: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CreateNewPasswordViewModel = koinInject(),
+    viewModel: CreateNewPasswordViewModel = koinViewModel(),
 ) {
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -82,7 +80,27 @@ fun CreateNewPasswordScreen(
         }
     }
 
-    // Provê o estado para o AppContainer e sub-componentes
+    CreateNewPasswordContent(
+        uiState = uiState,
+        onBackClick = onBackClick,
+        onChangePassword = viewModel::changePassword,
+        snackbarHostState = snackbarHostState,
+        modifier = modifier,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CreateNewPasswordContent(
+    uiState: CreateNewPasswordUiState,
+    onBackClick: () -> Unit,
+    onChangePassword: (String) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier,
+) {
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+
     CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
         AppContainer(
             modifier = modifier,
@@ -149,11 +167,37 @@ fun CreateNewPasswordScreen(
                     text = stringResource(Res.string.create_password_action),
                     enabled = uiState !is CreateNewPasswordUiState.Loading,
                     onClick = {
-                        viewModel.changePassword(password)
+                        onChangePassword(password)
                     },
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun CreateNewPasswordScreenIdlePreview() {
+    DLearnTheme {
+        CreateNewPasswordContent(
+            uiState = CreateNewPasswordUiState.Idle,
+            onBackClick = {},
+            onChangePassword = {},
+            snackbarHostState = remember { SnackbarHostState() },
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CreateNewPasswordScreenLoadingPreview() {
+    DLearnTheme {
+        CreateNewPasswordContent(
+            uiState = CreateNewPasswordUiState.Loading,
+            onBackClick = {},
+            onChangePassword = {},
+            snackbarHostState = remember { SnackbarHostState() },
+        )
     }
 }

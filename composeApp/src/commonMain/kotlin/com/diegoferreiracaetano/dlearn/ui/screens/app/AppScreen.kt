@@ -93,7 +93,7 @@ fun AppContent(
 @OptIn(ExperimentalResourceApi::class)
 @Preview
 @Composable
-fun AppScreenWatchlistPreview() {
+fun AppScreenSuccessPreview() {
     val watchlistEmptyMock =
         Screen(
             components =
@@ -106,17 +106,34 @@ fun AppScreenWatchlistPreview() {
             ),
         )
 
-    val uiState = UIState.Success(watchlistEmptyMock)
-
-    DLearnTheme(
-        darkTheme = false,
-    ) {
+    DLearnTheme {
         AppContent(
-            uiState = uiState,
-            actions =
-            ComponentActions(
-                onRetry = {},
-            ),
+            uiState = UIState.Success(watchlistEmptyMock),
+            actions = ComponentActions(onRetry = {}),
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@Preview
+@Composable
+fun AppScreenLoadingPreview() {
+    DLearnTheme {
+        AppContent(
+            uiState = UIState.Loading,
+            actions = ComponentActions(onRetry = {}),
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@Preview
+@Composable
+fun AppScreenErrorPreview() {
+    DLearnTheme {
+        AppContent(
+            uiState = UIState.Error(Exception("Error message")),
+            actions = ComponentActions(onRetry = {}),
             modifier = Modifier.fillMaxSize(),
         )
     }

@@ -221,15 +221,28 @@ fun WelcomeContent(
 
 @Preview
 @Composable
-fun WelcomeScreenPreview() {
-    val snackbarHostState = remember { SnackbarHostState() }
+fun WelcomeScreenIdlePreview() {
     DLearnTheme {
         WelcomeContent(
             onSignUpClick = {},
             onLoginClick = {},
             onSocialClick = {},
             isLoading = false,
-            snackbarHostState = snackbarHostState,
+            snackbarHostState = remember { SnackbarHostState() },
+        )
+    }
+}
+
+@Preview
+@Composable
+fun WelcomeScreenLoadingPreview() {
+    DLearnTheme {
+        WelcomeContent(
+            onSignUpClick = {},
+            onLoginClick = {},
+            onSocialClick = {},
+            isLoading = true,
+            snackbarHostState = remember { SnackbarHostState() },
         )
     }
 }

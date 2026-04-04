@@ -1,15 +1,18 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.movie
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.Render
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
@@ -49,4 +52,40 @@ fun MovieDetailContent(
     modifier: Modifier = Modifier,
 ) {
     uiState.Render(actions, modifier)
+}
+
+@Preview
+@Composable
+fun MovieDetailScreenSuccessPreview() {
+    DLearnTheme {
+        MovieDetailContent(
+            uiState = UIState.Success(Screen(components = listOf())),
+            actions = ComponentActions(),
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@Preview
+@Composable
+fun MovieDetailScreenLoadingPreview() {
+    DLearnTheme {
+        MovieDetailContent(
+            uiState = UIState.Loading,
+            actions = ComponentActions(),
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@Preview
+@Composable
+fun MovieDetailScreenErrorPreview() {
+    DLearnTheme {
+        MovieDetailContent(
+            uiState = UIState.Error(Exception("Error message")),
+            actions = ComponentActions(),
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
 }

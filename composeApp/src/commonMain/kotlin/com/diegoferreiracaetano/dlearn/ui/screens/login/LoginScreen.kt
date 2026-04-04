@@ -172,13 +172,27 @@ fun LoginContent(
 
 @Preview
 @Composable
-fun LoginScreenPreview() {
+fun LoginScreenIdlePreview() {
     DLearnTheme {
         LoginContent(
             onBackClick = {},
             onLoginClick = { _, _ -> },
             onForgotPasswordClick = {},
             isLoading = false,
+            snackbarHostState = remember { SnackbarHostState() },
+        )
+    }
+}
+
+@Preview
+@Composable
+fun LoginScreenLoadingPreview() {
+    DLearnTheme {
+        LoginContent(
+            onBackClick = {},
+            onLoginClick = { _, _ -> },
+            onForgotPasswordClick = {},
+            isLoading = true,
             snackbarHostState = remember { SnackbarHostState() },
         )
     }

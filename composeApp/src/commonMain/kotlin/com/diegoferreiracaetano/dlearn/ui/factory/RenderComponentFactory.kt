@@ -35,7 +35,6 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.ProfileRowComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.SectionComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.UserRowComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
-import org.koin.compose.koinInject
 
 @Composable
 fun RenderComponent(
@@ -43,8 +42,7 @@ fun RenderComponent(
     actions: ComponentActions,
     modifier: Modifier = Modifier,
 ) {
-    val factory: RenderComponentFactory = koinInject()
-    factory.Render(component, actions, modifier)
+    RenderComponentFactory.Render(component, actions, modifier)
 }
 
 @Composable
@@ -53,73 +51,52 @@ fun RenderComponents(
     actions: ComponentActions,
     modifier: Modifier = Modifier,
 ) {
-    val factory: RenderComponentFactory = koinInject()
-    factory.Render(components, actions, modifier)
+    components.forEach {
+        RenderComponent(it, actions, modifier)
+    }
 }
 
-@Suppress("LongParameterList")
-class RenderComponentFactory(
-    private val appLoadingRenderer: AppLoadingRenderer,
-    private val appErrorRenderer: AppErrorRenderer,
-    private val appEmptyStateRenderer: AppEmptyStateRenderer,
-    private val appFeedbackRenderer: AppFeedbackRenderer,
-    private val appContainerRenderer: AppContainerRenderer,
-    private val appListRenderer: AppListRenderer,
-    private val appTopBarRenderer: AppTopBarRenderer,
-    private val appTopBarListRenderer: AppTopBarListRenderer,
-    private val appSearchBarRenderer: AppSearchBarRenderer,
-    private val bottomNavigationRenderer: BottomNavigationRenderer,
-    private val movieCarouselRenderer: MovieCarouselRenderer,
-    private val bannerCarouselRenderer: BannerCarouselRenderer,
-    private val carouselRenderer: CarouselRenderer,
-    private val fullScreenBannerRenderer: FullScreenBannerRenderer,
-    private val chipGroupRenderer: ChipGroupRenderer,
-    private val profileRenderer: ProfileRowRenderer,
-    private val userRenderer: UserRowRenderer,
-    private val premiumBannerRenderer: PremiumBannerRenderer,
-    private val sectionRenderer: SectionRenderer,
-    private val footerRenderer: FooterRenderer,
-    private val movieDetailHeaderRenderer: AppMovieDetailHeaderRenderer,
-    private val expandableSectionRenderer: AppExpandableSectionRenderer,
-    private val mainContentRenderer: AppMainContentRenderer,
-    private val movieItemRenderer: MovieItemRenderer,
-    private val appSectionTitleRenderer: AppSectionTitleRenderer,
-    private val appProfileHeaderRenderer: AppProfileHeaderRenderer,
-    private val appTextFieldRenderer: AppTextFieldRenderer,
-    private val appSnackbarRenderer: AppSnackbarRenderer,
-    private val appHtmlTextRenderer: AppHtmlTextRenderer,
-    private val appSwitchRowRenderer: AppSwitchRowRenderer,
-    private val appSelectionRowRenderer: AppSelectionRowRenderer,
-) {
-    @Composable
-    fun Render(
-        components: List<Component>,
-        actions: ComponentActions,
-        modifier: Modifier = Modifier,
-    ) {
-        components.forEach {
-            Render(it, actions, modifier)
-        }
-    }
+object RenderComponentFactory {
+
+    private val appLoadingRenderer = AppLoadingRenderer()
+    private val appErrorRenderer = AppErrorRenderer()
+    private val appEmptyStateRenderer = AppEmptyStateRenderer()
+    private val appFeedbackRenderer = AppFeedbackRenderer()
+    private val appContainerRenderer = AppContainerRenderer()
+    private val appListRenderer = AppListRenderer()
+    private val appTopBarRenderer = AppTopBarRenderer()
+    private val appTopBarListRenderer = AppTopBarListRenderer()
+    private val appSearchBarRenderer = AppSearchBarRenderer()
+    private val bottomNavigationRenderer = BottomNavigationRenderer()
+    private val appSectionTitleRenderer = AppSectionTitleRenderer()
+    private val appProfileHeaderRenderer = AppProfileHeaderRenderer()
+    private val appTextFieldRenderer = AppTextFieldRenderer()
+    private val appSnackbarRenderer = AppSnackbarRenderer()
+    private val appHtmlTextRenderer = AppHtmlTextRenderer()
+    private val appSwitchRowRenderer = AppSwitchRowRenderer()
+    private val appSelectionRowRenderer = AppSelectionRowRenderer()
+    private val movieCarouselRenderer = MovieCarouselRenderer()
+    private val bannerCarouselRenderer = BannerCarouselRenderer()
+    private val carouselRenderer = CarouselRenderer()
+    private val fullScreenBannerRenderer = FullScreenBannerRenderer()
+    private val chipGroupRenderer = ChipGroupRenderer()
+    private val profileRowRenderer = ProfileRowRenderer()
+    private val userRowRenderer = UserRowRenderer()
+    private val premiumBannerRenderer = PremiumBannerRenderer()
+    private val sectionRenderer = SectionRenderer()
+    private val footerRenderer = FooterRenderer()
+    private val appMovieDetailHeaderRenderer = AppMovieDetailHeaderRenderer()
+    private val appExpandableSectionRenderer = AppExpandableSectionRenderer()
+    private val appMainContentRenderer = AppMainContentRenderer()
+    private val movieItemRenderer = MovieItemRenderer()
 
     @Composable
+    @Suppress("CyclomaticComplexMethod", "LongMethod")
     fun Render(
         component: Component,
         actions: ComponentActions,
         modifier: Modifier = Modifier,
     ) {
-        if (!renderBasicComponent(component, actions, modifier)) {
-            renderMediaComponent(component, actions, modifier)
-        }
-    }
-
-    @Composable
-    @Suppress("CyclomaticComplexMethod")
-    private fun renderBasicComponent(
-        component: Component,
-        actions: ComponentActions,
-        modifier: Modifier,
-    ): Boolean {
         when (component) {
             is AppLoadingComponent -> appLoadingRenderer.Render(component, actions, modifier)
             is AppErrorComponent -> appErrorRenderer.Render(component, actions, modifier)
@@ -130,81 +107,28 @@ class RenderComponentFactory(
             is AppTopBarComponent -> appTopBarRenderer.Render(component, actions, modifier)
             is AppTopBarListComponent -> appTopBarListRenderer.Render(component, actions, modifier)
             is AppSearchBarComponent -> appSearchBarRenderer.Render(component, actions, modifier)
-            is BottomNavigationComponent -> bottomNavigationRenderer.Render(
-                component,
-                actions,
-                modifier
-            )
-
-            is AppSectionTitleComponent -> appSectionTitleRenderer.Render(
-                component,
-                actions,
-                modifier
-            )
-
-            is AppProfileHeaderComponent -> appProfileHeaderRenderer.Render(
-                component,
-                actions,
-                modifier
-            )
-
+            is BottomNavigationComponent -> bottomNavigationRenderer.Render(component, actions, modifier)
+            is AppSectionTitleComponent -> appSectionTitleRenderer.Render(component, actions, modifier)
+            is AppProfileHeaderComponent -> appProfileHeaderRenderer.Render(component, actions, modifier)
             is AppTextFieldComponent -> appTextFieldRenderer.Render(component, actions, modifier)
             is AppSnackbarComponent -> appSnackbarRenderer.Render(component, actions, modifier)
             is AppHtmlTextComponent -> appHtmlTextRenderer.Render(component, actions, modifier)
             is AppSwitchRowComponent -> appSwitchRowRenderer.Render(component, actions, modifier)
-            is AppSelectionRowComponent -> appSelectionRowRenderer.Render(
-                component,
-                actions,
-                modifier
-            )
-
-            else -> return false
-        }
-        return true
-    }
-
-    @Composable
-    @Suppress("CyclomaticComplexMethod")
-    private fun renderMediaComponent(
-        component: Component,
-        actions: ComponentActions,
-        modifier: Modifier,
-    ) {
-        when (component) {
+            is AppSelectionRowComponent -> appSelectionRowRenderer.Render(component, actions, modifier)
             is MovieCarouselComponent -> movieCarouselRenderer.Render(component, actions, modifier)
-            is BannerCarouselComponent -> bannerCarouselRenderer.Render(
-                component,
-                actions,
-                modifier
-            )
-
+            is BannerCarouselComponent -> bannerCarouselRenderer.Render(component, actions, modifier)
             is CarouselComponent -> carouselRenderer.Render(component, actions, modifier)
-            is FullScreenBannerComponent -> fullScreenBannerRenderer.Render(
-                component,
-                actions,
-                modifier
-            )
-
+            is FullScreenBannerComponent -> fullScreenBannerRenderer.Render(component, actions, modifier)
             is ChipGroupComponent -> chipGroupRenderer.Render(component, actions, modifier)
-            is ProfileRowComponent -> profileRenderer.Render(component, actions, modifier)
-            is UserRowComponent -> userRenderer.Render(component, actions, modifier)
+            is ProfileRowComponent -> profileRowRenderer.Render(component, actions, modifier)
+            is UserRowComponent -> userRowRenderer.Render(component, actions, modifier)
             is PremiumBannerComponent -> premiumBannerRenderer.Render(component, actions, modifier)
             is SectionComponent -> sectionRenderer.Render(component, actions, modifier)
             is FooterComponent -> footerRenderer.Render(component, actions, modifier)
-            is AppMovieDetailHeaderComponent -> movieDetailHeaderRenderer.Render(
-                component,
-                actions,
-                modifier
-            )
-
-            is AppExpandableSectionComponent -> expandableSectionRenderer.Render(
-                component,
-                modifier
-            )
-
-            is AppMainContentComponent -> mainContentRenderer.Render(component, actions, modifier)
+            is AppMovieDetailHeaderComponent -> appMovieDetailHeaderRenderer.Render(component, actions, modifier)
+            is AppExpandableSectionComponent -> appExpandableSectionRenderer.Render(component, modifier)
+            is AppMainContentComponent -> appMainContentRenderer.Render(component, actions, modifier)
             is MovieItemComponent -> movieItemRenderer.Render(component, actions, modifier)
-            else -> Unit
         }
     }
 }

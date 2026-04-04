@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.main
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -8,7 +9,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppImageType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarItem
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarListComponent
@@ -68,7 +71,7 @@ fun MainContent(
 
 @Preview
 @Composable
-fun MainScreenPreview() {
+fun MainScreenSuccessPreview() {
     val bottomNavItems =
         listOf(
             BottomNavItem(AppNavigationRoute.HOME, AppNavigationRoute.HOME, AppIconType.HOME),
@@ -109,7 +112,7 @@ fun MainScreenPreview() {
                     items = bottomNavItems,
                     selectedActionUrl = selectedRoute,
                 ),
-                components = listOf(),
+                components = listOf()
             ),
         )
 
@@ -117,6 +120,31 @@ fun MainScreenPreview() {
         MainContent(
             uiState = UIState.Success(Screen(components = components)),
             actions = ComponentActions(),
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@Preview
+@Composable
+fun MainScreenLoadingPreview() {
+    DLearnTheme {
+        MainContent(
+            uiState = UIState.Loading,
+            actions = ComponentActions(),
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@Preview
+@Composable
+fun MainScreenErrorPreview() {
+    DLearnTheme {
+        MainContent(
+            uiState = UIState.Error(Exception("Error message")),
+            actions = ComponentActions(),
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }

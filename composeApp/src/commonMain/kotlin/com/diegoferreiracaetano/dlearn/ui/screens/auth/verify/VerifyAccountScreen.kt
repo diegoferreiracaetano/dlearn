@@ -27,6 +27,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppOtpVerification
+import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.util.toAppMessage
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.VerifyAccountUiState
@@ -37,9 +38,9 @@ import dlearn.composeapp.generated.resources.verify_account_action
 import dlearn.composeapp.generated.resources.verify_account_subtitle
 import dlearn.composeapp.generated.resources.verify_account_title
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VerifyAccountScreen(
     onBackClick: () -> Unit,
@@ -47,15 +48,43 @@ fun VerifyAccountScreen(
     modifier: Modifier = Modifier,
     viewModel: VerifyAccountViewModel = koinViewModel(),
 ) {
-    var otpCode by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(uiState) {
+        if (uiState is VerifyAccountUiState.Success) {
+            onContinueClick()
+        }
+    }
+
+    VerifyAccountContent(
+        uiState = uiState,
+        onBackClick = {
+            viewModel.cancel()
+            onBackClick()
+        },
+        onVerifyOtp = viewModel::verifyOtp,
+        onResendOtp = viewModel::resendOtp,
+        modifier = modifier,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun VerifyAccountContent(
+    uiState: VerifyAccountUiState,
+    onBackClick: () -> Unit,
+    onVerifyOtp: (String) -> Unit,
+    onResendOtp: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var otpCode by remember { mutableStateOf("") }
     var otpError by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(uiState) {
-        when (val state = uiState) {
-            is VerifyAccountUiState.Success -> onContinueClick()
-            is VerifyAccountUiState.Error -> otpError = state.throwable.toAppMessage()
-            else -> otpError = null
+        if (uiState is VerifyAccountUiState.Error) {
+            otpError = uiState.throwable.toAppMessage()
+        } else {
+            otpError = null
         }
     }
 
@@ -64,10 +93,7 @@ fun VerifyAccountScreen(
         topBar = {
             AppTopBar(
                 title = stringResource(Res.string.verify_account_title),
-                onBack = {
-                    viewModel.cancel()
-                    onBackClick()
-                },
+                onBack = onBackClick,
             )
         },
     ) { innerModifier ->
@@ -102,7 +128,7 @@ fun VerifyAccountScreen(
                     otpCode = text
                     otpError = null
                 },
-                onResendClick = { viewModel.resendOtp() },
+                onResendClick = onResendOtp,
                 modifier = Modifier.fillMaxWidth(),
                 isError = otpError != null,
                 errorText = otpError,
@@ -113,7 +139,7 @@ fun VerifyAccountScreen(
             AppButton(
                 text = stringResource(Res.string.verify_account_action),
                 onClick = {
-                    viewModel.verifyOtp(otpCode)
+                    onVerifyOtp(otpCode)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = otpCode.length == 6 && uiState !is VerifyAccountUiState.Loading,
@@ -130,7 +156,7 @@ fun VerifyAccountScreen(
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 TextButton(
-                    onClick = { viewModel.resendOtp() },
+                    onClick = onResendOtp,
                     enabled = uiState !is VerifyAccountUiState.Loading,
                 ) {
                     Text(
@@ -146,5 +172,31 @@ fun VerifyAccountScreen(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun VerifyAccountScreenIdlePreview() {
+    DLearnTheme {
+        VerifyAccountContent(
+            uiState = VerifyAccountUiState.Idle,
+            onBackClick = {},
+            onVerifyOtp = {},
+            onResendOtp = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+fun VerifyAccountScreenLoadingPreview() {
+    DLearnTheme {
+        VerifyAccountContent(
+            uiState = VerifyAccountUiState.Loading,
+            onBackClick = {},
+            onVerifyOtp = {},
+            onResendOtp = {},
+        )
     }
 }

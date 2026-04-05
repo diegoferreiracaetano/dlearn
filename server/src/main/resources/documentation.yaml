@@ -36,12 +36,6 @@ paths:
                 password:
                   type: string
                   example: "123456"
-                tmdbUsername:
-                  type: string
-                  nullable: true
-                tmdbPassword:
-                  type: string
-                  nullable: true
       responses:
         '200':
           description: OK
@@ -77,12 +71,6 @@ paths:
                   type: string
                 password:
                   type: string
-                tmdbUsername:
-                  type: string
-                  nullable: true
-                tmdbPassword:
-                  type: string
-                  nullable: true
       responses:
         '201':
           description: Created

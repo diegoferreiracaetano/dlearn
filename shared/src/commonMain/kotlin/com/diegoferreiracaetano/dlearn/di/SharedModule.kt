@@ -17,9 +17,6 @@ import com.diegoferreiracaetano.dlearn.data.password.remote.PasswordRepositoryRe
 import com.diegoferreiracaetano.dlearn.data.profile.remote.ProfileRepositoryRemote
 import com.diegoferreiracaetano.dlearn.data.source.local.KeyValueStorage
 import com.diegoferreiracaetano.dlearn.data.source.local.SettingsKeyValueStorage
-import com.diegoferreiracaetano.dlearn.data.user.UserRepository
-import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserNetworkDataSource
-import com.diegoferreiracaetano.dlearn.data.user.source.remote.UserRepositoryRemote
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
 import com.diegoferreiracaetano.dlearn.domain.auth.AccountProvider
@@ -128,9 +125,6 @@ val sharedModule =
         }
 
         single<AccountProvider> { SettingsAccountProvider(get()) }
-
-        single { UserNetworkDataSource() }
-        single<UserRepository> { UserRepositoryRemote(get()) }
         single { Settings() }
         single<KeyValueStorage> { SettingsKeyValueStorage(get()) }
         single<PreferencesRepository> { PreferencesRepositoryImpl(get(), getPlatform()) }

@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppBottomNavigation
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppBottomNavigationBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppNavigationTab
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
@@ -32,9 +33,13 @@ class BottomNavigationRenderer : ComponentRenderer {
                 )
             }
 
+        val selectedRoute = actions.currentRoute.takeIf { it.isNotEmpty() }
+            ?: bottomNav.selectedActionUrl
+            ?: AppNavigationRoute.HOME
+
         val nav =
             AppBottomNavigation(
-                selectedRoute = actions.currentRoute,
+                selectedRoute = selectedRoute,
                 items = mappedItems,
                 onTabSelected = actions.onTabSelected,
             )

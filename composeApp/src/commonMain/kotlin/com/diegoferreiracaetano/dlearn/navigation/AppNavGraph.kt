@@ -19,13 +19,11 @@ import androidx.navigation.navArgument
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.ChangePassword
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.CreateNewPassword
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Favorite
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Home
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Login
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Logout
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.MovieDetail
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Onboarding
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Profile
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.ResetPassword
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Search
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.SettingsClearCache
@@ -34,7 +32,6 @@ import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.SettingsLanguage
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.SettingsNotifications
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.SignUp
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.VerifyAccount
-import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Watchlist
 import com.diegoferreiracaetano.dlearn.navigation.ScreenRouter.Welcome
 import com.diegoferreiracaetano.dlearn.ui.screens.app.AppScreen
 import com.diegoferreiracaetano.dlearn.ui.screens.auth.password.CreateNewPasswordScreen
@@ -170,39 +167,8 @@ fun AppNavGraph(
                 onTabSelected = { route -> navController.navigateToRoute(route) },
                 onItemClick = { route -> navController.navigateToPath(route) },
                 onSearchClick = { navController.navigateToPath(Search.route) },
-                modifier = modifier,
-                currentRoute = Home.route,
-            )
-        }
-
-        composable(Watchlist.route) {
-            MainScreen(
-                onMovieClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
-                onItemClick = { route -> navController.navigateToPath(route) },
-                onTabSelected = { route -> navController.navigateToRoute(route) },
-                modifier = modifier,
-                currentRoute = Watchlist.route,
-            )
-        }
-
-        composable(Favorite.route) {
-            MainScreen(
-                onMovieClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
-                onItemClick = { route -> navController.navigateToPath(route) },
-                onTabSelected = { route -> navController.navigateToRoute(route) },
-                modifier = modifier,
-                currentRoute = Favorite.route,
-            )
-        }
-
-        composable(Profile.route) {
-            MainScreen(
-                onMovieClick = { id -> navController.navigate(MovieDetail.createRoute(id)) },
-                onItemClick = { route -> navController.navigateToPath(route) },
-                onTabSelected = { route -> navController.navigateToRoute(route) },
                 onClose = { navController.navigate(Logout.route) },
-                modifier = modifier,
-                currentRoute = Profile.route,
+                modifier = modifier
             )
         }
 

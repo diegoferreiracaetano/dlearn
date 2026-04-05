@@ -63,7 +63,7 @@ fun AppScreen(
 fun AppScreen(
     actions: ComponentActions,
     modifier: Modifier = Modifier,
-    path: String = actions.currentRoute,
+    path: String,
     params: Map<String, String>? = null,
 ) {
     AppScreen(

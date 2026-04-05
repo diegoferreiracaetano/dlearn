@@ -9,7 +9,7 @@ data class ComponentActions(
     val onBackClick: () -> Unit = {},
     val onClose: () -> Unit = {},
     val onRetry: () -> Unit = {},
-    val currentRoute: String = "",
     val onAction: (String) -> Unit = {},
     val onQueryChange: (String) -> Unit = {},
+    val currentRoute: String = "",
 )

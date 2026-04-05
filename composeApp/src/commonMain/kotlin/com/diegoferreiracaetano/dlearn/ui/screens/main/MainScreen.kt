@@ -9,9 +9,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppImageType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarItem
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarListComponent
@@ -33,21 +31,23 @@ fun MainScreen(
     onClose: () -> Unit = {},
     onSearchClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = koinInject(),
-    currentRoute: String = AppNavigationRoute.HOME,
+    viewModel: MainViewModel = koinInject()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val currentTab by viewModel.currentTab.collectAsStateWithLifecycle()
 
     val actions =
-        remember(currentRoute, onTabSelected, onClose) {
+        remember(onTabSelected, onClose, currentTab) {
             ComponentActions(
-                currentRoute = currentRoute,
                 onItemClick = onItemClick,
                 onSearchClick = onSearchClick,
                 onMovieClick = onMovieClick,
-                onTabSelected = onTabSelected,
+                onTabSelected = { route ->
+                    viewModel.onTabSelected(route, onTabSelected)
+                },
                 onClose = onClose,
                 onRetry = viewModel::retry,
+                currentRoute = currentTab,
             )
         }
     MainContent(
@@ -119,7 +119,7 @@ fun MainScreenSuccessPreview() {
     DLearnTheme {
         MainContent(
             uiState = UIState.Success(Screen(components = components)),
-            actions = ComponentActions(),
+            actions = ComponentActions(currentRoute = selectedRoute),
             modifier = Modifier.fillMaxSize(),
         )
     }

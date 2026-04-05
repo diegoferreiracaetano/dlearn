@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
 import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +21,16 @@ class MainViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
     val uiState: StateFlow<UIState<Screen>> = _uiState.asStateFlow()
+
+    private val _currentTab = MutableStateFlow(AppNavigationRoute.HOME)
+    val currentTab: StateFlow<String> = _currentTab.asStateFlow()
+
+    private val mainTabs = listOf(
+        AppNavigationRoute.HOME,
+        AppNavigationRoute.WATCHLIST,
+        AppNavigationRoute.FAVORITE,
+        AppNavigationRoute.PROFILE
+    )
 
     init {
         loadMain()
@@ -41,6 +52,14 @@ class MainViewModel(
                 }.collect { screen ->
                     _uiState.update { UIState.Success(screen) }
                 }
+        }
+    }
+
+    fun onTabSelected(route: String, onNavigate: (String) -> Unit) {
+        if (route in mainTabs) {
+            _currentTab.update { route }
+        } else {
+            onNavigate(route)
         }
     }
 

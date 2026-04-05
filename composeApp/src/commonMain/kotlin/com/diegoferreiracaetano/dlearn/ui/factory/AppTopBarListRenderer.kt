@@ -37,9 +37,12 @@ class AppTopBarListRenderer : ComponentRenderer {
                     )
                 }
 
+            val selectedRoute = actions.currentRoute.takeIf { it.isNotEmpty() }
+                ?: topBarList.selectedActionUrl
+
             AppTopBar(
                 configs = configs,
-                selectedRoute = actions.currentRoute,
+                selectedRoute = selectedRoute,
                 modifier = modifier,
             )
         }

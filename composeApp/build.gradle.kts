@@ -1,3 +1,6 @@
+@file:OptIn(ExperimentalComposeLibrary::class)
+
+import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -68,6 +71,15 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+        
+        val androidInstrumentedTest by getting {
+            dependencies {
+                implementation(libs.androidx.testExt.junit)
+                implementation(libs.androidx.espresso.core)
+                implementation(compose.uiTest)
+                implementation(libs.mockk)
+            }
+        }
     }
 }
 
@@ -81,6 +93,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnit4"
     }
     packaging {
         resources {

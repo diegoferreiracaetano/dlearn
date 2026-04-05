@@ -24,8 +24,16 @@ class AppViewModel(
         path: String,
         params: Map<String, String>? = null,
     ) {
+        _uiState.value = UIState.Loading
         fetch(AppPath.parse(path, params))
     }
+
+    fun action(
+        action: String
+    ) {
+        fetch(AppPath.parse(action))
+    }
+
 
     fun retry() {
         lastRequest?.let { request ->

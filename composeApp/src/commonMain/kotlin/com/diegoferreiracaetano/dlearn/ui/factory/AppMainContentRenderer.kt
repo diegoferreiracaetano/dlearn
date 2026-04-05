@@ -15,7 +15,11 @@ class AppMainContentRenderer : ComponentRenderer {
     ) {
         AppScreen(
             path = actions.currentRoute,
-            actions = actions,
+            onMovieClick = actions.onMovieClick,
+            onItemClick = actions.onItemClick,
+            onTabSelected = actions.onTabSelected,
+            onBackClick = actions.onBackClick,
+            onClose = actions.onClose,
             modifier = modifier,
         )
     }

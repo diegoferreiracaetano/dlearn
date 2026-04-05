@@ -42,9 +42,7 @@ fun MainScreen(
                 onItemClick = onItemClick,
                 onSearchClick = onSearchClick,
                 onMovieClick = onMovieClick,
-                onTabSelected = { route ->
-                    viewModel.onTabSelected(route, onTabSelected)
-                },
+                onTabSelected = viewModel::onTabSelected,
                 onClose = onClose,
                 onRetry = viewModel::retry,
                 currentRoute = currentTab,

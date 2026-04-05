@@ -25,13 +25,6 @@ class MainViewModel(
     private val _currentTab = MutableStateFlow(AppNavigationRoute.HOME)
     val currentTab: StateFlow<String> = _currentTab.asStateFlow()
 
-    private val mainTabs = listOf(
-        AppNavigationRoute.HOME,
-        AppNavigationRoute.WATCHLIST,
-        AppNavigationRoute.FAVORITE,
-        AppNavigationRoute.PROFILE
-    )
-
     init {
         loadMain()
         viewModelScope.launch {
@@ -55,12 +48,8 @@ class MainViewModel(
         }
     }
 
-    fun onTabSelected(route: String, onNavigate: (String) -> Unit) {
-        if (route in mainTabs) {
-            _currentTab.update { route }
-        } else {
-            onNavigate(route)
-        }
+    fun onTabSelected(route: String) {
+        _currentTab.update { route }
     }
 
     fun retry() {

@@ -51,31 +51,12 @@ fun AppScreen(
                 onTabSelected = onTabSelected,
                 onBackClick = onBackClick,
                 onRetry = viewModel::retry,
-                onAction = viewModel::fetch,
+                onAction = viewModel::action,
                 onClose = onClose,
             )
         }
 
     AppContent(uiState, actions, modifier)
-}
-
-@Composable
-fun AppScreen(
-    actions: ComponentActions,
-    modifier: Modifier = Modifier,
-    path: String,
-    params: Map<String, String>? = null,
-) {
-    AppScreen(
-        path = path,
-        params = params,
-        onBackClick = actions.onBackClick,
-        onClose = actions.onClose,
-        onTabSelected = actions.onTabSelected,
-        onMovieClick = actions.onMovieClick,
-        onItemClick = actions.onItemClick,
-        modifier = modifier,
-    )
 }
 
 @Composable

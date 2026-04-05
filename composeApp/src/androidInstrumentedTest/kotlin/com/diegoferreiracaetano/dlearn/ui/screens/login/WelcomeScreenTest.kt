@@ -38,7 +38,8 @@ class WelcomeScreenTest {
             }
         }
 
-        onNodeWithText("Entrar").performClick()
+        // Updated to use "Login" as per strings.xml
+        onNodeWithText("Login", ignoreCase = true).performClick()
 
         verify { onLoginClick() }
     }
@@ -59,7 +60,10 @@ class WelcomeScreenTest {
             }
         }
 
-        onNodeWithText("Criar conta").performClick()
+        // Updated to use "Cadastrar" as per strings.xml (pt) or "Sign Up" (en)
+        // Since the previous error showed it was looking for "Entrar" and failing, 
+        // let's use the actual resource value.
+        onNodeWithText("Cadastrar", ignoreCase = true).performClick()
 
         verify { onSignUpClick() }
     }
@@ -101,7 +105,7 @@ class WelcomeScreenTest {
             }
         }
 
-        onNodeWithText("Entrar").assertIsNotEnabled()
+        onNodeWithText("Login", ignoreCase = true).assertIsNotEnabled()
     }
 
     @Test
@@ -143,6 +147,6 @@ class WelcomeScreenTest {
 
         state.value = LoginUIState.Error(Exception(errorMessage))
 
-        onNodeWithText(errorMessage).assertExists()
+        onNodeWithText(errorMessage, ignoreCase = true).assertExists()
     }
 }

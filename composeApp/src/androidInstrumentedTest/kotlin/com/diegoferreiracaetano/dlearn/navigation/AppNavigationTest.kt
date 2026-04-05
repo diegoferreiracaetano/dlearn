@@ -62,7 +62,6 @@ class AppNavigationTest : KoinTest {
         }
 
         // Verifica se algum texto da WelcomeScreen está presente
-        // Usando "Plataforma de Aprendizado" que é o subtitle em PT, ou "DLearn"
         composeTestRule.onNodeWithText("DLearn", ignoreCase = true).assertExists()
     }
 
@@ -85,7 +84,6 @@ class AppNavigationTest : KoinTest {
         }
 
         // Tenta clicar no botão de Login na WelcomeScreen
-        // No strings.xml (PT e default), login_action é "Login"
         composeTestRule.onNodeWithText("Login", ignoreCase = true).performClick()
 
         // Verifica se a LoginScreen foi carregada

@@ -14,7 +14,7 @@ import kotlin.test.assertNull
 class UIExtensionsTest {
 
     @Test
-    fun `given profile title type when mapping to resource should return correct resource`() {
+    fun given_profile_title_type_when_mapping_to_resource_should_return_correct_resource() {
         val type = AppStringType.PROFILE_TITLE
         val expected = Res.string.profile_title
 
@@ -24,7 +24,7 @@ class UIExtensionsTest {
     }
 
     @Test
-    fun `given nav home type when mapping to resource should return correct resource`() {
+    fun given_nav_home_type_when_mapping_to_resource_should_return_correct_resource() {
         val type = AppStringType.NAV_HOME
         val expected = Res.string.nav_home
 
@@ -34,13 +34,13 @@ class UIExtensionsTest {
     }
 
     @Test
-    fun `given null string type when mapping should return null`() {
+    fun given_null_string_type_when_mapping_should_return_null() {
         val type: AppStringType? = null
         assertNull(type.toResource())
     }
 
     @Test
-    fun `given email text field type when mapping should return email design system type`() {
+    fun given_email_text_field_type_when_mapping_should_return_email_design_system_type() {
         val type = AppTextFieldType.EMAIL
         val expected = TextFieldType.EMAIL
 
@@ -50,7 +50,7 @@ class UIExtensionsTest {
     }
 
     @Test
-    fun `given password text field type when mapping should return password design system type`() {
+    fun given_password_text_field_type_when_mapping_should_return_password_design_system_type() {
         val type = AppTextFieldType.PASSWORD
         val expected = TextFieldType.PASSWORD
 
@@ -60,7 +60,7 @@ class UIExtensionsTest {
     }
 
     @Test
-    fun `given movie item component when mapping to movie item should preserve data`() {
+    fun given_movie_item_component_when_mapping_to_movie_item_should_preserve_data() {
         val component = MovieItemComponent(
             id = "1",
             title = "Movie Title",

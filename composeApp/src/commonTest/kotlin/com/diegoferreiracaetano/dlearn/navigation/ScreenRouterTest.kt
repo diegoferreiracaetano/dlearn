@@ -6,12 +6,12 @@ import kotlin.test.assertEquals
 class ScreenRouterTest {
 
     @Test
-    fun `given home route when accessed should return correct route string`() {
+    fun given_home_route_when_accessed_should_return_correct_route_string() {
         assertEquals(AppNavigationRoute.HOME, ScreenRouter.Home.route)
     }
 
     @Test
-    fun `given movie detail when create route with id should return formatted route`() {
+    fun given_movie_detail_when_create_route_with_id_should_return_formatted_route() {
         val movieId = "456"
         val expected = "${AppNavigationRoute.MOVIES}/$movieId"
         
@@ -21,7 +21,7 @@ class ScreenRouterTest {
     }
 
     @Test
-    fun `given login route when accessed should return correct route string`() {
+    fun given_login_route_when_accessed_should_return_correct_route_string() {
         assertEquals(AppNavigationRoute.LOGIN, ScreenRouter.Login.route)
     }
 }

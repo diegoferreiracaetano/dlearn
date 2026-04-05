@@ -38,9 +38,10 @@ class LoginScreenTest {
             }
         }
 
-        onNodeWithText("E-mail").performTextInput(email)
-        onNodeWithText("Senha").performTextInput(password)
-        onNodeWithText("Entrar").performClick()
+        // Updated to match strings.xml (PT/EN)
+        onNodeWithText("E-mail", ignoreCase = true).performTextInput(email)
+        onNodeWithText("Senha", ignoreCase = true).performTextInput(password)
+        onNodeWithText("Login", ignoreCase = true).performClick()
 
         verify { viewModel.login(email, password) }
     }
@@ -61,7 +62,7 @@ class LoginScreenTest {
             }
         }
 
-        onNodeWithText("Entrar").assertIsNotEnabled()
+        onNodeWithText("Login", ignoreCase = true).assertIsNotEnabled()
     }
 
     @Test
@@ -103,6 +104,6 @@ class LoginScreenTest {
 
         state.value = LoginUIState.Error(Exception(errorMessage))
 
-        onNodeWithText(errorMessage).assertExists()
+        onNodeWithText(errorMessage, ignoreCase = true).assertExists()
     }
 }

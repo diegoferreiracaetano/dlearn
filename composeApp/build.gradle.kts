@@ -9,7 +9,11 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.kover)
 }
+
+apply(from = "../gradle/coverage.gradle.kts")
 
 kotlin {
     androidTarget {
@@ -70,15 +74,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-        }
-        
-        val androidInstrumentedTest by getting {
-            dependencies {
-                implementation(libs.androidx.testExt.junit)
-                implementation(libs.androidx.espresso.core)
-                implementation(compose.uiTest)
-                implementation(libs.mockk)
-            }
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }
@@ -93,11 +89,18 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnit4"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
+            excludes += "META-INF/NOTICE.md"
+            excludes += "META-INF/LICENSE.txt"
+            excludes += "META-INF/NOTICE.txt"
+            excludes += "META-INF/LICENSE"
+            excludes += "META-INF/NOTICE"
         }
     }
     buildTypes {
@@ -113,5 +116,15 @@ android {
 }
 
 dependencies {
+    androidTestImplementation(libs.kotlin.test)
+    androidTestImplementation(libs.androidx.testExt.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(compose.uiTest)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.koin.test)
+
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(compose.uiTooling)
 }

@@ -28,7 +28,7 @@ fun CleanCacheScreen(
 }
 
 @Composable
-private fun CleanCacheContent(
+fun CleanCacheContent(
     onBackClick: () -> Unit,
     onConfirmClick: () -> Unit,
     modifier: Modifier = Modifier,

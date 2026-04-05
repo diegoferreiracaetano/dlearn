@@ -44,6 +44,7 @@ fun AppScreen(
             onTabSelected,
             onBackClick,
             onClose,
+            path,
         ) {
             ComponentActions(
                 onMovieClick = onMovieClick,
@@ -53,6 +54,7 @@ fun AppScreen(
                 onRetry = viewModel::retry,
                 onAction = viewModel::action,
                 onClose = onClose,
+                currentRoute = path,
             )
         }
 

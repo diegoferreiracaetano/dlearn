@@ -43,7 +43,7 @@ class AppViewModelTest {
     fun `when fetch is called should update state to Success`() = runTest {
         val request = AppRequest(path = "/home")
         val screen = Screen(components = emptyList())
-        
+
         coEvery { repository.execute(request) } returns flowOf(screen)
 
         viewModel.fetch(request)
@@ -56,7 +56,7 @@ class AppViewModelTest {
     fun `when fetch with path is called should update state to Success`() = runTest {
         val path = "/home"
         val screen = Screen(components = emptyList())
-        
+
         coEvery { repository.execute(any()) } returns flowOf(screen)
 
         viewModel.fetch(path)
@@ -69,7 +69,7 @@ class AppViewModelTest {
     fun `when fetch fails should update state to Error`() = runTest {
         val request = AppRequest(path = "/home")
         val exception = RuntimeException("Network error")
-        
+
         coEvery { repository.execute(request) } returns flow { throw exception }
 
         viewModel.fetch(request)
@@ -84,12 +84,12 @@ class AppViewModelTest {
     fun `when retry is called should execute last request again`() = runTest {
         val request = AppRequest(path = "/home")
         val screen = Screen(components = emptyList())
-        
+
         coEvery { repository.execute(request) } returns flowOf(screen)
 
         viewModel.fetch(request)
         advanceUntilIdle()
-        
+
         viewModel.retry()
         advanceUntilIdle()
 

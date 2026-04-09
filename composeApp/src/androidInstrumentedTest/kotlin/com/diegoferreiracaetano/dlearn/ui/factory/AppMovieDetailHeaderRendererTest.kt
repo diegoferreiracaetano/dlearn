@@ -13,7 +13,6 @@ import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 import org.junit.Test
 
-
 @ExperimentalTestApi
 class AppMovieDetailHeaderRendererTest {
 

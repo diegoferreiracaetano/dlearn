@@ -7,7 +7,7 @@ class AppStringTypeTest {
 
     @Test
     fun `AppStringType values exist`() {
-        AppStringType.entries.forEach { 
+        AppStringType.entries.forEach {
             assertNotNull(it.name)
         }
     }

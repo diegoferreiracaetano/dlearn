@@ -48,7 +48,7 @@ class LoginViewModelTest {
         val email = "test@example.com"
         val password = "password"
         val response = AuthResponse(accessToken = "token")
-        
+
         // Use a delayed flow to capture the Loading state
         coEvery { authRepository.login(email, password) } returns flow {
             kotlinx.coroutines.delay(100)
@@ -57,12 +57,12 @@ class LoginViewModelTest {
         coEvery { sessionManager.isLoggedIn } returns MutableStateFlow(true)
 
         viewModel.login(email, password)
-        
+
         testDispatcher.scheduler.runCurrent()
         assertEquals(LoginUIState.Loading, viewModel.state.value)
-        
+
         advanceUntilIdle()
-        
+
         assertEquals(LoginUIState.Success(true), viewModel.state.value)
     }
 
@@ -75,7 +75,7 @@ class LoginViewModelTest {
 
         viewModel.login(email, password)
         advanceUntilIdle()
-        
+
         val state = viewModel.state.value
         assertTrue(state is LoginUIState.Error)
         assertEquals(exception, state.throwable)
@@ -91,7 +91,7 @@ class LoginViewModelTest {
 
         viewModel.signInWith(provider)
         advanceUntilIdle()
-        
+
         assertEquals(LoginUIState.Success(true), viewModel.state.value)
     }
 
@@ -103,7 +103,7 @@ class LoginViewModelTest {
 
         viewModel.signInWith(provider)
         advanceUntilIdle()
-        
+
         val state = viewModel.state.value
         assertTrue(state is LoginUIState.Error)
         assertEquals(exception, state.throwable)
@@ -116,7 +116,7 @@ class LoginViewModelTest {
 
         viewModel.signInWith(provider)
         advanceUntilIdle()
-        
+
         assertEquals(LoginUIState.Idle, viewModel.state.value)
     }
 

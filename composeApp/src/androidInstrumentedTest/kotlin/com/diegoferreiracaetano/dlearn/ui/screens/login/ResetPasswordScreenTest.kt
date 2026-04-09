@@ -32,7 +32,7 @@ class ResetPasswordScreenTest {
 
         onNodeWithTag(TestTags.Components.EMAIL_FIELD, useUnmergedTree = true).onChildAt(0).performTextInput(email)
         onNodeWithTag(TestTags.Components.NEXT_BUTTON).performClick()
-        
+
         waitForIdle()
 
         verify { onNextClick() }

@@ -38,9 +38,9 @@ class NetworkErrorMapperTest {
         every { call.response } returns response
         every { call.request } returns request
         every { response.status } returns HttpStatusCode.BadRequest
-        
+
         val exception = ClientRequestException(response, "Bad Request")
-        
+
         val result = exception.toAppException()
         assertEquals(AppErrorCode.BAD_REQUEST, result.error.code)
     }
@@ -54,7 +54,7 @@ class NetworkErrorMapperTest {
         every { call.response } returns response
         every { call.request } returns request
         every { response.status } returns HttpStatusCode.InternalServerError
-        
+
         val exception = ServerResponseException(response, "Server Error")
 
         val result = exception.toAppException()
@@ -112,7 +112,7 @@ class NetworkErrorMapperTest {
         val response = mockk<HttpResponse>(relaxed = true)
         every { response.call } returns call
         every { call.response } returns response
-        
+
         val statusCodes = mapOf(
             HttpStatusCode.Unauthorized to AppErrorCode.UNAUTHORIZED,
             HttpStatusCode.Forbidden to AppErrorCode.FORBIDDEN,

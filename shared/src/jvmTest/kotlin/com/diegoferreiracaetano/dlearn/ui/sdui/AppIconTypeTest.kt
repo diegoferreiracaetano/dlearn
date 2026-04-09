@@ -7,7 +7,7 @@ class AppIconTypeTest {
 
     @Test
     fun `AppIconType values exist`() {
-        AppIconType.entries.forEach { 
+        AppIconType.entries.forEach {
             assertNotNull(it.name)
         }
     }

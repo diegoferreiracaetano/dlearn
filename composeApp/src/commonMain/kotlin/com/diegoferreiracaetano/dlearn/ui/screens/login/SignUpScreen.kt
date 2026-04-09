@@ -40,8 +40,8 @@ import dlearn.composeapp.generated.resources.signup_action
 import dlearn.composeapp.generated.resources.signup_agree_terms
 import dlearn.composeapp.generated.resources.signup_screen_subtitle
 import dlearn.composeapp.generated.resources.signup_screen_title
-import dlearn.composeapp.generated.resources.title_name
 import dlearn.composeapp.generated.resources.title_email
+import dlearn.composeapp.generated.resources.title_name
 import dlearn.composeapp.generated.resources.title_password
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview

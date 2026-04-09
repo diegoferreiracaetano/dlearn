@@ -1,7 +1,11 @@
 package com.diegoferreiracaetano.dlearn.tmdb
 
 import com.diegoferreiracaetano.dlearn.infrastructure.mappers.TmdbMapper
-import com.diegoferreiracaetano.dlearn.model.*
+import com.diegoferreiracaetano.dlearn.model.TmdbGenre
+import com.diegoferreiracaetano.dlearn.model.TmdbGenresResponse
+import com.diegoferreiracaetano.dlearn.model.TmdbItemRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbListResponse
+import com.diegoferreiracaetano.dlearn.model.TmdbMovieDetailRemote
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -12,7 +16,6 @@ import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.Test
 import kotlin.test.assertEquals

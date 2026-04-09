@@ -79,7 +79,7 @@ class VerifyAccountScreenTest {
         }
 
         state.value = VerifyAccountUiState.Success
-        
+
         waitForIdle()
 
         verify { onContinueClick() }
@@ -101,7 +101,7 @@ class VerifyAccountScreenTest {
         }
 
         state.value = VerifyAccountUiState.Error(Exception(errorMessage))
-        
+
         waitForIdle()
 
         onNodeWithText(errorMessage).assertExists()

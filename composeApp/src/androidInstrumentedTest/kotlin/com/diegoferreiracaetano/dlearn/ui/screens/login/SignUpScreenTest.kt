@@ -41,7 +41,10 @@ class SignUpScreenTest {
 
         onNodeWithTag(TestTags.Components.NAME_FIELD, useUnmergedTree = true).onChildAt(0).performTextInput(name)
         onNodeWithTag(TestTags.Components.EMAIL_FIELD, useUnmergedTree = true).onChildAt(0).performTextInput(email)
-        onNodeWithTag(TestTags.Components.PASSWORD_FIELD, useUnmergedTree = true).onChildAt(0).performTextInput(password)
+        onNodeWithTag(
+            TestTags.Components.PASSWORD_FIELD,
+            useUnmergedTree = true,
+        ).onChildAt(0).performTextInput(password)
         onNodeWithTag(TestTags.Components.SIGN_UP_BUTTON).performClick()
 
         verify { viewModel.signUp(name, email, password) }
@@ -63,7 +66,7 @@ class SignUpScreenTest {
         }
 
         state.value = SignUpUIState.Success(true)
-        
+
         waitForIdle()
 
         verify { onNavigateToHome() }
@@ -85,7 +88,7 @@ class SignUpScreenTest {
         }
 
         state.value = SignUpUIState.Error(Exception(errorMessage))
-        
+
         waitForIdle()
 
         onNodeWithTag(TestTags.Screens.SIGN_UP_SCREEN).assertExists()

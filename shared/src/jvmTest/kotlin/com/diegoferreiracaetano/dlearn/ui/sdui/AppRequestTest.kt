@@ -15,7 +15,7 @@ class AppRequestTest {
             params = params,
             metadata = metadata
         )
-        
+
         assertEquals("home", request.path)
         assertEquals(params, request.params)
         assertEquals(metadata, request.metadata)

@@ -5,7 +5,6 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTextFieldComponent
@@ -14,8 +13,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-
 
 class AppTextFieldRendererTest {
 
@@ -45,9 +42,9 @@ class AppTextFieldRendererTest {
         }
 
         val input = "searching..."
-        
+
         composeTestRule.onNodeWithTag("OutlinedTextField").performClick().performTextInput(input)
-        
+
         verify { onQueryChangeMock("$key:$input") }
     }
 }

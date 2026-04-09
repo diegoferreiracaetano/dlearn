@@ -13,7 +13,7 @@ class CarouselComponentTest {
             title = "Carousel",
             items = listOf<Component>(item)
         )
-        
+
         assertEquals("Carousel", component.title)
         assertEquals(listOf<Component>(item), component.items)
     }

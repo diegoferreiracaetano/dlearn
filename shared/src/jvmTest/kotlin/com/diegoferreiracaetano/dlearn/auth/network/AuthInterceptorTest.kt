@@ -19,7 +19,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -34,13 +33,13 @@ class AuthInterceptorTest {
     fun `when intercept is called with REQUIRED mode should add authorization header`() = runTest {
         val token = "secret_token"
         coEvery { sessionManager.token() } returns token
-        
+
         val client = HttpClient(MockEngine) {
             engine {
                 addHandler { respond("") }
             }
         }
-        
+
         val interceptor = AuthInterceptor(sessionManager, client)
         val request = HttpRequestBuilder().apply {
             attributes.put(AuthModeKey, AuthMode.REQUIRED)
@@ -58,7 +57,7 @@ class AuthInterceptorTest {
                 addHandler { respond("") }
             }
         }
-        
+
         val interceptor = AuthInterceptor(sessionManager, client)
         val request = HttpRequestBuilder().apply {
             attributes.put(AuthModeKey, AuthMode.NONE)
@@ -75,10 +74,10 @@ class AuthInterceptorTest {
         val refreshToken = "refresh_token"
         val newUser = User(id = "1", email = "test@test.com", name = "Test")
         val newAuthResponse = AuthResponse(user = newUser, accessToken = "new_token", refreshToken = "new_refresh")
-        
+
         coEvery { sessionManager.token() } returns oldToken
         coEvery { sessionManager.refreshToken() } returns refreshToken
-        
+
         val engine = MockEngine { request ->
             if (request.url.encodedPath == "/v1/auth/refresh") {
                 respond(
@@ -90,13 +89,13 @@ class AuthInterceptorTest {
                 respond("", status = HttpStatusCode.Unauthorized)
             }
         }
-        
+
         val client = HttpClient(engine) {
             install(ContentNegotiation) { json() }
         }
-        
+
         val interceptor = AuthInterceptor(sessionManager, client)
-        
+
         val response = client.request {
             header(HttpHeaders.Authorization, "Bearer $oldToken")
         }
@@ -112,11 +111,11 @@ class AuthInterceptorTest {
         val oldToken = "old_token"
         val newToken = "new_token"
         coEvery { sessionManager.token() } returns newToken
-        
+
         val engine = MockEngine { respond("", status = HttpStatusCode.Unauthorized) }
         val client = HttpClient(engine)
         val interceptor = AuthInterceptor(sessionManager, client)
-        
+
         val response = client.request {
             header(HttpHeaders.Authorization, "Bearer $oldToken")
         }
@@ -131,17 +130,17 @@ class AuthInterceptorTest {
         val oldToken = "old_token"
         coEvery { sessionManager.token() } returns oldToken
         coEvery { sessionManager.refreshToken() } returns "refresh_token"
-        
-        val engine = MockEngine { 
+
+        val engine = MockEngine {
             respond("", status = HttpStatusCode.Unauthorized)
         }
-        
+
         val client = HttpClient(engine) {
             install(ContentNegotiation) { json() }
         }
-        
+
         val interceptor = AuthInterceptor(sessionManager, client)
-        
+
         val response = client.request {
             header(HttpHeaders.Authorization, "Bearer $oldToken")
         }
@@ -157,7 +156,7 @@ class AuthInterceptorTest {
         val engine = MockEngine { respond("", status = HttpStatusCode.Unauthorized) }
         val client = HttpClient(engine)
         val interceptor = AuthInterceptor(sessionManager, client)
-        
+
         val response = client.request {
             attributes.put(AuthModeKey, AuthMode.NONE)
         }
@@ -172,7 +171,7 @@ class AuthInterceptorTest {
         val engine = MockEngine { respond("", status = HttpStatusCode.BadRequest) }
         val client = HttpClient(engine)
         val interceptor = AuthInterceptor(sessionManager, client)
-        
+
         val response = client.request { }
 
         val result = interceptor.handleUnauthorized(response)

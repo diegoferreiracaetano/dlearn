@@ -15,7 +15,7 @@ class FakeCacheManager : CacheManager {
     var shouldThrowOnPut = false
 
     override fun <T> put(key: String, value: T, serializer: KSerializer<T>) {
-        if (shouldThrowOnPut) throw RuntimeException("Cache error")
+        if (shouldThrowOnPut) throw IllegalStateException("Cache error")
         cache[key] = value
     }
 
@@ -33,9 +33,9 @@ class CacheExtensionsTest {
     fun `given NETWORK_FIRST when flow succeeds should emit and cache`() = runTest {
         val data = "test data"
         val flow = flowOf(data)
-        
+
         val result = flow.toCache(key = "test_key", manager = cacheManager).first()
-        
+
         assertEquals(data, result)
         assertEquals(data, cacheManager.get("test_key", String.serializer()))
     }
@@ -44,10 +44,10 @@ class CacheExtensionsTest {
     fun `given NETWORK_FIRST when flow fails and cache has data should emit cache`() = runTest {
         val cachedData = "cached data"
         cacheManager.put("test_key", cachedData, String.serializer())
-        val flow = flow<String> { throw RuntimeException("Network error") }
-        
+        val flow = flow<String> { throw IllegalStateException("Network error") }
+
         val result = flow.toCache(key = "test_key", manager = cacheManager).first()
-        
+
         assertEquals(cachedData, result)
     }
 
@@ -55,7 +55,7 @@ class CacheExtensionsTest {
     fun `given NETWORK_FIRST when flow fails and cache is empty should throw`() = runTest {
         val exception = RuntimeException("Network error")
         val flow = flow<String> { throw exception }
-        
+
         val result = assertFailsWith<RuntimeException> {
             flow.toCache(key = "test_key", manager = cacheManager).first()
         }
@@ -67,13 +67,13 @@ class CacheExtensionsTest {
         val cachedData = "cached data"
         cacheManager.put("test_key", cachedData, String.serializer())
         var flowCollected = false
-        val flow = flow { 
+        val flow = flow {
             flowCollected = true
-            emit("network data") 
+            emit("network data")
         }
-        
+
         val result = flow.toCache(key = "test_key", strategy = CacheStrategy.CACHE_FIRST, manager = cacheManager).first()
-        
+
         assertEquals(cachedData, result)
         assertEquals(false, flowCollected)
     }
@@ -82,9 +82,9 @@ class CacheExtensionsTest {
     fun `given CACHE_FIRST when cache is empty should collect flow and cache`() = runTest {
         val networkData = "network data"
         val flow = flowOf(networkData)
-        
+
         val result = flow.toCache(key = "test_key", strategy = CacheStrategy.CACHE_FIRST, manager = cacheManager).first()
-        
+
         assertEquals(networkData, result)
         assertEquals(networkData, cacheManager.get("test_key", String.serializer()))
     }
@@ -93,7 +93,7 @@ class CacheExtensionsTest {
     fun `given CACHE_FIRST when cache is empty and flow fails should throw`() = runTest {
         val exception = RuntimeException("Network error")
         val flow = flow<String> { throw exception }
-        
+
         val result = assertFailsWith<RuntimeException> {
             flow.toCache(key = "test_key", strategy = CacheStrategy.CACHE_FIRST, manager = cacheManager).first()
         }
@@ -105,9 +105,9 @@ class CacheExtensionsTest {
         val data = "test data"
         val flow = flowOf(data)
         cacheManager.shouldThrowOnPut = true
-        
+
         val result = flow.toCache(key = "test_key", manager = cacheManager).first()
-        
+
         assertEquals(data, result)
     }
 }

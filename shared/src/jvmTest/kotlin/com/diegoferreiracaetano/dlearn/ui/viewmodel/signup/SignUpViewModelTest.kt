@@ -45,19 +45,19 @@ class SignUpViewModelTest {
         val email = "test@example.com"
         val password = "password"
         val response = AuthResponse(accessToken = "token")
-        
+
         coEvery { authRepository.register(name, email, password) } returns flow {
             kotlinx.coroutines.delay(100)
             emit(response)
         }
 
         viewModel.signUp(name, email, password)
-        
+
         testDispatcher.scheduler.runCurrent()
         assertEquals(SignUpUIState.Loading, viewModel.state.value)
-        
+
         advanceUntilIdle()
-        
+
         coVerify(exactly = 1) { sessionManager.logout() }
         assertEquals(SignUpUIState.Success(true), viewModel.state.value)
     }
@@ -69,7 +69,7 @@ class SignUpViewModelTest {
 
         viewModel.signUp("Test", "test@example.com", "password")
         advanceUntilIdle()
-        
+
         val state = viewModel.state.value
         assertTrue(state is SignUpUIState.Error)
         assertEquals(exception, state.error)

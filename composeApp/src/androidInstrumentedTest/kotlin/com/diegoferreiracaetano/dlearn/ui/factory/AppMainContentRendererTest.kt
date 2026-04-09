@@ -24,18 +24,19 @@ import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.context.GlobalContext.stopKoin
 import org.koin.dsl.module
 
-
 @OptIn(ExperimentalTestApi::class)
-class AppMainContentRendererTest{
+class AppMainContentRendererTest {
 
     @Before
     fun setup() {
         if (GlobalContext.getOrNull() != null) stopKoin()
         startKoin {
             allowOverride(true)
-            modules(module {
-                single<AppViewModel> { viewModel }
-            })
+            modules(
+                module {
+                    single<AppViewModel> { viewModel }
+                }
+            )
         }
     }
 
@@ -50,7 +51,6 @@ class AppMainContentRendererTest{
 
     @Test
     fun given_AppMainContentComponent_then_Render_should_show_app_screen() = runComposeUiTest {
-
         every { viewModel.uiState } returns uiState
 
         val watchlistEmptyMock =

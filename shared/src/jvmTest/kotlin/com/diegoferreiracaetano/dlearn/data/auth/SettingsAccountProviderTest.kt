@@ -79,7 +79,7 @@ class SettingsAccountProviderTest {
     fun `when hasAccount is called should return true if access_token exists`() = runTest {
         every { settings.hasKey("access_token") } returns false
         assertFalse(provider.hasAccount())
-        
+
         every { settings.hasKey("access_token") } returns true
         assertTrue(provider.hasAccount())
     }

@@ -23,7 +23,7 @@ class PersistentCacheManagerTest {
     fun `when put is called should encode and store value`() {
         val data = TestData("test")
         val key = "key"
-        
+
         cacheManager.put(key, data, TestData.serializer())
 
         verify(exactly = 1) { keyValueStorage.put(key, json.encodeToString(TestData.serializer(), data)) }
@@ -34,7 +34,7 @@ class PersistentCacheManagerTest {
         val data = TestData("test")
         val key = "key"
         every { keyValueStorage.put(key, any<String>()) } throws RuntimeException()
-        
+
         cacheManager.put(key, data, TestData.serializer())
     }
 

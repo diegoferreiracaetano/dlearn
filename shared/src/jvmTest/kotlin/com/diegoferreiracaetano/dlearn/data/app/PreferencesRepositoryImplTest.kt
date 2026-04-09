@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.data.app
 
 import com.diegoferreiracaetano.dlearn.Platform
 import com.russhwolf.settings.ObservableSettings
-import com.russhwolf.settings.Settings
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -23,7 +22,7 @@ class PreferencesRepositoryImplTest {
     fun setup() {
         storage.clear()
         every { platform.updateLocale(any(), any()) } returns Unit
-        
+
         // Mocking settings behavior
         every { settings.getString(any(), any()) } answers {
             storage[firstArg()] as? String ?: secondArg()

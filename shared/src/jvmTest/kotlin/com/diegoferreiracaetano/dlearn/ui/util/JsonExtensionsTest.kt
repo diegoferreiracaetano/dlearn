@@ -1,6 +1,5 @@
 package com.diegoferreiracaetano.dlearn.ui.util
 
-import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

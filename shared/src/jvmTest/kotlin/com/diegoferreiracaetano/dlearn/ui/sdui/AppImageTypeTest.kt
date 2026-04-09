@@ -7,7 +7,7 @@ class AppImageTypeTest {
 
     @Test
     fun `AppImageType values exist`() {
-        AppImageType.entries.forEach { 
+        AppImageType.entries.forEach {
             assertNotNull(it.name)
         }
     }

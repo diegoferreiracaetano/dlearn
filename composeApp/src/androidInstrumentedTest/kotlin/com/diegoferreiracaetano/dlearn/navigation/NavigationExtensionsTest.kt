@@ -1,13 +1,5 @@
 package com.diegoferreiracaetano.dlearn.navigation
 
-import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.runComposeUiTest
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import org.junit.Assert.assertEquals
-import org.junit.Test
-
 /*
 class NavigationExtensionsTest {
 

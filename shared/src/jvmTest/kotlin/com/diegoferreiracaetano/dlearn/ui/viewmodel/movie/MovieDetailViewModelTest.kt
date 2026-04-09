@@ -45,6 +45,7 @@ class MovieDetailViewModelTest {
         viewModel = MovieDetailViewModel(movieId, repository)
         advanceUntilIdle()
 
+        @Suppress("IgnoredReturnValue")
         coVerify(exactly = 1) { repository.execute(any()) }
         assertTrue(viewModel.uiState.value is UIState.Success)
     }
@@ -70,6 +71,7 @@ class MovieDetailViewModelTest {
         viewModel.retry()
         advanceUntilIdle()
 
+        @Suppress("IgnoredReturnValue")
         coVerify(exactly = 2) { repository.execute(any()) }
     }
 
@@ -82,6 +84,7 @@ class MovieDetailViewModelTest {
         viewModel.execute(fullUrl)
         advanceUntilIdle()
 
+        @Suppress("IgnoredReturnValue")
         coVerify(exactly = 2) { repository.execute(any()) }
     }
 
@@ -92,7 +95,7 @@ class MovieDetailViewModelTest {
 
         val exception = RuntimeException("fail")
         coEvery { repository.execute(any()) } returns flow { throw exception }
-        
+
         viewModel.execute("/fail")
         advanceUntilIdle()
 

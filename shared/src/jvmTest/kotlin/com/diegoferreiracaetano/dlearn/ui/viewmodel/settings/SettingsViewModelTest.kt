@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.ui.viewmodel.settings
 
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import io.mockk.coEvery
@@ -84,6 +83,7 @@ class SettingsViewModelTest {
         viewModel.retry()
         advanceUntilIdle()
 
+        @Suppress("IgnoredReturnValue")
         coVerify(exactly = 2) { appRepository.execute(any()) }
     }
 
@@ -99,6 +99,7 @@ class SettingsViewModelTest {
         onConfigurationChanged.emit(Unit)
         advanceUntilIdle()
 
+        @Suppress("IgnoredReturnValue")
         coVerify(exactly = 2) { appRepository.execute(any()) }
     }
 
@@ -106,9 +107,9 @@ class SettingsViewModelTest {
     fun `when updatePreference is called should delegate to repository`() {
         val key = "theme"
         val value = "dark"
-        
+
         viewModel.updatePreference(key, value)
-        
+
         coVerify(exactly = 1) { preferencesRepository.updatePreference(key, value) }
     }
 }

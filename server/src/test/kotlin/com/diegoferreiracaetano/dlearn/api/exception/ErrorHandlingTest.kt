@@ -25,8 +25,6 @@ class ErrorHandlingTest {
         single { ChallengeMapper() }
     }
 
-    private fun routeFor(path: String, block: () -> Unit) = path to block
-
     @Test
     fun `given AppException with UNAUTHORIZED when thrown should return 401`() = testApplication {
         application {
@@ -252,7 +250,7 @@ class ErrorHandlingTest {
             install(ContentNegotiation) { json() }
             configureStatusPages()
             routing {
-                get("/test") { throw RuntimeException("unexpected error") }
+                get("/test") { throw IllegalStateException("unexpected error") }
             }
         }
 
@@ -266,7 +264,7 @@ class ErrorHandlingTest {
             install(ContentNegotiation) { json() }
             configureStatusPages()
             routing {
-                get("/test") { throw RuntimeException("unexpected error") }
+                get("/test") { throw IllegalStateException("unexpected error") }
             }
         }
 

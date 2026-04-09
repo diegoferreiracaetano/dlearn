@@ -24,7 +24,7 @@ class ChipGroupComponentTest {
             items = listOf(item),
             cleanUrl = "clean"
         )
-        
+
         assertEquals(listOf(item), component.items)
         assertEquals("clean", component.cleanUrl)
         assertEquals("1", item.id)

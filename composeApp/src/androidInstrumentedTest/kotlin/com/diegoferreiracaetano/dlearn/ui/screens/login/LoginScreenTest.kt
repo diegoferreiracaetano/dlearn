@@ -5,7 +5,6 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
@@ -41,8 +40,14 @@ class LoginScreenTest {
             }
         }
 
-        onNodeWithTag(TestTags.Components.EMAIL_FIELD, useUnmergedTree = true).onChildAt(0).performTextReplacement(email)
-        onNodeWithTag(TestTags.Components.PASSWORD_FIELD, useUnmergedTree = true).onChildAt(0).performTextReplacement(password)
+        onNodeWithTag(
+            TestTags.Components.EMAIL_FIELD,
+            useUnmergedTree = true,
+        ).onChildAt(0).performTextReplacement(email)
+        onNodeWithTag(
+            TestTags.Components.PASSWORD_FIELD,
+            useUnmergedTree = true,
+        ).onChildAt(0).performTextReplacement(password)
         onNodeWithTag(TestTags.Components.LOGIN_BUTTON).performClick()
 
         verify { viewModel.login(email, password) }
@@ -84,7 +89,7 @@ class LoginScreenTest {
         }
 
         state.value = LoginUIState.Success(true)
-        
+
         waitForIdle()
 
         verify { onNavigateToHome() }
@@ -107,7 +112,7 @@ class LoginScreenTest {
         }
 
         state.value = LoginUIState.Error(Exception(errorMessage))
-        
+
         waitForIdle()
 
         onNodeWithTag(TestTags.Screens.LOGIN_SCREEN).assertExists()

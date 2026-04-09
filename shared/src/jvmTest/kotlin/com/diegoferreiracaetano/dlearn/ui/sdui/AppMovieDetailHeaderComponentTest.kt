@@ -33,7 +33,7 @@ class AppMovieDetailHeaderComponentTest {
             isInWatchlist = true,
             providers = listOf(provider)
         )
-        
+
         assertEquals("Title", component.title)
         assertEquals("image", component.imageUrl)
         assertEquals("2024", component.year)
@@ -48,7 +48,7 @@ class AppMovieDetailHeaderComponentTest {
         assertEquals(true, component.isFavorite)
         assertEquals(true, component.isInWatchlist)
         assertEquals(listOf(provider), component.providers)
-        
+
         assertEquals("Netflix", provider.name)
         assertEquals("icon", provider.iconUrl)
         assertEquals("Free", provider.priceInfo)
@@ -73,7 +73,7 @@ class AppMovieDetailHeaderComponentTest {
         assertFalse(component.isInWatchlist)
         assertEquals(emptyList(), component.providers)
     }
-    
+
     @Test
     fun `WatchProviderComponent defaults`() {
         val provider = WatchProviderComponent("Netflix", "icon", "Free")

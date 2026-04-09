@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.domain.error
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 
 class AppExceptionTest {
 

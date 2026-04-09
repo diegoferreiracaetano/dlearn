@@ -13,6 +13,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -50,6 +51,7 @@ class MainViewModelTest {
     @Test
     fun `when initialized should load main content`() = runTest {
         advanceUntilIdle()
+        @Suppress("IgnoredReturnValue")
         coVerify(exactly = 1) { mainRepository.getMain() }
         assertTrue(viewModel.uiState.value is UIState.Success)
     }
@@ -70,20 +72,20 @@ class MainViewModelTest {
     @Test
     fun `when configuration changes should reload main content`() = runTest {
         advanceUntilIdle()
-        
+
         onConfigurationChanged.emit(Unit)
         advanceUntilIdle()
 
-        coVerify(exactly = 2) { mainRepository.getMain() }
+        coVerify(exactly = 2) { mainRepository.getMain().single() }
     }
 
     @Test
     fun `when retry is called should reload main content`() = runTest {
         advanceUntilIdle()
-        
+
         viewModel.retry()
         advanceUntilIdle()
 
-        coVerify(exactly = 2) { mainRepository.getMain() }
+        coVerify(exactly = 2) { mainRepository.getMain().single() }
     }
 }

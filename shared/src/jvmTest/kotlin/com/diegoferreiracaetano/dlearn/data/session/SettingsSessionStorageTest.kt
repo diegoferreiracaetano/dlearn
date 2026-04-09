@@ -33,7 +33,7 @@ class SettingsSessionStorageTest {
     fun `when hasSession is called should check key in settings`() {
         every { settings.hasKey("auth_token") } returns true
         assertTrue(sessionStorage.hasSession())
-        
+
         every { settings.hasKey("auth_token") } returns false
         assertFalse(sessionStorage.hasSession())
     }

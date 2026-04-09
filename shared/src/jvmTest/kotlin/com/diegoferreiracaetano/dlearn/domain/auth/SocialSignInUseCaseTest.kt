@@ -66,9 +66,9 @@ class SocialSignInUseCaseTest {
     @Test
     fun `invoke with cancelled should not emit`() = runTest {
         coEvery { socialAuthManager.googleSignIn() } returns SocialAuthResult.Cancelled
-        
+
         val result = useCase.invoke(AccountProvider.GOOGLE).toList()
-        
+
         assertEquals(0, result.size)
     }
 }

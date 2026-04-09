@@ -5,8 +5,8 @@ import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeResult
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeSession
 import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeType
 import kotlinx.coroutines.async
-import kotlinx.coroutines.yield
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

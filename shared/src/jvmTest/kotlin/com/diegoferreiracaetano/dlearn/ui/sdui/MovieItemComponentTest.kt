@@ -25,7 +25,7 @@ class MovieItemComponentTest {
             rank = 1,
             actionUrl = "url"
         )
-        
+
         assertEquals("1", component.id)
         assertEquals("Title", component.title)
         assertEquals("Subtitle", component.subtitle)

@@ -1,7 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password
 
-import com.diegoferreiracaetano.dlearn.domain.password.PasswordRepository
 import com.diegoferreiracaetano.dlearn.domain.password.ChangePasswordResponse
+import com.diegoferreiracaetano.dlearn.domain.password.PasswordRepository
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -42,19 +42,19 @@ class CreateNewPasswordViewModelTest {
     fun `when changePassword is called and succeeds should update state to Success`() = runTest {
         val newPassword = "newPassword123"
         val response = ChangePasswordResponse(message = "Password changed successfully")
-        
+
         coEvery { passwordRepository.changePassword(newPassword) } returns flow {
             delay(100)
             emit(response)
         }
 
         viewModel.changePassword(newPassword)
-        
+
         testDispatcher.scheduler.runCurrent()
         assertEquals(CreateNewPasswordUiState.Loading, viewModel.uiState.value)
-        
+
         advanceUntilIdle()
-        
+
         assertEquals(CreateNewPasswordUiState.Success(response.message), viewModel.uiState.value)
     }
 
@@ -63,7 +63,7 @@ class CreateNewPasswordViewModelTest {
         val newPassword = "newPassword123"
         val errorMessage = "Error changing password"
         val exception = RuntimeException(errorMessage)
-        
+
         coEvery { passwordRepository.changePassword(newPassword) } returns flow { throw exception }
 
         viewModel.changePassword(newPassword)

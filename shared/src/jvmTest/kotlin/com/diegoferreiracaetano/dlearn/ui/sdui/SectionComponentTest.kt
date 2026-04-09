@@ -19,7 +19,7 @@ class SectionComponentTest {
             title = "Section",
             items = listOf(item)
         )
-        
+
         assertEquals("Section", component.title)
         assertEquals(listOf(item), component.items)
         assertEquals("1", item.id)

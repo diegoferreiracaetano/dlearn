@@ -14,7 +14,7 @@ class AppContainerComponentTest {
         val chipGroup = ChipGroupComponent(items = emptyList(), cleanUrl = "url")
         val bottomBar = BottomNavigationComponent(items = emptyList())
         val components = listOf<Component>(AppLoadingComponent)
-        
+
         val container = AppContainerComponent(
             topBar = topBar,
             searchBar = searchBar,
@@ -22,7 +22,7 @@ class AppContainerComponentTest {
             bottomBar = bottomBar,
             components = components
         )
-        
+
         assertEquals(topBar, container.topBar)
         assertEquals(searchBar, container.searchBar)
         assertEquals(chipGroup, container.chipGroup)
@@ -45,22 +45,22 @@ class AppContainerComponentTest {
         val container = AppContainerComponent()
         val topBar = AppTopBarComponent(title = "New Top")
         val copy = container.copy(topBar = topBar)
-        
+
         assertEquals(topBar, copy.topBar)
         assertNull(copy.searchBar)
         assertNotSame(container, copy)
     }
-    
+
     @Test
     fun `AppContainerComponent equals and hashCode`() {
         val c1 = AppContainerComponent(topBar = AppTopBarComponent(title = "T"))
         val c2 = AppContainerComponent(topBar = AppTopBarComponent(title = "T"))
         val c3 = AppContainerComponent(topBar = AppTopBarComponent(title = "X"))
-        
+
         assertEquals(c1, c2)
         assertEquals(c1.hashCode(), c2.hashCode())
         assertEquals(false, c1.equals(c3))
-        assertEquals(false, c1.equals(null))
+        assertEquals(false, c1 == null)
         assertEquals(false, c1.equals("string"))
     }
 }

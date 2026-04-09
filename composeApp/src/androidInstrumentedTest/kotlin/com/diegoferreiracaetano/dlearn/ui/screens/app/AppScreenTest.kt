@@ -40,7 +40,6 @@ class AppScreenTest {
 
     @Test
     fun given_success_state_should_not_crash_and_render_content() = runComposeUiTest {
-
         val watchlistEmptyMock =
             Screen(
                 components =

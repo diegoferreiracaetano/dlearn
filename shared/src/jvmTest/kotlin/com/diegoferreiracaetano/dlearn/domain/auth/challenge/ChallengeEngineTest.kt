@@ -20,12 +20,12 @@ class ChallengeEngineTest {
         val challenge = Challenge(challengeType = ChallengeType.OTP_SMS, data = emptyMap())
         val session = ChallengeSession(challenge = challenge, transactionId = "sess_123")
         val expectedResult = ChallengeResult.Success(mapOf("token" to "123"))
-        
+
         every { handler.canHandle(challenge) } returns true
         coEvery { handler.handle(challenge, session) } returns expectedResult
-        
+
         val result = subject.resolve(session)
-        
+
         assertEquals(expectedResult, result)
         coVerify { coordinator.emit(session, challenge) }
     }
@@ -34,11 +34,11 @@ class ChallengeEngineTest {
     fun `given a session when no handler exists should return Failure`() = runTest {
         val challenge = Challenge(challengeType = ChallengeType.UNKNOWN, data = emptyMap())
         val session = ChallengeSession(challenge = challenge, transactionId = "sess_123")
-        
+
         every { handler.canHandle(challenge) } returns false
-        
+
         val result = subject.resolve(session)
-        
+
         assertTrue(result is ChallengeResult.Failure)
     }
 }

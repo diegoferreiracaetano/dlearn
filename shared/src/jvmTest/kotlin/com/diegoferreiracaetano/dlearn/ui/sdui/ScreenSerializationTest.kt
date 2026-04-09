@@ -1,14 +1,13 @@
 package com.diegoferreiracaetano.dlearn.ui.sdui
 
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ScreenSerializationTest {
 
-    private val json = Json { 
-        ignoreUnknownKeys = true 
+    private val json = Json {
+        ignoreUnknownKeys = true
         classDiscriminator = "type"
     }
 
@@ -24,7 +23,7 @@ class ScreenSerializationTest {
     fun `should deserialize Screen from json string`() {
         val jsonString = """{"components":[{"type":"com.diegoferreiracaetano.dlearn.ui.sdui.AppLoadingComponent"}]}"""
         val deserialized = json.decodeFromString<Screen>(jsonString)
-        
+
         assertEquals(1, deserialized.components.size)
         assertEquals(AppLoadingComponent, deserialized.components[0])
     }

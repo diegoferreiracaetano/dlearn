@@ -52,7 +52,9 @@ class AppNavigationTest : KoinTest {
 
         composeTestRule.setContent {
             val snackbarHostState = remember { SnackbarHostState() }
-            CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
+            CompositionLocalProvider(
+                LocalSnackbarHostState provides snackbarHostState,
+            ) {
                 AppNavGraph(
                     sessionManager = sessionManager,
                     eventDispatcher = eventDispatcher,
@@ -73,7 +75,9 @@ class AppNavigationTest : KoinTest {
 
         composeTestRule.setContent {
             val snackbarHostState = remember { SnackbarHostState() }
-            CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
+            CompositionLocalProvider(
+                LocalSnackbarHostState provides snackbarHostState,
+            ) {
                 AppNavGraph(
                     sessionManager = sessionManager,
                     eventDispatcher = eventDispatcher,

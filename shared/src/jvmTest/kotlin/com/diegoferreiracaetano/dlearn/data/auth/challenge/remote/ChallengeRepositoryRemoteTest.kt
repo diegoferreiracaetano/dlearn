@@ -24,8 +24,8 @@ import kotlinx.serialization.json.Json
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class ChallengeRepositoryRemoteTest {
@@ -105,13 +105,19 @@ class ChallengeRepositoryRemoteTest {
 
     @Test
     fun `resolveChallenge should handle ClientRequestException with body`() = runTest {
-        val httpClient = createClient("""{"success":false, "message":"error message"}""", status = HttpStatusCode.BadRequest)
+        val httpClient = createClient(
+            """{"success":false, "message":"error message"}""",
+            status = HttpStatusCode.BadRequest,
+        )
         val repository = ChallengeRepositoryRemote(httpClient, coordinator, otpHandler)
 
         val result = repository.resolveChallenge("123456").first()
 
         assertTrue(result is ChallengeResult.Failure)
-        assertTrue(result.error.message?.contains("error message") == true || result.error.message?.contains("400") == true)
+        assertTrue(
+            result.error.message?.contains("error message") == true ||
+                result.error.message?.contains("400") == true,
+        )
     }
 
     @Test
@@ -122,7 +128,10 @@ class ChallengeRepositoryRemoteTest {
         val result = repository.resolveChallenge("123456").first()
 
         assertTrue(result is ChallengeResult.Failure)
-        assertTrue(result.error.message?.contains("plain error") == true || result.error.message?.contains("400") == true)
+        assertTrue(
+            result.error.message?.contains("plain error") == true ||
+                result.error.message?.contains("400") == true,
+        )
     }
 
     @Test

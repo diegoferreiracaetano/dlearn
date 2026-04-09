@@ -13,7 +13,7 @@ class BottomNavigationComponentTest {
             items = listOf(item),
             selectedActionUrl = "url"
         )
-        
+
         assertEquals(listOf(item), component.items)
         assertEquals("url", component.selectedActionUrl)
         assertEquals("Label", item.label)
@@ -26,7 +26,7 @@ class BottomNavigationComponentTest {
         val component = BottomNavigationComponent(items = emptyList())
         assertNull(component.selectedActionUrl)
     }
-    
+
     @Test
     fun `BottomNavItem defaults`() {
         val item = BottomNavItem("Label", "url")

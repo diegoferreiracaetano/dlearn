@@ -19,7 +19,6 @@ import io.ktor.serialization.kotlinx.json.json
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -35,10 +34,10 @@ class ChallengeInterceptorTest {
         val transactionId = "tx123"
         val validatedToken = "valid_token"
         val session = ChallengeSession(
-            transactionId = transactionId, 
+            transactionId = transactionId,
             challenge = Challenge(challengeType = ChallengeType.OTP_SMS)
         )
-        
+
         val mockEngine = MockEngine { request ->
             if (request.headers.contains(SecurityConstants.HEADER_CHALLENGE_TOKEN)) {
                 assertEquals(validatedToken, request.headers[SecurityConstants.HEADER_CHALLENGE_TOKEN])
@@ -64,18 +63,18 @@ class ChallengeInterceptorTest {
         coEvery { engine.resolve(any()) } returns ChallengeResult.Success(mapOf("validatedToken" to validatedToken))
 
         val response = client.get("/test")
-        
+
         assertEquals(HttpStatusCode.OK, response.status)
     }
 
     @Test
     fun `when challenge is cancelled should throw ChallengeCancelledException`() = runTest {
         val session = ChallengeSession(
-            transactionId = "tx123", 
+            transactionId = "tx123",
             challenge = Challenge(challengeType = ChallengeType.OTP_SMS)
         )
-        
-        val mockEngine = MockEngine { 
+
+        val mockEngine = MockEngine {
             respond(
                 content = json.encodeToString(session),
                 status = HttpStatusCode.fromValue(428),
@@ -100,7 +99,7 @@ class ChallengeInterceptorTest {
 
     @Test
     fun `when response is 428 but body is invalid should proceed with original response`() = runTest {
-        val mockEngine = MockEngine { 
+        val mockEngine = MockEngine {
             respond(
                 content = "invalid json",
                 status = HttpStatusCode.fromValue(428)
@@ -120,7 +119,7 @@ class ChallengeInterceptorTest {
 
     @Test
     fun `when response is not 428 should proceed normally`() = runTest {
-        val mockEngine = MockEngine { 
+        val mockEngine = MockEngine {
             respond("OK", HttpStatusCode.OK)
         }
 

@@ -3,7 +3,6 @@ package com.diegoferreiracaetano.dlearn.navigation
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class AppPathTest {
 

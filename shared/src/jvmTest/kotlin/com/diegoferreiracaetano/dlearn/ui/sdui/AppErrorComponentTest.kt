@@ -14,7 +14,7 @@ class AppErrorComponentTest {
         val error = AppError(AppErrorCode.UNKNOWN_ERROR, "Generic")
         val throwable = RuntimeException("Test")
         val component = AppErrorComponent(error, throwable)
-        
+
         assertEquals(error, component.error)
         assertEquals(throwable, component.throwable)
     }
@@ -31,7 +31,7 @@ class AppErrorComponentTest {
         val error = AppError(AppErrorCode.UNKNOWN_ERROR, "Error")
         val component = AppErrorComponent(error)
         val copy = component.copy(error = null)
-        
+
         assertNull(copy.error)
         assertNotSame(component, copy)
     }
@@ -42,7 +42,7 @@ class AppErrorComponentTest {
         val c1 = AppErrorComponent(e1)
         val c2 = AppErrorComponent(e1)
         val c3 = AppErrorComponent(null)
-        
+
         assertEquals(c1, c2)
         assertEquals(c1.hashCode(), c2.hashCode())
         assertEquals(false, c1.equals(c3))

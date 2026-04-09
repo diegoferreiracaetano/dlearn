@@ -89,7 +89,7 @@ class CreateNewPasswordScreenTest {
         }
 
         state.value = CreateNewPasswordUiState.Success("Senha alterada com sucesso")
-        
+
         waitForIdle()
 
         verify { onSuccess() }
@@ -111,7 +111,7 @@ class CreateNewPasswordScreenTest {
         }
 
         state.value = CreateNewPasswordUiState.Error(errorMessage)
-        
+
         waitForIdle()
 
         onNodeWithText(errorMessage).assertExists()

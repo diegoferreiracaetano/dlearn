@@ -13,7 +13,7 @@ class AppTopBarListComponentTest {
             items = listOf(item),
             selectedActionUrl = "url"
         )
-        
+
         assertEquals(listOf(item), component.items)
         assertEquals("url", component.selectedActionUrl)
         assertEquals(topBar, item.topBar)

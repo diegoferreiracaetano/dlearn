@@ -12,7 +12,7 @@ class MovieCarouselComponentTest {
             title = "Carousel",
             items = listOf(movie)
         )
-        
+
         assertEquals("Carousel", component.title)
         assertEquals(listOf(movie), component.items)
     }

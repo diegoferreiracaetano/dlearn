@@ -3,7 +3,6 @@ package com.diegoferreiracaetano.dlearn.ui.sdui
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotSame
-import kotlin.test.assertNull
 
 class AppEmptyStateComponentTest {
 
@@ -23,7 +22,7 @@ class AppEmptyStateComponentTest {
     fun `AppEmptyStateComponent copy works`() {
         val component = AppEmptyStateComponent("Title", "Desc")
         val copy = component.copy(title = "New Title")
-        
+
         assertEquals("New Title", copy.title)
         assertEquals("Desc", copy.description)
         assertNotSame(component, copy)
@@ -34,7 +33,7 @@ class AppEmptyStateComponentTest {
         val c1 = AppEmptyStateComponent("T", "D")
         val c2 = AppEmptyStateComponent("T", "D")
         val c3 = AppEmptyStateComponent("X", "D")
-        
+
         assertEquals(c1, c2)
         assertEquals(c1.hashCode(), c2.hashCode())
         assertEquals(false, c1.equals(c3))

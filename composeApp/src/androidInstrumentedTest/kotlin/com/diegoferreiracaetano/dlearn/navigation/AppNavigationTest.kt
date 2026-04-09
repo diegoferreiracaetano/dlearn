@@ -61,7 +61,6 @@ class AppNavigationTest : KoinTest {
             }
         }
 
-        // Verifica se algum texto da WelcomeScreen está presente
         composeTestRule.onNodeWithText("DLearn", ignoreCase = true).assertExists()
     }
 
@@ -83,10 +82,8 @@ class AppNavigationTest : KoinTest {
             }
         }
 
-        // Tenta clicar no botão de Login na WelcomeScreen
         composeTestRule.onNodeWithText("Login", ignoreCase = true).performClick()
 
-        // Verifica se a LoginScreen foi carregada
         composeTestRule.onNodeWithText("Esqueceu a senha?", ignoreCase = true).assertExists()
     }
 }

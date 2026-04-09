@@ -70,7 +70,7 @@ class AuthProviderDataServiceTest {
         createUser("user2")
         val providers = listOf(AuthProvider(AccountProvider.GOOGLE, "g123", emptyMap()))
         authProviderDataService.saveAll("user2", providers)
-        
+
         authProviderDataService.deleteByUserId("user2")
         val found = authProviderDataService.findByUserId("user2")
         assertTrue(found.isEmpty())
@@ -81,10 +81,10 @@ class AuthProviderDataServiceTest {
         createUser("user3")
         val initial = listOf(AuthProvider(AccountProvider.GOOGLE, "old", emptyMap()))
         authProviderDataService.saveAll("user3", initial)
-        
+
         val updated = listOf(AuthProvider(AccountProvider.GOOGLE, "new", mapOf("v" to "2")))
         authProviderDataService.saveAll("user3", updated)
-        
+
         val found = authProviderDataService.findByUserId("user3")
         assertEquals(1, found.size)
         assertEquals("new", found[0].externalId)

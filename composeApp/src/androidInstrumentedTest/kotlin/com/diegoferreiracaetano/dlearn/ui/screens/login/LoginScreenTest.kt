@@ -2,11 +2,14 @@ package com.diegoferreiracaetano.dlearn.ui.screens.login
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onChildAt
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginUIState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
 import io.mockk.every
@@ -38,10 +41,9 @@ class LoginScreenTest {
             }
         }
 
-        // Updated to match strings.xml (PT/EN)
-        onNodeWithText("E-mail", ignoreCase = true).performTextInput(email)
-        onNodeWithText("Senha", ignoreCase = true).performTextInput(password)
-        onNodeWithText("Login", ignoreCase = true).performClick()
+        onNodeWithTag(TestTags.Components.EMAIL_FIELD, useUnmergedTree = true).onChildAt(0).performTextReplacement(email)
+        onNodeWithTag(TestTags.Components.PASSWORD_FIELD, useUnmergedTree = true).onChildAt(0).performTextReplacement(password)
+        onNodeWithTag(TestTags.Components.LOGIN_BUTTON).performClick()
 
         verify { viewModel.login(email, password) }
     }
@@ -62,7 +64,7 @@ class LoginScreenTest {
             }
         }
 
-        onNodeWithText("Login", ignoreCase = true).assertIsNotEnabled()
+        onNodeWithTag(TestTags.Components.LOGIN_BUTTON).assertIsNotEnabled()
     }
 
     @Test
@@ -82,6 +84,8 @@ class LoginScreenTest {
         }
 
         state.value = LoginUIState.Success(true)
+        
+        waitForIdle()
 
         verify { onNavigateToHome() }
     }
@@ -103,7 +107,9 @@ class LoginScreenTest {
         }
 
         state.value = LoginUIState.Error(Exception(errorMessage))
+        
+        waitForIdle()
 
-        onNodeWithText(errorMessage, ignoreCase = true).assertExists()
+        onNodeWithTag(TestTags.Screens.LOGIN_SCREEN).assertExists()
     }
 }

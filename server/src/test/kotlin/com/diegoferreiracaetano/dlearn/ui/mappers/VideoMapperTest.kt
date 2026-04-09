@@ -45,8 +45,24 @@ class VideoMapperTest {
     @Test
     fun `given a list of videos when toMovieItemComponents is called should return a list of mapped components`() {
         val videos = listOf(
-            Video(id = "1", title = "M1", subtitle = "2024", description = "D1", url = "u1", imageUrl = "i1", mediaType = MediaType.MOVIES),
-            Video(id = "2", title = "M2", subtitle = "2024", description = "D2", url = "u2", imageUrl = "i2", mediaType = MediaType.MOVIES)
+            Video(
+                id = "1",
+                title = "M1",
+                subtitle = "2024",
+                description = "D1",
+                url = "u1",
+                imageUrl = "i1",
+                mediaType = MediaType.MOVIES
+            ),
+            Video(
+                id = "2",
+                title = "M2",
+                subtitle = "2024",
+                description = "D2",
+                url = "u2",
+                imageUrl = "i2",
+                mediaType = MediaType.MOVIES
+            )
         )
 
         val result = mapper.toMovieItemComponents(videos, "en")

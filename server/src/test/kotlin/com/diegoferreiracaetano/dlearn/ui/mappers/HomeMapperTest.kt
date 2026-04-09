@@ -37,7 +37,7 @@ class HomeMapperTest {
     @Test
     fun `given a list of videos when toCarousel is called should map them to a MovieCarouselComponent`() {
         every { i18n.getString(AppStringType.FILTER_MOVIES, "en") } returns "Movies"
-        
+
         val result = mapper.toCarousel("Trending", listOf(video), "en", showRank = true)
 
         assertEquals("Trending", result.title)

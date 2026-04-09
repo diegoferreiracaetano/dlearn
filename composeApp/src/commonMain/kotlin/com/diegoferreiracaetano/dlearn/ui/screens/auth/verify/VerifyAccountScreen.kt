@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -28,6 +29,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppCon
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppOtpVerification
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.util.toAppMessage
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.VerifyAccountUiState
@@ -64,7 +66,7 @@ fun VerifyAccountScreen(
         },
         onVerifyOtp = viewModel::verifyOtp,
         onResendOtp = viewModel::resendOtp,
-        modifier = modifier,
+        modifier = modifier.testTag(TestTags.Screens.VERIFY_ACCOUNT_SCREEN),
     )
 }
 
@@ -129,7 +131,7 @@ fun VerifyAccountContent(
                     otpError = null
                 },
                 onResendClick = onResendOtp,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag(TestTags.Components.OTP_FIELD),
                 isError = otpError != null,
                 errorText = otpError,
             )
@@ -143,6 +145,7 @@ fun VerifyAccountContent(
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = otpCode.length == 6 && uiState !is VerifyAccountUiState.Loading,
+                testTag = TestTags.Components.CONFIRM_BUTTON,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -158,6 +161,7 @@ fun VerifyAccountContent(
                 TextButton(
                     onClick = onResendOtp,
                     enabled = uiState !is VerifyAccountUiState.Loading,
+                    modifier = Modifier.testTag(TestTags.Components.RETRY_BUTTON),
                 ) {
                     Text(
                         text = stringResource(Res.string.otp_resend_now),

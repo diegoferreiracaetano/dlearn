@@ -1,14 +1,16 @@
 package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.diegoferreiracaetano.dlearn.designsystem.components.state.AppEmptyState
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.LocalContentMaxHeight
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
+import com.diegoferreiracaetano.dlearn.ui.util.maybeHeight
 import com.diegoferreiracaetano.dlearn.ui.util.toImageSource
 
 class AppEmptyStateRenderer : ComponentRenderer {
@@ -26,7 +28,10 @@ class AppEmptyStateRenderer : ComponentRenderer {
             description = emptyStateComponent.description,
             imageSource = emptyStateComponent.image.toImageSource(),
             onPrimary = actions.onRetry,
-            modifier = modifier.fillMaxSize().height(maxHeight),
+            modifier = modifier
+                .fillMaxSize()
+                .maybeHeight(maxHeight)
+                .testTag(TestTags.Components.EMPTY_STATE),
         )
     }
 }

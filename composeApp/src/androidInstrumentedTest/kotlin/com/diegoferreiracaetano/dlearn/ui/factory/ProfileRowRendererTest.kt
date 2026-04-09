@@ -42,7 +42,5 @@ class ProfileRowRendererTest {
 
         composeTestRule.onNodeWithText(name).assertExists()
         composeTestRule.onNodeWithText(email).assertExists()
-        // Assuming there's an edit button/icon with a tag or we can find it by some text if available.
-        // For now, verifying name and email.
     }
 }

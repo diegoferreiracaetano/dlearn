@@ -33,7 +33,7 @@ class TmdbMapperTest {
             overview = "Overview",
             genres = emptyList()
         )
-        
+
         val result = mapper.toMovieDetail(response)
 
         assertEquals("MOVIES_1", result.id)
@@ -97,7 +97,14 @@ class TmdbMapperTest {
 
     @Test
     fun `given a TMDB response with a YouTube trailer when toMovieDetail should extract trailer id`() {
-        val video = TmdbVideoRemote(id = "v1", key = "trailer-key", name = "Trailer", site = TmdbConstants.SITE_YOUTUBE, type = TmdbConstants.TYPE_TRAILER)
+        val video =
+            TmdbVideoRemote(
+                id = "v1",
+                key = "trailer-key",
+                name = "Trailer",
+                site = TmdbConstants.SITE_YOUTUBE,
+                type = TmdbConstants.TYPE_TRAILER
+            )
         val response = TmdbMovieDetailRemote(
             id = 5,
             title = "Movie",
@@ -112,7 +119,14 @@ class TmdbMapperTest {
 
     @Test
     fun `given a TMDB response with a YouTube teaser when toMovieDetail should extract teaser id`() {
-        val video = TmdbVideoRemote(id = "v2", key = "teaser-key", name = "Teaser", site = TmdbConstants.SITE_YOUTUBE, type = TmdbConstants.TYPE_TEASER)
+        val video =
+            TmdbVideoRemote(
+                id = "v2",
+                key = "teaser-key",
+                name = "Teaser",
+                site = TmdbConstants.SITE_YOUTUBE,
+                type = TmdbConstants.TYPE_TEASER
+            )
         val response = TmdbMovieDetailRemote(
             id = 6,
             title = "Movie",
@@ -127,7 +141,14 @@ class TmdbMapperTest {
 
     @Test
     fun `given a TMDB response with a non-YouTube video when toMovieDetail should return null trailerId`() {
-        val video = TmdbVideoRemote(id = "v3", key = "vimeo-key", name = "Clip", site = "Vimeo", type = TmdbConstants.TYPE_TRAILER)
+        val video =
+            TmdbVideoRemote(
+                id = "v3",
+                key = "vimeo-key",
+                name = "Clip",
+                site = "Vimeo",
+                type = TmdbConstants.TYPE_TRAILER
+            )
         val response = TmdbMovieDetailRemote(
             id = 7,
             title = "Movie",

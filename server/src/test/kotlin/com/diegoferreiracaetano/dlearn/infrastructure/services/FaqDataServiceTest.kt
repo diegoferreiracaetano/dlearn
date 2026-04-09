@@ -17,7 +17,7 @@ class FaqDataServiceTest {
     @Test
     fun `given a valid reference when fetchFaqContent is called should return the expected faq content`() {
         every { i18n.getString(AppStringType.LEGAL_PRIVACY_TITLE, "en") } returns "Privacy"
-        
+
         val result = service.fetchFaqContent("privacy-policy", "en")
 
         assertNotNull(result)

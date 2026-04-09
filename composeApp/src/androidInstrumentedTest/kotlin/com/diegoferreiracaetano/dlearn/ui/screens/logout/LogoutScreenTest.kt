@@ -1,10 +1,11 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.logout
 
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.logout.LogoutViewModel
 import io.mockk.mockk
 import io.mockk.verify
@@ -26,7 +27,7 @@ class LogoutScreenTest {
             }
         }
 
-        onNodeWithText("Sim, sair").performClick()
+        onNodeWithTag(TestTags.Components.CONFIRM_BUTTON).performClick()
 
         verify { viewModel.logout() }
     }
@@ -44,7 +45,7 @@ class LogoutScreenTest {
             }
         }
 
-        onNodeWithText("Cancelar").performClick()
+        onNodeWithTag(TestTags.Components.CANCEL_BUTTON).performClick()
 
         verify { onBackClick() }
     }

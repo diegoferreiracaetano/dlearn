@@ -5,8 +5,8 @@ import com.diegoferreiracaetano.dlearn.domain.models.ChallengeCode
 import com.diegoferreiracaetano.dlearn.domain.models.ChallengeError
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class ChallengeMapperTest {
 

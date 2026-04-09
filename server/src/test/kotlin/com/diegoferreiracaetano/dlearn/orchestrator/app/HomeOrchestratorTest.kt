@@ -35,9 +35,11 @@ class HomeOrchestratorTest : KoinTest {
     fun setup() {
         stopKoin()
         startKoin {
-            modules(module {
-                single { cacheManager }
-            })
+            modules(
+                module {
+                    single { cacheManager }
+                }
+            )
         }
         every { cacheManager.get<Screen>(any(), any()) } returns null
         subject = HomeOrchestrator(getHomeDataUseCase, screenBuilder)

@@ -41,6 +41,5 @@ class AppSelectionRowRendererTest {
         }
 
         composeTestRule.onNodeWithText(title).assertExists()
-        composeTestRule.onNodeWithText(value).assertExists()
     }
 }

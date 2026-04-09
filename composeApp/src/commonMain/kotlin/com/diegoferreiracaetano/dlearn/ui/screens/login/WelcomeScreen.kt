@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -35,6 +36,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppCon
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.domain.user.AccountProvider
 import com.diegoferreiracaetano.dlearn.ui.theme.facebookColor
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.util.toAppMessage
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginUIState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
@@ -86,7 +88,7 @@ fun WelcomeScreen(
         onSocialClick = { provider -> viewModel.signInWith(provider) },
         isLoading = isLoading,
         snackbarHostState = snackbarHostState,
-        modifier = modifier,
+        modifier = modifier.testTag(TestTags.Screens.WELCOME_SCREEN),
     )
 }
 
@@ -136,7 +138,7 @@ fun WelcomeContent(
             Spacer(modifier = Modifier.height(48.dp))
 
             if (isLoading) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(modifier = Modifier.testTag(TestTags.Components.LOADING_INDICATOR))
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
@@ -145,6 +147,7 @@ fun WelcomeContent(
                 onClick = onLoginClick,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isLoading,
+                testTag = TestTags.Components.LOGIN_BUTTON,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -160,6 +163,7 @@ fun WelcomeContent(
                 TextButton(
                     onClick = onSignUpClick,
                     enabled = !isLoading,
+                    modifier = Modifier.testTag(TestTags.Components.SIGN_UP_BUTTON),
                 ) {
                     Text(
                         text = stringResource(Res.string.signup_action),
@@ -190,6 +194,7 @@ fun WelcomeContent(
                     iconTint = Color.Unspecified,
                     modifier = Modifier.size(64.dp),
                     enabled = !isLoading,
+                    testTag = TestTags.Components.GOOGLE_BUTTON,
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -200,6 +205,7 @@ fun WelcomeContent(
                     imageSource = Res.drawable.apple.toAppImageSource(),
                     modifier = Modifier.size(64.dp),
                     enabled = !isLoading,
+                    testTag = TestTags.Components.APPLE_BUTTON,
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -211,6 +217,7 @@ fun WelcomeContent(
                     modifier = Modifier.size(64.dp),
                     backgroundColor = facebookColor,
                     enabled = !isLoading,
+                    testTag = TestTags.Components.FACEBOOK_BUTTON,
                 )
             }
 

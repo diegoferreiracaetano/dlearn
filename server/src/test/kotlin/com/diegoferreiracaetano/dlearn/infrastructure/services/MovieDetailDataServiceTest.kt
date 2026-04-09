@@ -89,7 +89,7 @@ class MovieDetailDataServiceTest {
         val mediaId = 123
         val mediaType = MediaType.SERIES
         createUser(userId)
-        
+
         transaction(db) {
             FavoriteTable.insert {
                 it[this.userId] = userId

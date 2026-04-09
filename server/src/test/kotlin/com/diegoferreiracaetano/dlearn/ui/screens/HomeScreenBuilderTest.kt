@@ -12,7 +12,6 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class HomeScreenBuilderTest {

@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppListComponent
@@ -16,6 +17,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.LocalContentMaxHeight
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 
 class AppContainerRenderer : ComponentRenderer {
     @Composable
@@ -31,7 +33,7 @@ class AppContainerRenderer : ComponentRenderer {
             LocalSnackbarHostState provides snackbarHostState,
         ) {
             AppContainer(
-                modifier = modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize().testTag(TestTags.Components.APP_CONTAINER),
                 snackBarHostState = snackbarHostState,
                 topBar = {
                     container.topBar?.let {

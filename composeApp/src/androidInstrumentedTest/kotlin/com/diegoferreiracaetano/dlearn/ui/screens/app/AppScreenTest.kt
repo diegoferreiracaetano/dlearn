@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.ui.screens.app
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
@@ -10,6 +9,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppImageType
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.app.AppViewModel
 import io.mockk.every
 import io.mockk.mockk
@@ -29,28 +29,31 @@ class AppScreenTest {
 
         setContent {
             DLearnTheme {
-                AppScreen(
-                    path = "home",
-                    viewModel = viewModel
-                )
+                AppScreen(path = "home", viewModel = viewModel)
             }
         }
 
-        onNodeWithTag("loading_indicator").assertExists()
+        waitForIdle()
+
+        onNodeWithTag(TestTags.Components.LOADING_INDICATOR).assertExists()
     }
 
     @Test
-    fun given_success_state_with_empty_content_should_display_empty_state() = runComposeUiTest {
-        val screen = Screen(
-            components = listOf(
-                AppEmptyStateComponent(
-                    title = "Empty Title",
-                    description = "Empty Description",
-                    image = AppImageType.WATCHLIST
-                )
+    fun given_success_state_should_not_crash_and_render_content() = runComposeUiTest {
+
+        val watchlistEmptyMock =
+            Screen(
+                components =
+                    listOf(
+                        AppEmptyStateComponent(
+                            title = "WATCHLIST_EMPTY_TITLE",
+                            description = "WATCHLIST_EMPTY_DESCRIPTION",
+                            image = AppImageType.WATCHLIST,
+                        ),
+                    ),
             )
-        )
-        uiState.value = UIState.Success(screen)
+
+        uiState.value = UIState.Success(watchlistEmptyMock)
         every { viewModel.uiState } returns uiState
 
         setContent {
@@ -62,8 +65,9 @@ class AppScreenTest {
             }
         }
 
-        onNodeWithText("Empty Title").assertExists()
-        onNodeWithText("Empty Description").assertExists()
+        waitForIdle()
+
+        onNodeWithTag(TestTags.Components.EMPTY_STATE).assertExists()
     }
 
     @Test
@@ -80,7 +84,9 @@ class AppScreenTest {
             }
         }
 
-        onNodeWithText("Tentar novamente").performClick()
+        waitForIdle()
+
+        onNodeWithTag(TestTags.Components.RETRY_BUTTON).performClick()
 
         verify { viewModel.retry() }
     }

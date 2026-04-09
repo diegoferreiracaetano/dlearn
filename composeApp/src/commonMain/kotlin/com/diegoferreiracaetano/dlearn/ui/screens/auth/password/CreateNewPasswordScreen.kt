@@ -21,19 +21,20 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.components.alert.SnackbarType
 import com.diegoferreiracaetano.dlearn.designsystem.components.alert.showAppSnackBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
-import com.diegoferreiracaetano.dlearn.designsystem.components.loading.AppLoading
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppContainer
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState
 import dlearn.composeapp.generated.resources.Res
@@ -85,7 +86,7 @@ fun CreateNewPasswordScreen(
         onBackClick = onBackClick,
         onChangePassword = viewModel::changePassword,
         snackbarHostState = snackbarHostState,
-        modifier = modifier,
+        modifier = modifier.testTag(TestTags.Screens.CREATE_NEW_PASSWORD_SCREEN),
     )
 }
 
@@ -112,10 +113,6 @@ fun CreateNewPasswordContent(
                 )
             },
         ) { innerModifier ->
-            if (uiState is CreateNewPasswordUiState.Loading) {
-                AppLoading(modifier = Modifier.fillMaxSize())
-            }
-
             Column(
                 modifier =
                 Modifier
@@ -147,7 +144,7 @@ fun CreateNewPasswordContent(
                     placeholder = Res.string.title_password,
                     label = Res.string.title_password,
                     type = TextFieldType.PASSWORD,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().testTag(TestTags.Components.PASSWORD_FIELD),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -158,7 +155,7 @@ fun CreateNewPasswordContent(
                     placeholder = Res.string.create_password_confirm,
                     label = Res.string.create_password_confirm,
                     type = TextFieldType.PASSWORD,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().testTag(TestTags.Components.CONFIRM_PASSWORD_FIELD),
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -170,6 +167,7 @@ fun CreateNewPasswordContent(
                         onChangePassword(password)
                     },
                     modifier = Modifier.fillMaxWidth(),
+                    testTag = TestTags.Components.FINISH_BUTTON,
                 )
             }
         }

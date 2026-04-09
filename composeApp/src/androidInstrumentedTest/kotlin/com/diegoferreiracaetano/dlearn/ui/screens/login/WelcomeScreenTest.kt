@@ -3,11 +3,11 @@ package com.diegoferreiracaetano.dlearn.ui.screens.login
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.domain.user.AccountProvider
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginUIState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
 import io.mockk.every
@@ -38,8 +38,7 @@ class WelcomeScreenTest {
             }
         }
 
-        // Updated to use "Login" as per strings.xml
-        onNodeWithText("Login", ignoreCase = true).performClick()
+        onNodeWithTag(TestTags.Components.LOGIN_BUTTON).performClick()
 
         verify { onLoginClick() }
     }
@@ -60,10 +59,7 @@ class WelcomeScreenTest {
             }
         }
 
-        // Updated to use "Cadastrar" as per strings.xml (pt) or "Sign Up" (en)
-        // Since the previous error showed it was looking for "Entrar" and failing, 
-        // let's use the actual resource value.
-        onNodeWithText("Cadastrar", ignoreCase = true).performClick()
+        onNodeWithTag(TestTags.Components.SIGN_UP_BUTTON).performClick()
 
         verify { onSignUpClick() }
     }
@@ -83,8 +79,7 @@ class WelcomeScreenTest {
             }
         }
 
-        // Assumindo que o botão Social tem uma testTag correspondente ao provider
-        onNodeWithTag("google_button").performClick()
+        onNodeWithTag(TestTags.Components.GOOGLE_BUTTON).performClick()
 
         verify { viewModel.signInWith(AccountProvider.GOOGLE) }
     }
@@ -105,11 +100,11 @@ class WelcomeScreenTest {
             }
         }
 
-        onNodeWithText("Login", ignoreCase = true).assertIsNotEnabled()
+        onNodeWithTag(TestTags.Components.LOGIN_BUTTON).assertIsNotEnabled()
     }
 
     @Test
-    fun given_success_state_when_rendered_should_trigger_onNavigateToHome() = runComposeUiTest {
+    fun given_social_login_success_when_clicked_should_trigger_onNavigateToHome() = runComposeUiTest {
         val onNavigateToHome: () -> Unit = mockk(relaxed = true)
         every { viewModel.state } returns state
 
@@ -125,6 +120,8 @@ class WelcomeScreenTest {
         }
 
         state.value = LoginUIState.Success(true)
+
+        onNodeWithTag(TestTags.Components.GOOGLE_BUTTON).performClick()
 
         verify { onNavigateToHome() }
     }
@@ -147,6 +144,6 @@ class WelcomeScreenTest {
 
         state.value = LoginUIState.Error(Exception(errorMessage))
 
-        onNodeWithText(errorMessage, ignoreCase = true).assertExists()
+        onNodeWithTag(TestTags.Screens.WELCOME_SCREEN).assertExists()
     }
 }

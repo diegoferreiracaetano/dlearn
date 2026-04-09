@@ -2,13 +2,20 @@
 
 package com.diegoferreiracaetano.dlearn.ui.factory
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
-import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
+import androidx.compose.ui.platform.testTag
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 
 class AppTopBarRenderer : ComponentRenderer {
     @Composable
@@ -19,13 +26,27 @@ class AppTopBarRenderer : ComponentRenderer {
     ) {
         val topBar = component as? AppTopBarComponent ?: return
 
-        AppTopBar(
+        CenterAlignedTopAppBar(
             modifier = modifier,
-            title = topBar.title,
-            subtitle = topBar.subtitle,
-            profileImageSource = topBar.imageUrl?.let { AppImageSource.Url(it) },
-            onBack = actions.onBackClick,
-            onSearchClick = if (topBar.showSearch) actions.onSearchClick else null,
+            title = {
+                topBar.title.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                }
+            },
+            navigationIcon = {
+                IconButton(
+                    onClick = { actions.onBackClick() },
+                    modifier = Modifier.testTag(TestTags.Components.BACK_BUTTON)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null,
+                    )
+                }
+            }
         )
     }
 }

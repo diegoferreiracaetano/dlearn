@@ -16,7 +16,7 @@ class TokenServiceTest {
     fun `given a user when generateAccessToken is called should return a valid access token JWT`() {
         val token = service.generateAccessToken(user)
         assertNotNull(token)
-        
+
         val claims = service.verifyToken(token)
         assertNotNull(claims)
         assertEquals("1", claims[TokenConstants.CLAIM_USER_ID])
@@ -27,7 +27,7 @@ class TokenServiceTest {
     fun `given a user when generateRefreshToken is called should return a valid refresh token JWT`() {
         val token = service.generateRefreshToken(user)
         assertNotNull(token)
-        
+
         val claims = service.verifyToken(token)
         assertNotNull(claims)
         assertEquals("1", claims[TokenConstants.CLAIM_USER_ID])

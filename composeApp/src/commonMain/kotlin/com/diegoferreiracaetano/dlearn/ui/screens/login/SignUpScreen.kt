@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,6 +31,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTop
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.util.toAppMessage
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpUIState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpViewModel
@@ -38,8 +40,8 @@ import dlearn.composeapp.generated.resources.signup_action
 import dlearn.composeapp.generated.resources.signup_agree_terms
 import dlearn.composeapp.generated.resources.signup_screen_subtitle
 import dlearn.composeapp.generated.resources.signup_screen_title
-import dlearn.composeapp.generated.resources.title_email
 import dlearn.composeapp.generated.resources.title_name
+import dlearn.composeapp.generated.resources.title_email
 import dlearn.composeapp.generated.resources.title_password
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -71,7 +73,7 @@ fun SignUpScreen(
         onBackClick = onBackClick,
         onSignUpClick = viewModel::signUp,
         snackbarHostState = snackbarHostState,
-        modifier = modifier,
+        modifier = modifier.testTag(TestTags.Screens.SIGN_UP_SCREEN),
     )
 }
 
@@ -84,7 +86,7 @@ fun SignUpScreenContent(
     modifier: Modifier = Modifier,
 ) {
     if (uiState is SignUpUIState.Loading) {
-        AppLoading(modifier)
+        AppLoading(modifier.testTag(TestTags.Components.LOADING_INDICATOR))
     } else {
         SignUpContent(
             onBackClick = onBackClick,
@@ -147,7 +149,7 @@ fun SignUpContent(
                 onValueChange = { name = it },
                 placeholder = Res.string.title_name,
                 label = Res.string.title_name,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag(TestTags.Components.NAME_FIELD),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -158,7 +160,7 @@ fun SignUpContent(
                 placeholder = Res.string.title_email,
                 label = Res.string.title_email,
                 type = TextFieldType.EMAIL,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag(TestTags.Components.EMAIL_FIELD),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -169,7 +171,7 @@ fun SignUpContent(
                 placeholder = Res.string.title_password,
                 label = Res.string.title_password,
                 type = TextFieldType.PASSWORD,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag(TestTags.Components.PASSWORD_FIELD),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -191,6 +193,7 @@ fun SignUpContent(
                 text = Res.string.signup_action,
                 onClick = { onSignUpClick(name, email, password) },
                 modifier = Modifier.fillMaxWidth(),
+                testTag = TestTags.Components.SIGN_UP_BUTTON,
             )
         }
     }

@@ -1,12 +1,17 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.auth.password
 
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags.Components.CONFIRM_PASSWORD_FIELD
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags.Components.FINISH_BUTTON
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags.Components.PASSWORD_FIELD
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState
 import io.mockk.every
@@ -36,15 +41,20 @@ class CreateNewPasswordScreenTest {
             }
         }
 
-        onNodeWithText("Senha").performTextInput(password)
-        onNodeWithText("Confirmar nova senha").performTextInput(password)
-        onNodeWithText("Alterar senha").performClick()
+        onNodeWithTag(PASSWORD_FIELD, useUnmergedTree = true)
+            .onChildAt(0)
+            .performTextInput(password)
+        onNodeWithTag(CONFIRM_PASSWORD_FIELD, useUnmergedTree = true)
+            .onChildAt(0)
+            .performTextInput(password)
+
+        onNodeWithTag(FINISH_BUTTON).performClick()
 
         verify { viewModel.changePassword(password) }
     }
 
     @Test
-    fun given_loading_state_when_rendered_should_show_loading_indicator() = runComposeUiTest {
+    fun given_loading_state_when_rendered_should_disable_finish_button() = runComposeUiTest {
         state.value = CreateNewPasswordUiState.Loading
         every { viewModel.uiState } returns state
 
@@ -58,7 +68,9 @@ class CreateNewPasswordScreenTest {
             }
         }
 
-        onNodeWithTag("loading_indicator").assertExists()
+        waitForIdle()
+
+        onNodeWithTag(FINISH_BUTTON).assertIsNotEnabled()
     }
 
     @Test
@@ -77,6 +89,8 @@ class CreateNewPasswordScreenTest {
         }
 
         state.value = CreateNewPasswordUiState.Success("Senha alterada com sucesso")
+        
+        waitForIdle()
 
         verify { onSuccess() }
     }
@@ -97,6 +111,8 @@ class CreateNewPasswordScreenTest {
         }
 
         state.value = CreateNewPasswordUiState.Error(errorMessage)
+        
+        waitForIdle()
 
         onNodeWithText(errorMessage).assertExists()
     }

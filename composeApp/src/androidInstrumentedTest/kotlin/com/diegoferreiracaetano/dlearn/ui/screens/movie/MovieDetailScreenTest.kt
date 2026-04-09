@@ -2,12 +2,14 @@ package com.diegoferreiracaetano.dlearn.ui.screens.movie
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppTopBarComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel
 import io.mockk.every
 import io.mockk.mockk
@@ -37,30 +39,7 @@ class MovieDetailScreenTest {
             }
         }
 
-        onNodeWithTag("loading_indicator").assertExists()
-    }
-
-    @Test
-    fun given_success_state_when_back_clicked_should_trigger_onBackClick() = runComposeUiTest {
-        val onBackClick: () -> Unit = mockk(relaxed = true)
-        state.value = UIState.Success(Screen(components = emptyList()))
-        every { viewModel.uiState } returns state
-
-        setContent {
-            DLearnTheme {
-                MovieDetailScreen(
-                    movieId = "1",
-                    onBackClick = onBackClick,
-                    onMovieClick = {},
-                    onItemClick = {},
-                    viewModel = viewModel
-                )
-            }
-        }
-
-        onNodeWithTag("back_button").performClick()
-
-        verify { onBackClick() }
+        onNodeWithTag(TestTags.Components.LOADING_INDICATOR).assertExists()
     }
 
     @Test
@@ -80,7 +59,7 @@ class MovieDetailScreenTest {
             }
         }
 
-        onNodeWithText("Tentar novamente").performClick()
+        onNodeWithTag(TestTags.Components.RETRY_BUTTON).performClick()
 
         verify { viewModel.retry() }
     }

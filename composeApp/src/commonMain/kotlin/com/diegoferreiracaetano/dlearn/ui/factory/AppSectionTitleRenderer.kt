@@ -4,11 +4,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.designsystem.components.list.AppSectionTitle
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppSectionTitleComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 
 class AppSectionTitleRenderer : ComponentRenderer {
     @Composable
@@ -24,7 +26,8 @@ class AppSectionTitleRenderer : ComponentRenderer {
             modifier =
             modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .testTag(TestTags.Components.SECTION_TITLE),
         )
     }
 }

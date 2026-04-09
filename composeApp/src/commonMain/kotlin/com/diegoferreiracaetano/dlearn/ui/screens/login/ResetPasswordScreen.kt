@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.diegoferreiracaetano.dlearn.designsystem.components.button.AppButton
@@ -25,6 +26,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTop
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import dlearn.composeapp.generated.resources.Res
 import dlearn.composeapp.generated.resources.reset_password_action
 import dlearn.composeapp.generated.resources.reset_password_subtitle
@@ -43,7 +45,7 @@ fun ResetPasswordScreen(
     var email by remember { mutableStateOf("") }
 
     AppContainer(
-        modifier = modifier,
+        modifier = modifier.testTag(TestTags.Screens.RESET_PASSWORD_SCREEN),
         topBar = {
             AppTopBar(
                 title = stringResource(Res.string.reset_password_title),
@@ -82,7 +84,7 @@ fun ResetPasswordScreen(
                 placeholder = Res.string.title_email,
                 label = Res.string.title_email,
                 type = TextFieldType.EMAIL,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag(TestTags.Components.EMAIL_FIELD),
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -91,6 +93,7 @@ fun ResetPasswordScreen(
                 text = stringResource(Res.string.reset_password_action),
                 onClick = onNextClick,
                 modifier = Modifier.fillMaxWidth(),
+                testTag = TestTags.Components.NEXT_BUTTON,
             )
         }
     }

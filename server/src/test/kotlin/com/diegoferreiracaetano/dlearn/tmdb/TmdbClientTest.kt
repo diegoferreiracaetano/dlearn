@@ -1,6 +1,5 @@
 package com.diegoferreiracaetano.dlearn.tmdb
 
-import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.infrastructure.mappers.TmdbMapper
 import com.diegoferreiracaetano.dlearn.model.*
 import io.ktor.client.HttpClient
@@ -15,7 +14,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -24,7 +22,7 @@ class TmdbClientTest {
 
     private lateinit var tmdbClient: TmdbClient
     private val tmdbMapper = mockk<TmdbMapper>(relaxed = true)
-    
+
     private val json = Json {
         ignoreUnknownKeys = true
         isLenient = true
@@ -62,11 +60,11 @@ class TmdbClientTest {
             "/movie/popular" to json.encodeToString(moviesResponse),
             "/genre/movie/list" to json.encodeToString(genresResponse)
         )
-        
+
         tmdbClient = TmdbClient(createClient(responses), tmdbMapper)
-        
+
         val result = tmdbClient.getPopularMovies("en")
-        
+
         assertEquals(1, result.size)
         assertEquals("MOVIES_1", result[0].id)
         assertEquals("Movie 1", result[0].title)
@@ -87,11 +85,11 @@ class TmdbClientTest {
             "/tv/popular" to json.encodeToString(seriesResponse),
             "/genre/tv/list" to json.encodeToString(genresResponse)
         )
-        
+
         tmdbClient = TmdbClient(createClient(responses), tmdbMapper)
-        
+
         val result = tmdbClient.getPopularSeries("en")
-        
+
         assertEquals(1, result.size)
         assertEquals("SERIES_2", result[0].id)
         assertEquals("Series 1", result[0].title)
@@ -112,11 +110,11 @@ class TmdbClientTest {
             "/movie/top_rated" to json.encodeToString(moviesResponse),
             "/genre/movie/list" to json.encodeToString(genresResponse)
         )
-        
+
         tmdbClient = TmdbClient(createClient(responses), tmdbMapper)
-        
+
         val result = tmdbClient.getTopRatedMovies("en")
-        
+
         assertEquals(1, result.size)
         assertEquals("MOVIES_3", result[0].id)
     }
@@ -136,11 +134,11 @@ class TmdbClientTest {
             "/tv/top_rated" to json.encodeToString(seriesResponse),
             "/genre/tv/list" to json.encodeToString(genresResponse)
         )
-        
+
         tmdbClient = TmdbClient(createClient(responses), tmdbMapper)
-        
+
         val result = tmdbClient.getTopRatedSeries("en")
-        
+
         assertEquals(1, result.size)
         assertEquals("SERIES_4", result[0].id)
     }
@@ -152,20 +150,20 @@ class TmdbClientTest {
             title = "Detail Movie",
             overview = "Overview"
         )
-        
+
         val responses = mapOf(
             "/movie/123" to json.encodeToString(detailResponse)
         )
-        
+
         tmdbClient = TmdbClient(createClient(responses), tmdbMapper)
-        
+
         tmdbClient.getMovieDetail("MOVIES_123", "en")
-        
+
         // Since we mocked tmdbMapper, it will return default mock value (null or empty)
         // But we are testing the call logic and path selection here.
         assertTrue(true)
     }
-    
+
     @Test
     fun `given a series detail request when getMovieDetail is called should return series detail`() = runBlocking {
         val detailResponse = TmdbMovieDetailRemote(
@@ -173,15 +171,15 @@ class TmdbClientTest {
             name = "Detail Series",
             overview = "Overview"
         )
-        
+
         val responses = mapOf(
             "/tv/456" to json.encodeToString(detailResponse)
         )
-        
+
         tmdbClient = TmdbClient(createClient(responses), tmdbMapper)
-        
+
         tmdbClient.getMovieDetail("SERIES_456", "en")
-        
+
         assertTrue(true)
     }
 
@@ -201,11 +199,11 @@ class TmdbClientTest {
             "/genre/movie/list" to json.encodeToString(movieGenres),
             "/genre/tv/list" to json.encodeToString(tvGenres)
         )
-        
+
         tmdbClient = TmdbClient(createClient(responses), tmdbMapper)
-        
+
         val result = tmdbClient.searchMulti("query", "en")
-        
+
         assertEquals(2, result.size)
         assertEquals("MOVIES_1", result[0].id)
         assertEquals("SERIES_2", result[1].id)

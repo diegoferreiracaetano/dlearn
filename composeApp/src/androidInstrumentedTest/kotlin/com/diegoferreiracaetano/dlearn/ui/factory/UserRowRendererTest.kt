@@ -27,14 +27,14 @@ class UserRowRendererTest {
         val name = "Diego"
         val role = "Developer"
         val actionUrl = "profile/diego"
-        val onActionMock = mockk<(String) -> Unit>(relaxed = true)
+        val onItemClickMock = mockk<(String) -> Unit>(relaxed = true)
         val component = UserRowComponent(name = name, role = role, actionUrl = actionUrl)
 
         composeTestRule.setContent {
             DLearnTheme {
                 renderer.Render(
                     component = component,
-                    actions = ComponentActions(onAction = onActionMock),
+                    actions = ComponentActions(onItemClick = onItemClickMock),
                     modifier = Modifier
                 )
             }
@@ -42,6 +42,6 @@ class UserRowRendererTest {
 
         composeTestRule.onNodeWithText(name).assertExists()
         composeTestRule.onNodeWithText(role).assertExists().performClick()
-        verify { onActionMock(actionUrl) }
+        verify { onItemClickMock(actionUrl) }
     }
 }

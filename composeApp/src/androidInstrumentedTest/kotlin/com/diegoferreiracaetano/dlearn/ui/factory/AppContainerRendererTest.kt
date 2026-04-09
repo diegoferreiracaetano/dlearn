@@ -8,6 +8,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppLoadingComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -36,7 +37,7 @@ class AppContainerRendererTest {
             }
         }
 
-        composeTestRule.onNodeWithTag("app_container").assertExists()
-        composeTestRule.onNodeWithTag("loading_indicator").assertExists()
+        composeTestRule.onNodeWithTag(TestTags.Components.APP_CONTAINER).assertExists()
+        composeTestRule.onNodeWithTag(TestTags.Components.LOADING_INDICATOR).assertExists()
     }
 }

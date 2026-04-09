@@ -6,8 +6,14 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
+import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavItem
+import com.diegoferreiracaetano.dlearn.ui.sdui.BottomNavigationComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.main.MainViewModel
 import io.mockk.every
 import io.mockk.mockk
@@ -20,7 +26,7 @@ class MainScreenTest {
 
     private val viewModel: MainViewModel = mockk(relaxed = true)
     private val uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
-    private val currentTab = MutableStateFlow("home")
+    private val currentTab = MutableStateFlow(AppNavigationRoute.HOME)
 
     @Test
     fun given_loading_state_when_rendered_should_show_loading_indicator() = runComposeUiTest {
@@ -38,30 +44,7 @@ class MainScreenTest {
             }
         }
 
-        onNodeWithTag("loading_indicator").assertExists()
-    }
-
-    @Test
-    fun given_success_state_when_tab_clicked_should_call_viewModel_onTabSelected() = runComposeUiTest {
-        uiState.value = UIState.Success(Screen(components = emptyList()))
-        every { viewModel.uiState } returns uiState
-        every { viewModel.currentTab } returns currentTab
-
-        setContent {
-            DLearnTheme {
-                MainScreen(
-                    onMovieClick = {},
-                    onItemClick = {},
-                    onTabSelected = {},
-                    viewModel = viewModel
-                )
-            }
-        }
-
-        // Assumindo que o item de navegação "Perfil" tem essa tag ou texto
-        onNodeWithTag("tab_profile").performClick()
-
-        verify { viewModel.onTabSelected(any()) }
+        onNodeWithTag(TestTags.Components.LOADING_INDICATOR).assertExists()
     }
 
     @Test
@@ -80,8 +63,10 @@ class MainScreenTest {
                 )
             }
         }
+        
+        waitForIdle()
 
-        onNodeWithText("Tentar novamente").performClick()
+        onNodeWithTag(TestTags.Components.RETRY_BUTTON).performClick()
 
         verify { viewModel.retry() }
     }

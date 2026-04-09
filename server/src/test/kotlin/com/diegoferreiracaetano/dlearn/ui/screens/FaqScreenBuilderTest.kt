@@ -13,13 +13,13 @@ class FaqScreenBuilderTest {
     fun `given a faq item when build is called should return screen with correct title and content`() {
         val builder = FaqScreenBuilder()
         val faqItem = FaqItem(title = "Duvida", content = "<p>Resposta</p>")
-        
+
         val screen = builder.build(faqItem)
-        
+
         val container = screen.components.first() as AppContainerComponent
         val topBar = container.topBar as AppTopBarComponent
         val htmlText = container.components.first() as AppHtmlTextComponent
-        
+
         assertEquals("Duvida", topBar.title)
         assertEquals("<p>Resposta</p>", htmlText.html)
     }

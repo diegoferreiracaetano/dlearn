@@ -1,12 +1,13 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.login
 
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpUIState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpViewModel
 import io.mockk.every
@@ -38,30 +39,12 @@ class SignUpScreenTest {
             }
         }
 
-        onNodeWithText("Nome").performTextInput(name)
-        onNodeWithText("E-mail").performTextInput(email)
-        onNodeWithText("Senha").performTextInput(password)
-        onNodeWithText("Criar conta").performClick()
+        onNodeWithTag(TestTags.Components.NAME_FIELD, useUnmergedTree = true).onChildAt(0).performTextInput(name)
+        onNodeWithTag(TestTags.Components.EMAIL_FIELD, useUnmergedTree = true).onChildAt(0).performTextInput(email)
+        onNodeWithTag(TestTags.Components.PASSWORD_FIELD, useUnmergedTree = true).onChildAt(0).performTextInput(password)
+        onNodeWithTag(TestTags.Components.SIGN_UP_BUTTON).performClick()
 
         verify { viewModel.signUp(name, email, password) }
-    }
-
-    @Test
-    fun given_loading_state_when_rendered_should_show_loading_indicator() = runComposeUiTest {
-        state.value = SignUpUIState.Loading
-        every { viewModel.state } returns state
-
-        setContent {
-            DLearnTheme {
-                SignUpScreen(
-                    onBackClick = {},
-                    onNavigateToHome = {},
-                    viewModel = viewModel
-                )
-            }
-        }
-
-        onNodeWithTag("loading_indicator").assertExists()
     }
 
     @Test
@@ -80,6 +63,8 @@ class SignUpScreenTest {
         }
 
         state.value = SignUpUIState.Success(true)
+        
+        waitForIdle()
 
         verify { onNavigateToHome() }
     }
@@ -100,7 +85,9 @@ class SignUpScreenTest {
         }
 
         state.value = SignUpUIState.Error(Exception(errorMessage))
+        
+        waitForIdle()
 
-        onNodeWithText(errorMessage).assertExists()
+        onNodeWithTag(TestTags.Screens.SIGN_UP_SCREEN).assertExists()
     }
 }

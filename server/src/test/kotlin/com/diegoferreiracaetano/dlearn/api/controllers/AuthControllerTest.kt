@@ -103,7 +103,9 @@ class AuthControllerTest {
 
         val response = client.post("/v1/auth/social-login") {
             contentType(ContentType.Application.Json)
-            setBody("""{"provider":"google","id_token":"eyJhbGciOiJSUzI1NiJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJuYW1lIjoiVGVzdCJ9.sig"}""")
+            setBody(
+                """{"provider":"google","id_token":"eyJhbGciOiJSUzI1NiJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJuYW1lIjoiVGVzdCJ9.sig"}"""
+            )
         }
 
         assertEquals(HttpStatusCode.OK, response.status)

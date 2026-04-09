@@ -21,7 +21,7 @@ class VerifyAccountOrchestratorTest {
         val request = mockk<AppRequest>()
         val header = AppHeader(paramLanguage = "en")
         val expectedScreen = mockk<Screen>()
-        
+
         every { verifyAccountScreenBuilder.build("en") } returns expectedScreen
 
         val result = orchestrator.execute(request, header, "user1").first()

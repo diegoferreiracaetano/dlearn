@@ -1,9 +1,10 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.settings
 
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import com.diegoferreiracaetano.dlearn.designsystem.components.alert.AppDialogTags
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.CleanCacheViewModel
 import io.mockk.mockk
@@ -26,7 +27,7 @@ class CleanCacheScreenTest {
             }
         }
 
-        onNodeWithText("Limpar cache").performClick()
+        onNodeWithTag(AppDialogTags.CONFIRM_BUTTON).performClick()
 
         verify { viewModel.confirmClearCache() }
     }
@@ -44,7 +45,7 @@ class CleanCacheScreenTest {
             }
         }
 
-        onNodeWithText("Cancelar").performClick()
+        onNodeWithTag(AppDialogTags.DISMISS_BUTTON).performClick()
 
         verify { onBackClick() }
     }

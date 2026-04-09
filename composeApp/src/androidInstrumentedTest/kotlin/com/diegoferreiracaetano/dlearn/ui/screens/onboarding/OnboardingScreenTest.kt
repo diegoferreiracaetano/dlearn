@@ -1,9 +1,10 @@
 package com.diegoferreiracaetano.dlearn.ui.screens.onboarding
 
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import com.diegoferreiracaetano.dlearn.designsystem.components.carousel.PAGE_CAROUSEL_NEXT_BUTTON_TAG
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import io.mockk.mockk
 import io.mockk.verify
@@ -22,12 +23,12 @@ class OnboardingScreenTest {
             }
         }
 
-        // Navegar até a última página (são 3 páginas)
-        onNodeWithText("Próximo").performClick()
-        onNodeWithText("Próximo").performClick()
-        
-        // Na última página o texto do botão muda para "Começar" ou similar
-        onNodeWithText("Começar").performClick()
+        onNodeWithTag(PAGE_CAROUSEL_NEXT_BUTTON_TAG).performClick()
+        waitForIdle()
+        onNodeWithTag(PAGE_CAROUSEL_NEXT_BUTTON_TAG).performClick()
+        waitForIdle()
+
+        onNodeWithTag(PAGE_CAROUSEL_NEXT_BUTTON_TAG).performClick()
 
         verify { onFinish() }
     }

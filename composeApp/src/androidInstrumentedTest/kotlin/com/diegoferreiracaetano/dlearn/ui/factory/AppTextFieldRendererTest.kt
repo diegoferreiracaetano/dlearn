@@ -2,7 +2,8 @@ package com.diegoferreiracaetano.dlearn.ui.factory
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
@@ -25,7 +26,7 @@ class AppTextFieldRendererTest {
 
     @Test
     fun given_TextFieldComponent_when_InputEntered_then_should_callAction() {
-        val onActionMock = mockk<(String) -> Unit>(relaxed = true)
+        val onQueryChangeMock = mockk<(String) -> Unit>(relaxed = true)
         val key = "search_key"
         val component = AppTextFieldComponent(
             value = "",
@@ -37,15 +38,16 @@ class AppTextFieldRendererTest {
             DLearnTheme {
                 renderer.Render(
                     component = component,
-                    actions = ComponentActions(onAction = onActionMock),
+                    actions = ComponentActions(onQueryChange = onQueryChangeMock),
                     modifier = Modifier
                 )
             }
         }
 
         val input = "searching..."
-        // Assumindo que o placeholder vazio ou mapeado resulta em um nó encontrável
-        composeTestRule.onNodeWithText("").performTextInput(input)
-        verify { onActionMock("$key:$input") }
+        
+        composeTestRule.onNodeWithTag("OutlinedTextField").performClick().performTextInput(input)
+        
+        verify { onQueryChangeMock("$key:$input") }
     }
 }

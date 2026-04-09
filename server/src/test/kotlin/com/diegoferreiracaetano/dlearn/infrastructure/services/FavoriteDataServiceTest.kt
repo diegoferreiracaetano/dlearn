@@ -70,7 +70,7 @@ class FavoriteDataServiceTest {
         createUser("user2")
         favoriteDataService.toggleFavorite("user2", "SERIES_123", true)
         favoriteDataService.toggleFavorite("user2", "MOVIES_456", true)
-        
+
         val list = favoriteDataService.getFavorites("user2")
         assertEquals(2, list.size)
         assertTrue(list.contains("SERIES_123"))

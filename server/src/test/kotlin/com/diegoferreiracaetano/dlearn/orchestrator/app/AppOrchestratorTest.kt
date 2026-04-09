@@ -144,7 +144,11 @@ class AppOrchestratorTest {
     @Test
     fun `given a settings notifications path when execute is called should delegate to the settings orchestrator`() {
         mockExecute(settingsOrchestrator, AppNavigationRoute.SETTINGS_NOTIFICATIONS)
-        val result = appOrchestrator.execute(AppRequest(path = AppNavigationRoute.SETTINGS_NOTIFICATIONS), header, "user1")
+        val result = appOrchestrator.execute(
+            AppRequest(path = AppNavigationRoute.SETTINGS_NOTIFICATIONS),
+            header,
+            "user1"
+        )
         assertEquals(expectedScreen, result)
     }
 

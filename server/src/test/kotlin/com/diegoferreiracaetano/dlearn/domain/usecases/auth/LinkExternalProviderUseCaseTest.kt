@@ -26,7 +26,9 @@ class LinkExternalProviderUseCaseTest {
     )
 
     @Test
-    fun `given a userId when execute is called should fetch existing providers from repository`() = runTest(testDispatcher) {
+    fun `given a userId when execute is called should fetch existing providers from repository`() = runTest(
+        testDispatcher
+    ) {
         coEvery { authProviderRepository.findByUserId("user1") } returns emptyList()
 
         useCase.execute("user1")
@@ -35,7 +37,9 @@ class LinkExternalProviderUseCaseTest {
     }
 
     @Test
-    fun `given a userId and metadata when execute is called should merge and call sync service`() = runTest(testDispatcher) {
+    fun `given a userId and metadata when execute is called should merge and call sync service`() = runTest(
+        testDispatcher
+    ) {
         val existingProvider = AuthProvider(
             provider = AccountProvider.GOOGLE,
             externalId = "ext-123",
@@ -54,7 +58,9 @@ class LinkExternalProviderUseCaseTest {
     }
 
     @Test
-    fun `given a repository that throws when execute is called should not propagate the exception`() = runTest(testDispatcher) {
+    fun `given a repository that throws when execute is called should not propagate the exception`() = runTest(
+        testDispatcher
+    ) {
         coEvery { authProviderRepository.findByUserId(any()) } throws RuntimeException("DB error")
 
         useCase.execute("user1")
@@ -63,7 +69,9 @@ class LinkExternalProviderUseCaseTest {
     }
 
     @Test
-    fun `given no existing providers when execute is called should call sync service with only passed metadata`() = runTest(testDispatcher) {
+    fun `given no existing providers when execute is called should call sync service with only passed metadata`() = runTest(
+        testDispatcher
+    ) {
         coEvery { authProviderRepository.findByUserId("user1") } returns emptyList()
 
         useCase.execute("user1", metadata = mapOf("token" to "abc123"))

@@ -39,9 +39,11 @@ class ProfileOrchestratorTest {
     @Before
     fun setup() {
         startKoin {
-            modules(module {
-                single { cacheManager }
-            })
+            modules(
+                module {
+                    single { cacheManager }
+                }
+            )
         }
         every { cacheManager.get<Screen>(any(), any()) } returns null
         subject = ProfileOrchestrator(userRepository, screenBuilder, editScreenBuilder)

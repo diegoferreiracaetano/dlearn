@@ -38,7 +38,7 @@ class MovieDetailMapperTest {
     @Test
     fun `given movie detail data when toHeader is called should map it correctly to header component`() {
         every { i18n.getString(AppStringType.DETAIL_WATCH_NOW, "en") } returns "Watch Now"
-        
+
         val result = mapper.toHeader(data, "en")
 
         assertEquals("Inception", result.title)
@@ -50,7 +50,7 @@ class MovieDetailMapperTest {
     @Test
     fun `given movie detail data when toStoryLine is called should map it correctly to storyline component`() {
         every { i18n.getString(AppStringType.DETAIL_STORY_LINE, "en") } returns "Storyline"
-        
+
         val result = mapper.toStoryLine(data, "en")
 
         assertEquals("Storyline", result.title)
@@ -60,7 +60,7 @@ class MovieDetailMapperTest {
     @Test
     fun `given movie detail data when toCastCarousel is called should map it correctly to cast carousel component`() {
         every { i18n.getString(AppStringType.DETAIL_CAST_CREW, "en") } returns "Cast"
-        
+
         val result = mapper.toCastCarousel(data, "en")
 
         assertEquals("Cast", result.title)

@@ -7,6 +7,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppListComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppLoadingComponent
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -35,9 +36,7 @@ class AppListRendererTest {
             }
         }
 
-        // AppList (from Design System) should have a test tag. 
-        // Based on AppListRenderer, it uses AppList.
-        composeTestRule.onNodeWithTag("app_list").assertExists()
-        composeTestRule.onNodeWithTag("loading_indicator").assertExists()
+        composeTestRule.onNodeWithTag(TestTags.Components.APP_LIST).assertExists()
+        composeTestRule.onNodeWithTag(TestTags.Components.LOADING_INDICATOR).assertExists()
     }
 }

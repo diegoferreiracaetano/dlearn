@@ -2,7 +2,6 @@ package com.diegoferreiracaetano.dlearn.util
 
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import org.junit.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 class I18nProviderTest {

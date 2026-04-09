@@ -2,12 +2,12 @@ package com.diegoferreiracaetano.dlearn.ui.screens.settings
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
+import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.SettingsViewModel
 import io.mockk.every
 import io.mockk.mockk
@@ -34,7 +34,7 @@ class SettingsScreenTest {
             }
         }
 
-        onNodeWithTag("loading_indicator").assertExists()
+        onNodeWithTag(TestTags.Components.LOADING_INDICATOR).assertExists()
     }
 
     @Test
@@ -51,7 +51,7 @@ class SettingsScreenTest {
             }
         }
 
-        onNodeWithText("Tentar novamente").performClick()
+        onNodeWithTag(TestTags.Components.RETRY_BUTTON).performClick()
 
         verify { viewModel.retry() }
     }

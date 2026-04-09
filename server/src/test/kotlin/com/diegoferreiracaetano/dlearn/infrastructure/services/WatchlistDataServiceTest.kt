@@ -1,7 +1,7 @@
 package com.diegoferreiracaetano.dlearn.infrastructure.services
 
-import com.diegoferreiracaetano.dlearn.infrastructure.db.WatchlistTable
 import com.diegoferreiracaetano.dlearn.infrastructure.db.UserTable
+import com.diegoferreiracaetano.dlearn.infrastructure.db.WatchlistTable
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -52,7 +52,7 @@ class WatchlistDataServiceTest {
     fun `given an item not in watchlist when toggleWatchlist with true is called should add the item to the watchlist`() = runBlocking {
         createUser("user1")
         watchlistDataService.toggleWatchlist("user1", "MOVIES_123", true)
-        
+
         val isIn = watchlistDataService.isInWatchlist("user1", "MOVIES_123")
         assertTrue(isIn)
     }
@@ -62,7 +62,7 @@ class WatchlistDataServiceTest {
         createUser("user1")
         watchlistDataService.toggleWatchlist("user1", "MOVIES_123", true)
         watchlistDataService.toggleWatchlist("user1", "MOVIES_123", false)
-        
+
         val isIn = watchlistDataService.isInWatchlist("user1", "MOVIES_123")
         assertFalse(isIn)
     }
@@ -72,7 +72,7 @@ class WatchlistDataServiceTest {
         createUser("user2")
         watchlistDataService.toggleWatchlist("user2", "SERIES_456", true)
         watchlistDataService.toggleWatchlist("user2", "MOVIES_789", true)
-        
+
         val list = watchlistDataService.getWatchlist("user2")
         assertEquals(2, list.size)
         assertTrue(list.contains("SERIES_456"))
@@ -81,8 +81,8 @@ class WatchlistDataServiceTest {
 
     @Test
     fun `given an ID without prefix when toggleWatchlist is called should assume MOVIES as default media type`() = runBlocking {
-         createUser("user3")
-         watchlistDataService.toggleWatchlist("user3", "123", true)
-         assertTrue(watchlistDataService.isInWatchlist("user3", "MOVIES_123"))
+        createUser("user3")
+        watchlistDataService.toggleWatchlist("user3", "123", true)
+        assertTrue(watchlistDataService.isInWatchlist("user3", "MOVIES_123"))
     }
 }

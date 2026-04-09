@@ -54,7 +54,6 @@ class GlobalEventHandlerTest {
 
         globalEventHandler.handle(event)
 
-        // showAppSnackBar uses scope.launch, so we use coVerify with timeout to wait for the coroutine
         coVerify(timeout = 2000) { snackbarHostState.showSnackbar(any<SnackbarVisuals>()) }
     }
 }

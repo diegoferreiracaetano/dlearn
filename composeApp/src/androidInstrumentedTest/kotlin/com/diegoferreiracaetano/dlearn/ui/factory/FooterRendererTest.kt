@@ -26,20 +26,20 @@ class FooterRendererTest {
     fun given_FooterComponent_when_Rendered_then_should_displayLabelAndHandleClick() {
         val label = "Click Me"
         val actionUrl = "action/url"
-        val onActionMock = mockk<(String) -> Unit>(relaxed = true)
+        val onItemClickMock = mockk<(String) -> Unit>(relaxed = true)
         val component = FooterComponent(label = label, actionUrl = actionUrl)
 
         composeTestRule.setContent {
             DLearnTheme {
                 renderer.Render(
                     component = component,
-                    actions = ComponentActions(onAction = onActionMock),
+                    actions = ComponentActions(onItemClick = onItemClickMock),
                     modifier = Modifier
                 )
             }
         }
 
         composeTestRule.onNodeWithText(label).assertExists().performClick()
-        verify { onActionMock(actionUrl) }
+        verify { onItemClickMock(actionUrl) }
     }
 }

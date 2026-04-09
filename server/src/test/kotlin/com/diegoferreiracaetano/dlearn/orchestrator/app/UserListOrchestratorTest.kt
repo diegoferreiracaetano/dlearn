@@ -24,7 +24,7 @@ class UserListOrchestratorTest {
         val request = mockk<AppRequest>()
         val header = AppHeader(paramLanguage = "en")
         val expectedScreen = mockk<Screen>()
-        
+
         coEvery { userRepository.findAll() } returns emptyList()
         every { screenBuilder.build(any(), "en") } returns expectedScreen
 

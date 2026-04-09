@@ -27,7 +27,7 @@ class CreateNewPasswordScreenTest {
     private val state = MutableStateFlow<CreateNewPasswordUiState>(CreateNewPasswordUiState.Idle)
 
     @Test
-    fun given_idle_state_when_password_filled_and_confirm_clicked_should_call_viewModel_changePassword() = runComposeUiTest {
+    fun given_idle_state_when_password_filled_and_confirm_clicked_should_call_changePassword() = runComposeUiTest {
         val password = "newPassword123"
         every { viewModel.uiState } returns state
 

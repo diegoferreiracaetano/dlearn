@@ -155,6 +155,14 @@ formatting:
   MaximumLineLength:
     active: true
     maxLineLength: 120
+    excludes:
+      - '**/test/**'
+      - '**/androidTest/**'
+      - '**/commonTest/**'
+      - '**/jvmTest/**'
+      - '**/iosTest/**'
+      - '**/*Test.kt'
+      - '**/*Spec.kt'
   ModifierOrdering:
     active: true
   NoBlankLineBeforeRbrace:
@@ -266,6 +274,16 @@ potential-bugs:
 
 style:
   active: true
+  MaxLineLength:
+    active: true
+    excludes:
+      - '**/test/**'
+      - '**/androidTest/**'
+      - '**/commonTest/**'
+      - '**/jvmTest/**'
+      - '**/iosTest/**'
+      - '**/*Test.kt'
+      - '**/*Spec.kt'
   MagicNumber:
     active: true
     ignoreNumbers:
@@ -284,6 +302,13 @@ style:
       - '**/ui/theme/Colors.kt'
       - '**/generated/**'
       - '**/*Composable*.*'
+      - '**/test/**'
+      - '**/androidTest/**'
+      - '**/commonTest/**'
+      - '**/jvmTest/**'
+      - '**/iosTest/**'
+      - '**/*Test.kt'
+      - '**/*Spec.kt'
   FunctionOnlyReturningConstant:
     active: true
   ReturnCount:

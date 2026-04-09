@@ -15,7 +15,7 @@ class FakeCacheManager : CacheManager {
     var shouldThrowOnPut = false
 
     override fun <T> put(key: String, value: T, serializer: KSerializer<T>) {
-        if (shouldThrowOnPut) throw IllegalStateException("Cache error")
+        if (shouldThrowOnPut) error("Cache error")
         cache[key] = value
     }
 
@@ -44,7 +44,7 @@ class CacheExtensionsTest {
     fun `given NETWORK_FIRST when flow fails and cache has data should emit cache`() = runTest {
         val cachedData = "cached data"
         cacheManager.put("test_key", cachedData, String.serializer())
-        val flow = flow<String> { throw IllegalStateException("Network error") }
+        val flow = flow<String> { error("Network error") }
 
         val result = flow.toCache(key = "test_key", manager = cacheManager).first()
 
@@ -72,7 +72,11 @@ class CacheExtensionsTest {
             emit("network data")
         }
 
-        val result = flow.toCache(key = "test_key", strategy = CacheStrategy.CACHE_FIRST, manager = cacheManager).first()
+        val result = flow.toCache(
+            key = "test_key",
+            strategy = CacheStrategy.CACHE_FIRST,
+            manager = cacheManager,
+        ).first()
 
         assertEquals(cachedData, result)
         assertEquals(false, flowCollected)
@@ -83,7 +87,11 @@ class CacheExtensionsTest {
         val networkData = "network data"
         val flow = flowOf(networkData)
 
-        val result = flow.toCache(key = "test_key", strategy = CacheStrategy.CACHE_FIRST, manager = cacheManager).first()
+        val result = flow.toCache(
+            key = "test_key",
+            strategy = CacheStrategy.CACHE_FIRST,
+            manager = cacheManager,
+        ).first()
 
         assertEquals(networkData, result)
         assertEquals(networkData, cacheManager.get("test_key", String.serializer()))
@@ -95,7 +103,11 @@ class CacheExtensionsTest {
         val flow = flow<String> { throw exception }
 
         val result = assertFailsWith<RuntimeException> {
-            flow.toCache(key = "test_key", strategy = CacheStrategy.CACHE_FIRST, manager = cacheManager).first()
+            flow.toCache(
+                key = "test_key",
+                strategy = CacheStrategy.CACHE_FIRST,
+                manager = cacheManager,
+            ).first()
         }
         assertEquals(exception.message, result.message)
     }

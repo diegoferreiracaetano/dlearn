@@ -35,11 +35,13 @@ class AppNavigationTest : KoinTest {
     private fun setupKoin() {
         stopKoin()
         startKoin {
-            modules(module {
-                single { sessionManager }
-                single { eventDispatcher }
-                single { loginViewModel }
-            })
+            modules(
+                module {
+                    single { sessionManager }
+                    single { eventDispatcher }
+                    single { loginViewModel }
+                }
+            )
         }
     }
 

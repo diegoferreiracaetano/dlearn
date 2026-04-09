@@ -42,14 +42,13 @@ class AppScreenTest {
     fun given_success_state_should_not_crash_and_render_content() = runComposeUiTest {
         val watchlistEmptyMock =
             Screen(
-                components =
-                    listOf(
-                        AppEmptyStateComponent(
-                            title = "WATCHLIST_EMPTY_TITLE",
-                            description = "WATCHLIST_EMPTY_DESCRIPTION",
-                            image = AppImageType.WATCHLIST,
-                        ),
+                components = listOf(
+                    AppEmptyStateComponent(
+                        title = "WATCHLIST_EMPTY_TITLE",
+                        description = "WATCHLIST_EMPTY_DESCRIPTION",
+                        image = AppImageType.WATCHLIST,
                     ),
+                )
             )
 
         uiState.value = UIState.Success(watchlistEmptyMock)

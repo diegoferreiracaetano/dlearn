@@ -55,14 +55,13 @@ class AppMainContentRendererTest {
 
         val watchlistEmptyMock =
             Screen(
-                components =
-                    listOf(
-                        AppEmptyStateComponent(
-                            title = "WATCHLIST_EMPTY_TITLE",
-                            description = "WATCHLIST_EMPTY_DESCRIPTION",
-                            image = AppImageType.WATCHLIST,
-                        ),
+                components = listOf(
+                    AppEmptyStateComponent(
+                        title = "WATCHLIST_EMPTY_TITLE",
+                        description = "WATCHLIST_EMPTY_DESCRIPTION",
+                        image = AppImageType.WATCHLIST,
                     ),
+                ),
             )
 
         uiState.value = UIState.Success(watchlistEmptyMock)

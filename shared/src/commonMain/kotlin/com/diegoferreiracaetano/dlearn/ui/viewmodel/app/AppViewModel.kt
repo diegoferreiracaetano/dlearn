@@ -34,7 +34,6 @@ class AppViewModel(
         fetch(AppPath.parse(action))
     }
 
-
     fun retry() {
         lastRequest?.let { request ->
             fetch(request)

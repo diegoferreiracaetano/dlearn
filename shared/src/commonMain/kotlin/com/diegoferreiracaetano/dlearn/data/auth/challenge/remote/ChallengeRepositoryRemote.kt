@@ -122,8 +122,9 @@ class ChallengeRepositoryRemote(
                         setBody(ResendChallengeRequest(type = challenge.challengeType.name))
                     }
                 emit(response.status.value in HTTP_SUCCESS_RANGE_START..HTTP_SUCCESS_RANGE_END)
-            } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) throw e
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (_: Exception) {
                 emit(false)
             }
         }

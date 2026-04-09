@@ -17,7 +17,7 @@ import org.junit.Test
 class ResetPasswordScreenTest {
 
     @Test
-    fun given_reset_password_screen_when_email_filled_and_button_clicked_should_trigger_onNextClick() = runComposeUiTest {
+    fun given_reset_password_screen_when_email_filled_and_button_clicked_should_onNextClick() = runComposeUiTest {
         val onNextClick: () -> Unit = mockk(relaxed = true)
         val email = "test@dlearn.com"
 

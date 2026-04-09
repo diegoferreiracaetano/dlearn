@@ -20,7 +20,9 @@ class CleanCacheViewModelTest {
 
         verify(exactly = 1) { preferencesRepository.clear() }
         verify(exactly = 1) {
-            globalEventDispatcher.tryEmit(match { it is GlobalEvent.Navigation && it.route == AppNavigationRoute.PROFILE })
+            globalEventDispatcher.tryEmit(
+                match { it is GlobalEvent.Navigation && it.route == AppNavigationRoute.PROFILE },
+            )
         }
     }
 }

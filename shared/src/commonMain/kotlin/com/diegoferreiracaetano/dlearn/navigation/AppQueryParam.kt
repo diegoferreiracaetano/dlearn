@@ -11,5 +11,4 @@ object AppQueryParam {
     const val USER_ID = "userId"
     const val MEDIA_TYPE = "mediaType"
     const val SEASON_NUMBER = "seasonNumber"
-    const val EPISODE_NUMBER = "episodeNumber"
 }

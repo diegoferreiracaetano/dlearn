@@ -101,8 +101,6 @@ class MovieDetailMapper(
     ): List<Component> {
         if (data.seasons.isEmpty()) return emptyList()
 
-        val components = mutableListOf<Component>()
-
         val seasonLabel = i18n.getString(AppStringType.DETAIL_SEASON, lang)
 
         val seasonOptions = data.seasons.map { season ->
@@ -120,37 +118,34 @@ class MovieDetailMapper(
             )
         }
 
-        components.add(
-            ChipGroupComponent(
-                items = listOf(
-                    ChipItem(
-                        id = "season_selector",
-                        label = "$seasonLabel $selectedSeason",
-                        isSelected = true,
-                        hasDropDown = true,
-                        isFilter = false,
-                        options = seasonOptions,
-                        actionUrl = ""
-                    )
-                ),
-                cleanUrl = ""
+        return buildList {
+            add(
+                ChipGroupComponent(
+                    items = listOf(
+                        ChipItem(
+                            id = "season_selector",
+                            label = "$seasonLabel $selectedSeason",
+                            isSelected = true,
+                            hasDropDown = true,
+                            isFilter = false,
+                            options = seasonOptions,
+                            actionUrl = ""
+                        )
+                    ),
+                    cleanUrl = ""
+                )
             )
-        )
-
-        val episodes = data.episodes.map { episode ->
-            AppEpisodeComponent(
-                id = "${data.id}_s${episode.seasonNumber}_e${episode.episodeNumber}",
-                title = episode.name,
-                description = episode.overview,
-                imageUrl = episode.imageUrl ?: data.imageUrl,
-                duration = episode.duration?.let { "${it}m" }.orEmpty(),
-                isPremium = false,
-                actionUrl = null
-            )
+            data.episodes.mapTo(this) { episode ->
+                AppEpisodeComponent(
+                    id = "${data.id}_s${episode.seasonNumber}_e${episode.episodeNumber}",
+                    title = episode.name,
+                    description = episode.overview,
+                    imageUrl = episode.imageUrl ?: data.imageUrl,
+                    duration = episode.duration?.let { "${it}m" }.orEmpty(),
+                    isPremium = false,
+                    actionUrl = null
+                )
+            }
         }
-
-        components.addAll(episodes)
-
-        return components
     }
 }

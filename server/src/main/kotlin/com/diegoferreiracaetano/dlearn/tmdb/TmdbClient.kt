@@ -83,10 +83,7 @@ internal class TmdbClient(
 
     override suspend fun getTopRatedSeries(language: String): List<Video> {
         val genres = getTvGenres(language)
-        return get<TmdbListResponse<TmdbItemRemote>>(
-            TmdbEndpoints.TV_POPULAR,
-            language
-        ) // TV_TOP_RATED actually used POPULAR in previous version? Fixing to TV_TOP_RATED
+        return get<TmdbListResponse<TmdbItemRemote>>(TmdbEndpoints.TV_TOP_RATED, language)
             .results
             .map { it.toVideo(MediaType.SERIES, genres) }
     }

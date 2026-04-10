@@ -8,6 +8,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.error.model.Gener
 import com.diegoferreiracaetano.dlearn.designsystem.components.error.model.NoInternetError
 import com.diegoferreiracaetano.dlearn.designsystem.components.error.model.NotFoundError
 import com.diegoferreiracaetano.dlearn.designsystem.components.error.model.ServerError
+import com.diegoferreiracaetano.dlearn.designsystem.components.error.model.ServiceUnavailableError
 import com.diegoferreiracaetano.dlearn.designsystem.util.rememberNetworkManager
 import com.diegoferreiracaetano.dlearn.domain.error.AppError
 import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
@@ -78,8 +79,6 @@ fun AppError.toUiData(): AppErrorData {
     val networkManager = rememberNetworkManager()
     val isNetworkAvailable = networkManager.isNetworkAvailable()
 
-    if (!isNetworkAvailable) return NoInternetError()
-
     return when (code) {
         // Auth
         AppErrorCode.UNAUTHORIZED,
@@ -108,7 +107,10 @@ fun AppError.toUiData(): AppErrorData {
         -> ServerError()
 
         // Network
-        AppErrorCode.NETWORK_ERROR -> NoInternetError()
+        AppErrorCode.NETWORK_ERROR -> {
+            if (!isNetworkAvailable) NoInternetError()
+            else ServiceUnavailableError()
+        }
 
         else -> GenericError()
     }

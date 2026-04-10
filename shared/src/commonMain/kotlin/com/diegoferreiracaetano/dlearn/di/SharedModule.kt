@@ -88,7 +88,7 @@ val sharedModule =
                 defaultRequest {
                     url {
                         protocol = URLProtocol.HTTP
-                        host = "192.168.15.3"
+                        host = "192.168.15.6"
                         port = SERVER_PORT
                     }
                 }

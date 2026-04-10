@@ -81,7 +81,7 @@ fun AppNavGraph(
         }
     }
 
-    val startDestination = if (isLoggedIn) Home.route else Welcome.route
+    val startDestination = if (isLoggedIn) Home.route else Onboarding.route
 
     NavHost(
         navController = navController,

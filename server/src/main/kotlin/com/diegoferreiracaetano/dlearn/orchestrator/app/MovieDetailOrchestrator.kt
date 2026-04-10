@@ -32,6 +32,7 @@ class MovieDetailOrchestrator(
 
         val isFavoriteAction = request.params?.containsKey(FAVORITE) == true
         val isWatchlistAction = request.params?.containsKey(WATCHLIST) == true
+        val seasonNumber = request.params?.get(AppQueryParam.SEASON_NUMBER)?.toIntOrNull()
 
         return flow {
             val language = header.language
@@ -46,8 +47,9 @@ class MovieDetailOrchestrator(
                 watchlistRepository.toggleWatchlist(userId, movieId, active)
             }
 
-            val domainData = getMovieDetailUseCase.execute(movieId, language, userId)
-            emit(screenBuilder.build(domainData, language))
+            val domainData = getMovieDetailUseCase.execute(movieId, language, userId, seasonNumber)
+            val finalSeasonNumber = seasonNumber ?: domainData.seasons.firstOrNull { it.number > 0 }?.number ?: 1
+            emit(screenBuilder.build(domainData, language, finalSeasonNumber))
         }
     }
 }

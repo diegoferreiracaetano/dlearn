@@ -30,6 +30,8 @@ object ServerConstants {
 
         fun tvDetail(id: String) = "/tv/$id"
 
+        fun tvSeasonDetail(id: String, seasonNumber: Int) = "/tv/$id/season/$seasonNumber"
+
         fun accountStates(id: String) = "/movie/$id/account_states"
 
         fun tvAccountStates(id: String) = "/tv/$id/account_states"

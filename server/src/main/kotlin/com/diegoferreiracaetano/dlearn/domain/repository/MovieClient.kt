@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.domain.repository
 
+import com.diegoferreiracaetano.dlearn.domain.models.EpisodeDomainData
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
 import com.diegoferreiracaetano.dlearn.domain.video.Video
 import com.diegoferreiracaetano.dlearn.model.TmdbGenre
@@ -30,7 +31,14 @@ interface MovieClient {
     suspend fun getMovieDetail(
         movieId: String,
         language: String,
+        season: Int? = null,
     ): MovieDetailDomainData
+
+    suspend fun getTvSeasonEpisodes(
+        tvId: String,
+        seasonNumber: Int,
+        language: String,
+    ): List<EpisodeDomainData>
 
     suspend fun searchMulti(
         query: String,

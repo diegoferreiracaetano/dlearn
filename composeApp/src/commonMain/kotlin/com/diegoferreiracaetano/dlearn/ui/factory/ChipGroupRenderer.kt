@@ -4,9 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.diegoferreiracaetano.dlearn.designsystem.components.chip.AppChipGroup
 import com.diegoferreiracaetano.dlearn.designsystem.components.chip.AppChipItem
+import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.ChipItem
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 class ChipGroupRenderer : ComponentRenderer {
     @Composable
@@ -32,8 +35,11 @@ class ChipGroupRenderer : ComponentRenderer {
                     isFilter = item.isFilter,
                     isSelected = item.isSelected,
                     dropDownOptions = item.options?.map { it.label } ?: emptyList(),
-                    onOptionSelected = {
-                        actions.onAction(item.actionUrl)
+                    onOptionSelected = { label ->
+                        val selectedOption = item.options?.find { it.label == label }
+                        selectedOption?.actionUrl?.let { url ->
+                            actions.onAction(url)
+                        }
                     },
                 )
             },
@@ -42,6 +48,24 @@ class ChipGroupRenderer : ComponentRenderer {
                     actions.onAction(chipGroup.cleanUrl)
                 }
             },
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ChipGroupRendererPreview() {
+    DLearnTheme {
+        ChipGroupRenderer().Render(
+            component = ChipGroupComponent(
+                items = listOf(
+                    ChipItem(id = "1", label = "Season 1", actionUrl = "url1", isSelected = true),
+                    ChipItem(id = "2", label = "Season 2", actionUrl = "url2")
+                ),
+                cleanUrl = "clean"
+            ),
+            actions = ComponentActions(),
+            modifier = Modifier
         )
     }
 }

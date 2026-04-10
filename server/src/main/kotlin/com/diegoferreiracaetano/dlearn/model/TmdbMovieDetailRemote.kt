@@ -24,6 +24,42 @@ data class TmdbMovieDetailRemote(
     val videos: TmdbVideosResponseRemote? = null,
     @SerialName("external_ids") val externalIds: TmdbExternalIdsRemote? = null,
     @SerialName("watch/providers") val watchProviders: TmdbWatchProvidersResponse? = null,
+    val seasons: List<TmdbSeasonRemote> = emptyList(),
+)
+
+@Serializable
+data class TmdbSeasonRemote(
+    val id: Int,
+    @SerialName("season_number") val seasonNumber: Int,
+    @SerialName("episode_count") val episodeCount: Int,
+    val name: String? = null,
+    val overview: String? = null,
+    @SerialName("poster_path") val posterPath: String? = null,
+    @SerialName("air_date") val airDate: String? = null,
+)
+
+@Serializable
+data class TmdbSeasonDetailRemote(
+    val id: String,
+    @SerialName("air_date") val airDate: String? = null,
+    val episodes: List<TmdbEpisodeRemote> = emptyList(),
+    val name: String,
+    val overview: String,
+    @SerialName("season_number") val seasonNumber: Int,
+    @SerialName("poster_path") val posterPath: String? = null,
+)
+
+@Serializable
+data class TmdbEpisodeRemote(
+    val id: Int,
+    val name: String,
+    val overview: String,
+    @SerialName("episode_number") val episodeNumber: Int,
+    @SerialName("season_number") val seasonNumber: Int,
+    @SerialName("air_date") val airDate: String? = null,
+    @SerialName("still_path") val stillPath: String? = null,
+    @SerialName("vote_average") val voteAverage: Double? = null,
+    val runtime: Int? = null,
 )
 
 fun TmdbMovieDetailRemote.toVideo(mediaType: MediaType): Video =

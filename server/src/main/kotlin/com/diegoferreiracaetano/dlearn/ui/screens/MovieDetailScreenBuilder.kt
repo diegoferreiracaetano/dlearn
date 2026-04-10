@@ -13,6 +13,7 @@ class MovieDetailScreenBuilder(
     fun build(
         data: MovieDetailDomainData,
         lang: String,
+        selectedSeason: Int = 1,
     ): Screen {
         val components = mutableListOf<Component>()
 
@@ -20,9 +21,7 @@ class MovieDetailScreenBuilder(
         components.add(mapper.toStoryLine(data, lang))
         components.add(mapper.toCastCarousel(data, lang))
 
-        mapper.toEpisodesSection(data, lang)?.let {
-            components.add(it)
-        }
+        components.addAll(mapper.toEpisodesSection(data, lang, selectedSeason))
 
         val topBar =
             AppTopBarComponent(

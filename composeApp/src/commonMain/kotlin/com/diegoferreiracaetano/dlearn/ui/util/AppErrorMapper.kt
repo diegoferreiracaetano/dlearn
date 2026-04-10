@@ -108,8 +108,11 @@ fun AppError.toUiData(): AppErrorData {
 
         // Network
         AppErrorCode.NETWORK_ERROR -> {
-            if (!isNetworkAvailable) NoInternetError()
-            else ServiceUnavailableError()
+            if (!isNetworkAvailable) {
+                NoInternetError()
+            } else {
+                ServiceUnavailableError()
+            }
         }
 
         else -> GenericError()

@@ -44,12 +44,33 @@ class MovieDetailOrchestratorTest {
         val domainData = mockk<MovieDetailDomainData>(relaxed = true)
         val expectedScreen = Screen(components = emptyList())
 
-        coEvery { getMovieDetailUseCase.execute(movieId, lang, userId) } returns domainData
-        every { screenBuilder.build(domainData, lang) } returns expectedScreen
+        coEvery { getMovieDetailUseCase.execute(movieId, lang, userId, null) } returns domainData
+        every { screenBuilder.build(domainData, lang, any()) } returns expectedScreen
 
         val result = subject.execute(request, header, userId).first()
 
         assertEquals(expectedScreen, result)
+    }
+
+    @Test
+    fun `given a movie detail request with a season number when execute is called should fetch correct season`() = runTest {
+        val request = AppRequest(
+            path = "movie_detail",
+            params = mapOf(
+                AppQueryParam.ID to movieId,
+                AppQueryParam.SEASON_NUMBER to "2"
+            )
+        )
+        val domainData = mockk<MovieDetailDomainData>(relaxed = true)
+        val expectedScreen = Screen(components = emptyList())
+
+        coEvery { getMovieDetailUseCase.execute(movieId, lang, userId, 2) } returns domainData
+        every { screenBuilder.build(domainData, lang, 2) } returns expectedScreen
+
+        val result = subject.execute(request, header, userId).first()
+
+        assertEquals(expectedScreen, result)
+        coVerify { getMovieDetailUseCase.execute(movieId, lang, userId, 2) }
     }
 
     @Test
@@ -73,8 +94,8 @@ class MovieDetailOrchestratorTest {
         val domainData = mockk<MovieDetailDomainData>(relaxed = true)
         val expectedScreen = Screen(components = emptyList())
 
-        coEvery { getMovieDetailUseCase.execute(movieId, lang, userId) } returns domainData
-        every { screenBuilder.build(domainData, lang) } returns expectedScreen
+        coEvery { getMovieDetailUseCase.execute(movieId, lang, userId, any()) } returns domainData
+        every { screenBuilder.build(domainData, lang, any()) } returns expectedScreen
 
         val result = subject.execute(request, header, userId).first()
 
@@ -94,8 +115,8 @@ class MovieDetailOrchestratorTest {
         val domainData = mockk<MovieDetailDomainData>(relaxed = true)
         val expectedScreen = Screen(components = emptyList())
 
-        coEvery { getMovieDetailUseCase.execute(movieId, lang, userId) } returns domainData
-        every { screenBuilder.build(domainData, lang) } returns expectedScreen
+        coEvery { getMovieDetailUseCase.execute(movieId, lang, userId, any()) } returns domainData
+        every { screenBuilder.build(domainData, lang, any()) } returns expectedScreen
 
         val result = subject.execute(request, header, userId).first()
 

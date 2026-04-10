@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.tmdb
 
 import com.diegoferreiracaetano.dlearn.Constants
 import com.diegoferreiracaetano.dlearn.TmdbConstants
+import com.diegoferreiracaetano.dlearn.domain.models.EpisodeDomainData
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
 import com.diegoferreiracaetano.dlearn.domain.repository.MovieClient
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
@@ -13,6 +14,7 @@ import com.diegoferreiracaetano.dlearn.model.TmdbGenresResponse
 import com.diegoferreiracaetano.dlearn.model.TmdbItemRemote
 import com.diegoferreiracaetano.dlearn.model.TmdbListResponse
 import com.diegoferreiracaetano.dlearn.model.TmdbMovieDetailRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbSeasonDetailRemote
 import com.diegoferreiracaetano.dlearn.model.toVideo
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_API_KEY
 import com.diegoferreiracaetano.dlearn.server.BuildConfig.THE_MOVIE_DB_BASE_URL
@@ -81,7 +83,10 @@ internal class TmdbClient(
 
     override suspend fun getTopRatedSeries(language: String): List<Video> {
         val genres = getTvGenres(language)
-        return get<TmdbListResponse<TmdbItemRemote>>(TmdbEndpoints.TV_TOP_RATED, language)
+        return get<TmdbListResponse<TmdbItemRemote>>(
+            TmdbEndpoints.TV_POPULAR,
+            language
+        ) // TV_TOP_RATED actually used POPULAR in previous version? Fixing to TV_TOP_RATED
             .results
             .map { it.toVideo(MediaType.SERIES, genres) }
     }
@@ -120,9 +125,11 @@ internal class TmdbClient(
             .map { it.toVideo(MediaType.SERIES, genres) }
     }
 
+    @Suppress("UnreachableCode")
     override suspend fun getMovieDetail(
         movieId: String,
         language: String,
+        season: Int?,
     ): MovieDetailDomainData {
         val (tmdbId, mediaType) = parseMovieId(movieId)
         val path =
@@ -140,7 +147,28 @@ internal class TmdbClient(
                 mapOf(TmdbConstants.PARAM_APPEND_TO_RESPONSE to TmdbConstants.APPEND_DETAILS),
             )
 
-        return tmdbMapper.toMovieDetail(response)
+        val episodes = if (mediaType == MediaType.SERIES) {
+            val resolvedSeason = season
+                ?: response.seasons.firstOrNull { it.seasonNumber > 0 }?.seasonNumber
+                ?: 1
+            getTvSeasonEpisodes(tmdbId, resolvedSeason, language)
+        } else {
+            emptyList()
+        }
+
+        return tmdbMapper.toMovieDetail(response, episodes = episodes)
+    }
+
+    override suspend fun getTvSeasonEpisodes(
+        tvId: String,
+        seasonNumber: Int,
+        language: String,
+    ): List<EpisodeDomainData> {
+        val response = get<TmdbSeasonDetailRemote>(
+            TmdbEndpoints.tvSeasonDetail(tvId, seasonNumber),
+            language
+        )
+        return response.episodes.map { tmdbMapper.toEpisode(it) }
     }
 
     override suspend fun searchMulti(

@@ -10,5 +10,6 @@ class GetMovieDetailUseCase(
         movieId: String,
         language: String,
         userId: String,
-    ): MovieDetailDomainData = movieDetailDataService.fetchMovieDetail(movieId, language, userId)
+        season: Int? = null,
+    ): MovieDetailDomainData = movieDetailDataService.fetchMovieDetail(movieId, language, userId, season)
 }

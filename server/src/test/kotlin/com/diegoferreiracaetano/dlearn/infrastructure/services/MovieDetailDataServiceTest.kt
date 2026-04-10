@@ -74,7 +74,7 @@ class MovieDetailDataServiceTest {
             providers = emptyList(),
             seasons = emptyList()
         )
-        coEvery { movieClient.getMovieDetail("MOVIES_1", "en") } returns detail
+        coEvery { movieClient.getMovieDetail("MOVIES_1", "en", any()) } returns detail
 
         val result = service.fetchMovieDetail("MOVIES_1", "en", "user1")
 
@@ -120,11 +120,33 @@ class MovieDetailDataServiceTest {
             providers = emptyList(),
             seasons = emptyList()
         )
-        coEvery { movieClient.getMovieDetail("SERIES_123", "en") } returns detail
+        coEvery { movieClient.getMovieDetail("SERIES_123", "en", any()) } returns detail
 
         val result = service.fetchMovieDetail("SERIES_123", "en", userId)
 
         assertTrue(result.isFavorite)
         assertTrue(result.isInWatchlist)
+    }
+
+    @Test
+    fun `given a series detail and seasonNumber when fetchMovieDetail is called should fetch episodes`() = runTest {
+        val detail = MovieDetailDomainData(
+            id = "SERIES_456",
+            title = "Series",
+            imageUrl = "url",
+            year = "2020",
+            duration = "40",
+            genre = "Sci-Fi",
+            rating = "8.0",
+            mediaType = MediaType.SERIES,
+            storyLine = "S",
+            cast = emptyList(),
+            seasons = emptyList()
+        )
+        coEvery { movieClient.getMovieDetail("SERIES_456", "en", 1) } returns detail
+
+        val result = service.fetchMovieDetail("SERIES_456", "en", "user1", season = 1)
+
+        assertEquals("Series", result.title)
     }
 }

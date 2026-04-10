@@ -2,11 +2,15 @@ package com.diegoferreiracaetano.dlearn.infrastructure.mappers
 
 import com.diegoferreiracaetano.dlearn.TmdbConstants
 import com.diegoferreiracaetano.dlearn.domain.models.CastMemberDomainData
+import com.diegoferreiracaetano.dlearn.domain.models.EpisodeDomainData
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
+import com.diegoferreiracaetano.dlearn.domain.models.SeasonDomainData
 import com.diegoferreiracaetano.dlearn.domain.models.WatchProviderDomainData
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.model.TmdbCastRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbEpisodeRemote
 import com.diegoferreiracaetano.dlearn.model.TmdbMovieDetailRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbSeasonRemote
 import com.diegoferreiracaetano.dlearn.model.WatchProviderRemote
 import java.util.Locale
 
@@ -17,6 +21,7 @@ class TmdbMapper(
         response: TmdbMovieDetailRemote,
         isFavorite: Boolean = false,
         isInWatchlist: Boolean = false,
+        episodes: List<EpisodeDomainData> = emptyList(),
     ): MovieDetailDomainData {
         val movieTitle = response.title ?: response.name.orEmpty()
         val countryProviders = response.watchProviders?.results?.get(TmdbConstants.DEFAULT_REGION)
@@ -46,7 +51,10 @@ class TmdbMapper(
                 ?.take(TmdbConstants.MAX_CAST_SIZE)
                 ?.map { toCastMember(it) }
                 .orEmpty(),
-            seasons = emptyList(),
+            seasons = response.seasons
+                .filter { it.seasonNumber > 0 }
+                .map { toSeason(it) },
+            episodes = episodes,
             trailerId = getTrailerId(response),
             isFavorite = isFavorite,
             isInWatchlist = isInWatchlist,
@@ -59,6 +67,23 @@ class TmdbMapper(
             mediaType = mediaType,
         )
     }
+
+    private fun toSeason(season: TmdbSeasonRemote) =
+        SeasonDomainData(
+            number = season.seasonNumber,
+            episodeCount = season.episodeCount,
+        )
+
+    fun toEpisode(episode: TmdbEpisodeRemote) =
+        EpisodeDomainData(
+            id = episode.id,
+            name = episode.name,
+            overview = episode.overview,
+            episodeNumber = episode.episodeNumber,
+            seasonNumber = episode.seasonNumber,
+            imageUrl = episode.stillPath?.let { "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W300}$it" },
+            duration = episode.runtime?.toString(),
+        )
 
     private fun getTrailerId(response: TmdbMovieDetailRemote): String? =
         response.videos

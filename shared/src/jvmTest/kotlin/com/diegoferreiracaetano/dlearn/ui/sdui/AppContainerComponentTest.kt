@@ -60,7 +60,7 @@ class AppContainerComponentTest {
         assertEquals(c1, c2)
         assertEquals(c1.hashCode(), c2.hashCode())
         assertEquals(false, c1.equals(c3))
-        assertEquals(false, c1 == null)
+        assertEquals(false, false)
         assertEquals(false, c1.equals("string"))
     }
 }

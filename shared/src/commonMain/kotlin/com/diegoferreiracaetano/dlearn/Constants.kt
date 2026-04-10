@@ -5,7 +5,6 @@ object Constants {
     const val VALIDATED_TOKEN_PREFIX = "validated-token-"
     const val DEFAULT_MOCK_OTP = "123456"
     const val DEBUG_OTP = "000000"
-    const val DEFAULT_USER_ID = "system_user"
     const val OTP_KEY = "otp"
     const val OTP_CODE_KEY = "otp_code"
     const val EMPTY_STRING = ""
@@ -13,9 +12,6 @@ object Constants {
     const val DASH = "-"
     const val UNDERSCORE = "_"
     const val COMMA = ","
-    const val SEMICOLON = ";"
-    const val DOT = "."
-    const val SLASH = "/"
     const val COLON = ":"
 
     const val HTTP_STATUS_PRECONDITION_REQUIRED = 428
@@ -50,8 +46,6 @@ object LocaleConstants {
     const val COUNTRY_BR = "BR"
     const val COUNTRY_US = "US"
     const val COUNTRY_ES = "ES"
-
-    const val LOCALE_STRINGS_BUNDLE = "strings"
 }
 
 object ProfileConstants {
@@ -111,6 +105,7 @@ object SocialAuthConstants {
 object TmdbConstants {
     const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/"
     const val IMAGE_W500 = "w500"
+    const val IMAGE_W300 = "w300"
     const val IMAGE_W185 = "w185"
     const val DEFAULT_REGION = "BR"
     const val SITE_YOUTUBE = "YouTube"

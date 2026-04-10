@@ -4,7 +4,9 @@ import com.diegoferreiracaetano.dlearn.TmdbConstants
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
 import com.diegoferreiracaetano.dlearn.model.TmdbCastRemote
 import com.diegoferreiracaetano.dlearn.model.TmdbCreditsRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbEpisodeRemote
 import com.diegoferreiracaetano.dlearn.model.TmdbMovieDetailRemote
+import com.diegoferreiracaetano.dlearn.model.TmdbSeasonRemote
 import com.diegoferreiracaetano.dlearn.model.TmdbVideoRemote
 import com.diegoferreiracaetano.dlearn.model.TmdbVideosResponseRemote
 import com.diegoferreiracaetano.dlearn.model.TmdbWatchProvidersResponse
@@ -43,22 +45,41 @@ class TmdbMapperTest {
     }
 
     @Test
-    fun `given a TMDB response with a name property when toMovieDetail is called should map it to a series media type`() {
+    fun `given a TMDB response with seasons when toMovieDetail should filter out season 0`() {
+        val season0 = TmdbSeasonRemote(id = 0, seasonNumber = 0, episodeCount = 10, name = "Specials")
+        val season1 = TmdbSeasonRemote(id = 1, seasonNumber = 1, episodeCount = 20, name = "Season 1")
         val response = TmdbMovieDetailRemote(
             id = 2,
             name = "Breaking Bad",
-            posterPath = "/path.jpg",
-            firstAirDate = "2008-01-20",
-            voteAverage = 9.5,
-            overview = "Overview",
-            genres = emptyList()
+            genres = emptyList(),
+            seasons = listOf(season0, season1)
         )
 
         val result = mapper.toMovieDetail(response)
 
-        assertEquals("SERIES_2", result.id)
-        assertEquals("Breaking Bad", result.title)
-        assertEquals(MediaType.SERIES, result.mediaType)
+        assertEquals(1, result.seasons.size)
+        assertEquals(1, result.seasons[0].number)
+    }
+
+    @Test
+    fun `given episodes when toEpisode should map fields correctly`() {
+        val remoteEpisode = TmdbEpisodeRemote(
+            id = 10,
+            episodeNumber = 1,
+            name = "Pilot",
+            overview = "First episode",
+            seasonNumber = 1,
+            stillPath = "/still.jpg",
+            runtime = 45
+        )
+
+        val episode = mapper.toEpisode(remoteEpisode)
+
+        assertEquals(10, episode.id)
+        assertEquals("Pilot", episode.name)
+        assertEquals("First episode", episode.overview)
+        assertEquals("45", episode.duration)
+        assertNotNull(episode.imageUrl)
     }
 
     @Test

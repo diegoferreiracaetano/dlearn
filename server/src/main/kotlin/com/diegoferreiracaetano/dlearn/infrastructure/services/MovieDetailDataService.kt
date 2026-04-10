@@ -18,11 +18,12 @@ class MovieDetailDataService(
         movieId: String,
         language: String,
         userId: String,
+        season: Int? = null,
     ): MovieDetailDomainData =
         coroutineScope {
             val movieDetailDeferred =
                 async {
-                    movieClient.getMovieDetail(movieId, language)
+                    movieClient.getMovieDetail(movieId, language, season)
                 }
 
             val localStatesDeferred =

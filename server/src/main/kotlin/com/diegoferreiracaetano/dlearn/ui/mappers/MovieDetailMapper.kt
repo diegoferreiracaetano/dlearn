@@ -1,13 +1,13 @@
 package com.diegoferreiracaetano.dlearn.ui.mappers
 
 import com.diegoferreiracaetano.dlearn.Constants
+import com.diegoferreiracaetano.dlearn.UIConstants
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.FAVORITE
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute.WATCHLIST
 import com.diegoferreiracaetano.dlearn.navigation.AppPath
 import com.diegoferreiracaetano.dlearn.navigation.AppQueryParam
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppEpisodeComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppExpandableSectionComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppMovieDetailHeaderComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
@@ -15,6 +15,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.CarouselComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipItem
 import com.diegoferreiracaetano.dlearn.ui.sdui.Component
+import com.diegoferreiracaetano.dlearn.ui.sdui.MovieItemComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.UserRowComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.WatchProviderComponent
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
@@ -136,12 +137,17 @@ class MovieDetailMapper(
                 )
             )
             data.episodes.mapTo(this) { episode ->
-                AppEpisodeComponent(
+                MovieItemComponent(
                     id = "${data.id}_s${episode.seasonNumber}_e${episode.episodeNumber}",
                     title = episode.name,
-                    description = episode.overview,
+                    subtitle = episode.overview,
                     imageUrl = episode.imageUrl ?: data.imageUrl,
                     duration = episode.duration?.let { "${it}m" }.orEmpty(),
+                    year = episode.airDate,
+                    rating = episode.rating,
+                    contentRating = UIConstants.DEFAULT_CONTENT_RATING,
+                    genre = data.genre,
+                    movieType = "Episode",
                     isPremium = false,
                     actionUrl = null
                 )

@@ -32,7 +32,7 @@ class TmdbMapper(
         return MovieDetailDomainData(
             id = "${mediaType.name}_${response.id}",
             title = movieTitle,
-            imageUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W500}${response.posterPath}",
+            imageUrl = TmdbConstants.buildImageUrl(response.posterPath, TmdbConstants.IMAGE_W500),
             year = (
                 response.releaseDate
                     ?: response.firstAirDate.orEmpty()
@@ -81,8 +81,10 @@ class TmdbMapper(
             overview = episode.overview,
             episodeNumber = episode.episodeNumber,
             seasonNumber = episode.seasonNumber,
-            imageUrl = episode.stillPath?.let { "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W300}$it" },
+            imageUrl = TmdbConstants.buildImageUrl(episode.stillPath, TmdbConstants.IMAGE_W300).ifEmpty { null },
             duration = episode.runtime?.toString(),
+            airDate = episode.airDate?.take(TmdbConstants.YEAR_CHAR_COUNT),
+            rating = String.format(Locale.US, "%.1f", episode.voteAverage ?: 0.0),
         )
 
     private fun getTrailerId(response: TmdbMovieDetailRemote): String? =
@@ -98,10 +100,7 @@ class TmdbMapper(
         CastMemberDomainData(
             name = cast.name,
             role = cast.character,
-            imageUrl =
-            cast.profilePath?.let { path ->
-                "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W185}$path"
-            },
+            imageUrl = TmdbConstants.buildImageUrl(cast.profilePath, TmdbConstants.IMAGE_W185).ifEmpty { null },
         )
 
     private fun toWatchProvider(
@@ -114,7 +113,7 @@ class TmdbMapper(
         return WatchProviderDomainData(
             id = provider.providerId,
             name = provider.providerName.orEmpty(),
-            iconUrl = "${TmdbConstants.IMAGE_BASE_URL}${TmdbConstants.IMAGE_W185}${provider.logoPath}",
+            iconUrl = TmdbConstants.buildImageUrl(provider.logoPath, TmdbConstants.IMAGE_W185),
             priceInfo = "",
             appUrl = urls.appUrl,
             webUrl = urls.webUrl,

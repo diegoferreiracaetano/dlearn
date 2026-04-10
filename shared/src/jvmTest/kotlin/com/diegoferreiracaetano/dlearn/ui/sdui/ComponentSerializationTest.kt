@@ -93,15 +93,4 @@ class ComponentSerializationTest {
             imageUrl = "url"
         )
     )
-
-    @Test
-    fun `test AppEpisodeComponent serialization`() = testSerialization(
-        AppEpisodeComponent(
-            id = "1",
-            title = "Episode",
-            description = "Desc",
-            imageUrl = "url",
-            duration = "45m"
-        )
-    )
 }

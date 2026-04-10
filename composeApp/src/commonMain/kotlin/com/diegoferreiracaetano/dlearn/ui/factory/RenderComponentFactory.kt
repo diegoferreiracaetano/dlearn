@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppEpisodeComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppErrorComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppExpandableSectionComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppFeedbackComponent
@@ -87,7 +86,6 @@ object RenderComponentFactory {
     private val sectionRenderer = SectionRenderer()
     private val footerRenderer = FooterRenderer()
     private val appMovieDetailHeaderRenderer = AppMovieDetailHeaderRenderer()
-    private val appEpisodeRenderer = AppEpisodeRenderer()
     private val appExpandableSectionRenderer = AppExpandableSectionRenderer()
     private val appMainContentRenderer = AppMainContentRenderer()
     private val movieItemRenderer = MovieItemRenderer()
@@ -128,7 +126,6 @@ object RenderComponentFactory {
             is SectionComponent -> sectionRenderer.Render(component, actions, modifier)
             is FooterComponent -> footerRenderer.Render(component, actions, modifier)
             is AppMovieDetailHeaderComponent -> appMovieDetailHeaderRenderer.Render(component, actions, modifier)
-            is AppEpisodeComponent -> appEpisodeRenderer.Render(component, actions, modifier)
             is AppExpandableSectionComponent -> appExpandableSectionRenderer.Render(component, modifier)
             is AppMainContentComponent -> appMainContentRenderer.Render(component, actions, modifier)
             is MovieItemComponent -> movieItemRenderer.Render(component, actions, modifier)

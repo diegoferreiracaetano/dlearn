@@ -127,6 +127,9 @@ object TmdbConstants {
 
     const val YEAR_CHAR_COUNT = 4
     const val MAX_CAST_SIZE = 10
+
+    fun buildImageUrl(path: String?, width: String): String =
+        if (path != null) "$IMAGE_BASE_URL$width$path" else ""
 }
 
 object FrameworkConstants {

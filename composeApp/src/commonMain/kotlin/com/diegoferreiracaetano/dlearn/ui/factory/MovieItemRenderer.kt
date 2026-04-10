@@ -21,7 +21,7 @@ class MovieItemRenderer : ComponentRenderer {
 
         AppMovieItem(
             movie = movieItem.toMovieItem(),
-            onClick = { actions.onMovieClick(movieItem.id) },
+            onClick = { movieItem.actionUrl?.let { actions.onMovieClick(movieItem.id) } },
             modifier = modifier.padding(horizontal = 16.dp),
         )
     }

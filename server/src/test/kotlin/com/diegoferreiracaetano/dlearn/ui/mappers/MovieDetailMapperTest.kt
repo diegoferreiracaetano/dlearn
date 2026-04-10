@@ -4,9 +4,9 @@ import com.diegoferreiracaetano.dlearn.domain.models.EpisodeDomainData
 import com.diegoferreiracaetano.dlearn.domain.models.MovieDetailDomainData
 import com.diegoferreiracaetano.dlearn.domain.models.SeasonDomainData
 import com.diegoferreiracaetano.dlearn.domain.video.MediaType
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppEpisodeComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppStringType
 import com.diegoferreiracaetano.dlearn.ui.sdui.ChipGroupComponent
+import com.diegoferreiracaetano.dlearn.ui.sdui.MovieItemComponent
 import com.diegoferreiracaetano.dlearn.util.I18nProvider
 import io.mockk.every
 import io.mockk.mockk
@@ -43,7 +43,9 @@ class MovieDetailMapperTest {
                 episodeNumber = 1,
                 seasonNumber = 1,
                 imageUrl = "ep_url",
-                duration = "58"
+                duration = "58",
+                airDate = "2008",
+                rating = "9.0"
             )
         )
     )
@@ -88,14 +90,15 @@ class MovieDetailMapperTest {
 
         assertEquals(2, result.size)
         assertTrue(result[0] is ChipGroupComponent)
-        assertTrue(result[1] is AppEpisodeComponent)
+        assertTrue(result[1] is MovieItemComponent)
 
         val chipGroup = result[0] as ChipGroupComponent
         assertEquals("Season 1", chipGroup.items[0].label)
 
-        val episodeComp = result[1] as AppEpisodeComponent
+        val episodeComp = result[1] as MovieItemComponent
         assertEquals("Pilot", episodeComp.title)
         assertEquals("58m", episodeComp.duration)
+        assertEquals("Episode", episodeComp.movieType)
     }
 
     @Test

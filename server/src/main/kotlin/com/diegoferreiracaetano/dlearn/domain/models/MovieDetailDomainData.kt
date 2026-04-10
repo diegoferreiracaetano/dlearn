@@ -66,4 +66,6 @@ data class EpisodeDomainData(
     val seasonNumber: Int,
     val imageUrl: String?,
     val duration: String?,
+    val airDate: String?,
+    val rating: String?,
 )

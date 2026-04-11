@@ -8,10 +8,10 @@ O **DLearn** é um ecossistema completo desenvolvido em **Kotlin Multiplatform (
 
 Confira o ecossistema em ação, demonstrando a fluidez da UI gerada pelo servidor e a paridade entre plataformas.
 
-| Vídeo de Demonstração | Interface & SDUI |
-|:---:|:---:|
-| <img src="https://raw.githubusercontent.com/diegoferreiracaetano/dlearn/main/docs/sample/app.gif" width="300" alt="DLearn Demo GIF"> | <img src="https://raw.githubusercontent.com/diegoferreiracaetano/dlearn/main/docs/sample/app.gif" width="300" alt="DLearn Demo GIF"> |
-| *Fluxo completo de navegação e autenticação* | *Preview rápido de componentes nativos* |
+| Vídeo de Demonstração |
+|:---:|
+| <img src="https://raw.githubusercontent.com/diegoferreiracaetano/dlearn/main/docs/sample/app.gif" width="300" alt="DLearn Demo GIF"> |
+| *Fluxo completo de navegação e autenticação* |
 
 ---
 

@@ -14,7 +14,7 @@ import org.koin.dsl.module
 
 val viewModelModule =
     module {
-        factory { MainViewModel(get(), get()) }
+        single { MainViewModel(get(), get()) }
         factory { AppViewModel(get()) }
         factory { SettingsViewModel(get(), get()) }
         factory { (movieId: String) -> MovieDetailViewModel(movieId, get()) }

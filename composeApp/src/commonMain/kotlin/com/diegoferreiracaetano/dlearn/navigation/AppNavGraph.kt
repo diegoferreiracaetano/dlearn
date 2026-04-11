@@ -75,7 +75,7 @@ fun AppNavGraph(
 
     LaunchedEffect(isLoggedIn) {
         if (!isLoggedIn) {
-            navController.navigate(Welcome.route) {
+            navController.navigate(Onboarding.route) {
                 popUpTo(0)
             }
         }

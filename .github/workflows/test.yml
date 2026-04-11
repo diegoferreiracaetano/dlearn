@@ -20,7 +20,8 @@ jobs:
           java-version: '21'
           cache: gradle
       - name: Run Detekt
-        run: ./gradlew detektAll --stacktrace
+        # O detektAll roda em todos os módulos conforme definido no build.gradle.kts raiz
+        run: ./gradlew detektAll --stacktrace -Pandroid.useAndroidX=true
 
   unit-tests:
     name: Unit Tests (Server, Shared & App)
@@ -36,8 +37,8 @@ jobs:
           cache: gradle
 
       - name: Run All Unit Tests
-        # Executa testes do Server (JVM), Shared (Android/JVM) e App (Android)
-        run: ./gradlew :server:test :shared:testDebugUnitTest :shared:jvmTest :composeApp:testDebugUnitTest --no-daemon --stacktrace
+        # Executa testes do Server, Shared (JVM/Android) e App (Android Unit)
+        run: ./gradlew :server:test :shared:testDebugUnitTest :shared:jvmTest :composeApp:testDebugUnitTest --no-daemon --stacktrace -Pandroid.useAndroidX=true
         env:
           GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8"
 
@@ -63,8 +64,8 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          # Roda testes instrumentados no App e no Shared (se houver)
-          script: ./gradlew connectedDebugAndroidTest
+          # Roda testes instrumentados no App (UI principal)
+          script: ./gradlew :composeApp:connectedDebugAndroidTest -Pandroid.useAndroidX=true
 
   coverage:
     name: Coverage Report
@@ -80,13 +81,14 @@ jobs:
           java-version: '21'
           cache: gradle
       
-      - name: Generate Kover & Jacoco Reports
-        run: ./gradlew koverXmlReport jacocoAndroidTestReport --continue || echo "Some reports failed to generate"
+      - name: Generate Coverage Reports
+        # Gera relatórios via Kover e Jacoco (usando seu script customizado)
+        run: ./gradlew koverXmlReport jacocoAndroidTestReport --continue -Pandroid.useAndroidX=true || echo "Some reports failed"
 
-      - name: Upload Coverage Artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-reports
+          name: ci-reports
           path: |
             **/build/reports/kover
             **/build/reports/jacoco

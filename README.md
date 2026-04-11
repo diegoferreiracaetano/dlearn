@@ -10,7 +10,7 @@ Confira o ecossistema em ação, demonstrando a fluidez da UI gerada pelo servid
 
 | Vídeo de Demonstração | Interface & SDUI |
 |:---:|:---:|
-| <video src="docs/sample/app.mp4" width="300" controls>Seu navegador não suporta a tag de vídeo.</video> | <img src="https://raw.githubusercontent.com/diegoferreiracaetano/dlearn/main/docs/assets/demo.gif" width="300" alt="DLearn Demo GIF"> |
+| <img src="https://raw.githubusercontent.com/diegoferreiracaetano/dlearn/main/docs/sample/app.gif" width="300" alt="DLearn Demo GIF"> | <img src="https://raw.githubusercontent.com/diegoferreiracaetano/dlearn/main/docs/sample/app.gif" width="300" alt="DLearn Demo GIF"> |
 | *Fluxo completo de navegação e autenticação* | *Preview rápido de componentes nativos* |
 
 ---

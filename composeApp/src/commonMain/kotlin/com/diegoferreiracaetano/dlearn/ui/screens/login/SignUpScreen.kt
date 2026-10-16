@@ -13,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,8 +30,11 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTop
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.util.CollectEffects
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.util.toAppMessage
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpAction
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpEffect
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpUIState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpViewModel
 import dlearn.composeapp.generated.resources.Res
@@ -57,21 +59,20 @@ fun SignUpScreen(
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(uiState) {
-        when (val state = uiState) {
-            is SignUpUIState.Success -> onNavigateToHome()
-            is SignUpUIState.Error -> {
-                snackbarHostState.showSnackbar(state.error.toAppMessage())
-            }
-
-            else -> Unit
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            SignUpEffect.NavigateToHome -> onNavigateToHome()
+            is SignUpEffect.ShowError ->
+                snackbarHostState.showSnackbar(effect.error.toAppMessage())
         }
     }
 
     SignUpScreenContent(
         uiState = uiState,
         onBackClick = onBackClick,
-        onSignUpClick = viewModel::signUp,
+        onSignUpClick = { name, email, password ->
+            viewModel.onAction(SignUpAction.Submit(name, email, password))
+        },
         snackbarHostState = snackbarHostState,
         modifier = modifier.testTag(TestTags.Screens.SIGN_UP_SCREEN),
     )

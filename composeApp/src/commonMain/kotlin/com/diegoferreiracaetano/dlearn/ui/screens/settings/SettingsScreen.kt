@@ -8,10 +8,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.Render
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.SettingsAction
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.SettingsViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -27,18 +30,18 @@ fun SettingsScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(path) {
-        viewModel.loadContent(path)
+        viewModel.onAction(SettingsAction.Load(path))
     }
 
     val actions =
         remember {
             ComponentActions(
                 onBackClick = onBackClick,
-                onRetry = viewModel::retry,
+                onRetry = { viewModel.onAction(SettingsAction.Retry) },
                 onClose = onClose,
                 onSelectChanged = { key, value ->
                     if (key != null && value != null) {
-                        viewModel.updatePreference(key, value)
+                        viewModel.onAction(SettingsAction.UpdatePreference(key, value))
                     }
                 },
             )
@@ -92,7 +95,7 @@ fun SettingsScreenLoadingPreview() {
 fun SettingsScreenErrorPreview() {
     DLearnTheme {
         SettingsScreenContent(
-            uiState = UIState.Error(Exception("Error message")),
+            uiState = UIState.Error(AppError(AppErrorCode.UNKNOWN_ERROR, "Error message")),
             actions = ComponentActions(),
             modifier = Modifier.fillMaxSize(),
         )

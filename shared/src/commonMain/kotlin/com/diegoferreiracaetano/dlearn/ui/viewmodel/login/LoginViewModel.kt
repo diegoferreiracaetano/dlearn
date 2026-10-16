@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthRepository
 import com.diegoferreiracaetano.dlearn.domain.auth.SocialSignInUseCase
+import com.diegoferreiracaetano.dlearn.domain.error.toAppError
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
-import com.diegoferreiracaetano.dlearn.domain.user.AccountProvider
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.EffectChannel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,45 +22,34 @@ class LoginViewModel(
     private val _state = MutableStateFlow<LoginUIState>(LoginUIState.Idle)
     val state: StateFlow<LoginUIState> = _state.asStateFlow()
 
-    fun login(
-        email: String,
-        password: String,
-    ) {
-        viewModelScope.launch {
-            _state.value = LoginUIState.Loading
+    private val effectChannel = EffectChannel<LoginEffect>()
+    val effects = effectChannel.effects
 
-            authRepository
-                .login(email, password)
-                .catch { e ->
-                    _state.value = LoginUIState.Error(e)
-                }.collect {
-                    _state.value = LoginUIState.Success(sessionManager.isLoggedIn.value)
-                }
+    fun onAction(action: LoginAction) {
+        when (action) {
+            is LoginAction.Submit -> signIn { authRepository.login(action.email, action.password) }
+            is LoginAction.SocialSignIn -> signIn { socialSignInUseCase(action.provider) }
+            LoginAction.CheckSession -> checkSession()
         }
     }
 
-    fun signInWith(provider: AccountProvider) {
+    private fun signIn(source: () -> Flow<*>) {
         viewModelScope.launch {
             _state.value = LoginUIState.Loading
 
-            socialSignInUseCase(provider)
-                .catch { e ->
-                    _state.value = LoginUIState.Error(e)
-                }.collect {
-                    _state.value = LoginUIState.Success(sessionManager.isLoggedIn.value)
-                }
+            source()
+                .catch { effectChannel.send(LoginEffect.ShowError(it.toAppError())) }
+                .collect { effectChannel.send(LoginEffect.NavigateToHome) }
 
-            if (_state.value is LoginUIState.Loading) {
-                _state.value = LoginUIState.Idle
-            }
+            _state.value = LoginUIState.Idle
         }
     }
 
-    fun checkSession() {
+    private fun checkSession() {
         viewModelScope.launch {
             sessionManager.initialize()
             if (sessionManager.isLoggedIn.value) {
-                _state.value = LoginUIState.Success(true)
+                effectChannel.send(LoginEffect.NavigateToHome)
             }
         }
     }

@@ -5,9 +5,12 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailAction
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel
 import io.mockk.every
 import io.mockk.mockk
@@ -42,7 +45,7 @@ class MovieDetailScreenTest {
 
     @Test
     fun given_error_state_when_retry_clicked_should_call_viewModel_retry() = runComposeUiTest {
-        state.value = UIState.Error(Exception("Error"))
+        state.value = UIState.Error(AppError(AppErrorCode.UNKNOWN_ERROR, "Error"))
         every { viewModel.uiState } returns state
 
         setContent {
@@ -59,6 +62,6 @@ class MovieDetailScreenTest {
 
         onNodeWithTag(TestTags.Components.RETRY_BUTTON).performClick()
 
-        verify { viewModel.retry() }
+        verify { viewModel.onAction(MovieDetailAction.Retry) }
     }
 }

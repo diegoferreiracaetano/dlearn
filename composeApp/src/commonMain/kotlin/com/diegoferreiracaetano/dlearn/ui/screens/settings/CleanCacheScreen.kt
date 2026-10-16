@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.diegoferreiracaetano.dlearn.designsystem.components.alert.AppDialog
 import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.CleanCacheAction
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.CleanCacheViewModel
 import dlearn.composeapp.generated.resources.Res
 import dlearn.composeapp.generated.resources.clear_cache_cancel
@@ -22,7 +23,7 @@ fun CleanCacheScreen(
 ) {
     CleanCacheContent(
         onBackClick = onBackClick,
-        onConfirmClick = viewModel::confirmClearCache,
+        onConfirmClick = { viewModel.onAction(CleanCacheAction.Confirm) },
         modifier = modifier,
     )
 }

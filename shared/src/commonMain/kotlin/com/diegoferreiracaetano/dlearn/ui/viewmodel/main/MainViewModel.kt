@@ -7,11 +7,10 @@ import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.ScreenLoader
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -25,6 +24,8 @@ class MainViewModel(
     private val _currentTab = MutableStateFlow(AppNavigationRoute.HOME)
     val currentTab: StateFlow<String> = _currentTab.asStateFlow()
 
+    private val loader = ScreenLoader(viewModelScope, _uiState)
+
     init {
         loadMain()
         viewModelScope.launch {
@@ -34,25 +35,14 @@ class MainViewModel(
         }
     }
 
-    fun loadMain() {
-        viewModelScope.launch {
-            mainRepository
-                .getMain()
-                .onStart {
-                    _uiState.update { UIState.Loading }
-                }.catch { error ->
-                    _uiState.update { UIState.Error(error) }
-                }.collect { screen ->
-                    _uiState.update { UIState.Success(screen) }
-                }
+    fun onAction(action: MainAction) {
+        when (action) {
+            is MainAction.SelectTab -> _currentTab.update { action.route }
+            MainAction.Retry -> loader.retry()
         }
     }
 
-    fun onTabSelected(route: String) {
-        _currentTab.update { route }
-    }
-
-    fun retry() {
-        loadMain()
+    private fun loadMain() {
+        loader.load { mainRepository.getMain() }
     }
 }

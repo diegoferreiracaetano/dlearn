@@ -18,7 +18,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -36,8 +35,11 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppCon
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.domain.user.AccountProvider
 import com.diegoferreiracaetano.dlearn.ui.theme.facebookColor
+import com.diegoferreiracaetano.dlearn.ui.util.CollectEffects
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.util.toAppMessage
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginAction
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginEffect
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginUIState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
 import dlearn.composeapp.generated.resources.Res
@@ -68,24 +70,18 @@ fun WelcomeScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val isLoading = uiState is LoginUIState.Loading
 
-    LaunchedEffect(uiState) {
-        when (val state = uiState) {
-            is LoginUIState.Success -> {
-                onNavigateToHome()
-            }
-
-            is LoginUIState.Error -> {
-                snackbarHostState.showSnackbar(state.throwable.toAppMessage())
-            }
-
-            else -> Unit
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            LoginEffect.NavigateToHome -> onNavigateToHome()
+            is LoginEffect.ShowError ->
+                snackbarHostState.showSnackbar(effect.error.toAppMessage())
         }
     }
 
     WelcomeContent(
         onSignUpClick = onSignUpClick,
         onLoginClick = onLoginClick,
-        onSocialClick = { provider -> viewModel.signInWith(provider) },
+        onSocialClick = { provider -> viewModel.onAction(LoginAction.SocialSignIn(provider)) },
         isLoading = isLoading,
         snackbarHostState = snackbarHostState,
         modifier = modifier.testTag(TestTags.Screens.WELCOME_SCREEN),

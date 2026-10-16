@@ -19,6 +19,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImage
 import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.logout.LogoutAction
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.logout.LogoutViewModel
 import dlearn.composeapp.generated.resources.Res
 import dlearn.composeapp.generated.resources.cancel
@@ -42,7 +43,7 @@ fun LogoutScreen(
 ) {
     LogoutContent(
         onBackClick = onBackClick,
-        onConfirmClick = viewModel::logout,
+        onConfirmClick = { viewModel.onAction(LogoutAction.Confirm) },
         modifier = modifier,
     )
 }

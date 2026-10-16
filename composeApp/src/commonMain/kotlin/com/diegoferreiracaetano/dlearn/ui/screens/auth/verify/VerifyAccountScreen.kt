@@ -29,8 +29,11 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppCon
 import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTopBar
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppOtpVerification
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.util.CollectEffects
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.util.toAppMessage
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountAction
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountEffect
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.VerifyAccountUiState
 import dlearn.composeapp.generated.resources.Res
@@ -52,20 +55,20 @@ fun VerifyAccountScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(uiState) {
-        if (uiState is VerifyAccountUiState.Success) {
-            onContinueClick()
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            VerifyAccountEffect.Verified -> onContinueClick()
         }
     }
 
     VerifyAccountContent(
         uiState = uiState,
         onBackClick = {
-            viewModel.cancel()
+            viewModel.onAction(VerifyAccountAction.Cancel)
             onBackClick()
         },
-        onVerifyOtp = viewModel::verifyOtp,
-        onResendOtp = viewModel::resendOtp,
+        onVerifyOtp = { viewModel.onAction(VerifyAccountAction.VerifyOtp(it)) },
+        onResendOtp = { viewModel.onAction(VerifyAccountAction.ResendOtp) },
         modifier = modifier.testTag(TestTags.Screens.VERIFY_ACCOUNT_SCREEN),
     )
 }
@@ -84,7 +87,7 @@ fun VerifyAccountContent(
 
     LaunchedEffect(uiState) {
         if (uiState is VerifyAccountUiState.Error) {
-            otpError = uiState.throwable.toAppMessage()
+            otpError = uiState.error.toAppMessage()
         } else {
             otpError = null
         }

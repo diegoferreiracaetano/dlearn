@@ -10,8 +10,12 @@ class CleanCacheViewModel(
     private val preferencesRepository: PreferencesRepository,
     private val globalEventDispatcher: GlobalEventDispatcher,
 ) : ViewModel() {
-    fun confirmClearCache() {
-        preferencesRepository.clear()
-        globalEventDispatcher.tryEmit(Navigation(AppNavigationRoute.PROFILE))
+    fun onAction(action: CleanCacheAction) {
+        when (action) {
+            CleanCacheAction.Confirm -> {
+                preferencesRepository.clear()
+                globalEventDispatcher.tryEmit(Navigation(AppNavigationRoute.PROFILE))
+            }
+        }
     }
 }

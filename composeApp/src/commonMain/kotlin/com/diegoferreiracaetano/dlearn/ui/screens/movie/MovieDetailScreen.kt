@@ -7,10 +7,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.Render
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailAction
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.movie.MovieDetailViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -33,8 +36,8 @@ fun MovieDetailScreen(
                 onMovieClick = onMovieClick,
                 onItemClick = onItemClick,
                 onBackClick = onBackClick,
-                onRetry = viewModel::retry,
-                onAction = viewModel::execute,
+                onRetry = { viewModel.onAction(MovieDetailAction.Retry) },
+                onAction = { viewModel.onAction(MovieDetailAction.Open(it)) },
             )
         }
 
@@ -83,7 +86,7 @@ fun MovieDetailScreenLoadingPreview() {
 fun MovieDetailScreenErrorPreview() {
     DLearnTheme {
         MovieDetailContent(
-            uiState = UIState.Error(Exception("Error message")),
+            uiState = UIState.Error(AppError(AppErrorCode.UNKNOWN_ERROR, "Error message")),
             actions = ComponentActions(),
             modifier = Modifier.fillMaxSize(),
         )

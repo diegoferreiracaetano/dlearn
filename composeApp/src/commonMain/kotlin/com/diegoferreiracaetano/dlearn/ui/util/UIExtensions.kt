@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
 import com.diegoferreiracaetano.dlearn.designsystem.components.movie.MovieItem
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
+import com.diegoferreiracaetano.dlearn.domain.error.toAppError
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponent
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponents
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppErrorComponent
@@ -92,7 +93,7 @@ fun UIState<Screen>.Render(
 
         is UIState.Error ->
             RenderComponent(
-                component = AppErrorComponent(throwable.toAppError()),
+                component = AppErrorComponent(error),
                 actions = actions,
                 modifier = modifier,
             )
@@ -114,7 +115,7 @@ fun <T> Flow<T>.collectIn(
     scope.launch {
         this@collectIn
             .onStart { uiState.value = UIState.Loading }
-            .catch { e -> uiState.value = UIState.Error(e) }
+            .catch { e -> uiState.value = UIState.Error(e.toAppError()) }
             .collect { uiState.value = UIState.Success(it) }
     }
 }

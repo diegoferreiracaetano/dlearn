@@ -58,6 +58,14 @@ O projeto é modularizado para garantir a máxima reutilização de código:
 
 ---
 
+## 🧭 Arquitetura dos ViewModels (UDF)
+
+Cada tela expõe **`onAction(Action)`** para entrada, um **State** só de leitura e um canal de
+**Effect** para o que acontece uma vez só (navegação, snackbar). Detalhes em
+[docs/mobile](docs/mobile/index.md).
+
+---
+
 ## ⚙️ CI/CD Pipeline
 Possuímos um fluxo de integração contínua robusto via GitHub Actions:
 - **Lint**: Análise estática de código com Detekt.

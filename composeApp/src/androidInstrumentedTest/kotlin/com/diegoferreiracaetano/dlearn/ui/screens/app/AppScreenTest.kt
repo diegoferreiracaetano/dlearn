@@ -5,11 +5,14 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppEmptyStateComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppImageType
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.app.AppAction
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.app.AppViewModel
 import io.mockk.every
 import io.mockk.mockk
@@ -70,7 +73,7 @@ class AppScreenTest {
 
     @Test
     fun given_error_state_when_retry_clicked_should_call_viewModel_retry() = runComposeUiTest {
-        uiState.value = UIState.Error(Exception("Network Error"))
+        uiState.value = UIState.Error(AppError(AppErrorCode.UNKNOWN_ERROR, "Network Error"))
         every { viewModel.uiState } returns uiState
 
         setContent {
@@ -86,6 +89,6 @@ class AppScreenTest {
 
         onNodeWithTag(TestTags.Components.RETRY_BUTTON).performClick()
 
-        verify { viewModel.retry() }
+        verify { viewModel.onAction(AppAction.Retry) }
     }
 }

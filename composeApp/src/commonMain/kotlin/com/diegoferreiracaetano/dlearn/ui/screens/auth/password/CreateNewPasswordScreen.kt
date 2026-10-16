@@ -13,7 +13,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,8 +32,12 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTop
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.util.CollectEffects
 import com.diegoferreiracaetano.dlearn.ui.util.LocalSnackbarHostState
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags
+import com.diegoferreiracaetano.dlearn.ui.util.toAppMessage
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordAction
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordEffect
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState
 import dlearn.composeapp.generated.resources.Res
@@ -58,33 +61,30 @@ fun CreateNewPasswordScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(uiState) {
-        when (val state = uiState) {
-            is CreateNewPasswordUiState.Success -> {
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            is CreateNewPasswordEffect.Changed -> {
                 snackbarHostState.showAppSnackBar(
                     scope = scope,
-                    message = state.message,
+                    message = effect.message,
                     type = SnackbarType.SUCCESS,
                 )
                 onSuccess()
             }
 
-            is CreateNewPasswordUiState.Error -> {
+            is CreateNewPasswordEffect.ShowError ->
                 snackbarHostState.showAppSnackBar(
                     scope = scope,
-                    message = state.message,
+                    message = effect.error.toAppMessage(),
                     type = SnackbarType.ERROR,
                 )
-            }
-
-            else -> {}
         }
     }
 
     CreateNewPasswordContent(
         uiState = uiState,
         onBackClick = onBackClick,
-        onChangePassword = viewModel::changePassword,
+        onChangePassword = { viewModel.onAction(CreateNewPasswordAction.ChangePassword(it)) },
         snackbarHostState = snackbarHostState,
         modifier = modifier.testTag(TestTags.Screens.CREATE_NEW_PASSWORD_SCREEN),
     )

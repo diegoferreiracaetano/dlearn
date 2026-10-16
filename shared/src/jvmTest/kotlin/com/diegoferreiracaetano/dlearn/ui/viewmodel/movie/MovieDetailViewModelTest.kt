@@ -1,5 +1,6 @@
 package com.diegoferreiracaetano.dlearn.ui.viewmodel.movie
 
+import com.diegoferreiracaetano.dlearn.domain.error.toAppError
 import com.diegoferreiracaetano.dlearn.domain.movie.MovieDetailRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
@@ -60,7 +61,7 @@ class MovieDetailViewModelTest {
 
         val state = viewModel.uiState.value
         assertTrue(state is UIState.Error)
-        assertEquals(exception, state.throwable)
+        assertEquals(exception.toAppError(), state.error)
     }
 
     @Test
@@ -68,7 +69,7 @@ class MovieDetailViewModelTest {
         viewModel = MovieDetailViewModel(movieId, repository)
         advanceUntilIdle()
 
-        viewModel.retry()
+        viewModel.onAction(MovieDetailAction.Retry)
         advanceUntilIdle()
 
         @Suppress("IgnoredReturnValue")
@@ -81,7 +82,7 @@ class MovieDetailViewModelTest {
         advanceUntilIdle()
 
         val fullUrl = "/movies/456"
-        viewModel.execute(fullUrl)
+        viewModel.onAction(MovieDetailAction.Open(fullUrl))
         advanceUntilIdle()
 
         @Suppress("IgnoredReturnValue")
@@ -96,11 +97,11 @@ class MovieDetailViewModelTest {
         val exception = RuntimeException("fail")
         coEvery { repository.execute(any()) } returns flow { throw exception }
 
-        viewModel.execute("/fail")
+        viewModel.onAction(MovieDetailAction.Open("/fail"))
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
         assertTrue(state is UIState.Error)
-        assertEquals(exception, state.throwable)
+        assertEquals(exception.toAppError(), state.error)
     }
 }

@@ -30,8 +30,11 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.navigation.AppTop
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.AppTextField
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.util.CollectEffects
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags
 import com.diegoferreiracaetano.dlearn.ui.util.toAppMessage
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginAction
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginEffect
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginUIState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
 import dlearn.composeapp.generated.resources.Res
@@ -57,23 +60,22 @@ fun LoginScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
-        viewModel.checkSession()
+        viewModel.onAction(LoginAction.CheckSession)
     }
 
-    LaunchedEffect(uiState) {
-        when (val state = uiState) {
-            is LoginUIState.Success -> onNavigateToHome()
-            is LoginUIState.Error -> {
-                snackbarHostState.showSnackbar(state.throwable.toAppMessage())
-            }
-
-            else -> Unit
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            LoginEffect.NavigateToHome -> onNavigateToHome()
+            is LoginEffect.ShowError ->
+                snackbarHostState.showSnackbar(effect.error.toAppMessage())
         }
     }
 
     LoginContent(
         onBackClick = onBackClick,
-        onLoginClick = viewModel::login,
+        onLoginClick = { email, password ->
+            viewModel.onAction(LoginAction.Submit(email, password))
+        },
         onForgotPasswordClick = onForgotPasswordClick,
         isLoading = uiState is LoginUIState.Loading,
         snackbarHostState = snackbarHostState,

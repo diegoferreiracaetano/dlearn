@@ -6,6 +6,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.components.alert.AppDialogTags
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.CleanCacheAction
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.settings.CleanCacheViewModel
 import io.mockk.mockk
 import io.mockk.verify
@@ -29,7 +30,7 @@ class CleanCacheScreenTest {
 
         onNodeWithTag(AppDialogTags.CONFIRM_BUTTON).performClick()
 
-        verify { viewModel.confirmClearCache() }
+        verify { viewModel.onAction(CleanCacheAction.Confirm) }
     }
 
     @Test

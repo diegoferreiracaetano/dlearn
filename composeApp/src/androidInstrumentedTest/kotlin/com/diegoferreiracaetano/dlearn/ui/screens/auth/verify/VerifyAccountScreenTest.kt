@@ -9,13 +9,19 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountAction
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountEffect
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.VerifyAccountViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state.VerifyAccountUiState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import org.junit.Test
 
 @OptIn(ExperimentalTestApi::class)
@@ -23,6 +29,12 @@ class VerifyAccountScreenTest {
 
     private val viewModel: VerifyAccountViewModel = mockk(relaxed = true)
     private val state = MutableStateFlow<VerifyAccountUiState>(VerifyAccountUiState.Idle)
+
+    private val effectChannel = Channel<VerifyAccountEffect>(Channel.UNLIMITED)
+
+    init {
+        every { viewModel.effects } returns effectChannel.receiveAsFlow()
+    }
 
     @Test
     fun given_idle_state_when_otp_filled_and_verify_clicked_should_call_viewModel_verifyOtp() = runComposeUiTest {
@@ -42,7 +54,7 @@ class VerifyAccountScreenTest {
         onNodeWithTag(TestTags.Components.OTP_FIELD, useUnmergedTree = true).onChildAt(0).performTextInput(otp)
         onNodeWithTag(TestTags.Components.CONFIRM_BUTTON).performClick()
 
-        verify { viewModel.verifyOtp(otp) }
+        verify { viewModel.onAction(VerifyAccountAction.VerifyOtp(otp)) }
     }
 
     @Test
@@ -78,7 +90,7 @@ class VerifyAccountScreenTest {
             }
         }
 
-        state.value = VerifyAccountUiState.Success
+        effectChannel.trySend(VerifyAccountEffect.Verified)
 
         waitForIdle()
 
@@ -100,7 +112,7 @@ class VerifyAccountScreenTest {
             }
         }
 
-        state.value = VerifyAccountUiState.Error(Exception(errorMessage))
+        state.value = VerifyAccountUiState.Error(AppError(AppErrorCode.UNKNOWN_ERROR, errorMessage))
 
         waitForIdle()
 

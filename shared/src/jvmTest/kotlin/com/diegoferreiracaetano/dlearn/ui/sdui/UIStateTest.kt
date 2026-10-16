@@ -1,5 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.sdui
 
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -19,9 +21,9 @@ class UIStateTest {
     }
 
     @Test
-    fun `UIState Error holds throwable`() {
-        val throwable = RuntimeException("Error")
-        val state = UIState.Error(throwable)
-        assertEquals(throwable, state.throwable)
+    fun `UIState Error holds app error`() {
+        val error = AppError(AppErrorCode.NETWORK_ERROR, "Sem rede")
+        val state = UIState.Error(error)
+        assertEquals(error, state.error)
     }
 }

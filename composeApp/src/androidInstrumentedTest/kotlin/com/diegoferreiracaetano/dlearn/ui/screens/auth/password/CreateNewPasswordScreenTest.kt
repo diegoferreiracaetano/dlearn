@@ -9,15 +9,21 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags.Components.CONFIRM_PASSWORD_FIELD
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags.Components.FINISH_BUTTON
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags.Components.PASSWORD_FIELD
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordAction
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordEffect
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.CreateNewPasswordViewModel
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import org.junit.Test
 
 @OptIn(ExperimentalTestApi::class)
@@ -25,6 +31,12 @@ class CreateNewPasswordScreenTest {
 
     private val viewModel: CreateNewPasswordViewModel = mockk(relaxed = true)
     private val state = MutableStateFlow<CreateNewPasswordUiState>(CreateNewPasswordUiState.Idle)
+
+    private val effectChannel = Channel<CreateNewPasswordEffect>(Channel.UNLIMITED)
+
+    init {
+        every { viewModel.effects } returns effectChannel.receiveAsFlow()
+    }
 
     @Test
     fun given_idle_state_when_password_filled_and_confirm_clicked_should_call_changePassword() = runComposeUiTest {
@@ -50,7 +62,7 @@ class CreateNewPasswordScreenTest {
 
         onNodeWithTag(FINISH_BUTTON).performClick()
 
-        verify { viewModel.changePassword(password) }
+        verify { viewModel.onAction(CreateNewPasswordAction.ChangePassword(password)) }
     }
 
     @Test
@@ -88,7 +100,7 @@ class CreateNewPasswordScreenTest {
             }
         }
 
-        state.value = CreateNewPasswordUiState.Success("Senha alterada com sucesso")
+        effectChannel.trySend(CreateNewPasswordEffect.Changed("Senha alterada com sucesso"))
 
         waitForIdle()
 
@@ -110,7 +122,9 @@ class CreateNewPasswordScreenTest {
             }
         }
 
-        state.value = CreateNewPasswordUiState.Error(errorMessage)
+        effectChannel.trySend(
+            CreateNewPasswordEffect.ShowError(AppError(AppErrorCode.UNKNOWN_ERROR, errorMessage)),
+        )
 
         waitForIdle()
 

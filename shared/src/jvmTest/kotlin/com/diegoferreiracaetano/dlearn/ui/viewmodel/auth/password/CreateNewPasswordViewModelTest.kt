@@ -1,8 +1,10 @@
 package com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password
 
+import com.diegoferreiracaetano.dlearn.domain.error.toAppError
 import com.diegoferreiracaetano.dlearn.domain.password.ChangePasswordResponse
 import com.diegoferreiracaetano.dlearn.domain.password.PasswordRepository
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.password.state.CreateNewPasswordUiState
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.collectEffects
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +20,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreateNewPasswordViewModelTest {
@@ -39,38 +40,41 @@ class CreateNewPasswordViewModelTest {
     }
 
     @Test
-    fun `when changePassword is called and succeeds should update state to Success`() = runTest {
+    fun `when changePassword succeeds should go through Loading then emit Changed`() = runTest {
         val newPassword = "newPassword123"
         val response = ChangePasswordResponse(message = "Password changed successfully")
+        val effects = collectEffects(viewModel.effects)
 
         coEvery { passwordRepository.changePassword(newPassword) } returns flow {
             delay(100)
             emit(response)
         }
 
-        viewModel.changePassword(newPassword)
+        viewModel.onAction(CreateNewPasswordAction.ChangePassword(newPassword))
 
         testDispatcher.scheduler.runCurrent()
         assertEquals(CreateNewPasswordUiState.Loading, viewModel.uiState.value)
 
         advanceUntilIdle()
 
-        assertEquals(CreateNewPasswordUiState.Success(response.message), viewModel.uiState.value)
+        assertEquals(CreateNewPasswordUiState.Idle, viewModel.uiState.value)
+        assertEquals(listOf<CreateNewPasswordEffect>(CreateNewPasswordEffect.Changed(response.message)), effects)
     }
 
     @Test
-    fun `when changePassword fails should update state to Error`() = runTest {
+    fun `when changePassword fails should emit ShowError and return to Idle`() = runTest {
         val newPassword = "newPassword123"
-        val errorMessage = "Error changing password"
-        val exception = RuntimeException(errorMessage)
-
+        val exception = RuntimeException("Error changing password")
         coEvery { passwordRepository.changePassword(newPassword) } returns flow { throw exception }
+        val effects = collectEffects(viewModel.effects)
 
-        viewModel.changePassword(newPassword)
+        viewModel.onAction(CreateNewPasswordAction.ChangePassword(newPassword))
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value
-        assertTrue(state is CreateNewPasswordUiState.Error)
-        assertEquals(errorMessage, state.message)
+        assertEquals(CreateNewPasswordUiState.Idle, viewModel.uiState.value)
+        assertEquals(
+            listOf<CreateNewPasswordEffect>(CreateNewPasswordEffect.ShowError(exception.toAppError())),
+            effects,
+        )
     }
 }

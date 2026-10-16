@@ -93,7 +93,7 @@ fun UIState<Screen>.Render(
 
         is UIState.Error ->
             RenderComponent(
-                component = AppErrorComponent(throwable.toAppError()),
+                component = AppErrorComponent(error),
                 actions = actions,
                 modifier = modifier,
             )
@@ -115,7 +115,7 @@ fun <T> Flow<T>.collectIn(
     scope.launch {
         this@collectIn
             .onStart { uiState.value = UIState.Loading }
-            .catch { e -> uiState.value = UIState.Error(e) }
+            .catch { e -> uiState.value = UIState.Error(e.toAppError()) }
             .collect { uiState.value = UIState.Success(it) }
     }
 }

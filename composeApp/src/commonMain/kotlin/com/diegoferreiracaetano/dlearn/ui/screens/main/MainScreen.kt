@@ -7,6 +7,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
 import com.diegoferreiracaetano.dlearn.navigation.AppNavigationRoute
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppContainerComponent
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppIconType
@@ -19,6 +21,7 @@ import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import com.diegoferreiracaetano.dlearn.ui.util.ComponentActions
 import com.diegoferreiracaetano.dlearn.ui.util.Render
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.main.MainAction
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.main.MainViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -42,9 +45,9 @@ fun MainScreen(
                 onItemClick = onItemClick,
                 onSearchClick = onSearchClick,
                 onMovieClick = onMovieClick,
-                onTabSelected = viewModel::onTabSelected,
+                onTabSelected = { viewModel.onAction(MainAction.SelectTab(it)) },
                 onClose = onClose,
-                onRetry = viewModel::retry,
+                onRetry = { viewModel.onAction(MainAction.Retry) },
                 currentRoute = currentTab,
             )
         }
@@ -140,7 +143,7 @@ fun MainScreenLoadingPreview() {
 fun MainScreenErrorPreview() {
     DLearnTheme {
         MainContent(
-            uiState = UIState.Error(Exception("Error message")),
+            uiState = UIState.Error(AppError(AppErrorCode.UNKNOWN_ERROR, "Error message")),
             actions = ComponentActions(),
             modifier = Modifier.fillMaxSize(),
         )

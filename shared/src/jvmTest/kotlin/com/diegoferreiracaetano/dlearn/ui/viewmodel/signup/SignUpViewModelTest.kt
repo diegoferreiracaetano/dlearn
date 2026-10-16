@@ -2,7 +2,9 @@ package com.diegoferreiracaetano.dlearn.ui.viewmodel.signup
 
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthRepository
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthResponse
+import com.diegoferreiracaetano.dlearn.domain.error.toAppError
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.collectEffects
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -18,7 +20,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SignUpViewModelTest {
@@ -40,18 +41,18 @@ class SignUpViewModelTest {
     }
 
     @Test
-    fun `given valid data when signUp is called should logout then register and update state to Success`() = runTest {
+    fun `given valid data when submit should logout then register and navigate to home`() = runTest {
         val name = "Test"
         val email = "test@example.com"
         val password = "password"
-        val response = AuthResponse(accessToken = "token")
+        val effects = collectEffects(viewModel.effects)
 
         coEvery { authRepository.register(name, email, password) } returns flow {
             kotlinx.coroutines.delay(100)
-            emit(response)
+            emit(AuthResponse(accessToken = "token"))
         }
 
-        viewModel.signUp(name, email, password)
+        viewModel.onAction(SignUpAction.Submit(name, email, password))
 
         testDispatcher.scheduler.runCurrent()
         assertEquals(SignUpUIState.Loading, viewModel.state.value)
@@ -59,27 +60,20 @@ class SignUpViewModelTest {
         advanceUntilIdle()
 
         coVerify(exactly = 1) { sessionManager.logout() }
-        assertEquals(SignUpUIState.Success(true), viewModel.state.value)
+        assertEquals(SignUpUIState.Idle, viewModel.state.value)
+        assertEquals(listOf<SignUpEffect>(SignUpEffect.NavigateToHome), effects)
     }
 
     @Test
-    fun `given error during register when signUp is called should update state to Error`() = runTest {
+    fun `given error during register when submit should show the error and return to Idle`() = runTest {
         val exception = RuntimeException("Register failed")
         coEvery { authRepository.register(any(), any(), any()) } returns flow { throw exception }
+        val effects = collectEffects(viewModel.effects)
 
-        viewModel.signUp("Test", "test@example.com", "password")
+        viewModel.onAction(SignUpAction.Submit("Test", "test@example.com", "password"))
         advanceUntilIdle()
 
-        val state = viewModel.state.value
-        assertTrue(state is SignUpUIState.Error)
-        assertEquals(exception, state.error)
-    }
-
-    @Test
-    fun `SignUpUIState components test`() {
-        assertEquals(SignUpUIState.Idle, SignUpUIState.Idle)
-        assertEquals(SignUpUIState.Loading, SignUpUIState.Loading)
-        val success = SignUpUIState.Success(true)
-        assertTrue(success.isLoggedIn)
+        assertEquals(SignUpUIState.Idle, viewModel.state.value)
+        assertEquals(listOf<SignUpEffect>(SignUpEffect.ShowError(exception.toAppError())), effects)
     }
 }

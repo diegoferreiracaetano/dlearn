@@ -8,13 +8,19 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginAction
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginEffect
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginUIState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import org.junit.Test
 
 @OptIn(ExperimentalTestApi::class)
@@ -22,6 +28,12 @@ class LoginScreenTest {
 
     private val viewModel: LoginViewModel = mockk(relaxed = true)
     private val state = MutableStateFlow<LoginUIState>(LoginUIState.Idle)
+
+    private val effectChannel = Channel<LoginEffect>(Channel.UNLIMITED)
+
+    init {
+        every { viewModel.effects } returns effectChannel.receiveAsFlow()
+    }
 
     @Test
     fun given_idle_state_when_user_fills_credentials_and_clicks_login_should_call_viewModel_login() = runComposeUiTest {
@@ -50,7 +62,7 @@ class LoginScreenTest {
         ).onChildAt(0).performTextReplacement(password)
         onNodeWithTag(TestTags.Components.LOGIN_BUTTON).performClick()
 
-        verify { viewModel.login(email, password) }
+        verify { viewModel.onAction(LoginAction.Submit(email, password)) }
     }
 
     @Test
@@ -88,7 +100,7 @@ class LoginScreenTest {
             }
         }
 
-        state.value = LoginUIState.Success(true)
+        effectChannel.trySend(LoginEffect.NavigateToHome)
 
         waitForIdle()
 
@@ -111,7 +123,7 @@ class LoginScreenTest {
             }
         }
 
-        state.value = LoginUIState.Error(Exception(errorMessage))
+        effectChannel.trySend(LoginEffect.ShowError(AppError(AppErrorCode.UNKNOWN_ERROR, errorMessage)))
 
         waitForIdle()
 

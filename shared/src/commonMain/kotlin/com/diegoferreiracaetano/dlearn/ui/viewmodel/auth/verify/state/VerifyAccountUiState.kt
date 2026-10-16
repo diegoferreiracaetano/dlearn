@@ -1,25 +1,13 @@
 package com.diegoferreiracaetano.dlearn.ui.viewmodel.auth.verify.state
 
-import com.diegoferreiracaetano.dlearn.domain.auth.challenge.ChallengeResult
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
 
-sealed class VerifyAccountUiState {
-    data object Idle : VerifyAccountUiState()
+sealed interface VerifyAccountUiState {
+    data object Idle : VerifyAccountUiState
 
-    data object Loading : VerifyAccountUiState()
-
-    data object Success : VerifyAccountUiState()
+    data object Loading : VerifyAccountUiState
 
     data class Error(
-        val throwable: Throwable,
-    ) : VerifyAccountUiState()
+        val error: AppError,
+    ) : VerifyAccountUiState
 }
-
-/**
- * Extension to map ChallengeResult to VerifyAccountUiState
- */
-fun ChallengeResult.toUiState(): VerifyAccountUiState =
-    when (this) {
-        is ChallengeResult.Success -> VerifyAccountUiState.Success
-        is ChallengeResult.Failure -> VerifyAccountUiState.Error(error)
-        is ChallengeResult.Cancelled -> VerifyAccountUiState.Idle
-    }

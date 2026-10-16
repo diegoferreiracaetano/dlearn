@@ -1,6 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.viewmodel.main
 
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
+import com.diegoferreiracaetano.dlearn.domain.error.toAppError
 import com.diegoferreiracaetano.dlearn.domain.main.MainRepository
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
@@ -13,7 +14,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -61,12 +61,12 @@ class MainViewModelTest {
         val exception = RuntimeException("Main error")
         coEvery { mainRepository.getMain() } returns flow { throw exception }
 
-        viewModel.loadMain()
+        viewModel.onAction(MainAction.Retry)
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
         assertTrue(state is UIState.Error)
-        assertEquals(exception, state.throwable)
+        assertEquals(exception.toAppError(), state.error)
     }
 
     @Test
@@ -76,16 +76,18 @@ class MainViewModelTest {
         onConfigurationChanged.emit(Unit)
         advanceUntilIdle()
 
-        coVerify(exactly = 2) { mainRepository.getMain().single() }
+        @Suppress("IgnoredReturnValue")
+        coVerify(exactly = 2) { mainRepository.getMain() }
     }
 
     @Test
     fun `when retry is called should reload main content`() = runTest {
         advanceUntilIdle()
 
-        viewModel.retry()
+        viewModel.onAction(MainAction.Retry)
         advanceUntilIdle()
 
-        coVerify(exactly = 2) { mainRepository.getMain().single() }
+        @Suppress("IgnoredReturnValue")
+        coVerify(exactly = 2) { mainRepository.getMain() }
     }
 }

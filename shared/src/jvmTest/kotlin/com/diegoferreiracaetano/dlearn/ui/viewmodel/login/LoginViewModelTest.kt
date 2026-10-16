@@ -3,14 +3,17 @@ package com.diegoferreiracaetano.dlearn.ui.viewmodel.login
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthRepository
 import com.diegoferreiracaetano.dlearn.domain.auth.AuthResponse
 import com.diegoferreiracaetano.dlearn.domain.auth.SocialSignInUseCase
+import com.diegoferreiracaetano.dlearn.domain.error.toAppError
 import com.diegoferreiracaetano.dlearn.domain.session.SessionManager
 import com.diegoferreiracaetano.dlearn.domain.user.AccountProvider
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.collectEffects
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -44,101 +47,114 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `given valid credentials when login is called should update state to Success`() = runTest {
+    fun `given valid credentials when submit should go through Loading then navigate to home`() = runTest {
         val email = "test@example.com"
         val password = "password"
-        val response = AuthResponse(accessToken = "token")
+        val effects = collectEffects(viewModel.effects)
 
-        // Use a delayed flow to capture the Loading state
+        // fluxo com atraso para conseguir observar o Loading
         coEvery { authRepository.login(email, password) } returns flow {
             kotlinx.coroutines.delay(100)
-            emit(response)
+            emit(AuthResponse(accessToken = "token"))
         }
-        coEvery { sessionManager.isLoggedIn } returns MutableStateFlow(true)
 
-        viewModel.login(email, password)
+        viewModel.onAction(LoginAction.Submit(email, password))
 
         testDispatcher.scheduler.runCurrent()
         assertEquals(LoginUIState.Loading, viewModel.state.value)
 
         advanceUntilIdle()
 
-        assertEquals(LoginUIState.Success(true), viewModel.state.value)
+        assertEquals(LoginUIState.Idle, viewModel.state.value)
+        assertEquals(listOf<LoginEffect>(LoginEffect.NavigateToHome), effects)
     }
 
     @Test
-    fun `given invalid credentials when login is called should update state to Error`() = runTest {
-        val email = "test@example.com"
-        val password = "wrong"
+    fun `given invalid credentials when submit should show the error and return to Idle`() = runTest {
         val exception = RuntimeException("Invalid credentials")
-        coEvery { authRepository.login(email, password) } returns flow { throw exception }
+        coEvery { authRepository.login("test@example.com", "wrong") } returns flow { throw exception }
+        val effects = collectEffects(viewModel.effects)
 
-        viewModel.login(email, password)
+        viewModel.onAction(LoginAction.Submit("test@example.com", "wrong"))
         advanceUntilIdle()
 
-        val state = viewModel.state.value
-        assertTrue(state is LoginUIState.Error)
-        assertEquals(exception, state.throwable)
+        assertEquals(LoginUIState.Idle, viewModel.state.value)
+        assertEquals(listOf<LoginEffect>(LoginEffect.ShowError(exception.toAppError())), effects)
     }
 
     @Test
-    fun `given a provider when signInWith is called should update state to Success`() = runTest {
+    fun `given a provider when social sign in succeeds should navigate to home`() = runTest {
         val provider = AccountProvider.GOOGLE
-        coEvery { socialSignInUseCase(provider) } returns flow {
-            emit(Unit)
-        }
-        coEvery { sessionManager.isLoggedIn } returns MutableStateFlow(true)
+        coEvery { socialSignInUseCase(provider) } returns flow { emit(Unit) }
+        val effects = collectEffects(viewModel.effects)
 
-        viewModel.signInWith(provider)
+        viewModel.onAction(LoginAction.SocialSignIn(provider))
         advanceUntilIdle()
 
-        assertEquals(LoginUIState.Success(true), viewModel.state.value)
+        assertEquals(LoginUIState.Idle, viewModel.state.value)
+        assertEquals(listOf<LoginEffect>(LoginEffect.NavigateToHome), effects)
     }
 
     @Test
-    fun `given a provider when signInWith is called and fails should update state to Error`() = runTest {
+    fun `given a provider when social sign in fails should show the error`() = runTest {
         val provider = AccountProvider.GOOGLE
         val exception = RuntimeException("Error")
         coEvery { socialSignInUseCase(provider) } returns flow { throw exception }
+        val effects = collectEffects(viewModel.effects)
 
-        viewModel.signInWith(provider)
-        advanceUntilIdle()
-
-        val state = viewModel.state.value
-        assertTrue(state is LoginUIState.Error)
-        assertEquals(exception, state.throwable)
-    }
-
-    @Test
-    fun `given a provider when signInWith is cancelled should return to Idle`() = runTest {
-        val provider = AccountProvider.GOOGLE
-        coEvery { socialSignInUseCase(provider) } returns emptyFlow()
-
-        viewModel.signInWith(provider)
+        viewModel.onAction(LoginAction.SocialSignIn(provider))
         advanceUntilIdle()
 
         assertEquals(LoginUIState.Idle, viewModel.state.value)
+        assertEquals(listOf<LoginEffect>(LoginEffect.ShowError(exception.toAppError())), effects)
     }
 
     @Test
-    fun `given session is logged in when checkSession is called should update state to Success`() = runTest {
+    fun `given a provider when social sign in is cancelled should return to Idle without effects`() = runTest {
+        val provider = AccountProvider.GOOGLE
+        coEvery { socialSignInUseCase(provider) } returns emptyFlow()
+        val effects = collectEffects(viewModel.effects)
+
+        viewModel.onAction(LoginAction.SocialSignIn(provider))
+        advanceUntilIdle()
+
+        assertEquals(LoginUIState.Idle, viewModel.state.value)
+        assertTrue(effects.isEmpty())
+    }
+
+    @Test
+    fun `given session is logged in when checking session should navigate to home`() = runTest {
+        coEvery { sessionManager.initialize() } returns Unit
+        coEvery { sessionManager.isLoggedIn } returns MutableStateFlow(true)
+        val effects = collectEffects(viewModel.effects)
+
+        viewModel.onAction(LoginAction.CheckSession)
+        advanceUntilIdle()
+
+        assertEquals(listOf<LoginEffect>(LoginEffect.NavigateToHome), effects)
+    }
+
+    @Test
+    fun `given session is not logged in when checking session should not emit effects`() = runTest {
+        coEvery { sessionManager.initialize() } returns Unit
+        coEvery { sessionManager.isLoggedIn } returns MutableStateFlow(false)
+        val effects = collectEffects(viewModel.effects)
+
+        viewModel.onAction(LoginAction.CheckSession)
+        advanceUntilIdle()
+
+        assertEquals(LoginUIState.Idle, viewModel.state.value)
+        assertTrue(effects.isEmpty())
+    }
+
+    @Test
+    fun `given effect emitted before the screen collects when collecting later should still receive it`() = runTest {
         coEvery { sessionManager.initialize() } returns Unit
         coEvery { sessionManager.isLoggedIn } returns MutableStateFlow(true)
 
-        viewModel.checkSession()
+        viewModel.onAction(LoginAction.CheckSession)
         advanceUntilIdle()
 
-        assertEquals(LoginUIState.Success(true), viewModel.state.value)
-    }
-
-    @Test
-    fun `given session is not logged in when checkSession is called should remain in Idle`() = runTest {
-        coEvery { sessionManager.initialize() } returns Unit
-        coEvery { sessionManager.isLoggedIn } returns MutableStateFlow(false)
-
-        viewModel.checkSession()
-        advanceUntilIdle()
-
-        assertEquals(LoginUIState.Idle, viewModel.state.value)
+        assertEquals(LoginEffect.NavigateToHome, viewModel.effects.first())
     }
 }

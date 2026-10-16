@@ -119,7 +119,6 @@ fun AppError.toUiData(): AppErrorData {
     }
 }
 
-suspend fun Throwable.toAppMessage(): String {
-    val error = this.toAppError()
-    return error.message ?: getString(error.code.toResource())
-}
+suspend fun AppError.toAppMessage(): String = message ?: getString(code.toResource())
+
+suspend fun Throwable.toAppMessage(): String = toAppError().toAppMessage()

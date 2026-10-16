@@ -2,6 +2,7 @@ package com.diegoferreiracaetano.dlearn.ui.viewmodel.settings
 
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
 import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
+import com.diegoferreiracaetano.dlearn.domain.error.toAppError
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
 import io.mockk.coEvery
@@ -51,7 +52,7 @@ class SettingsViewModelTest {
         val screen = Screen(components = emptyList())
         coEvery { appRepository.execute(any()) } returns flowOf(screen)
 
-        viewModel.loadContent(path)
+        viewModel.onAction(SettingsAction.Load(path))
         advanceUntilIdle()
 
         assertEquals(UIState.Success(screen), viewModel.uiState.value)
@@ -63,12 +64,12 @@ class SettingsViewModelTest {
         val exception = RuntimeException("error")
         coEvery { appRepository.execute(any()) } returns flow { throw exception }
 
-        viewModel.loadContent(path)
+        viewModel.onAction(SettingsAction.Load(path))
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
         assertTrue(state is UIState.Error)
-        assertEquals(exception, state.throwable)
+        assertEquals(exception.toAppError(), state.error)
     }
 
     @Test
@@ -77,10 +78,10 @@ class SettingsViewModelTest {
         val screen = Screen(components = emptyList())
         coEvery { appRepository.execute(any()) } returns flowOf(screen)
 
-        viewModel.loadContent(path)
+        viewModel.onAction(SettingsAction.Load(path))
         advanceUntilIdle()
 
-        viewModel.retry()
+        viewModel.onAction(SettingsAction.Retry)
         advanceUntilIdle()
 
         @Suppress("IgnoredReturnValue")
@@ -93,7 +94,7 @@ class SettingsViewModelTest {
         val screen = Screen(components = emptyList())
         coEvery { appRepository.execute(any()) } returns flowOf(screen)
 
-        viewModel.loadContent(path)
+        viewModel.onAction(SettingsAction.Load(path))
         advanceUntilIdle()
 
         onConfigurationChanged.emit(Unit)
@@ -108,7 +109,7 @@ class SettingsViewModelTest {
         val key = "theme"
         val value = "dark"
 
-        viewModel.updatePreference(key, value)
+        viewModel.onAction(SettingsAction.UpdatePreference(key, value))
 
         coVerify(exactly = 1) { preferencesRepository.updatePreference(key, value) }
     }

@@ -7,13 +7,19 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpAction
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpEffect
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpUIState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.signup.SignUpViewModel
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import org.junit.Test
 
 @OptIn(ExperimentalTestApi::class)
@@ -21,6 +27,12 @@ class SignUpScreenTest {
 
     private val viewModel: SignUpViewModel = mockk(relaxed = true)
     private val state = MutableStateFlow<SignUpUIState>(SignUpUIState.Idle)
+
+    private val effectChannel = Channel<SignUpEffect>(Channel.UNLIMITED)
+
+    init {
+        every { viewModel.effects } returns effectChannel.receiveAsFlow()
+    }
 
     @Test
     fun given_idle_state_when_register_clicked_should_call_viewModel_signUp() = runComposeUiTest {
@@ -47,7 +59,7 @@ class SignUpScreenTest {
         ).onChildAt(0).performTextInput(password)
         onNodeWithTag(TestTags.Components.SIGN_UP_BUTTON).performClick()
 
-        verify { viewModel.signUp(name, email, password) }
+        verify { viewModel.onAction(SignUpAction.Submit(name, email, password)) }
     }
 
     @Test
@@ -65,7 +77,7 @@ class SignUpScreenTest {
             }
         }
 
-        state.value = SignUpUIState.Success(true)
+        effectChannel.trySend(SignUpEffect.NavigateToHome)
 
         waitForIdle()
 
@@ -87,7 +99,7 @@ class SignUpScreenTest {
             }
         }
 
-        state.value = SignUpUIState.Error(Exception(errorMessage))
+        effectChannel.trySend(SignUpEffect.ShowError(AppError(AppErrorCode.UNKNOWN_ERROR, errorMessage)))
 
         waitForIdle()
 

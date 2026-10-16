@@ -6,14 +6,20 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
 import com.diegoferreiracaetano.dlearn.domain.user.AccountProvider
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginAction
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginEffect
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginUIState
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.login.LoginViewModel
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import org.junit.Test
 
 @OptIn(ExperimentalTestApi::class)
@@ -21,6 +27,12 @@ class WelcomeScreenTest {
 
     private val viewModel: LoginViewModel = mockk(relaxed = true)
     private val state = MutableStateFlow<LoginUIState>(LoginUIState.Idle)
+
+    private val effectChannel = Channel<LoginEffect>(Channel.UNLIMITED)
+
+    init {
+        every { viewModel.effects } returns effectChannel.receiveAsFlow()
+    }
 
     @Test
     fun given_idle_state_when_login_clicked_should_trigger_onLoginClick() = runComposeUiTest {
@@ -81,7 +93,7 @@ class WelcomeScreenTest {
 
         onNodeWithTag(TestTags.Components.GOOGLE_BUTTON).performClick()
 
-        verify { viewModel.signInWith(AccountProvider.GOOGLE) }
+        verify { viewModel.onAction(LoginAction.SocialSignIn(AccountProvider.GOOGLE)) }
     }
 
     @Test
@@ -119,7 +131,7 @@ class WelcomeScreenTest {
             }
         }
 
-        state.value = LoginUIState.Success(true)
+        effectChannel.trySend(LoginEffect.NavigateToHome)
 
         onNodeWithTag(TestTags.Components.GOOGLE_BUTTON).performClick()
 
@@ -142,7 +154,7 @@ class WelcomeScreenTest {
             }
         }
 
-        state.value = LoginUIState.Error(Exception(errorMessage))
+        effectChannel.trySend(LoginEffect.ShowError(AppError(AppErrorCode.UNKNOWN_ERROR, errorMessage)))
 
         onNodeWithTag(TestTags.Screens.WELCOME_SCREEN).assertExists()
     }

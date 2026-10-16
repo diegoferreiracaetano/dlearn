@@ -4,51 +4,34 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.domain.app.AppRepository
 import com.diegoferreiracaetano.dlearn.navigation.AppPath
-import com.diegoferreiracaetano.dlearn.ui.sdui.AppRequest
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.ScreenLoader
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.launch
 
 class AppViewModel(
     private val repository: AppRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
-    val uiState = _uiState.asStateFlow()
+    val uiState: StateFlow<UIState<Screen>> = _uiState.asStateFlow()
 
-    private var lastRequest: AppRequest? = null
+    private val loader = ScreenLoader(viewModelScope, _uiState)
 
-    fun fetch(
-        path: String,
-        params: Map<String, String>? = null,
-    ) {
-        _uiState.value = UIState.Loading
-        fetch(AppPath.parse(path, params))
-    }
+    fun onAction(action: AppAction) {
+        when (action) {
+            is AppAction.Load -> {
+                val request = AppPath.parse(action.path, action.params)
+                loader.load { repository.execute(request) }
+            }
 
-    fun action(
-        action: String
-    ) {
-        fetch(AppPath.parse(action))
-    }
+            is AppAction.Open -> {
+                val request = AppPath.parse(action.url)
+                loader.refresh { repository.execute(request) }
+            }
 
-    fun retry() {
-        lastRequest?.let { request ->
-            fetch(request)
-        }
-    }
-
-    fun fetch(request: AppRequest) {
-        lastRequest = request
-        viewModelScope.launch {
-            repository
-                .execute(request)
-                .catch { e -> _uiState.value = UIState.Error(e) }
-                .collect { screen ->
-                    _uiState.value = UIState.Success(screen)
-                }
+            AppAction.Retry -> loader.retry()
         }
     }
 }

@@ -32,6 +32,22 @@ Seguindo as **Regras de Ouro**, estas são classes de infraestrutura genéricas:
 2. **`AppScreen`**: O container que observa o ViewModel e delega a renderização para o
    `RenderComponent`.
 
+### Fluxo de dados unidirecional (Action / State / Effect)
+
+Todo ViewModel segue o mesmo contrato:
+
+- **`<Tela>Action`** (`sealed interface`): tudo o que a tela pode pedir. A tela só envia ações por
+  um ponto, `viewModel.onAction(...)`; não existem métodos soltos por botão.
+- **State** (`StateFlow` só de leitura): o que a tela mostra agora. Erros guardados no estado são
+  `AppError`, nunca `Throwable`.
+- **`<Tela>Effect`** (`Flow` do `EffectChannel`): o que acontece uma vez só (navegar, mostrar um
+  snackbar). Fica na fila até a tela coletar, então não se perde em segundo plano nem se repete ao
+  reconstruir. A tela coleta com `CollectEffects(viewModel.effects) { ... }`.
+
+As telas SDUI (`AppViewModel`, `MovieDetailViewModel`, `MainViewModel`, `SettingsViewModel`)
+carregam pelo `ScreenLoader`: `load` mostra `Loading`, `refresh` mantém o conteúdo atual até
+chegar o novo, `retry` repete a última fonte e uma nova busca cancela a anterior.
+
 ### `RenderComponent.kt`
 
 Este é o "cérebro" visual. Ele percorre a lista de `Component` e utiliza um `when` exaustivo para

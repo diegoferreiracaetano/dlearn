@@ -7,12 +7,10 @@ import com.diegoferreiracaetano.dlearn.domain.app.PreferencesRepository
 import com.diegoferreiracaetano.dlearn.navigation.AppPath
 import com.diegoferreiracaetano.dlearn.ui.sdui.Screen
 import com.diegoferreiracaetano.dlearn.ui.sdui.UIState
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.ScreenLoader
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
@@ -22,47 +20,33 @@ class SettingsViewModel(
     private val _uiState = MutableStateFlow<UIState<Screen>>(UIState.Loading)
     val uiState: StateFlow<UIState<Screen>> = _uiState.asStateFlow()
 
+    private val loader = ScreenLoader(viewModelScope, _uiState)
+
     private var currentPath: String = ""
 
     init {
         viewModelScope.launch {
             preferencesRepository.onConfigurationChanged.collect {
                 if (currentPath.isNotEmpty()) {
-                    loadContent(currentPath)
+                    load(currentPath)
                 }
             }
         }
     }
 
-    fun loadContent(path: String) {
+    fun onAction(action: SettingsAction) {
+        when (action) {
+            is SettingsAction.Load -> load(action.path)
+            is SettingsAction.UpdatePreference ->
+                preferencesRepository.updatePreference(action.key, action.value)
+
+            SettingsAction.Retry -> loader.retry()
+        }
+    }
+
+    private fun load(path: String) {
         currentPath = path
-        execute(path)
-    }
-
-    fun retry() {
-        if (currentPath.isNotEmpty()) {
-            loadContent(currentPath)
-        }
-    }
-
-    fun updatePreference(
-        key: String,
-        value: String,
-    ) {
-        preferencesRepository.updatePreference(key, value)
-    }
-
-    private fun execute(path: String) {
-        viewModelScope.launch {
-            appRepository
-                .execute(AppPath.parse(path))
-                .onStart {
-                    _uiState.update { UIState.Loading }
-                }.catch { error ->
-                    _uiState.update { UIState.Error(error) }
-                }.collect { screen ->
-                    _uiState.update { UIState.Success(screen) }
-                }
-        }
+        val request = AppPath.parse(path)
+        loader.load { appRepository.execute(request) }
     }
 }

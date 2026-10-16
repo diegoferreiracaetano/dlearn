@@ -6,6 +6,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.diegoferreiracaetano.dlearn.designsystem.theme.DLearnTheme
 import com.diegoferreiracaetano.dlearn.ui.util.TestTags
+import com.diegoferreiracaetano.dlearn.ui.viewmodel.logout.LogoutAction
 import com.diegoferreiracaetano.dlearn.ui.viewmodel.logout.LogoutViewModel
 import io.mockk.mockk
 import io.mockk.verify
@@ -29,7 +30,7 @@ class LogoutScreenTest {
 
         onNodeWithTag(TestTags.Components.CONFIRM_BUTTON).performClick()
 
-        verify { viewModel.logout() }
+        verify { viewModel.onAction(LogoutAction.Confirm) }
     }
 
     @Test

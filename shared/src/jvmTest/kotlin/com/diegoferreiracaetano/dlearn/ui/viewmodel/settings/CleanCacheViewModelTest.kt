@@ -16,7 +16,7 @@ class CleanCacheViewModelTest {
 
     @Test
     fun `when confirmClearCache is called should clear preferences and dispatch navigation`() {
-        viewModel.confirmClearCache()
+        viewModel.onAction(CleanCacheAction.Confirm)
 
         verify(exactly = 1) { preferencesRepository.clear() }
         verify(exactly = 1) {

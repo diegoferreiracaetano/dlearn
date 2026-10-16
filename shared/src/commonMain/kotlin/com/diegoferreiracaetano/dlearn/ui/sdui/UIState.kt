@@ -1,5 +1,7 @@
 package com.diegoferreiracaetano.dlearn.ui.sdui
 
+import com.diegoferreiracaetano.dlearn.domain.error.AppError
+
 sealed interface UIState<out T> {
     data object Loading : UIState<Nothing>
 
@@ -8,6 +10,6 @@ sealed interface UIState<out T> {
     ) : UIState<T>
 
     data class Error(
-        val throwable: Throwable,
+        val error: AppError,
     ) : UIState<Nothing>
 }

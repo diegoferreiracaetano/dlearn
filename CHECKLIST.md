@@ -9,18 +9,21 @@ então marcar. Nada de código antes do item estar descrito aqui.
 
 ## Diagnóstico (2026-10-16)
 
-- [ ] D1. Não existe contrato de ações; cada ViewModel expõe métodos soltos.
-- [ ] D2. Nomes diferentes para a mesma coisa: `fetch`, `execute`, `action`,
+- [x] D1. Não existe contrato de ações; cada ViewModel expõe métodos soltos.
+- [x] D2. Nomes diferentes para a mesma coisa: `fetch`, `execute`, `action`,
       `loadContent`, `loadMain`, `retry`.
-- [ ] D3. `AppViewModel.action(String)` é só um `fetch` por URL com outro nome.
-- [ ] D4. Dois `fetch` no `AppViewModel`: só `fetch(path, params)` põe `Loading`.
-- [ ] D5. `MovieDetailViewModel.execute(url)` não põe `Loading`, não guarda o
+- [x] D3. `AppViewModel.action(String)` é só um `fetch` por URL com outro nome.
+- [x] D4. Dois `fetch` no `AppViewModel`: só `fetch(path, params)` põe `Loading`.
+- [x] D5. `MovieDetailViewModel.execute(url)` não põe `Loading`, não guarda o
       último pedido (o `retry` repete o antigo) e não cancela a busca anterior.
-- [ ] D6. `LoginUIState.Success(isLoggedIn)` é gatilho de navegação dentro do
+- [x] D6. `LoginUIState.Success(isLoggedIn)` é gatilho de navegação dentro do
       estado; `signInWith` escreve o estado em dois pontos (corrida).
-- [ ] D7. A UI decide quando carregar (`checkSession`, `fetch` na entrada da
-      tela) em vez do ViewModel.
-- [ ] D8. `Error(throwable)` leva exceção crua para a UI.
+- [x] D7. (parcial, de propósito) A UI decide quando carregar (`checkSession`, `fetch` na entrada da
+      tela) em vez do ViewModel. `LoginAction.CheckSession` continua sendo
+      enviado pelo `LoginScreen` (a `WelcomeScreen` usa o mesmo ViewModel e não
+      deve navegar sozinha); o `Load(path, params)` do `AppScreen` depende dos
+      argumentos da tela, então também fica na tela.
+- [x] D8. `Error(throwable)` leva exceção crua para a UI.
 
 ## Padrão alvo
 
@@ -41,7 +44,7 @@ repositórios. Toda comunicação continua via `AppRequest` (`path`, `params`,
 `metadata`). A mudança no `AppViewModel` é só no contrato de entrada
 (`onAction`) e no carregamento interno.
 
-## M1 — Tipos base
+## M1 — Tipos base (concluído)
 
 - [x] M1.1 Reusar `AppError` (já existe em `domain/error`) em vez de criar
       `UiError`: `Throwable.toAppError()` movido para o `shared`
@@ -51,52 +54,76 @@ repositórios. Toda comunicação continua via `AppRequest` (`path`, `params`,
       nos marcos M2–M4.
       Pendente de verificar: `composeApp` não foi compilado aqui (precisa do
       `designsystem 1.0.34` do GitHub Packages, 401 sem credencial).
-- [ ] M1.2 Canal de efeitos reutilizável por ViewModel (sem perder evento
-      quando a tela não está coletando).
-- [ ] M1.3 Carregamento padrão: `Loading` sempre, guarda último pedido,
-      cancela job anterior.
-- [ ] M1.4 Decidir o destino de `UIState<T>` (separar primeira carga de
-      recarga com conteúdo antigo na tela).
-- [ ] M1.5 Testes dos tipos base (`commonTest`).
-- [ ] Fechamento: build, testes, revisão do checklist.
+- [x] M1.2 Canal de efeitos reutilizável por ViewModel (sem perder evento
+      quando a tela não está coletando): `EffectChannel<E>` no `shared`
+      (`Channel.UNLIMITED` + `receiveAsFlow`) e helper `CollectEffects` no
+      `composeApp`. Testes em `EffectChannelTest` (fila, ordem, entrega única).
+      `CollectEffects` não foi compilado aqui (mesmo 401 do `designsystem`).
+      Sem commit: junta com o resto do M1 (commit só no fechamento).
+- [x] M1.3 Carregamento padrão: `ScreenLoader` (`load` com `Loading`,
+      `refresh` sem `Loading`, `retry` repete a última fonte, nova busca
+      cancela a anterior). Usado por App, MovieDetail, Main e Settings.
+- [x] M1.4 `UIState<T>` fica com `Loading/Success/Error`, mas `Error` agora
+      guarda `AppError`. Em vez de um estado `Refreshing`, a recarga com conteúdo
+      na tela é o `ScreenLoader.refresh` (mantém o `Success` atual até chegar o
+      novo), usado pelas ações `Open` do App e do MovieDetail.
+- [x] M1.5 Testes dos tipos base (`commonTest`): `AppErrorMappingTest`,
+      `EffectChannelTest`, `ScreenLoaderTest`.
+- [x] Fechamento: build, testes, revisão do checklist.
 
-## M2 — Login (piloto)
+## M2 — Login (piloto) (concluído)
 
-- [ ] M2.1 `LoginAction` (`Submit`, `SocialSignIn`, `CheckSession`) e `onAction`.
-- [ ] M2.2 `LoginUIState` sem `Success(isLoggedIn)`; `Error` com `UiError`.
-- [ ] M2.3 `LoginEffect` (`NavigateToHome`) no lugar do `Success`.
-- [ ] M2.4 `checkSession` no `init` do ViewModel; um só ponto de escrita do
-      estado em `signInWith`.
-- [ ] M2.5 `LoginScreen`/`WelcomeScreen` só enviam ações e coletam efeito.
-- [ ] M2.6 Testes do ViewModel e das telas.
-- [ ] Fechamento: build, testes, revisão do checklist.
+- [x] M2.1 `LoginAction` (`Submit`, `SocialSignIn`, `CheckSession`) e `onAction`.
+- [x] M2.2 `LoginUIState` só `Idle/Loading`. O erro de login (snackbar) virou
+      efeito `ShowError(AppError)`, não estado: não repete ao reconstruir.
+- [x] M2.3 `LoginEffect` (`NavigateToHome`, `ShowError`) no lugar do `Success`.
+- [x] M2.4 Um só ponto de escrita do estado (`signIn`, que sempre volta para
+      `Idle`). `CheckSession` ficou como ação (ver D7).
+- [x] M2.5 `LoginScreen`/`WelcomeScreen` só enviam ações e coletam efeito.
+- [x] M2.6 Testes do ViewModel (rodados) e das telas instrumentadas
+      (compilam; não rodaram, sem emulador).
+- [x] Fechamento: build, testes, revisão do checklist.
 
-## M3 — AppViewModel e MovieDetailViewModel
+## M3 — AppViewModel e MovieDetailViewModel (concluído)
 
-- [ ] M3.1 `AppAction` (`Load`, `Retry`, `Navigate`) substituindo `fetch`,
-      `action` e `retry` soltos; um único caminho interno.
-- [ ] M3.2 `MovieDetailViewModel` usa o mesmo caminho (corrige D5).
-- [ ] M3.3 `retry` repete o último pedido de verdade.
-- [ ] M3.4 Revisar chamadores em `AppScreen`, `MainScreen` e Settings.
-- [ ] M3.5 Testes.
-- [ ] Fechamento: build, testes, revisão do checklist.
+- [x] M3.1 `AppAction` (`Load`, `Open`, `Retry`) substituindo `fetch`, `action`
+      e `retry` soltos; um único caminho interno (`ScreenLoader`). `Load` mostra
+      `Loading`; `Open` mantém o conteúdo (comportamento que o `action` já tinha).
+- [x] M3.2 `MovieDetailViewModel` usa o mesmo caminho (corrige D5).
+- [x] M3.3 `retry` repete o último pedido de verdade (teste: retry depois de `Open`).
+- [x] M3.4 Chamadores em `AppScreen`, `MovieDetailScreen`, `MainScreen` e Settings.
+- [x] M3.5 Testes.
+- [x] Fechamento: build, testes, revisão do checklist.
 
-## M4 — Demais ViewModels
+## M4 — Demais ViewModels (concluído)
 
-- [ ] M4.1 `SignUp`
-- [ ] M4.2 `VerifyAccount`
-- [ ] M4.3 `CreateNewPassword`
-- [ ] M4.4 `Logout` e `CleanCache`
-- [ ] M4.5 `Settings` e `Main`
-- [ ] Fechamento por ViewModel: build, testes, revisão do checklist.
+- [x] M4.1 `SignUp` (`SignUpAction`, `SignUpEffect`)
+- [x] M4.2 `VerifyAccount` (erro do OTP fica no estado, `Verified` é efeito)
+- [x] M4.3 `CreateNewPassword` (`Changed` e `ShowError` são efeitos)
+- [x] M4.4 `Logout` e `CleanCache` (`onAction`; a navegação do CleanCache segue pelo `GlobalEvent`)
+- [x] M4.5 `Settings` e `Main`
+- [x] Fechamento por ViewModel: build, testes, revisão do checklist.
 
-## M5 — Testes
+## M5 — Testes (concluído)
 
-- [ ] M5.1 Trocar `verify { viewModel.x() }` por asserção de comportamento
-      (sequência de estados + efeito), com Turbine.
-- [ ] M5.2 Atualizar `README.md` e a documentação em `docs/`.
-- [ ] Fechamento final: build, testes (`commonTest` e instrumentados),
+- [x] M5.1 Testes do shared agora conferem sequência de estados + efeitos
+      (utilitário `collectEffects` em `commonTest`, sem Turbine). Os testes de
+      tela instrumentados continuam com `verify { viewModel.onAction(...) }`.
+- [x] M5.2 `README.md` e `docs/mobile/index.md` atualizados.
+- [x] Fechamento final: build, testes (`commonTest` e instrumentados),
       revisão do checklist.
+
+## Verificação feita (2026-10-16)
+
+- `:shared:jvmTest`: 358 testes, 0 falhas (inclui as 2 falhas antigas do
+  `MainViewModelTest`, que eram erro do próprio teste: `coVerify { ...single() }`).
+- `:composeApp:testDebugUnitTest`: 13 testes, 0 falhas.
+- `:composeApp:compileDebugKotlinAndroid`, `compileDebugUnitTestKotlinAndroid` e
+  `compileDebugAndroidTestKotlinAndroid`: compilam.
+- **Não rodou:** testes instrumentados (sem emulador/dispositivo), nenhuma
+  verificação visual das telas, iOS e wasm não compilados.
+- A compilação do `composeApp` foi feita com `designsystem 1.0.33` (a 1.0.34 dá
+  401 no GitHub Packages); a troca foi só local e não está no commit.
 
 ## Ambiente de teste
 

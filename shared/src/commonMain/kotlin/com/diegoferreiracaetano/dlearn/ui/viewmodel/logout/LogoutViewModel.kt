@@ -8,9 +8,9 @@ import kotlinx.coroutines.launch
 class LogoutViewModel(
     private val sessionManager: SessionManager,
 ) : ViewModel() {
-    fun logout() {
-        viewModelScope.launch {
-            sessionManager.logout()
+    fun onAction(action: LogoutAction) {
+        when (action) {
+            LogoutAction.Confirm -> viewModelScope.launch { sessionManager.logout() }
         }
     }
 }

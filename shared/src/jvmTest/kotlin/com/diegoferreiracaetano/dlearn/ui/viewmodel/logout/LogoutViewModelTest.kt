@@ -36,7 +36,7 @@ class LogoutViewModelTest {
     fun `logout should call sessionManager logout`() = runTest {
         coEvery { sessionManager.logout() } returns Unit
 
-        viewModel.logout()
+        viewModel.onAction(LogoutAction.Confirm)
         testDispatcher.scheduler.advanceUntilIdle()
 
         coVerify { sessionManager.logout() }

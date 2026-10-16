@@ -12,7 +12,7 @@ import com.diegoferreiracaetano.dlearn.designsystem.components.error.model.Servi
 import com.diegoferreiracaetano.dlearn.designsystem.util.rememberNetworkManager
 import com.diegoferreiracaetano.dlearn.domain.error.AppError
 import com.diegoferreiracaetano.dlearn.domain.error.AppErrorCode
-import com.diegoferreiracaetano.dlearn.domain.error.AppException
+import com.diegoferreiracaetano.dlearn.domain.error.toAppError
 import dlearn.composeapp.generated.resources.Res
 import dlearn.composeapp.generated.resources.error_challenge_expired
 import dlearn.composeapp.generated.resources.error_challenge_required
@@ -123,13 +123,3 @@ suspend fun Throwable.toAppMessage(): String {
     val error = this.toAppError()
     return error.message ?: getString(error.code.toResource())
 }
-
-fun Throwable.toAppError(): AppError =
-    when (this) {
-        is AppException -> this.error
-        else ->
-            AppError(
-                code = AppErrorCode.UNKNOWN_ERROR,
-                message = this.message,
-            )
-    }

@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.diegoferreiracaetano.dlearn.designsystem.components.image.AppImageSource
 import com.diegoferreiracaetano.dlearn.designsystem.components.movie.MovieItem
 import com.diegoferreiracaetano.dlearn.designsystem.components.textfield.TextFieldType
+import com.diegoferreiracaetano.dlearn.domain.error.toAppError
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponent
 import com.diegoferreiracaetano.dlearn.ui.factory.RenderComponents
 import com.diegoferreiracaetano.dlearn.ui.sdui.AppErrorComponent

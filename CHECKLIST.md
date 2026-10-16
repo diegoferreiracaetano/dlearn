@@ -43,7 +43,14 @@ repositórios. Toda comunicação continua via `AppRequest` (`path`, `params`,
 
 ## M1 — Tipos base
 
-- [ ] M1.1 `UiError` (mensagem, tipo, `canRetry`) e mapeamento de `Throwable`.
+- [x] M1.1 Reusar `AppError` (já existe em `domain/error`) em vez de criar
+      `UiError`: `Throwable.toAppError()` movido para o `shared`
+      (`AppErrorMapping.kt`) e `AppError.canRetry` derivado do código.
+      Testes em `AppErrorMappingTest` (`commonTest`). Os estados passam de
+      `Error(throwable)` para `Error(error: AppError)` ViewModel por ViewModel,
+      nos marcos M2–M4.
+      Pendente de verificar: `composeApp` não foi compilado aqui (precisa do
+      `designsystem 1.0.34` do GitHub Packages, 401 sem credencial).
 - [ ] M1.2 Canal de efeitos reutilizável por ViewModel (sem perder evento
       quando a tela não está coletando).
 - [ ] M1.3 Carregamento padrão: `Loading` sempre, guarda último pedido,
@@ -90,6 +97,16 @@ repositórios. Toda comunicação continua via `AppRequest` (`path`, `params`,
 - [ ] M5.2 Atualizar `README.md` e a documentação em `docs/`.
 - [ ] Fechamento final: build, testes (`commonTest` e instrumentados),
       revisão do checklist.
+
+## Ambiente de teste
+
+- Rodar o Gradle com JDK 21 (`JAVA_HOME` do Temurin 21); o JDK 26 padrão do
+  shell quebra o build.
+- `./gradlew :shared:jvmTest` funciona; o `composeApp` precisa do
+  `designsystem 1.0.34` do GitHub Packages (credencial `gpr.user`/`gpr.key`).
+- Falhas que já existiam antes deste trabalho: `MainViewModelTest`
+  ("when retry is called should reload main content" e "when configuration
+  changes should reload main content", `Flow is empty`).
 
 ## Fora de escopo por enquanto
 

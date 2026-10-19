@@ -7,6 +7,11 @@ on:
     branches: [ main, master, develop ]
   workflow_dispatch:
 
+# Lê o design system publicado no GitHub Packages de outro repositório. O settings.gradle.kts
+# usa GITHUB_ACTOR e GITHUB_TOKEN; o token vem do secret GPR_KEY (classic, read:packages).
+env:
+  GITHUB_TOKEN: ${{ secrets.GPR_KEY }}
+
 jobs:
   lint:
     name: Lint & Static Analysis

@@ -8,8 +8,11 @@ on:
 
 # Lê o design system publicado no GitHub Packages de outro repositório. O settings.gradle.kts
 # usa GITHUB_ACTOR e GITHUB_TOKEN; o token vem do secret GPR_KEY (classic, read:packages).
+# O gradle.properties do projeto é ignorado pelo git e não existe no runner, então a memória
+# do Gradle e do Kotlin é definida aqui (o padrão de 512 MB estoura ao compilar o composeApp).
 env:
   GITHUB_TOKEN: ${{ secrets.GPR_KEY }}
+  GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8" -Dorg.gradle.project.kotlin.daemon.jvmargs=-Xmx3g
 
 jobs:
   detekt-check:

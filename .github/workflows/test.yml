@@ -63,6 +63,8 @@ jobs:
     name: Android Instrumented Tests
     needs: unit-tests
     runs-on: ubuntu-latest
+    # Se o emulador travar, o job para aqui em vez de ocupar o runner por horas.
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 21
@@ -71,6 +73,17 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: gradle
+
+      - name: Enable KVM
+        # Sem KVM o emulador x86_64 fica lento demais e o adb o marca como "offline".
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Build test APKs
+        # Compila antes de subir o emulador, para ele não ficar parado esperando o Gradle.
+        run: ./gradlew :composeApp:assembleDebug :composeApp:assembleDebugAndroidTest -Pandroid.useAndroidX=true
 
       - name: Run Emulator and Instrumented Tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -81,6 +94,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
+          emulator-boot-timeout: 900
           # Roda testes instrumentados no App (UI principal)
           script: ./gradlew :composeApp:connectedDebugAndroidTest -Pandroid.useAndroidX=true
 

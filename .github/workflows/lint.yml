@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout do Repositório
         uses: actions/checkout@v4
+      - name: Verificar credencial do GitHub Packages
+        run: bash .github/scripts/check-packages-credential.sh
 
       - name: Configurar Java
         uses: actions/setup-java@v4

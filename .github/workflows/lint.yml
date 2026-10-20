@@ -6,6 +6,14 @@ on:
   pull_request:
     branches: [ main, master ]
 
+# Lê o design system publicado no GitHub Packages de outro repositório. O settings.gradle.kts
+# usa GITHUB_ACTOR e GITHUB_TOKEN; o token vem do secret GPR_KEY (classic, read:packages).
+# O gradle.properties do projeto é ignorado pelo git e não existe no runner, então a memória
+# do Gradle e do Kotlin é definida aqui (o padrão de 512 MB estoura ao compilar o composeApp).
+env:
+  GITHUB_TOKEN: ${{ secrets.GPR_KEY }}
+  GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8" -Dorg.gradle.project.kotlin.daemon.jvmargs=-Xmx3g
+
 jobs:
   detekt-check:
     runs-on: ubuntu-latest
@@ -13,6 +21,8 @@ jobs:
     steps:
       - name: Checkout do Repositório
         uses: actions/checkout@v4
+      - name: Verificar credencial do GitHub Packages
+        run: bash .github/scripts/check-packages-credential.sh
 
       - name: Configurar Java
         uses: actions/setup-java@v4
@@ -22,4 +32,11 @@ jobs:
           cache: gradle
 
       - name: Run Detekt
-        run: ./gradlew detektAll
+        run: |
+          set -o pipefail
+          ./gradlew detektAll --stacktrace -Pandroid.useAndroidX=true 2>&1 | tee gradle.log
+      - name: Resumir erro do Gradle
+        if: failure()
+        run: |
+          msg=$(grep -E "What went wrong|Could not|FAILED|^e: |\.kt:[0-9]+:[0-9]+|Execution failed" -A3 gradle.log | head -40 | cut -c1-220 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}' | cut -c1-3500)
+          echo "::error title=Resumo do erro do Gradle::${msg}"

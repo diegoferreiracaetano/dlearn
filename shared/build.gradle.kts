@@ -13,17 +13,17 @@ buildConfig {
     buildConfigField(
         "String",
         "GOOGLE_WEB_CLIENT_ID",
-        providers.gradleProperty("GOOGLE_WEB_CLIENT_ID").getOrElse("")
+        providers.gradleProperty("GOOGLE_WEB_CLIENT_ID").getOrElse("\"\"")
     )
     buildConfigField(
         "String",
         "APPLE_CLIENT_ID",
-        providers.gradleProperty("APPLE_CLIENT_ID").getOrElse("")
+        providers.gradleProperty("APPLE_CLIENT_ID").getOrElse("\"\"")
     )
     buildConfigField(
         "String",
         "FACEBOOK_APP_ID",
-        providers.gradleProperty("FACEBOOK_APP_ID").getOrElse("")
+        providers.gradleProperty("FACEBOOK_APP_ID").getOrElse("\"\"")
     )
 }
 

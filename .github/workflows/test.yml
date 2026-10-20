@@ -28,7 +28,14 @@ jobs:
           cache: gradle
       - name: Run Detekt
         # O detektAll roda em todos os módulos conforme definido no build.gradle.kts raiz
-        run: ./gradlew detektAll --stacktrace -Pandroid.useAndroidX=true
+        run: |
+          set -o pipefail
+          ./gradlew detektAll --stacktrace -Pandroid.useAndroidX=true 2>&1 | tee gradle.log
+      - name: Resumir erro do Gradle
+        if: failure()
+        run: |
+          msg=$(grep -E "What went wrong|Could not|FAILED|^e: |\.kt:[0-9]+:[0-9]+|Execution failed" -A3 gradle.log | head -40 | cut -c1-220 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}' | cut -c1-3500)
+          echo "::error title=Resumo do erro do Gradle::${msg}"
 
   unit-tests:
     name: Unit Tests (Server, Shared & App)

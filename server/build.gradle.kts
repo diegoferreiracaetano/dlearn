@@ -66,15 +66,15 @@ buildConfig {
     buildConfigField(
         "String",
         "THE_MOVIE_DB_BASE_URL",
-        providers.gradleProperty("THE_MOVIE_DB_BASE_URL").getOrElse("")
+        providers.gradleProperty("THE_MOVIE_DB_BASE_URL").getOrElse("\"\"")
     )
     buildConfigField(
         "String",
         "THE_MOVIE_DB_API_KEY",
-        providers.gradleProperty("THE_MOVIE_DB_API_KEY").getOrElse("")
+        providers.gradleProperty("THE_MOVIE_DB_API_KEY").getOrElse("\"\"")
     )
-    buildConfigField("String", "SECRET", providers.gradleProperty("SECRET").getOrElse(""))
-    buildConfigField("String", "ISSUER", providers.gradleProperty("ISSUER").getOrElse(""))
-    buildConfigField("String", "AUDIENCE", providers.gradleProperty("AUDIENCE").getOrElse(""))
+    buildConfigField("String", "SECRET", providers.gradleProperty("SECRET").getOrElse("\"\""))
+    buildConfigField("String", "ISSUER", providers.gradleProperty("ISSUER").getOrElse("\"\""))
+    buildConfigField("String", "AUDIENCE", providers.gradleProperty("AUDIENCE").getOrElse("\"\""))
 
 }

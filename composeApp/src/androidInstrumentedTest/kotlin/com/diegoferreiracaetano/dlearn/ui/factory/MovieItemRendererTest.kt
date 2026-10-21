@@ -24,7 +24,7 @@ class MovieItemRendererTest {
         val title = "Movie Title"
         val movieId = "123"
         val onMovieClickMock = mockk<(String) -> Unit>(relaxed = true)
-        val component = MovieItemComponent(id = movieId, title = title, imageUrl = "")
+        val component = MovieItemComponent(id = movieId, title = title, imageUrl = "", actionUrl = "app?path=movie")
 
         composeTestRule.setContent {
             DLearnTheme {

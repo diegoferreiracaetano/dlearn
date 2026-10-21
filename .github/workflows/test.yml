@@ -98,6 +98,10 @@ jobs:
           # Roda testes instrumentados no App (UI principal)
           script: ./gradlew :composeApp:connectedDebugAndroidTest -Pandroid.useAndroidX=true
 
+      - name: Resumir falhas dos testes instrumentados
+        if: failure()
+        run: python3 .github/scripts/summarize-android-tests.py
+
   coverage:
     name: Coverage Report
     needs: [unit-tests, android-instrumented-tests]
